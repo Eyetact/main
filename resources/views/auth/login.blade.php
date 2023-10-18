@@ -45,13 +45,13 @@
                                                         </span>
                                                     @enderror
                                                 </div>
-                                            
+
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <button type="submit" class="btn  btn-primary btn-block px-4">Login</button>
                                                     </div>
                                                     <div class="col-12 text-center">
-                                                        <a href="{{ url('/' . $page='forgot-password-1')}}" class="btn btn-link box-shadow-0 px-0">Forgot password?</a>
+                                                        <a href="{{ route('password.request') }}" class="btn btn-link box-shadow-0 px-0">Forgot password?</a>
                                                     </div>
                                                 </div>
                                             </form>

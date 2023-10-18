@@ -14,12 +14,11 @@
 
 		<!-- Animate css -->
 		<link href="{{URL::asset('assets/css/animated.css')}}" rel="stylesheet" />
-		
+
 		<!---Icons css-->
 		<link href="{{URL::asset('assets/css/icons.css')}}" rel="stylesheet" />
-		
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
 		@yield('css')
-		
+
 		<!-- Color Skin css -->
 		<link id="theme" href="{{URL::asset('assets/colors/color1.css')}}" rel="stylesheet" type="text/css"/>
-		

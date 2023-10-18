@@ -19,7 +19,7 @@
 
 		<!--Sidemenu js-->
 		<script src="{{URL::asset('assets/plugins/sidemenu/sidemenu.js')}}"></script>
-		
+
 		<!-- P-scroll js-->
 		<script src="{{URL::asset('assets/plugins/p-scrollbar/p-scrollbar.js')}}"></script>
 		<script src="{{URL::asset('assets/plugins/p-scrollbar/p-scroll1.js')}}"></script>
@@ -29,4 +29,4 @@
 		<!-- Simplebar JS -->
 		<script src="{{URL::asset('assets/plugins/simplebar/js/simplebar.min.js')}}"></script>
 		<!-- Custom js-->
-		<script src="{{URL::asset('assets/js/custom.js')}}"></script>		
+		<script src="{{URL::asset('assets/js/custom.js')}}"></script>
