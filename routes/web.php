@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AttributeController;  
 
 /*
 |--------------------------------------------------------------------------
@@ -20,4 +21,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/', function () {
         return view('index');
     });
+
+    Route::controller(AttributeController::class)->prefix('attribute')->group(function () {
+        Route::get('/', 'index')->name('attribute.index');
+        Route::get('create', 'create')->name('attribute.create');
+        Route::post('store', 'store')->name('attribute.store');
+        Route::get('{attribute}/edit', 'edit')->name('attribute.edit');
+        Route::post('{attribute}', 'update')->name('attribute.update');
+        Route::delete('{attribute}', 'destroy')->name('attribute.destroy');
+    });
+    
 });
