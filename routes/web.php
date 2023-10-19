@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,5 +20,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
     Route::get('/', function () {
         return view('index');
+    });
+
+    Route::prefix('profile')->group(function () {
+        Route::get('{id?}',[ProfileController::class,'index'])->name('profile.index');
+        Route::post('update/{id?}',[ProfileController::class,'update'])->name('profile.update');
     });
 });
