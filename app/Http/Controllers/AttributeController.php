@@ -28,7 +28,7 @@ class AttributeController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
-        return view('attributes.list', ['blog' => new Attribute()]);
+        return view('attributes.list', ['attribute' => new Attribute()]);
     }
 
     /**
@@ -38,7 +38,7 @@ class AttributeController extends Controller
      */
     public function create()
     {
-        //
+        return view('attributes.create', ['attribute' => new Attribute()]);
     }
 
     /**
