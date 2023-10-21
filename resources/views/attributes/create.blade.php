@@ -17,59 +17,62 @@
     <!--End Page header-->
 @endsection
 @section('content')
+@php
+    $data = json_decode($attribute->fields_info, true);
+@endphp
 			<!-- Row -->
 			<div class="row">
 				<div class="col-lg-12 col-md-12">
 					<div class="card">
-						<div class="card-header">
-							<h3 class="card-title">Add Attributes</h3>
-						</div>
-						<div class="card-body pb-2">
-							<form
+						<form
 			                action="{{ $attribute->id == null ? route('attribute.store') : route('attribute.update', ['attribute' => $attribute->id]) }}"
 			                id="attributeCreate" method="POST" autocomplete="off">
-		                    @csrf
+							<div class="card-header">
+								<h3 class="card-title">Add Attributes</h3>
+							</div>
+							<div class="card-body pb-2">							
+			                    @csrf
 			                    <div class="row">
 			                        <div class="col-sm-6 form-group">
-										<label class="name">Name/Label of Attribute <span class="text-red">*</span></label>
+										<label class="form-label" for="name">Name/Label of Attribute <span class="text-red">*</span></label>
 										<input type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Enter name" value="{{ old('name', $attribute->name) }}">
-			                            <label id="name-error" class="error text-red" for="name"></label>
+			                            <label id="name-error" class="error text-red hide" for="name"></label>
 			                            @error('name')
 			                                <span class="error name-error">{{ $message }}</span>
 			                            @enderror
 			                        </div>
 			                        <div class="form-group col-sm-6">
-			                            <label for="input_name">Slug(Attribute name) <span class="text-red">*</span></label>
+			                            <label class="form-label" for="input_name">Slug(Attribute name) <span class="text-red">*</span></label>
 			                            <input class="form-control @error('input_name') is-invalid @enderror" name="input_name"
 			                                placeholder="Enter input name" type="text" value="{{ old('input_name', $attribute->input_name) }}"
 			                                autocomplete="off">
-			                            <label id="input_name-error" class="error text-red" for="input_name"></label>
+			                            <label id="input_name-error" class="error text-red hide" for="input_name"></label>
 			                            @error('input_name')
 			                                <span class="error input_name-error">{{ $message }}</span>
 			                            @enderror
 			                        </div>
 			                        <div class="form-group col-sm-6">
-			                            <label for="input_class">Class <span class="text-red">*</span></label>
+			                            <label class="form-label" for="input_class">Class <span class="text-red">*</span></label>
 			                            <input class="form-control @error('input_class') is-invalid @enderror" name="input_class"
 			                                placeholder="Enter input class" type="text" value="{{ old('input_class', $attribute->input_class) }}"
 			                                autocomplete="off">
-			                            <label id="input_class-error" class="error text-red" for="input_class"></label>
+			                            <label id="input_class-error" class="error text-red hide" for="input_class"></label>
 			                            @error('input_class')
 			                                <span class="error input_class-error">{{ $message }}</span>
 			                            @enderror
 			                        </div>
 			                        <div class="form-group col-sm-6">
-			                            <label for="input_id">ID <span class="text-red">*</span></label>
+			                            <label class="form-label" for="input_id">ID <span class="text-red">*</span></label>
 			                            <input class="form-control @error('input_id') is-invalid @enderror" name="input_id"
 			                                placeholder="Enter input id" type="text" value="{{ old('input_id', $attribute->input_id) }}"
 			                                autocomplete="off">
-			                            <label id="input_id-error" class="error text-red" for="input_id"></label>
+			                            <label id="input_id-error" class="error text-red hide" for="input_id"></label>
 			                            @error('input_id')
 			                                <span class="error input_id-error">{{ $message }}</span>
 			                            @enderror
 			                        </div>
 			                        <div class="form-group col-sm-12">
-			                            <label>Select Attribute type<span class="text-red">*</span></label>
+			                            <label class="form-label">Select Attribute type<span class="text-red">*</span></label>
 			                            <select name="field_type" class="form-control field_type" id="field_type">
 			                                <option value="" selected>Please select attribute field type</option>
 			                                <option value="text" {{ ($attribute->field_type == 'text' ? 'selected' : '') }}>Text</option>
@@ -84,15 +87,21 @@
 			                                <option value="file" {{ ($attribute->field_type == 'file' ? 'selected' : '') }}>File</option>
 			                                <option value="date" {{ ($attribute->field_type == 'date' ? 'selected' : '') }}>Date</option>
 			                            </select>
+			                            <label id="field_type-error" class="error text-red hide" for="field_type"></label>
+			                            @error('input_id')
+			                                <span class="error input_id-error">{{ $message }}</span>
+			                            @enderror
+			                        </div>
 			                        </div>
 			                        <div class="text_fields row">
 
 			                        </div>
-			                        <div class="option_fields form-group col-sm-12">
+			                        <div class="option_fields form-group">
 
 			                        </div>
+			                        <div class="row">
 			                        <div class="form-group col-sm-4">
-			                        	<label class="custom-switch">
+			                        	<label class="custom-switch form-label">
 											<input type="checkbox" name="is_required" class="custom-switch-input" id="is_required" {{ $attribute->is_required == 1 ? 'checked' : '' }}>
 											<span class="custom-switch-indicator"></span>
 											<span class="custom-switch-description">Is Required?</span>
@@ -104,27 +113,26 @@
 			                            <input class="form-control @error('validation_message') is-invalid @enderror" name="validation_message"
 			                                placeholder="Enter validation message" type="text" value="{{ old('validation_message', $attribute->validation_message) }}"
 			                                autocomplete="off" id="validation_message">
-			                            <label id="validation_message-error" class="error text-red" for="validation_message"></label>
+			                            <label id="validation_message-error" class="error text-red hide" for="validation_message"></label>
 			                            @error('validation_message')
 			                                <span class="error validation_message-error">{{ $message }}</span>
 			                            @enderror
 			                        </div>
 			                        <div class="form-group col-sm-12">
-			                            <label for="description">Description</label>
+			                            <label class="form-label" for="description">Description</label>
 			                            <textarea class="form-control" name="description" autocomplete="off" id="description"
 			                                placeholder="Enter Description" rows="3">{{ old('description', $attribute->description) }}</textarea>
 			                        </div>
-			                    </div>
-				               
-
-				                <div class="card-footer">
-				                    <input title="Save attribute" class="btn btn-success mr-2" type="submit"
-				                        value="{{ $attribute->id == null ? 'Create' : 'Update' }}">
-				                    <input title="Reset form" class="btn btn-warning mr-2" type="reset" value="Reset">
-				                    <a title="Cancel form" href="{{ route('attribute.index') }}" class="btn btn-default">Cancel</a>
-				                </div>
-				            </form>
-						</div>
+			                    </div>	
+					            
+							</div>
+							<div class="card-footer text-right">
+								<input title="Save attribute" class="btn btn-primary" type="submit"
+			                        value="{{ $attribute->id == null ? 'Create' : 'Update' }}">
+			                    <input title="Reset form" class="btn btn-warning" type="reset" value="Reset">
+			                    <a title="Cancel form" href="{{ route('attribute.index') }}" class="btn btn-danger">Cancel</a>
+							</div>
+						</form>
 					</div>
 				</div>
 				
@@ -165,8 +173,8 @@
         });
         $(".field_type").change(function() {
             var field_val = $(this).val();
-            var text_html = '<div class="form-group col-sm-4"><label for="min_length">Min length </label><input class="form-control min_length" name="fields_info[min_length]" placeholder="Enter min length" type="text" value="" autocomplete="off"></div><div class="form-group col-sm-4"><label for="max_length">Max length </label><input class="form-control max_length" name="fields_info[max_length]" placeholder="Enter max length" type="text" value="" autocomplete="off"></div><div class="form-group col-sm-4"><label for="placeholder">Placeholder </label><input class="form-control placeholder" name="fields_info[placeholder]" placeholder="Enter placeholder" type="text" value="" autocomplete="off"></div>';
-            var option_html = '<div class="themeSection" data-id="0"><div class="input-group mb-3"><input type="text" name="fields_info[0][value]" class="form-control m-input mr-2" placeholder="Enter value" autocomplete="off"><input type="text" name="fields_info[0][label]" class="form-control m-input mr-2" placeholder="Enter label" autocomplete="off"><div class="input-group-append"><button id="addRow" type="button" class="btn btn-info">Add</button></div></div></div><div id="newSection"></div>';
+            var text_html = '<div class="form-group col-sm-4"><label class="form-label" for="min_length">Min length </label><input class="form-control min_length" name="fields_info[min_length]" placeholder="Enter min length" type="text" value="" autocomplete="off"></div><div class="form-group col-sm-4"><label class="form-label" for="max_length">Max length </label><input class="form-control max_length" name="fields_info[max_length]" placeholder="Enter max length" type="text" value="" autocomplete="off"></div><div class="form-group col-sm-4"><label class="form-label" for="placeholder">Placeholder </label><input class="form-control placeholder" name="fields_info[placeholder]" placeholder="Enter placeholder" type="text" value="" autocomplete="off"></div>';
+            var option_html = '<div class="themeSection" data-id="0"><div class="input-group mb-3"><input type="text" name="fields_info[0][value]" class="form-control m-input mr-2" placeholder="Enter value" autocomplete="off"><input type="text" name="fields_info[0][label]" class="form-control m-input mr-2" placeholder="Enter label" autocomplete="off"><div class="input-group-append"><button id="addRow" type="button" class="btn btn-info"><i class="fa fa-plus"></i></button></div></div></div><div id="newSection"></div>';
             if (field_val === 'text') {
                 $('.text_fields').html(text_html);
                 $(".text_fields").fadeIn("slow");
@@ -185,30 +193,33 @@
             }
         });
 
-        setTimeout(() => {
-            var fields_value = @json($data);
-            if (fields_value.length === undefined) {
-                $('.min_length').val(fields_value.min_length);
-                $('.max_length').val(fields_value.max_length);
-                $('.placeholder').val(fields_value.placeholder);
-            } else {
-                var html_data = [];
-                $.each(fields_value, function(index, value) {
-                    var html = '';
-                    html += '<div class="themeSection" data-id="'+index+'"><div class="input-group mb-3"><input type="text" name="fields_info['+index+'][value]" value="'+value.value+'" class="form-control m-input mr-2" placeholder="Enter value" autocomplete="off"><input type="text" name="fields_info['+index+'][label]" class="form-control m-input mr-2" value="'+value.label+'" placeholder="Enter label" autocomplete="off">';
-                    if(index == 0) {
-                        html += '<div class="input-group-append"><button id="addRow" type="button" class="btn btn-info">Add</button></div>';
-                    } else {
-                        html += '<div class="input-group-append">';
-                        html += '<button id="removeSection" type="button" class="btn btn-danger">Remove</button>';
-                        html += '</div>';
-                    }
-                    html += '</div></div><div id="newSection"></div>';
-                    html_data.push(html);
-                });
-                $('.option_fields').html(html_data);
-            }
-        }, 1000);
+        @if($data)
+	        setTimeout(() => {
+	            var fields_value = @json($data);
+	            if (fields_value.length === undefined) {
+	                $('.min_length').val(fields_value.min_length);
+	                $('.max_length').val(fields_value.max_length);
+	                $('.placeholder').val(fields_value.placeholder);
+	            } else {
+	                var html_data = [];
+	                $.each(fields_value, function(index, value) {
+	                    var html = '';
+	                    html += '<div class="themeSection" data-id="'+index+'"><div class="input-group mb-3"><input type="text" name="fields_info['+index+'][value]" value="'+value.value+'" class="form-control m-input mr-2" placeholder="Enter value" autocomplete="off"><input type="text" name="fields_info['+index+'][label]" class="form-control m-input mr-2" value="'+value.label+'" placeholder="Enter label" autocomplete="off">';
+	                    if(index == 0) {
+	                        html += '<div class="input-group-append"><button id="addRow" type="button" class="btn btn-info"><i class="fa fa-plus"></i></button></div>';
+	                    } else {
+	                        html += '<div class="input-group-append">';
+	                        html += '<button id="removeSection" type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>';
+	                        html += '</div>';
+	                    }
+	                    html += '</div></div><div id="newSection"></div>';
+	                    html_data.push(html);
+	                });
+	                $('.option_fields').html(html_data);
+	            }
+	        }, 1000);
+        @endif
+
         $('#attributeCreate').validate({
             rules: {
                 name: {
@@ -241,7 +252,7 @@
                     required: "Please enter input id.",
                 },
                 field_type: {
-                    required: "Please enter field type.",
+                    required: "Please select field type.",
                 }
             }
         });
@@ -254,7 +265,7 @@
             html += '<input type="text" name="fields_info['+index+'][value]" class="form-control m-input mr-2" placeholder="Enter value" autocomplete="off">';
             html += '<input type="text" name="fields_info['+index+'][label]" class="form-control m-input mr-2" placeholder="Enter label" autocomplete="off">';
             html += '<div class="input-group-append">';
-            html += '<button id="removeSection" type="button" class="btn btn-danger">Remove</button>';
+            html += '<button id="removeSection" type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>';
             html += '</div>';
             html += '</div>';
             html += '</div>';

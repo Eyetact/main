@@ -6,6 +6,8 @@
 		<link href="{{URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.css')}}" rel="stylesheet" />
 		<!-- Slect2 css -->
 		<link href="{{URL::asset('assets/plugins/select2/select2.min.css')}}" rel="stylesheet" />
+		<link href="{{URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css')}}" rel="stylesheet" />
+		<link href="{{URL::asset('assets/plugins/sweet-alert/sweetalert.css')}}" rel="stylesheet" />
 
 @endsection
 @section('page-header')
@@ -39,26 +41,13 @@
 											<table class="table table-bordered text-nowrap" id="attribute_table">
 												<thead>
 													<tr>
-														<th class="wd-15p border-bottom-0">No.</th>
-														<th class="wd-15p border-bottom-0">Name</th>
-														<th class="wd-20p border-bottom-0">Code</th>
-														<th class="wd-15p border-bottom-0">Type</th>
-														<th class="wd-10p border-bottom-0">Required</th>
-														<th class="wd-25p border-bottom-0">Action</th>
+														<th width="100px">No.</th>
+							                            <th>Name</th>
+							                            <th>Description</th>
+							                            <th width="200px">Action</th>
 													</tr>
 												</thead>
 												<tbody>
-													<tr>
-														<td>1</td>
-														<td>First Name</td>
-														<td>first_name</td>
-														<td>Text Field</td>
-														<td>Yes</td>
-														<td>
-															<a class="btn btn-icon  btn-warning" href=""><i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i></a>
-															<a class="btn btn-icon  btn-danger" href=""><i class="fa fa-trash" data-toggle="tooltip" title="" data-original-title="Delete"></i></a>
-														</td>
-													</tr>
 												</tbody>
 											</table>
 										</div>
@@ -87,6 +76,13 @@
 		<script src="{{URL::asset('assets/plugins/datatable/dataTables.responsive.min.js')}}"></script>
 		<script src="{{URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.js')}}"></script>
 		<script src="{{URL::asset('assets/js/datatables.js')}}"></script>
+		<script src="{{URL::asset('assets/js/popover.js')}}"></script>
+
+		<!-- INTERNAL Sweet alert js -->
+		<script src="{{URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.js')}}"></script>
+		<script src="{{URL::asset('assets/plugins/sweet-alert/sweetalert.min.js')}}"></script>
+		<script src="{{URL::asset('assets/js/sweet-alert.js')}}"></script>
+	
 
 		<!-- INTERNAL Select2 js -->
 		<script src="{{URL::asset('assets/plugins/select2/select2.full.min.js')}}"></script>
@@ -97,37 +93,104 @@
 	            serverSide: true,
 	            ajax: "{{ route('attribute.index') }}",
 	            columns: [{
-	                    data: 'DT_RowIndex',
-	                    name: 'DT_RowIndex',
-	                    orderable: false,
-	                    searchable: false
-	                },
-	                {
-	                    data: 'name',
-	                    name: 'name'
-	                },
-	                {
-	                    data: 'key',
-	                    name: 'key'
-	                },
-	                {
-	                    data: 'type',
-	                    name: 'type'
-	                },
-	                {
-	                    data: 'required',
-	                    name: 'required'
-	                },
-	                {
-	                    data: 'action',
-	                    name: 'action',
-	                    orderable: false,
-	                    searchable: false
-	                },
-	            ],
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'description',
+                    name: 'description'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                }],
 	            order: [
 	                [1, 'asc']
 	            ]
 	        });
+
+	        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        $(document).on('click', '.toggle-btn', function(e) {
+            var audit_typeId = $(this).attr("data-id");
+            var currentState = $(this).attr('data-state');
+
+         	e.preventDefault();
+
+            var toggleButton = $(this);
+            swal({
+                title: 'Confirm ' + currentState,
+                text: 'Are you sure you want to ' + currentState + ' this attribute set?',
+                icon: 'warning',
+                showCancelButton: true,
+				confirmButtonText: 'Confirm',
+            }, function (value) {
+				  if (value) {
+	                $.ajax({
+	                    url: '{{url("/")}}/attribute/' + audit_typeId + '/updateStatus',
+	                    type: 'POST',
+	                    data: {
+	                        _token: '{{ csrf_token() }}',
+	                        state: currentState
+	                    },
+	                    success: function(response) {
+	                        // Toggle the button state
+	                        if (currentState === 'disabled') {
+	                            toggleButton.data('state', 'enabled');
+	                            toggleButton.removeClass('btn-danger').addClass(
+	                                'btn-success');
+	                            toggleButton.text('Enable');
+	                        } else {
+	                            toggleButton.data('state', 'disabled');
+	                            toggleButton.removeClass('btn-success').addClass(
+	                                'btn-danger');
+	                            toggleButton.text('Disable');
+	                        }
+	                    },
+	                    error: function(xhr, status, error) {
+	                    }
+	                });
+	            }
+			});
+        });
+
+        $(document).on('click', '.delete-attribute', function() {
+        	var id = $(this).attr("data-id");
+            swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this attribute!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }, function (willDelete) {
+                    if (willDelete) {
+                       
+                        $.ajax({
+                            type: "GET",
+                            url: '{{url("/")}}/remove_attribute/' + id,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+	                            swal({
+	                				title: response.msg
+	                			}, function (result) {
+	                				location.reload();
+	                			});                               
+                            }
+                        });
+                    }
+                });
+        });
 		</script>
 @endsection
