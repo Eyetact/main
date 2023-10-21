@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttributeController;  
 
@@ -22,6 +23,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         return view('index');
     });
 
+
     Route::controller(AttributeController::class)->group(function () {
         Route::get('/attribute', 'index')->name('attribute.index');
         Route::get('attribute/create', 'create')->name('attribute.create');
@@ -32,4 +34,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/attribute/{attributeId}/updateStatus', 'updateStatus')->name('attribute.updateStatus');
     });
     
+
+    Route::prefix('profile')->group(function () {
+        Route::get('{id?}',[ProfileController::class,'index'])->name('profile.index');
+        Route::post('update/{id?}',[ProfileController::class,'update'])->name('profile.update');
+    });
+
 });
