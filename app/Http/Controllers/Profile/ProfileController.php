@@ -20,7 +20,6 @@ class ProfileController extends Controller
 
     public function update(Request $request, $id = null)
     {
-//        dd($request->all());
         $validator = Validator::make($request->all(),[
             'name' => 'required',
             'phone' => 'required',

@@ -18,6 +18,7 @@ class Attribute extends Model
         'is_required',
         'validation_message',
         'fields_info',
+        'is_enable',
         'description'
     ];
 }

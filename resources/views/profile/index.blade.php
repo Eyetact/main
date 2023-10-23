@@ -9,13 +9,6 @@
                 <li class="breadcrumb-item active" aria-current="page"><a href="{{url('/' . $page='#')}}">Profile</a></li>
             </ol>
         </div>
-{{--        <div class="page-rightheader">--}}
-{{--            <div class="btn btn-list">--}}
-{{--                <a href="{{url('/' . $page='#')}}" class="btn btn-info"><i class="fe fe-settings mr-1"></i> General Settings </a>--}}
-{{--                <a href="{{url('/' . $page='#')}}" class="btn btn-danger"><i class="fe fe-printer mr-1"></i> Print </a>--}}
-{{--                <a href="{{url('/' . $page='#')}}" class="btn btn-warning"><i class="fe fe-shopping-cart mr-1"></i> Buy Now </a>--}}
-{{--            </div>--}}
-{{--        </div>--}}
     </div>
     <!--End Page header-->
 @endsection
@@ -39,49 +32,6 @@
                 </div>
             </div>
         </div>
-{{--        <div class="col-lg-4 col-md-auto">--}}
-{{--            <div class="text-lg-right btn-list mt-4 mt-lg-0">--}}
-{{--                <a href="#" class="btn btn-light">Message</a>--}}
-{{--                <a href="#" class="btn btn-primary">Edit Profile</a>--}}
-{{--            </div>--}}
-{{--            <div class="mt-5">--}}
-{{--                <div class="main-profile-contact-list row">--}}
-{{--                    <div class="media col-sm-4">--}}
-{{--                        <div class="media-icon bg-primary text-white mr-3 mt-1">--}}
-{{--                            <i class="fa fa-comments fs-18"></i>--}}
-{{--                        </div>--}}
-{{--                        <div class="media-body">--}}
-{{--                            <small class="text-muted">Posts</small>--}}
-{{--                            <div class="font-weight-bold number-font">--}}
-{{--                                245--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="media col-sm-4">--}}
-{{--                        <div class="media-icon bg-secondary text-white mr-3 mt-1">--}}
-{{--                            <i class="fa fa-users fs-18"></i>--}}
-{{--                        </div>--}}
-{{--                        <div class="media-body">--}}
-{{--                            <small class="text-muted">Followers</small>--}}
-{{--                            <div class="font-weight-normal1">--}}
-{{--                                689k--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="media col-sm-4">--}}
-{{--                        <div class="media-icon bg-info text-white mr-3 mt-1">--}}
-{{--                            <i class="fa fa-feed fs-18"></i>--}}
-{{--                        </div>--}}
-{{--                        <div class="media-body">--}}
-{{--                            <small class="text-muted">Following</small>--}}
-{{--                            <div class="font-weight-bold number-font">--}}
-{{--                                3,765--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
     </div>
     <div class="profile-cover">
         <div class="wideget-user-tab">
@@ -108,7 +58,6 @@
                                 <div class="card-title">Edit Profile</div>
                             </div>
                             <div class="card-body">
-{{--                                <div class="card-title font-weight-bold">Basic info:</div>--}}
                                 <div class="row">
                                     <div class="col-sm-6 col-md-6">
                                         <div class="form-group">
