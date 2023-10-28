@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Attribute;
+use App\Models\Module;
 use App\Http\Requests\AttributePostRequest;
 use App\Repositories\FlashRepository;
 
@@ -37,7 +38,7 @@ class AttributeController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
-        return view('attributes.list', ['attribute' => new Attribute()]);
+        return view('attribute.list', ['attribute' => new Attribute()]);
     }
 
     /**
@@ -47,7 +48,8 @@ class AttributeController extends Controller
      */
     public function create()
     {
-        return view('attributes.create', ['attribute' => new Attribute()]);
+        $moduleData=Module::active()->get();
+        return view('attribute.create', ['attribute' => new Attribute(),'moduleData'=>$moduleData]);
     }
 
     /**
@@ -87,7 +89,7 @@ class AttributeController extends Controller
      */
     public function edit(Attribute $attribute)
     {
-        return view('attributes.create', ['attribute' => $attribute]);
+        return view('attribute.create', ['attribute' => $attribute]);
     }
 
     /**

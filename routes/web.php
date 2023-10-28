@@ -3,6 +3,7 @@
 use App\Http\Controllers\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttributeController;  
+use App\Http\Controllers\ModuleController;  
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         return view('index');
     });
 
+
+    Route::controller(ModuleController::class)->group(function () {
+        Route::get('/module', 'index')->name('module.index');
+        Route::get('module/create', 'create')->name('module.create');
+        Route::post('module/store', 'store')->name('module.store');
+        Route::get('module/{module}/edit', 'edit')->name('module.edit');
+        Route::post('module/{module}', 'update')->name('module.update');
+        Route::get('remove_module/{module}', 'destroy')->name('module.destroy');
+        Route::post('/module/{moduleId}/updateStatus', 'updateStatus')->name('module.updateStatus');
+    });
 
     Route::controller(AttributeController::class)->group(function () {
         Route::get('/attribute', 'index')->name('attribute.index');
