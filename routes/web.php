@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AttributeController;  
-use App\Http\Controllers\ModuleController;  
+use App\Http\Controllers\AttributeController;
+use App\Http\Controllers\ModuleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,12 +44,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('remove_attribute/{attribute}', 'destroy')->name('attribute.destroy');
         Route::post('/attribute/{attributeId}/updateStatus', 'updateStatus')->name('attribute.updateStatus');
     });
-    
+
 
     Route::prefix('profile')->group(function () {
         Route::get('{id?}',[ProfileController::class,'index'])->name('profile.index');
         Route::post('update/{id?}',[ProfileController::class,'update'])->name('profile.update');
         Route::post('change-password/{id?}',[ProfileController::class,'changePassword'])->name('profile.change-password');
+        Route::post('profile-upload/{id?}',[ProfileController::class,'uploadProfileImage'])->name('profile.upload-image');
     });
 
 });

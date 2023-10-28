@@ -13,20 +13,73 @@
     <!--End Page header-->
 @endsection
 @section('content')
+    <style>
+        .profile-upload {
+            transition: .5s ease;
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            left: 65px;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .profile-upload i{
+            font-size: 34px;
+            color: #705ec8;
+        }
+        .img-container{
+            position: relative;
+            width: 18%;
+        }
+        .img-container:hover .profile-img {
+            opacity: 0.3;
+        }
+        .img-container .profile-img {
+            width: auto;
+            height: 100%;
+        }
+        .img-container:hover .profile-upload {
+            opacity: 1;
+        }
+        .profile-img {
+            opacity: 1;
+            display: block;
+            transition: .5s ease;
+            backface-visibility: hidden;
+            max-height: 131px;
+        }
+
+    </style>
 <!--/app header-->
 <div class="main-proifle">
     <div class="row">
         <div class="col-lg-8">
             <div class="box-widget widget-user">
                 <div class="widget-user-image1 d-sm-flex">
-                    <img alt="User Avatar" class="rounded-circle border p-0" src="../../assets/images/users/2.jpg">
+                    <div class="img-container">
+                        <img alt="User Avatar" class="rounded-circle profile-img border p-0"
+                             src="{{ $user->profile_url }}">
+                        <div class="profile-upload">
+                            <a href="javascript:void(0)" class="" id="ProfileUploadBtn"><i class="fa fa-camera"></i></a>
+                        </div>
+                        <form id="profileImageForm" action="{{ route('profile.upload-image') }}" enctype="multipart/form-data" method="POST">
+                            @csrf
+                            <input type="file" id="ProfileUpload" name="image_upload" style="display:none;" accept="image/*" />
+                        </form>
+                    </div>
                     <div class="mt-1 ml-lg-5">
-                        <h4 class="pro-user-username mb-3 font-weight-bold">{{ $user->name }} <i class="fa fa-check-circle text-success"></i></h4>
+                        <h4 class="pro-user-username mb-3 font-weight-bold">{{ $user->name }} <i
+                                class="fa fa-check-circle text-success"></i></h4>
                         <ul class="mb-0 pro-details">
-                            <li><span class="profile-icon"><i class="fe fe-mail"></i></span><span class="h6 mt-3">{{ $user->email }}</span></li>
-                            <li><span class="profile-icon"><i class="fe fe-phone-call"></i></span><span class="h6 mt-3">{{ $user->phone }}</span></li>
-                            <li><span class="profile-icon"><i class="fe fe-globe"></i></span><span class="h6 mt-3">{{ $user->website }}</span></li>
-                            <li><span class="profile-icon"><i class="fa fa-location-arrow"></i></span><span class="h6 mt-3">{{ $user->address }}</span></li>
+                            <li><span class="profile-icon"><i class="fe fe-mail"></i></span><span
+                                    class="h6 mt-3">{{ $user->email }}</span></li>
+                            <li><span class="profile-icon"><i class="fe fe-phone-call"></i></span><span
+                                    class="h6 mt-3">{{ $user->phone }}</span></li>
+                            <li><span class="profile-icon"><i class="fe fe-globe"></i></span><span
+                                    class="h6 mt-3">{{ $user->website }}</span></li>
+                            <li><span class="profile-icon"><i class="fa fa-location-arrow"></i></span><span
+                                    class="h6 mt-3">{{ $user->address }}</span></li>
                         </ul>
                     </div>
                 </div>
@@ -164,6 +217,12 @@
 @push('script')
 <script>
     $(document).ready(function() {
+        $("#ProfileUploadBtn").click(function(){
+            $("#ProfileUpload").trigger('click');
+        });
+        $('#ProfileUpload').change(function(){
+            $('#profileImageForm').submit()
+        })
         $("#editProfile").validate({
             onkeyup: function(el, e) {
                 $(el).valid();

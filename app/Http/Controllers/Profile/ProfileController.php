@@ -65,4 +65,22 @@ class ProfileController extends Controller
         Session::flash('success','Password has been changed successfully.');
         return redirect()->route('profile.index');
     }
+
+    public function uploadProfileImage(Request $request,$id = null)
+    {
+        if($request->hasFile('image_upload')){
+            $filename = $request->image_upload->getClientOriginalName();
+            $destinationPath = 'uploads/users';
+            $request->image_upload->move($destinationPath,$filename);
+            $request->merge(['avatar' => $filename]);
+
+            $user_id = !filled($id) ? Auth::id() : $id;
+            $user = User::where('id',$user_id)->first();
+            $user->avatar = $request->avatar;
+            $user->save();
+
+            Session::flash('success','Profile image updated successfully.');
+            return redirect()->route('profile.index');
+        }
+    }
 }
