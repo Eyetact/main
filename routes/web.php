@@ -25,5 +25,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::prefix('profile')->group(function () {
         Route::get('{id?}',[ProfileController::class,'index'])->name('profile.index');
         Route::post('update/{id?}',[ProfileController::class,'update'])->name('profile.update');
+        Route::post('change-password/{id?}',[ProfileController::class,'changePassword'])->name('profile.change-password');
     });
 });

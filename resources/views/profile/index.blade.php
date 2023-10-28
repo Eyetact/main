@@ -89,6 +89,7 @@
                 <div class="tabs-menu1 px-3">
                     <ul class="nav">
                         <li><a href="#myProfile" class="active fs-14" data-toggle="tab">My Profile</a></li>
+                        <li><a href="#changePassword" class=" fs-14" data-toggle="tab">Change Password</a></li>
                     </ul>
                 </div>
             </div>
@@ -121,8 +122,17 @@
                                     </div>
                                     <div class="col-sm-6 col-md-6">
                                         <div class="form-group">
+                                            <label class="form-label">Username</label>
+                                            <input type="text" name="username" class="form-control" id="Username" value="{{ $user->username }}" placeholder="Username">
+                                        </div>
+                                        @error('username')
+                                        <label id="name-error" class="error" for="name">{{ $message }}</label>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="form-group">
                                             <label class="form-label">Email address</label>
-                                            <input type="email" disabled value="{{ $user->email }}" class="form-control" placeholder="Email">
+                                            <input type="email" name="email" value="{{ $user->email }}" class="form-control" placeholder="Email">
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-md-6">
@@ -160,6 +170,42 @@
                         </form>
                     </div>
                 </div>
+                <div class="tab-pane" id="changePassword">
+                    <div class="card">
+                        <form action="{{ route('profile.change-password') }}" method="POST" id="changePasswordForm">
+                            @csrf
+                            <div class="card-header">
+                                <div class="card-title">Change Password</div>
+                            </div>
+                            <div class="card-body">
+                                {{--                                <div class="card-title font-weight-bold">Basic info:</div>--}}
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">New Password</label>
+                                            <input type="password" name="password" class="form-control" id="password" value="{{ $user->name }}" placeholder="New Password">
+                                        </div>
+                                        @error('name')
+                                        <label id="name-error" class="error" for="name">{{ $message }}</label>
+                                        @enderror
+                                    </div>
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Confirm Password</label>
+                                            <input type="password" name="password_confirmation" class="form-control" id="PasswordConfirmation" placeholder="Confirm Password">
+                                        </div>
+                                        @error('password_confirmation')
+                                        <label id="name-error" class="error" for="name">{{ $message }}</label>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer text-right">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -181,6 +227,15 @@
                     required: true,
                     maxlength: 255,
                 },
+                username:{
+                    required:true,
+                    maxlength:255,
+                },
+                email:{
+                  required:true,
+                  email:true,
+                  maxlength:255,
+                },
                 address:{
                     required:true,
                     maxlength: 500,
@@ -199,6 +254,26 @@
             },
             errorPlacement: function (error, element) {
                 error.insertAfter($(element).parent());
+            },
+        });
+
+        $("#changePasswordForm").validate({
+            ignore: ":hidden",
+            rules: {
+                password:{
+                    required:true,
+                    min:6,
+                },
+                password_confirmation:{
+                    required:true,
+                    min:6,
+                    equalTo: "#password"
+                }
+            },
+            messages: {
+                password_confirmation:{
+                    equalTo: "To create a valid password, both the password and confirm password field values must be matched."
+                }
             },
         });
     });
