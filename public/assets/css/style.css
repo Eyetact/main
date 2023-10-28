@@ -7,6 +7,9 @@
 /*border variables*/
 /*shadow variables*/
 /*Colors*/
+.hide{
+  display: none;
+}
 /*------ Accordion -------*/
 .accordion .card:not(:first-of-type):not(:last-of-type) {
   border-bottom: 0;
