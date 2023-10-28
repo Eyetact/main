@@ -30,7 +30,7 @@
         }
         .img-container{
             position: relative;
-            width: 18%;
+            width: 17%;
         }
         .img-container:hover .profile-img {
             opacity: 0.3;
