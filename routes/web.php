@@ -53,4 +53,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('profile-upload/{id?}',[ProfileController::class,'uploadProfileImage'])->name('profile.upload-image');
     });
 
+    Route::get('example-datatable',function (){
+        return view('example_datatable.index');
+    });
 });
