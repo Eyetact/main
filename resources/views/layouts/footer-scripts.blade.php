@@ -60,4 +60,51 @@
             @if(Session::get('success'))
                 toastr.success("{{ Session::get('success') }}");
             @endif
+
+            $(document.body).on('change','#ModeChangeDropdown',function (){
+                console.log($(this).val());
+               console.log('Mode Changed');
+            });
+
+            // function setFocus(on) {
+            //     var element = document.activeElement;
+            //     if (on) {
+            //         setTimeout(function () {
+            //             element.parentNode.classList.add("focus");
+            //         });
+            //     } else {
+            //         let box = document.querySelector(".input-box");
+            //         box.classList.remove("focus");
+            //         $("input").each(function () {
+            //             var $input = $(this);
+            //             var $parent = $input.closest(".input-box");
+            //             if ($input.val()) $parent.addClass("focus");
+            //             else $parent.removeClass("focus");
+            //         });
+            //     }
+            // }
+            $("input[type='text'], input[type='number'], input[type='password'], input[type='email']").on( "focus, blur", function() {
+                var $input = $(this);
+                if($input.val() != ''){
+                    $input.parents(".input-box").addClass("focus");
+                }else{
+                    $input.parents(".input-box").removeClass("focus");
+                }
+            } );
+            $("input[type='text'], input[type='number'], input[type='password'], input[type='email']").on( "keyup", function() {
+                var $input = $(this);
+                if($input.val() != ''){
+                    $input.parents(".input-box").addClass("focus");
+                }else{
+                    $input.parents(".input-box").removeClass("focus");
+                }
+            } );
+            $("input[type='text'], input[type='number'], input[type='password'], input[type='email']").each(function(index, element) {
+                var value = $(element).val();
+                if(value != ''){
+                    $(this).parents('.input-box').addClass('focus');
+                }else{
+                    $(this).parents('.input-box').removeClass('focus');
+                }
+            });
         </script>

@@ -29,75 +29,6 @@
     <!--End Page header-->
 @endsection
 @section('content')
-    <style>
-
-        p {
-            font-size: 0.75em;
-            font-weight: bold;
-            position: absolute;
-            top: 15%;
-            width: 100%;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            text-align: center;
-            color: white;
-            user-select: none;
-        }
-
-        .draggable-table {
-            /*position: absolute;*/
-            top: 25%;
-            left: 20%;
-            /*width: 60%;*/
-            height: auto;
-            border-collapse: collapse;
-            /*background: white;*/
-            /*-webkit-box-shadow: 0px 0px 10px 8px rgba(0, 0, 0, 0.1);*/
-            /*box-shadow: 0px 0px 10px 8px rgba(0, 0, 0, 0.1);*/
-        }
-        .draggable-table .draggable-table__drag {
-            font-size: 0.95em;
-            font-weight: lighter;
-            text-transform: capitalize;
-            position: absolute;
-            width: 100%;
-            text-indent: 50px;
-            border: 1px solid #f1f1f1;
-            z-index: 10;
-            cursor: grabbing;
-            -webkit-box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.05);
-            box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.05);
-            opacity: 1;
-        }
-        .draggable-table thead th {
-            /*height: 25px;*/
-            /*font-weight: bold;*/
-            /*text-transform: capitalize;*/
-            /*padding: 10px;*/
-            /*user-select: none;*/
-        }
-        .draggable-table tbody tr {
-            /*cursor: grabbing;*/
-        }
-        .draggable-table tbody tr td {
-            /*font-size: 0.95em;*/
-            /*font-weight: lighter;*/
-            /*text-transform: capitalize;*/
-            /*text-indent: 50px;*/
-            /*padding: 10px;*/
-            user-select: none;
-            /*border-top: 1px solid whitesmoke;*/
-        }
-        .draggable-table tbody tr {
-            background-color: #ffffff;
-        }
-        .draggable-table tbody tr.is-dragging {
-            background: #a99af7;
-        }
-        .draggable-table tbody tr.is-dragging td {
-            color: #ffffff;
-        }
-    </style>
     <!-- Row -->
     <div class="row">
         <div class="col-12">
@@ -302,7 +233,11 @@
                 dragElem = target.cloneNode(true);
                 dragElem.classList.add("draggable-table__drag");
                 dragElem.style.height = getStyle(target, "height");
-                dragElem.style.background = getStyle(target, "backgroundColor");
+                if($('body').hasClass('dark-mode')){
+                    dragElem.style.background = '#565985';
+                }else{
+                    dragElem.style.background = '#ffffff';
+                }
                 for (var i = 0; i < target.children.length; i++) {
                     let oldTD = target.children[i],
                         newTD = dragElem.children[i];

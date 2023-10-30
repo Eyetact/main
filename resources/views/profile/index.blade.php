@@ -114,51 +114,50 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Name</label>
-                                            <input type="text" name="name" class="form-control" id="name" value="{{ $user->name }}" placeholder="First Name">
+                                        <div class="input-box">
+                                            <label class="input-label">Name</label>
+                                            <input type="text" class="google-input" name="name" id="name" value="{{ $user->name }}"  />
                                         </div>
                                         @error('name')
                                             <label id="name-error" class="error" for="name">{{ $message }}</label>
                                         @enderror
                                     </div>
                                     <div class="col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Username</label>
-                                            <input type="text" name="username" class="form-control" id="Username" value="{{ $user->username }}" placeholder="Username">
+                                        <div class="input-box">
+                                            <label class="input-label">Username</label>
+                                            <input type="text" name="username" class="google-input" id="Username" value="{{ $user->username }}">
                                         </div>
                                         @error('username')
                                         <label id="name-error" class="error" for="name">{{ $message }}</label>
                                         @enderror
                                     </div>
                                     <div class="col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Email address</label>
-                                            <input type="email" name="email" value="{{ $user->email }}" class="form-control" placeholder="Email">
+                                        <div class="input-box">
+                                            <label class="input-label">Email address</label>
+                                            <input type="email" name="email" value="{{ $user->email }}" class="google-input" >
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Phone Number</label>
-                                            <input type="number" name="phone" id="phone" class="form-control" value="{{ $user->phone }}" placeholder="Phone Number">
+                                        <div class="input-box">
+                                            <label class="input-label">Phone Number</label>
+                                            <input type="number" name="phone" id="phone" class="google-input" value="{{ $user->phone }}" >
                                         </div>
                                         @error('phone')
                                             <label id="phone-error" class="error" for="phone">{{ $message }}</label>
                                         @enderror
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Address</label>
-                                            <textarea class="form-control" id="address" name="address" rows="1" placeholder="Address">{{ $user->address }}</textarea>
+                                        <div class="input-box">
+                                            <textarea class="google-input" id="address" name="address" rows="1" placeholder="Address">{{ $user->address }}</textarea>
                                         </div>
                                         @error('address')
                                             <label id="address-error" class="error" for="address">{{ $message }}</label>
                                         @enderror
                                     </div>
                                     <div class="col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Website</label>
-                                            <input type="text" id="website" name="website" class="form-control" value="{{ $user->website }}" placeholder="https://www.domainname.com/">
+                                        <div class="input-box">
+                                            <label class="input-label">Website</label>
+                                            <input type="text" id="website" name="website" class="google-input" value="{{ $user->website }}" >
                                         </div>
                                         @error('website')
                                             <label id="website-error" class="error" for="website">{{ $message }}</label>
@@ -183,18 +182,18 @@
                                 {{--                                <div class="card-title font-weight-bold">Basic info:</div>--}}
                                 <div class="row">
                                     <div class="col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">New Password</label>
-                                            <input type="password" name="password" class="form-control" id="password" value="{{ $user->name }}" placeholder="New Password">
+                                        <div class="input-box">
+                                            <label class="input-label">New Password</label>
+                                            <input type="password" name="password" class="google-input" id="password" value="{{ $user->name }}">
                                         </div>
                                         @error('name')
                                         <label id="name-error" class="error" for="name">{{ $message }}</label>
                                         @enderror
                                     </div>
                                     <div class="col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label">Confirm Password</label>
-                                            <input type="password" name="password_confirmation" class="form-control" id="PasswordConfirmation" placeholder="Confirm Password">
+                                        <div class="input-box">
+                                            <label class="input-label">Confirm Password</label>
+                                            <input type="password" name="password_confirmation" class="google-input" id="PasswordConfirmation" >
                                         </div>
                                         @error('password_confirmation')
                                         <label id="name-error" class="error" for="name">{{ $message }}</label>

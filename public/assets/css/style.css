@@ -25368,3 +25368,223 @@ object, embed, video {
 .error{
     color:red;
 }
+
+
+
+/* Google Input Start */
+
+input {
+    background: #fff;
+}
+
+#form {
+    width: 40vw;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+.input-box.active-grey .google-input {
+    border: 1px solid #dadce0;
+}
+.input-box.active-grey .input-label {
+    color: #80868b;
+    top: -8px;
+    background: #fff;
+    font-size: 11px;
+    transition: 250ms;
+}
+.input-box.active-grey .input-label svg {
+    position: relative;
+    width: 11px;
+    height: 11px;
+    top: 2px;
+    transition: 250ms;
+}
+
+.input-box {
+    position: relative;
+    margin: 10px 0;
+}
+.input-box .input-label {
+    position: absolute;
+    color: #80868b;
+    font-size: 16px;
+    font-weight: 400;
+    max-width: calc(100% - (2 * 8px));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    left: 8px;
+    top: 13px;
+    padding: 0 8px;
+    transition: 250ms;
+    user-select: none;
+    pointer-events: none;
+}
+.input-box .input-label svg {
+    position: relative;
+    width: 15px;
+    height: 15px;
+    top: 2px;
+    transition: 250ms;
+}
+.input-box .google-input {
+    box-sizing: border-box;
+    height: 50px;
+    width: 100%;
+    border-radius: 4px;
+    color: #202124;
+    border: 1px solid #dadce0;
+    padding: 13px 15px;
+    transition: 250ms;
+}
+.input-box .google-input:focus {
+    outline: none;
+    border: 2px solid #705ec8;
+    transition: 250ms;
+}
+
+.input-box.error .input-label {
+    color: #f44336;
+    top: -8px;
+    background: #fff;
+    font-size: 11px;
+    transition: 250ms;
+}
+.input-box.error .google-input {
+    border: 2px solid #f44336;
+}
+
+.input-box.focus .input-label,
+.input-box.active .input-label {
+    /*color: #1a73e8;*/
+    top: -8px;
+    background: #fff;
+    font-size: 11px;
+    transition: 250ms;
+}
+.input-box.focus .input-label svg,
+.input-box.active .input-label svg {
+    position: relative;
+    width: 11px;
+    height: 11px;
+    top: 2px;
+    transition: 250ms;
+}
+
+.input-box.active .google-input {
+    border: 2px solid #705ec8;
+}
+
+.btn {
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    border: none;
+    white-space: normal;
+    letter-spacing: 0.25px;
+    font-weight: 400;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    line-height: 20px;
+    min-width: 88px;
+    transition: 250ms;
+}
+.btn:hover {
+    background: #ddd;
+    transition: 250ms;
+}
+.btn:focus {
+    outline: none;
+}
+
+.btn-primary {
+    background: #1a73e8;
+    color: #fff;
+    transition: 250ms;
+}
+.btn-primary:hover {
+    background: #287ae6;
+    box-shadow: 0 1px 1px 0 rgba(66, 133, 244, 0.45), 0 1px 3px 1px rgba(66, 133, 244, 0.3);
+    transition: 250ms;
+}
+
+.pull-right {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
+/* Google Input End */
+
+/* Drag and drop datatable Start*/
+
+p {
+    font-size: 0.75em;
+    font-weight: bold;
+    position: absolute;
+    top: 15%;
+    width: 100%;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    text-align: center;
+    color: white;
+    user-select: none;
+}
+
+.draggable-table {
+    /*position: absolute;*/
+    top: 25%;
+    left: 20%;
+    /*width: 60%;*/
+    height: auto;
+    border-collapse: collapse;
+    /*background: white;*/
+    /*-webkit-box-shadow: 0px 0px 10px 8px rgba(0, 0, 0, 0.1);*/
+    /*box-shadow: 0px 0px 10px 8px rgba(0, 0, 0, 0.1);*/
+}
+.draggable-table .draggable-table__drag {
+    font-size: 0.95em;
+    font-weight: lighter;
+    text-transform: capitalize;
+    position: absolute;
+    width: 100%;
+    text-indent: 50px;
+    border: 1px solid #f1f1f1;
+    z-index: 10;
+    cursor: grabbing;
+    -webkit-box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.05);
+    box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.05);
+    opacity: 1;
+}
+.draggable-table thead th {
+    /*height: 25px;*/
+    /*font-weight: bold;*/
+    /*text-transform: capitalize;*/
+    /*padding: 10px;*/
+    /*user-select: none;*/
+}
+.draggable-table tbody tr {
+    /*cursor: grabbing;*/
+}
+.draggable-table tbody tr td {
+    /*font-size: 0.95em;*/
+    /*font-weight: lighter;*/
+    /*text-transform: capitalize;*/
+    /*text-indent: 50px;*/
+    /*padding: 10px;*/
+    user-select: none;
+    /*border-top: 1px solid whitesmoke;*/
+}
+.draggable-table tbody tr {
+    /*background-color: #ffffff;*/
+}
+.draggable-table tbody tr.is-dragging {
+    background: #a99af7;
+}
+.draggable-table tbody tr.is-dragging td {
+    color: #ffffff;
+}
+/* Drag and drop datatable End*/
