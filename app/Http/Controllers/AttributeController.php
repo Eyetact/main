@@ -61,22 +61,44 @@ class AttributeController extends Controller
     public function store(AttributePostRequest $request)
     {
         $request->validated();
+        $requestData=$request->all();
+        // dd($requestData);
+        $fields_info=$requestData['fields_info'];
+        if($requestData['field_type']!='text'||$requestData['field_type']!='file'){
+            $order = 1;
+            $fields_info = array_map(function ($key, $arr) use (&$order) {
+                if (is_array($arr)) {
+                    return array_merge($arr, ['order' => $order++]);
+                }
+            }, array_keys($fields_info), $fields_info);
+        }
+        // dd($fields_info);
+        $createArr=[
+            'module' => $requestData['module'],
+            'name' => $requestData['name'],
+            'field_type' => $requestData['field_type'],
+            'input_name' => $requestData['input_name'],
+            'input_class' => $requestData['input_class'],
+            'input_id' => $requestData['input_id'],
+            'scope' => $requestData['scope'],
+            'depend' => $requestData['depend'],
+            'attribute' => $requestData['attribute'],
+            'validation' => $requestData['validation'],
+            'is_required' => isset($requestData['is_required']) ? 1 : 0,
+            'is_enable' => isset($requestData['is_enable']) ? 1 : 0,
+            'is_system' => isset($requestData['is_system']) ? 1 : 0,
+            'fields_info' => json_encode($fields_info),
+            'description' => $requestData['description']
+        ];
 
-        $attribute = Attribute::create([
-            'name' => $request->name,
-            'field_type' => $request->field_type,
-            'input_name' => $request->input_name,
-            'input_class' => $request->input_class,
-            'input_id' => $request->input_id,
-            'is_required' => isset($request->is_required) ? 1 : 0,
-            'validation_message' => $request->validation_message,
-            'fields_info' => json_encode($request->fields_info),
-            'description' => $request->description
-        ]);
+        // dd($createArr);
+        $attribute = Attribute::create($createArr);
+
         if (!$attribute) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
             return redirect()->route('attribute.index');
         }
+
         $this->flashRepository->setFlashSession('alert-success', 'Attribute created successfully.');
         return redirect()->route('attribute.index');
     }
@@ -89,7 +111,8 @@ class AttributeController extends Controller
      */
     public function edit(Attribute $attribute)
     {
-        return view('attribute.create', ['attribute' => $attribute]);
+        $moduleData=Module::active()->get();
+        return view('attribute.create', ['attribute' => $attribute,'moduleData' => $moduleData]);
     }
 
     /**
@@ -103,20 +126,39 @@ class AttributeController extends Controller
     {
         $request->validated();
 
+        $requestData=$request->all();
+
+        $fields_info=$requestData['fields_info'];
+        if($requestData['field_type']!='text'||$requestData['field_type']!='file'){
+            $order = 1;
+            $fields_info = array_map(function ($key, $arr) use (&$order) {
+                if (is_array($arr)) {
+                    return array_merge($arr, ['order' => $order++]);
+                }
+            }, array_keys($fields_info), $fields_info);
+        }
+
+        $updateArr=[
+            'module' => $requestData['module'],
+            'name' => $requestData['name'],
+            'field_type' => $requestData['field_type'],
+            'input_name' => $requestData['input_name'],
+            'input_class' => $requestData['input_class'],
+            'input_id' => $requestData['input_id'],
+            'scope' => $requestData['scope'],
+            'depend' => $requestData['depend'],
+            'attribute' => $requestData['attribute'],
+            'validation' => $requestData['validation'],
+            'is_required' => isset($requestData['is_required']) ? 1 : 0,
+            'is_enable' => isset($requestData['is_enable']) ? 1 : 0,
+            'is_system' => isset($requestData['is_system']) ? 1 : 0,
+            'fields_info' => json_encode($fields_info),
+            'description' => $requestData['description']
+        ];
+
         $attribute = Attribute::find($attribute->id);
-        $attribute->update(
-            [
-                'name' => $request->name,
-                'field_type' => $request->field_type,
-                'input_name' => $request->input_name,
-                'input_class' => $request->input_class,
-                'input_id' => $request->input_id,
-                'is_required' => isset($request->is_required) ? 1 : 0,
-                'validation_message' => $request->validation_message,
-                'fields_info' => json_encode($request->fields_info),
-                'description' => $request->description
-            ]
-        );
+
+        $attribute->update($updateArr);
         if (!$attribute) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
             return redirect()->route('attribute.index');

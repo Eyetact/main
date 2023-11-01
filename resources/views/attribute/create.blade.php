@@ -2,6 +2,73 @@
 @section('css')
 		<!--INTERNAL Select2 css -->
 		<link href="{{URL::asset('assets/plugins/select2/select2.min.css')}}" rel="stylesheet" />
+         <style>
+        p {
+            font-size: 0.75em;
+            font-weight: bold;
+            position: absolute;
+            top: 15%;
+            width: 100%;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            text-align: center;
+            color: white;
+            user-select: none;
+        }
+        .draggable-table {
+            /*position: absolute;*/
+            top: 25%;
+            left: 20%;
+            /*width: 60%;*/
+            height: auto;
+            border-collapse: collapse;
+            /*background: white;*/
+            /*-webkit-box-shadow: 0px 0px 10px 8px rgba(0, 0, 0, 0.1);*/
+            /*box-shadow: 0px 0px 10px 8px rgba(0, 0, 0, 0.1);*/
+        }
+        .draggable-table .draggable-table__drag {
+            font-size: 0.95em;
+            font-weight: lighter;
+            text-transform: capitalize;
+            position: absolute;
+            width: 100%;
+            text-indent: 50px;
+            border: 1px solid #f1f1f1;
+            z-index: 10;
+            cursor: grabbing;
+            -webkit-box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.05);
+            box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.05);
+            opacity: 1;
+        }
+        .draggable-table thead th {
+            /*height: 25px;*/
+            /*font-weight: bold;*/
+            /*text-transform: capitalize;*/
+            /*padding: 10px;*/
+            /*user-select: none;*/
+        }
+        .draggable-table tbody tr {
+            /*cursor: grabbing;*/
+        }
+        .draggable-table tbody tr td {
+            /*font-size: 0.95em;*/
+            /*font-weight: lighter;*/
+            /*text-transform: capitalize;*/
+            /*text-indent: 50px;*/
+            /*padding: 10px;*/
+            user-select: none;
+            /*border-top: 1px solid whitesmoke;*/
+        }
+        .draggable-table tbody tr {
+            background-color: #ffffff;
+        }
+        .draggable-table tbody tr.is-dragging {
+            background: #a99af7;
+        }
+        .draggable-table tbody tr.is-dragging td {
+            color: #ffffff;
+        }
+    </style>
 @endsection
 @section('page-header')
 	<!--Page header-->
@@ -19,6 +86,7 @@
 @section('content')
 @php
     $data = json_decode($attribute->fields_info, true);
+    // dump($data);
 @endphp
 			<form action="{{ $attribute->id == null ? route('attribute.store') : route('attribute.update', ['attribute' => $attribute->id]) }}" id="attributeCreate" method="POST" autocomplete="off">
 				@csrf
@@ -35,7 +103,7 @@
 										<select name="module" class="form-control module" id="module">
 			                                <option value="" selected>Select Module</option>
 			                                @foreach($moduleData as $module)
-			                                	<option value="select" {{ ($module->id == $attribute->module ? 'selected' : '') }}>{{$module->name}}</option>
+			                                	<option value="{{$module->id}}" {{ ($module->id == $attribute->module ? 'selected' : '') }}>{{$module->name}}</option>
 			                                @endforeach
 			                            </select>
 			                            <label id="module-error" class="error text-red hide" for="module"></label>
@@ -131,7 +199,7 @@
                                 </div>
                                 <div class="option_fields">
                                     <div class="table-responsive">
-                                        <table class="table card-table table-vcenter text-nowrap table-light">
+                                        <table class="table card-table table-vcenter text-nowrap table-light draggable-table" id="type_options">
                                             <thead class="bg-gray-700 text-white">
                                                 <tr>
                                                     <th></th>
@@ -228,7 +296,8 @@
                                     <div class="col-sm-4 hide" id="attr_div">
                                         <label class="form-label">Attribute</label>
                                         <select name="attribute" class="form-control attribute" id="attribute">
-                                            <option value="" selected>Module</option>
+                                            <option value="" selected>None</option>
+                                            <option value="module">Module</option>
                                             <option value="not_visible">Not Visible</option>
                                             <option value="disabled">Disabled</option>
                                         </select>
@@ -302,6 +371,7 @@
                 $("#attr_div").show();
             }
         });
+
         $(".field_type").change(function() {
             $(".text_fields").fadeOut("slow");
             $(".option_fields").fadeOut("slow");
@@ -327,21 +397,27 @@
         });
 
         @if($data)
-	        setTimeout(() => {
+	        // setTimeout(() => {
 	            var fields_value = @json($data);
-	            if (fields_value.length === undefined) {
+                var field_type_val=$("#field_type").val();
+                console.log(fields_value,$.type(fields_value),Object.keys(fields_value).length);
+	            if (field_type_val == 'text') {
 	                $('.min_length').val(fields_value.min_length);
 	                $('.max_length').val(fields_value.max_length);
-	            } else {
+	            } else if(field_type_val == 'file'){
+
+                } else {
 	                var html_data = [];
 	                $.each(fields_value, function(index, value) {
+                        console.log(index,value.value);
 	                    var html = '';
-	                    html += '<tr><td scope="row"></td><td><input type="radio" name="fields_info['+index+'][default]" class="m-input mr-2"></td><td><input type="text" name="fields_info['+index+'][value]" class="form-control m-input mr-2" value="'+value.value+'" autocomplete="off"></td><td><button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button></td></tr>';
+	                    html += '<tr><td scope="row"></td><td><input type="radio" onchange="addValue('+index+')" class="m-input mr-2"' + (value.default == 1 ? ' checked' : '') + '><input type="hidden" value="'+value.default+'" id="fields_info['+index+'][default]" name="fields_info['+index+'][default]"></td><td><input type="text" name="fields_info['+index+'][value]" class="form-control m-input mr-2" value="'+value.value+'" autocomplete="off"></td><td><button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button></td></tr>';
 	                    html_data.push(html);
 	                });
-	                $('.option_fields tbody').html(html_data);
+                    console.log(html_data);
+	                $('.option_fields tbody').append(html_data);
 	            }
-	        }, 1000);
+	        // }, 1000);
         @endif
 
         $('#attributeCreate').validate({
@@ -384,14 +460,151 @@
         var index = 1;
         $(document).on("click", "#addRow", function () {
             var html = '';
-            html += '<tr><td scope="row"></td><td><input type="radio" name="fields_info['+index+'][default]" class="m-input mr-2"></td><td><input type="text" name="fields_info['+index+'][value]" class="form-control m-input mr-2"  autocomplete="off"></td><td><button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button></td></tr>';
+            html += '<tr><td scope="row"></td><td><input type="radio" onchange="addValue('+index+')" class="m-input mr-2"><input type="hidden" value="0" id="fields_info['+index+'][default]" name="fields_info['+index+'][default]"></td><td><input type="text" name="fields_info['+index+'][value]" class="form-control m-input mr-2"  autocomplete="off"></td><td><button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button></td></tr>';
             $('.option_fields tbody').append(html);
             index++;
         });
+
+        function addValue(index){
+            console.log(index);
+            $('[id^="fields_info"]').each(function() {
+                $(this).val(0);
+            });
+            $("#fields_info\\[" + index + "\\]\\[default\\]").val(1);
+
+        }
+
+
+
 
         $(document).on('click', '.removeSection', function () {
             $(this).closest('tr').remove();
             index--;
         });
+    </script>
+
+    <script>
+        (function () {
+            "use strict";
+            const table = document.getElementById("type_options");
+            const tbody = table.querySelector("tbody");
+            var currRow = null,
+                dragElem = null,
+                mouseDownX = 0,
+                mouseDownY = 0,
+                mouseX = 0,
+                mouseY = 0,
+                mouseDrag = false;
+            function init() {
+                bindMouse();
+            }
+            function bindMouse() {
+                document.addEventListener("mousedown", (event) => {
+                    if (event.button != 0) return true;
+                    let target = getTargetRow(event.target);
+                    if (target) {
+                        currRow = target;
+                        addDraggableRow(target);
+                        currRow.classList.add("is-dragging");
+                        let coords = getMouseCoords(event);
+                        mouseDownX = coords.x;
+                        mouseDownY = coords.y;
+                        mouseDrag = true;
+                    }
+                });
+                document.addEventListener("mousemove", (event) => {
+                    if (!mouseDrag) return;
+                    let coords = getMouseCoords(event);
+                    mouseX = coords.x - mouseDownX;
+                    mouseY = coords.y - mouseDownY;
+                    moveRow(mouseX, mouseY);
+                });
+                document.addEventListener("mouseup", (event) => {
+                    if (!mouseDrag) return;
+                    currRow.classList.remove("is-dragging");
+                    table.removeChild(dragElem);
+                    dragElem = null;
+                    mouseDrag = false;
+                });
+            }
+            function swapRow(row, index) {
+                let currIndex = Array.from(tbody.children).indexOf(currRow),
+                    row1 = currIndex > index ? currRow : row,
+                    row2 = currIndex > index ? row : currRow;
+                tbody.insertBefore(row1, row2);
+            }
+            function moveRow(x, y) {
+                dragElem.style.transform = "translate3d(" + x + "px, " + y + "px, 0)";
+                let dPos = dragElem.getBoundingClientRect(),
+                    currStartY = dPos.y,
+                    currEndY = currStartY + dPos.height,
+                    rows = getRows();
+                for (var i = 0; i < rows.length; i++) {
+                    let rowElem = rows[i],
+                        rowSize = rowElem.getBoundingClientRect(),
+                        rowStartY = rowSize.y,
+                        rowEndY = rowStartY + rowSize.height;
+                    if (
+                        currRow !== rowElem &&
+                        isIntersecting(currStartY, currEndY, rowStartY, rowEndY)
+                    ) {
+                        if (Math.abs(currStartY - rowStartY) < rowSize.height / 2)
+                            swapRow(rowElem, i);
+                    }
+                }
+            }
+            function addDraggableRow(target) {
+                dragElem = target.cloneNode(true);
+                dragElem.classList.add("draggable-table__drag");
+                dragElem.style.height = getStyle(target, "height");
+                dragElem.style.background = getStyle(target, "backgroundColor");
+                for (var i = 0; i < target.children.length; i++) {
+                    let oldTD = target.children[i],
+                        newTD = dragElem.children[i];
+                    newTD.style.width = getStyle(oldTD, "width");
+                    newTD.style.height = getStyle(oldTD, "height");
+                    newTD.style.padding = getStyle(oldTD, "padding");
+                    newTD.style.margin = getStyle(oldTD, "margin");
+                }
+                table.appendChild(dragElem);
+                let tPos = target.getBoundingClientRect(),
+                    dPos = dragElem.getBoundingClientRect();
+                dragElem.style.bottom = dPos.y - tPos.y - tPos.height + "px";
+                dragElem.style.left = "-1px";
+                document.dispatchEvent(
+                    new MouseEvent("mousemove", {
+                        view: window,
+                        cancelable: true,
+                        bubbles: true
+                    })
+                );
+            }
+            function getRows() {
+                return table.querySelectorAll("tbody tr");
+            }
+            function getTargetRow(target) {
+                let elemName = target.tagName.toLowerCase();
+                if (elemName == "tr") return target;
+                if (elemName == "td") return target.closest("tr");
+            }
+            function getMouseCoords(event) {
+                return {
+                    x: event.clientX,
+                    y: event.clientY
+                };
+            }
+            function getStyle(target, styleName) {
+                let compStyle = getComputedStyle(target),
+                    style = compStyle[styleName];
+                return style ? style : null;
+            }
+            function isIntersecting(min0, max0, min1, max1) {
+                return (
+                    Math.max(min0, max0) >= Math.min(min1, max1) &&
+                    Math.min(min0, max0) <= Math.max(min1, max1)
+                );
+            }
+            init();
+        })();
     </script>
 @endsection
