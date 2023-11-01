@@ -411,7 +411,7 @@
 	                $.each(fields_value, function(index, value) {
                         console.log(index,value.value);
 	                    var html = '';
-	                    html += '<tr><td scope="row"></td><td><input type="radio" onchange="addValue('+index+')" class="m-input mr-2"' + (value.default == 1 ? ' checked' : '') + '><input type="hidden" value="'+value.default+'" id="fields_info['+index+'][default]" name="fields_info['+index+'][default]"></td><td><input type="text" name="fields_info['+index+'][value]" class="form-control m-input mr-2" value="'+value.value+'" autocomplete="off"></td><td><button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button></td></tr>';
+	                    html += '<tr><td scope="row"></td><td><input type="radio" onchange="addValue('+index+')" name="fields_info_radio" class="m-input mr-2"' + (value.default == 1 ? ' checked' : '') + '><input type="hidden" value="'+value.default+'" id="fields_info['+index+'][default]" name="fields_info['+index+'][default]"></td><td><input type="text" name="fields_info['+index+'][value]" class="form-control m-input mr-2" value="'+value.value+'" autocomplete="off"></td><td><button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button></td></tr>';
 	                    html_data.push(html);
 	                });
                     console.log(html_data);
@@ -460,7 +460,7 @@
         var index = 1;
         $(document).on("click", "#addRow", function () {
             var html = '';
-            html += '<tr><td scope="row"></td><td><input type="radio" onchange="addValue('+index+')" class="m-input mr-2"><input type="hidden" value="0" id="fields_info['+index+'][default]" name="fields_info['+index+'][default]"></td><td><input type="text" name="fields_info['+index+'][value]" class="form-control m-input mr-2"  autocomplete="off"></td><td><button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button></td></tr>';
+            html += '<tr><td scope="row"></td><td><input type="radio" name="fields_info_radio" onchange="addValue('+index+')" class="m-input mr-2"><input type="hidden" value="0" id="fields_info['+index+'][default]" name="fields_info['+index+'][default]"></td><td><input type="text" name="fields_info['+index+'][value]" class="form-control m-input mr-2"  autocomplete="off"></td><td><button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button></td></tr>';
             $('.option_fields tbody').append(html);
             index++;
         });
