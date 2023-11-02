@@ -25487,18 +25487,6 @@ input {
 
 /* Drag and drop datatable Start*/
 
-p {
-    font-size: 0.75em;
-    font-weight: bold;
-    position: absolute;
-    top: 15%;
-    width: 100%;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    text-align: center;
-    color: white;
-    user-select: none;
-}
 
 .draggable-table {
     /*position: absolute;*/

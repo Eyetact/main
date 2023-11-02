@@ -10,7 +10,8 @@
 		@include('layouts.head')
 	</head>
 
-	<body class="app sidebar-mini">
+	<body class="app sidebar-mini {{ \App\Helpers\Helper::getThemeClasses() }}">
+        @include('layouts.theme-setting')
 		<!---Global-loader-->
 		<div id="global-loader" >
 			<img src="{{URL::asset('assets/images/svgs/loader.svg')}}" alt="loader">
@@ -20,7 +21,8 @@
 		<div class="page">
 			<div class="page-main">
 				@include('layouts.aside-menu')
-				<!-- App-Content -->			
+
+				<!-- App-Content -->
 				<div class="app-content main-content">
 					<div class="side-app">
 						@include('layouts.header')
@@ -31,4 +33,3 @@
 			@include('layouts.footer-scripts')
 	</body>
 </html>
-		

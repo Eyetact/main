@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttributeController;
@@ -56,4 +57,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('example-datatable',function (){
         return view('example_datatable.index');
     });
+
+    Route::post('theme-setting/update',[Helper::class,'update'])->name('update.theme');
 });

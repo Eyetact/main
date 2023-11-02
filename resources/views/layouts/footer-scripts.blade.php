@@ -27,6 +27,7 @@
 		<script src="{{URL::asset('assets/plugins/p-scrollbar/p-scrollbar.js')}}"></script>
 		<script src="{{URL::asset('assets/plugins/p-scrollbar/p-scroll1.js')}}"></script>
 		<script src="{{URL::asset('assets/plugins/p-scrollbar/p-scroll.js')}}"></script>
+		<script src="{{URL::asset('assets/js/switcher.js')}}"></script>
         <!-- Toastr JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
         <script>
@@ -107,4 +108,36 @@
                     $(this).parents('.input-box').removeClass('focus');
                 }
             });
+            $(document.body).on('click','.theme-setting',function () {
+                console.log('changed');
+                setTimeout(function () {
+                    themeUpdate();
+                },100);
+            })
+            function themeUpdate(){
+                var bodyClassList = $('body').prop('classList');
+                var classListString = Array.from(bodyClassList).join(' ');
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('update.theme') }}",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        'classes': classListString,
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function(data) {
+                    },
+                    error: function(data) {
+                    }
+                });
+            }
+            @php
+                $classes = \App\Helpers\Helper::getThemeClasses();
+                $classesList = explode(' ',$classes);
+            @endphp
+            @foreach($classesList as $item)
+            $('.{{$item}}-radio').prop('checked',true);
+            @endforeach
         </script>

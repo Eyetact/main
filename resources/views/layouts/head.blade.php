@@ -31,4 +31,6 @@
 
 	    <!-- Color Skin css -->
 		<link id="theme" href="{{URL::asset('assets/colors/color1.css')}}" rel="stylesheet" type="text/css"/>
+		<link id="theme" href="{{URL::asset('assets/switcher.css')}}" rel="stylesheet" type="text/css"/>
+		<link id="theme" href="{{URL::asset('assets/demo.css')}}" rel="stylesheet" type="text/css"/>
 
