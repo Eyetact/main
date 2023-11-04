@@ -28,6 +28,11 @@ class Helper
 
     public static function getThemeClasses()
     {
-        return ThemeSetting::where('user_id',Auth::id())->first()->theme_classes;
+        $themeSetting = ThemeSetting::where('user_id', Auth::id())->first();
+
+        if ($themeSetting) {
+            $themeClasses = $themeSetting->theme_classes;
+            // Use $themeClasses as needed
+        }
     }
 }
