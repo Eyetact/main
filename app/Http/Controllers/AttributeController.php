@@ -64,13 +64,19 @@ class AttributeController extends Controller
         $requestData=$request->all();
         // dd($requestData);
         $fields_info=$requestData['fields_info'];
-        if($requestData['field_type']!='text'||$requestData['field_type']!='file'){
+        if($requestData['field_type']=='select' && $requestData['field_type']=='multiselect' && $requestData['field_type']=='radio' && $requestData['field_type']=='checkbox'){
             $order = 1;
             $fields_info = array_map(function ($key, $arr) use (&$order) {
                 if (is_array($arr)) {
                     return array_merge($arr, ['order' => $order++]);
                 }
             }, array_keys($fields_info), $fields_info);
+        } elseif ($requestData['field_type']=='text' || $requestData['field_type']=='file') {
+            $fields_info = array_filter($fields_info, function ($element,$key) {
+                return $key === 'file_ext' || !is_array($element);
+            }, ARRAY_FILTER_USE_BOTH);
+        } else {
+            $fields_info = [];
         }
         // dd($fields_info);
         $createArr=[
@@ -128,16 +134,24 @@ class AttributeController extends Controller
 
         $requestData=$request->all();
 
+        // dump($requestData);
+
         $fields_info=$requestData['fields_info'];
-        if($requestData['field_type']!='text'||$requestData['field_type']!='file'){
+        if($requestData['field_type']=='select' && $requestData['field_type']=='multiselect' && $requestData['field_type']=='radio' && $requestData['field_type']=='checkbox'){
             $order = 1;
             $fields_info = array_map(function ($key, $arr) use (&$order) {
                 if (is_array($arr)) {
                     return array_merge($arr, ['order' => $order++]);
                 }
             }, array_keys($fields_info), $fields_info);
+        } elseif ($requestData['field_type']=='text' || $requestData['field_type']=='file') {
+            $fields_info = array_filter($fields_info, function ($element,$key) {
+                return $key === 'file_ext' || !is_array($element);
+            }, ARRAY_FILTER_USE_BOTH);
+        } else {
+            $fields_info = [];
         }
-
+        // dump($fields_info);
         $updateArr=[
             'module' => $requestData['module'],
             'name' => $requestData['name'],
@@ -155,10 +169,11 @@ class AttributeController extends Controller
             'fields_info' => json_encode($fields_info),
             'description' => $requestData['description']
         ];
+        // dd($updateArr);
 
         $attribute = Attribute::find($attribute->id);
-
         $attribute->update($updateArr);
+
         if (!$attribute) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
             return redirect()->route('attribute.index');

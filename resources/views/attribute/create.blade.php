@@ -88,7 +88,7 @@
     $data = json_decode($attribute->fields_info, true);
     // dump($data);
 @endphp
-			<form action="{{ $attribute->id == null ? route('attribute.store') : route('attribute.update', ['attribute' => $attribute->id]) }}" id="attributeCreate" method="POST" autocomplete="off">
+			<form action="{{ $attribute->id == null ? route('attribute.store') : route('attribute.update', ['attribute' => $attribute->id]) }}" id="attributeCreate" method="POST" autocomplete="off" enctype="multipart/form-data">
 				@csrf
 				<div class="row">
 					<div class="col-lg-12 col-md-12">
@@ -383,7 +383,7 @@
             var field_val = $(this).val();
             var text_html = '<div class="form-group col-sm-6"><label class="form-label" for="min_length">Min length </label><input class="form-control min_length" name="fields_info[min_length]"  type="text" value="" autocomplete="off"></div><div class="form-group col-sm-6"><label class="form-label" for="max_length">Max length </label><input class="form-control max_length" name="fields_info[max_length]"  type="text" value="" autocomplete="off"></div>';
             // var option_html = '<tr><td scope="row"></td><td><input type="radio" name="fields_info[0][default]" class="m-input mr-2"></td><td><input type="text" name="fields_info[0][value]" class="form-control m-input mr-2"  autocomplete="off"></td><td><button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button></td></tr>';
-            var file_html = '<div class="form-group col-sm-6"> <label class="form-label" for="file_ext">Allowed Extension</label> <select name="fields_info[file_ext]" class="form-control fields_info[file_ext]" multiple> <option value="" selected>Allowed Extension</option> <option value="doc">Document(PDF/Doc/Docx)</option> <option value="image">Image(jpg/jpeg/png/svg)</option> <option value="media">Media(mp3/mp4)</option> </select> </div> <div class="form-group col-sm-6"><label class="form-label" for="max_length">File Size</label> <select name="fields_info[file_size]" class="form-control fields_info[file_size]"> <option value="" selected>File Size</option> <option value="1">1 mb</option> <option value="2">2 mb</option> <option value="3">3 mb</option> <option value="4">4 mb</option> <option value="5">5 mb</option> <option value="6">6 mb</option> <option value="7">7 mb</option> <option value="8">8 mb</option> <option value="9">9 mb</option> <option value="10">10 mb</option> </select> </div>';
+            var file_html = '<div class="form-group col-sm-6"> <label class="form-label" for="file_ext">Allowed Extension</label> <select name="fields_info[file_ext][]" class="form-control fields_info[file_ext] file_ext" multiple> <option value="" selected>Allowed Extension</option> <option value="doc">Document(PDF/Doc/Docx)</option> <option value="image">Image(jpg/jpeg/png/svg)</option> <option value="media">Media(mp3/mp4)</option> </select> </div> <div class="form-group col-sm-6"><label class="form-label" for="max_length">File Size</label> <select name="fields_info[file_size]" class="form-control fields_info[file_size] file_size"> <option value="" selected>File Size</option> <option value="1">1 mb</option> <option value="2">2 mb</option> <option value="3">3 mb</option> <option value="4">4 mb</option> <option value="5">5 mb</option> <option value="6">6 mb</option> <option value="7">7 mb</option> <option value="8">8 mb</option> <option value="9">9 mb</option> <option value="10">10 mb</option> </select> </div>';
             if (field_val === 'text') {
                 $('.text_fields').html(text_html);
                 $(".text_fields").fadeIn("slow");
@@ -397,7 +397,13 @@
         });
 
         @if($data)
-	        // setTimeout(() => {
+	        setTimeout(() => {
+                $('.min_length').val(null);
+	            $('.max_length').val(null);
+                $('.file_ext').val(null);
+	            $('.file_size').val(null);
+                $('.option_fields tbody').html('');
+
 	            var fields_value = @json($data);
                 var field_type_val=$("#field_type").val();
                 console.log(fields_value,$.type(fields_value),Object.keys(fields_value).length);
@@ -405,7 +411,8 @@
 	                $('.min_length').val(fields_value.min_length);
 	                $('.max_length').val(fields_value.max_length);
 	            } else if(field_type_val == 'file'){
-
+                    $('.file_ext').val(fields_value.file_ext);
+	                $('.file_size').val(fields_value.file_size);
                 } else {
 	                var html_data = [];
 	                $.each(fields_value, function(index, value) {
@@ -417,7 +424,7 @@
                     console.log(html_data);
 	                $('.option_fields tbody').append(html_data);
 	            }
-	        // }, 1000);
+	        }, 500);
         @endif
 
         $('#attributeCreate').validate({
