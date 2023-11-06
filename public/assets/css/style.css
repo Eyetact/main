@@ -25376,7 +25376,9 @@ object, embed, video {
 input {
     background: #fff;
 }
-
+body.dark-mode input, body.dark-mode textarea {
+    background: #272d47;
+}
 #form {
     width: 40vw;
     margin: 0 auto;
@@ -25385,6 +25387,9 @@ input {
 
 .input-box.active-grey .google-input {
     border: 1px solid #dadce0;
+}
+body.dark-mode .google-input{
+    color: white;
 }
 .input-box.active-grey .input-label {
     color: #80868b;
@@ -25460,6 +25465,15 @@ input {
     /*color: #1a73e8;*/
     top: -8px;
     background: #fff;
+    font-size: 11px;
+    transition: 250ms;
+}
+
+body.dark-mode .input-box.focus .input-label,
+body.dark-mode .input-box.active .input-label {
+    /*color: #1a73e8;*/
+    top: -8px;
+    background: #272d47;
     font-size: 11px;
     transition: 250ms;
 }

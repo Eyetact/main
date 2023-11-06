@@ -84,7 +84,7 @@
             //         });
             //     }
             // }
-            $("input[type='text'], input[type='number'], input[type='password'], input[type='email']").on( "focus, blur", function() {
+            $("input[type='text'], input[type='number'], input[type='password'], input[type='email'], input[type='tel']").on( "focus, blur", function() {
                 var $input = $(this);
                 if($input.val() != ''){
                     $input.parents(".input-box").addClass("focus");
@@ -92,7 +92,23 @@
                     $input.parents(".input-box").removeClass("focus");
                 }
             } );
-            $("input[type='text'], input[type='number'], input[type='password'], input[type='email']").on( "keyup", function() {
+            $(document.body).on('focus',"input[type='text'], input[type='number'], input[type='password'], input[type='email'], input[type='tel']",function (){
+                var $input = $(this);
+                if($input.val() != ''){
+                    $input.parents(".input-box").addClass("focus");
+                }else{
+                    $input.parents(".input-box").removeClass("focus");
+                }
+            })
+            $(document.body).on('keyup',"input[type='text'], input[type='number'], input[type='password'], input[type='email'], input[type='tel']",function (){
+                var $input = $(this);
+                if($input.val() != ''){
+                    $input.parents(".input-box").addClass("focus");
+                }else{
+                    $input.parents(".input-box").removeClass("focus");
+                }
+            })
+            $("input[type='text'], input[type='number'], input[type='password'], input[type='email'], input[type='tel']").on( "keyup", function() {
                 var $input = $(this);
                 if($input.val() != ''){
                     $input.parents(".input-box").addClass("focus");
@@ -100,7 +116,7 @@
                     $input.parents(".input-box").removeClass("focus");
                 }
             } );
-            $("input[type='text'], input[type='number'], input[type='password'], input[type='email']").each(function(index, element) {
+            $("input[type='text'], input[type='number'], input[type='password'], input[type='email'], input[type='tel']").each(function(index, element) {
                 var value = $(element).val();
                 if(value != ''){
                     $(this).parents('.input-box').addClass('focus');

@@ -25,7 +25,7 @@
 		<link href="{{URL::asset('assets/css/icons.css')}}" rel="stylesheet" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
 		@yield('css')
-
+        @stack('styles')
 		<!-- Simplebar css -->
 		<link rel="stylesheet" href="{{URL::asset('assets/plugins/simplebar/css/simplebar.css')}}">
 

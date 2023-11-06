@@ -1,7 +1,10 @@
 <?php
 
 use App\Helpers\Helper;
+use App\Http\Controllers\MailboxController;
 use App\Http\Controllers\Profile\ProfileController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SmtpController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\ModuleController;
@@ -56,6 +59,33 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('example-datatable',function (){
         return view('example_datatable.index');
+    });
+
+    Route::controller(SettingController::class)->group(function () {
+        Route::get('/setting', 'index')->name('setting.index');
+//        Route::get('/setting/countries', 'countries')->name('setting.countries')->middleware('permission:countries.setting');
+//        Route::get('/setting/status/{id}/{status}', 'settingCountry')->name('setting.status')->middleware('permission:countries.status');
+//        Route::get('/setting/states', 'states')->name('setting.states')->middleware('permission:states.setting');
+//        Route::get('/setting/cities', 'cities')->name('setting.cities')->middleware('permission:cities.setting');
+        Route::post('/setting', 'store')->name('setting.store');
+    });
+
+    Route::controller(SmtpController::class)->group(function () {
+        Route::get('/smtp', 'index')->name('smtp.index');
+        Route::get('smtp/create', 'create')->name('smtp.create');
+        Route::post('smtp/store', 'store')->name('smtp.store');
+        Route::get('smtp/{smtp}/edit', 'edit')->name('smtp.edit');
+        Route::post('smtp/{smtp}', 'update')->name('smtp.update');
+        Route::delete('smtp/{smtp}', 'destroy')->name('smtp.destroy');
+    });
+
+    Route::controller(MailboxController::class)->group(function () {
+        Route::get('/main_mailbox', 'index')->name('main_mailbox.index');
+        Route::get('main_mailbox/create', 'create')->name('main_mailbox.create');
+        Route::post('main_mailbox/store', 'store')->name('main_mailbox.store');
+        Route::get('main_mailbox/{main_mailbox}/edit', 'edit')->name('main_mailbox.edit');
+        Route::post('main_mailbox/{main_mailbox}', 'update')->name('main_mailbox.update');
+        Route::delete('main_mailbox/{main_mailbox}', 'destroy')->name('main_mailbox.destroy');
     });
 
     Route::post('theme-setting/update',[Helper::class,'update'])->name('update.theme');
