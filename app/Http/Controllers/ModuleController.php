@@ -7,6 +7,10 @@ use App\Models\Module;
 use App\Http\Requests\ModulePostRequest;
 use App\Repositories\FlashRepository;
 
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
+
 class ModuleController extends Controller
 {
     private $flashRepository;
@@ -62,14 +66,89 @@ class ModuleController extends Controller
 
         $module = Module::create([
             'name' => $request->name,
-            'description' => $request->description
+            'description' => $request->description,
+            'is_enable'=>1
         ]);
+
+        $migrationName = "create_" . strtolower($request->name) . "_table";
+        $modelClassName = Str::studly($request->name);
+        // Create the migration
+        Artisan::call('make:migration', [
+            'name' => $migrationName,
+            '--create' => $request->name,
+        ]);
+
+        $migrationFilePath = database_path("migrations") . "/" . date('Y_m_d_His') . "_$migrationName.php";
+        File::put($migrationFilePath, $this->generateMigrationContent($request->name));
+
+        // Create the model
+        Artisan::call('make:model', [
+            'name' => $modelClassName,
+        ]);
+
+        Artisan::call('migrate');
+
         if (!$module) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
             return redirect()->route('module.index');
         }
         $this->flashRepository->setFlashSession('alert-success', 'module created successfully.');
         return redirect()->route('module.index');
+    }
+
+     private function generateMigrationContent($tableName)
+    {
+        // Define the migration schema here based on $tableName
+        $content = <<<EOT
+        <?php
+
+        use Illuminate\Database\Migrations\Migration;
+        use Illuminate\Database\Schema\Blueprint;
+        use Illuminate\Support\Facades\Schema;
+
+        class Create{$tableName}Table extends Migration
+        {
+            public function up()
+            {
+                Schema::create('$tableName', function (Blueprint \$table) {
+                    \$table->id();
+                    \$table->timestamps();
+                });
+            }
+
+            public function down()
+            {
+                Schema::dropIfExists('$tableName');
+            }
+        }
+        EOT;
+
+        return $content;
+    }
+
+    private function generateMigrationContentforRename($newTable, $oldTable)
+    {
+        // Define the migration schema here based on $newTable
+        $content = <<<EOT
+        <?php
+        use Illuminate\Database\Migrations\Migration;
+        use Illuminate\Support\Facades\Schema;
+
+        return new class extends Migration
+        {
+            public function up()
+            {
+                Schema::rename('$oldTable', '$newTable');
+            }
+
+            public function down()
+            {
+                Schema::rename('$newTable', '$oldTable');
+            }
+        };
+        EOT;
+
+        return $content;
     }
 
     /**
@@ -94,17 +173,36 @@ class ModuleController extends Controller
     {
         $request->validated();
 
-        $module = Module::find($module->id);
-        $module->update(
-            [
-                'name' => $request->name,
-                'description' => $request->description
-            ]
-        );
+        if ($module->name !== $request->name) {
+            $migrationName = "rename_" . strtolower($module->name) . "_table";
+            $modelClassName = Str::studly($request->name);
+            // Create the migration
+            Artisan::call('make:migration', [
+                'name' => $migrationName,
+                '--table' => $module->name,
+            ]);
+
+            $migrationFilePath = database_path("migrations") . "/" . date('Y_m_d_His') . "_$migrationName.php";
+            File::put($migrationFilePath, $this->generateMigrationContentforRename($request->name, $module->name));
+            // Create the model
+            Artisan::call('make:model', [
+                'name' => $modelClassName,
+            ]);
+            Artisan::call('migrate');
+
+            $module->update(
+                [
+                    'name' => $request->name,
+                    'description' => $request->description
+                ]
+            );
+        }
+
         if (!$module) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
             return redirect()->route('module.index');
         }
+
         $this->flashRepository->setFlashSession('alert-success', 'Module updated successfully.');
         return redirect()->route('module.index');
     }

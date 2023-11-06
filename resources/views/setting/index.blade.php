@@ -218,25 +218,25 @@
                                     <div data-repeater-item>
                                         <div class="form row">
                                             <div class="col-lg-4 col-sm-4 mt-3">
-                                                <input type="file" class="dropify" name="icon" data-default-file="{{ filled($socialMedia->icon) ? asset('uploads/socialmedia/'.$socialMedia->icon) : '' }}"
+                                                <input type="file" class="dropify" name="icon" data-default-file="{{-- {{ filled($socialMedia->icon) ? asset('uploads/socialmedia/'.$socialMedia->icon) : '' }} --}}"
                                                        data-height="180"/>
                                             </div>
                                             <div class="col-sm-4 col-md-4 mt-8">
                                                 <div class="input-box">
                                                     <label class="input-label">Title</label>
                                                     <input type="text" class="google-input" name="title"
-                                                           id="title" value="{{ old('title', $socialMedia->title) }}"/>
+                                                           id="title" value="{{--{{ old('title', $socialMedia->title) }}--}}"/>
                                                 </div>
-                                                @error('copyright_text')
+                                                {{-- @error('copyright_text')
                                                 <label id="title-error" class="error"
                                                        for="title">{{ $message }}</label>
-                                                @enderror
+                                                @enderror --}}
                                             </div>
                                             <div class="col-sm-3 col-md-3 mt-8">
                                                 <div class="input-box">
                                                     <label class="input-label">URL</label>
                                                     <input type="text" name="url" class="google-input" id="url"
-                                                           value="{{ old('url', $socialMedia->url) }}">
+                                                           value="{{--{{ old('url', $socialMedia->url) }}--}}">
                                                 </div>
                                                 @error('url')
                                                 <label id="url-error" class="error"
