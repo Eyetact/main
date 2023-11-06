@@ -29,9 +29,8 @@ class Helper
     public static function getThemeClasses()
     {
         $themeSetting = ThemeSetting::where('user_id', Auth::id())->first();
-
-        if ($themeSetting) {
-            $themeClasses = $themeSetting->theme_classes;
+        if (filled($themeSetting)) {
+            return $themeSetting->theme_classes;
             // Use $themeClasses as needed
         }
     }
