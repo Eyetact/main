@@ -59,7 +59,7 @@ class MailboxController extends Controller
                     $btn = '';
 //                    if(Auth::user()->can('edit.mainmailbox')){
                         // $btn = '<a class="btn-default  edit-mailbox edit_form" data-path="'.route('main_mailbox.edit', ['main_mailbox' => $row->id]).'"> <button><i class="fa fa-edit"></i></button> </a>';
-                        $btn = '<a class="edit-mailbox edit_form btn btn-icon btn-success mr-1 white" data-path="'.route('main_mailbox.edit', ['main_mailbox' => $row->id]).'" data-name="'.$row->name.'" data-id='.$row->id.' title="Edit"> <i class="fa fa-edit"></i> </a>';
+                        $btn = '<a class="edit-mailbox edit_form btn btn-icon btn-success mr-1 white" href="'.route('main_mailbox.edit', ['main_mailbox' => $row->id]).'" data-path="'.route('main_mailbox.edit', ['main_mailbox' => $row->id]).'" data-name="'.$row->name.'" data-id='.$row->id.' title="Edit"> <i class="fa fa-edit"></i> </a>';
 //                    }
 //                    if(Auth::user()->can('delete.mainmailbox')){
                         // $btn = $btn.'<button type="submit" class=" btn-danger delete-mailbox" data-id="'.$row->id.'"><i class="fa fa-trash-o"></i>';

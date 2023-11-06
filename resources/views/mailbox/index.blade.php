@@ -14,15 +14,15 @@
     <!--Page header-->
     <div class="page-header">
         <div class="page-leftheader">
-            <h4 class="page-title mb-0">Modules</h4>
+            <h4 class="page-title mb-0">Mailbox Settings</h4>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Settings</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="#">Modules</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">Mailbox Settings</a></li>
             </ol>
         </div>
         <div class="page-rightheader">
             <div class="btn btn-list">
-                <a id="add_new" href="javascript:void(0)" class="btn btn-info" title="" data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
+                <a href="{{ route('main_mailbox.create') }}" class="btn btn-info" title="" data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
             </div>
         </div>
     </div>

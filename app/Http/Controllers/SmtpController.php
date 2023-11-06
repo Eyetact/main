@@ -21,7 +21,7 @@ class SmtpController extends Controller
                 ->addColumn('action', function($row){
                     $btn = '';
 //                    if(Auth::user()->can('edit.smtp')){
-                        $btn = '<a class="edit-smtp edit_form btn btn-icon btn-success mr-1 white" data-path="'.route('smtp.edit', ['smtp' => $row->id]).'" data-name="'.$row->name.'" data-id='.$row->id.' title="Edit"> <i class="fa fa-edit"></i> </a>';
+                        $btn = '<a class="edit-smtp edit_form btn btn-icon btn-success mr-1 white" href="'.route('smtp.edit', ['smtp' => $row->id]).'" data-path="'.route('smtp.edit', ['smtp' => $row->id]).'" data-name="'.$row->name.'" data-id='.$row->id.' title="Edit"> <i class="fa fa-edit"></i> </a>';
 
 //                    }
 //                    if(Auth::user()->can('delete.smtp')){
