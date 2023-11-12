@@ -10,7 +10,7 @@
 		<!-- Bootstrap4 js-->
 		<script src="{{URL::asset('assets/plugins/bootstrap/popper.min.js')}}"></script>
 		<script src="{{URL::asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Nestable/2012-10-15/jquery.nestable.min.js" integrity="sha512-a3kqAaSAbp2ymx5/Kt3+GL+lnJ8lFrh2ax/norvlahyx59Ru/1dOwN1s9pbWEz1fRHbOd/gba80hkXxKPNe6fg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 		<!--Othercharts js-->
 		<script src="{{URL::asset('assets/plugins/othercharts/jquery.sparkline.min.js')}}"></script>
 

@@ -61,7 +61,12 @@
                     <a class="sub-side-menu__item" href="{{ url('attribute')}}"><span class="sub-side-menu__label">Attributes</span></a>
                 </li>
                 <li class="sub-slide">
+                    {{-- {{ url('module')}} --}}
                     <a class="sub-side-menu__item" href="{{ url('module')}}"><span class="sub-side-menu__label">Modules</span></a>
+                </li>
+                <li class="sub-slide">
+                    {{-- {{ url('module')}} --}}
+                    <a class="sub-side-menu__item" href="{{ url('menu')}}"><span class="sub-side-menu__label">Menu Manager</span></a>
                 </li>
             </ul>
         </li>

@@ -8,6 +8,7 @@ use App\Http\Controllers\SmtpController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\MenuManagerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/attribute/{attributeId}/updateStatus', 'updateStatus')->name('attribute.updateStatus');
     });
 
+    Route::controller(MenuManagerController::class)->group(function () {
+        Route::get('/menu', 'index')->name('menu.index');
+        Route::get('menu/create', 'create')->name('menu.create');
+        Route::post('menu/store', 'store')->name('menu.store');
+        Route::get('menu/{menu}/edit', 'edit')->name('menu.edit');
+        Route::post('menu/{menu}', 'update')->name('menu.update');
+        Route::delete('menu/{menu}', 'destroy')->name('menu.destroy');
+    });
 
     Route::prefix('profile')->group(function () {
         Route::get('{id?}',[ProfileController::class,'index'])->name('profile.index');
