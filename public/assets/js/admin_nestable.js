@@ -8,6 +8,7 @@ var updateOutput = function (e) {
         output = list.data('output');
     if (window.JSON) {
         if (output) {
+            console.log("PMD list", list.nestable('serialize'))
             output.val(window.JSON.stringify(list.nestable('serialize')));
         }
     } else {

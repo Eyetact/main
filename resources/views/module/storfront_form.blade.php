@@ -22,45 +22,45 @@
                         </div> --}}
                         <div class="col-sm-12 form-group">
                             <label class="form-label" for="name">Name <span class="text-red">*</span></label>
-                            <input type="text" name="name" class="form-control" value="">
+                            <input type="text" name="name" id="sname" class="form-control" value="">
                         </div>
                         <div class="col-sm-12 form-group">
                             <label class="form-label" for="code">Code <span class="text-red">*</span></label>
-                            <input type="text" name="code" class="form-control" value="">
+                            <input type="text" name="code" id="scode" class="form-control" value="">
                         </div>
                         <div class="col-sm-12 form-group">
                             <label class="form-label" for="path">Path <span class="text-red">*</span></label>
-                            <input type="text" name="path" class="form-control" value="">
+                            <input type="text" name="path" id="spath" class="form-control" value="">
                         </div>
                         <div class="form-group col-sm-6">
                             <label class="custom-switch form-label">
-                                <input type="checkbox" name="is_enable" class="custom-switch-input" id="is_enable" >
+                                <input type="checkbox" name="is_enable" id="sis_enable" class="custom-switch-input">
                                 <span class="custom-switch-indicator"></span>
                                 <span class="custom-switch-description">Status</span>
                             </label>
                         </div>
                         <div class="form-group col-sm-6">
                             <label class="custom-switch form-label">
-                                <input type="checkbox" name="include_in_menu" class="custom-switch-input" id="is_enable" >
+                                <input type="checkbox" name="include_in_menu" id="sinclude_in_menu" class="custom-switch-input">
                                 <span class="custom-switch-indicator"></span>
                                 <span class="custom-switch-description">Include in menu</span>
                             </label>
                         </div>
                         <div class="col-sm-12 form-group">
                             <label class="form-label" for="meta_title">Meta Title</label>
-                            <input type="text" name="meta_title" class="form-control" value="">
+                            <input type="text" name="meta_title" id="smeta_title" class="form-control" value="">
                         </div>
                         <div class="form-group col-sm-12">
                             <label class="form-label" for="meta_description">Meta Description</label>
-                            <textarea class="form-control" name="meta_description" autocomplete="off" id="description" rows="2"></textarea>
+                            <textarea class="form-control" name="meta_description" id="smeta_description" autocomplete="off" id="description" rows="2"></textarea>
                         </div>
                         <div class="col-sm-12 form-group">
-                            <label class="form-label" for="created_date">Created Date</label>
-                            <input type="date" name="created_date" class="form-control" value="">
+                            <label class="form-label" for="created_date">Created Date <span class="text-red">*</span></label>
+                            <input type="date" name="created_date" id="screated_date" class="form-control" value="">
                         </div>
                         <div class="form-group col-sm-12">
-                            <label class="form-label" for="assigned_attributes">Assigned Attributes</label>
-                            <textarea class="form-control" name="assigned_attributes" autocomplete="off" id="description" rows="2"></textarea>
+                            <label class="form-label" for="assigned_attributes">Assigned Attributes <span class="text-red">*</span></label>
+                            <textarea class="form-control" name="assigned_attributes"  id="sassigned_attributes"autocomplete="off" id="description" rows="2"></textarea>
                         </div>
                     </div>
                 </div>

@@ -2,17 +2,17 @@
 /*************** General ***************/
 
 var updateOutput = function (e) {
-var list = e.length ? e : $(e.target),
-    output = list.data('output');
-if (window.JSON) {
-    if (output) {
-        // console.log("PMD output",output)
-        console.log("PMD list",list.nestable('serialize'))
-    output.val(window.JSON.stringify(list.nestable('serialize')));
+    var list = e.length ? e : $(e.target),
+        output = list.data('output');
+    if (window.JSON) {
+        if (output) {
+            // console.log("PMD output",output)
+            console.log("PMD list", list.nestable('serialize'))
+            output.val(window.JSON.stringify(list.nestable('serialize')));
+        }
+    } else {
+        alert('JSON browser support required for this page.');
     }
-} else {
-    alert('JSON browser support required for this page.');
-}
 };
 
 var nestableList = $("#storfront_nestable > .dd-list");
@@ -23,39 +23,39 @@ var nestableList = $("#storfront_nestable > .dd-list");
 /*************** Delete ***************/
 
 var deleteFromMenuHelper = function (target) {
-if (target.data('new') == 1) {
-    // if it's not yet saved in the database, just remove it from DOM
-    target.fadeOut(function () {
-    target.remove();
-    updateOutput($('#storfront_nestable').data('output', $('#json-output')));
-    });
-} else {
-    // otherwise hide and mark it for deletion
-    target.appendTo(nestableList); // if children, move to the top level
-    target.data('deleted', '1');
-    target.fadeOut();
-}
+    if (target.data('new') == 1) {
+        // if it's not yet saved in the database, just remove it from DOM
+        target.fadeOut(function () {
+            target.remove();
+            updateOutput($('#storfront_nestable').data('output', $('#json-output')));
+        });
+    } else {
+        // otherwise hide and mark it for deletion
+        target.appendTo(nestableList); // if children, move to the top level
+        target.data('deleted', '1');
+        target.fadeOut();
+    }
 };
 
 var deleteFromMenu = function () {
-var targetId = $(this).data('owner-id');
-var target = $('[data-id="' + targetId + '"]');
+    var targetId = $(this).data('owner-id');
+    var target = $('[data-id="' + targetId + '"]');
 
-var result = confirm("Delete " + target.data('name') + " and all its subitems ?");
-if (!result) {
-    return;
-}
+    var result = confirm("Delete " + target.data('name') + " and all its subitems ?");
+    if (!result) {
+        return;
+    }
 
-// Remove children (if any)
-target.find("li").each(function () {
-    deleteFromMenuHelper($(this));
-});
+    // Remove children (if any)
+    target.find("li").each(function () {
+        deleteFromMenuHelper($(this));
+    });
 
-// Remove parent
-deleteFromMenuHelper(target);
+    // Remove parent
+    deleteFromMenuHelper(target);
 
-// update JSON
-updateOutput($('#storfront_nestable').data('output', $('#json-output')));
+    // update JSON
+    updateOutput($('#storfront_nestable').data('output', $('#json-output')));
 };
 
 /***************************************/
@@ -65,42 +65,58 @@ updateOutput($('#storfront_nestable').data('output', $('#json-output')));
 
 var menuEditor = $("#menu-editor");
 var editButton = $("#editButton");
-var editInputName = $("#editInputName");
-var editInputSlug = $("#editInputSlug");
+
+var sName = $("#sname");
+var scode = $("#scode");
+var spath = $("#spath");
+var sis_enable = $("#sis_enable");
+var sinclude_in_menu = $("#sinclude_in_menu");
+var smeta_title = $("#smeta_title");
+var smeta_description = $("#smeta_description");
+var screated_date = $("#screated_date");
+var sassigned_attributes = $("#sassigned_attributes");
 var currentEditName = $("#currentEditName");
 
 // Prepares and shows the Edit Form
 var prepareEdit = function () {
-var targetId = $(this).data('owner-id');
-var target = $('[data-id="' + targetId + '"]');
+    var targetId = $(this).data('owner-id');
+    var target = $('[data-id="' + targetId + '"]');
 
-editInputName.val(target.data("name"));
-editInputSlug.val(target.data("slug"));
-currentEditName.html(target.data("name"));
-editButton.data("owner-id", target.data("id"));
+    sName.val(target.data("name"));
+    scode.val(target.data("code"));
+    spath.val(target.data("path"));
+    smeta_title.val(target.data("meta_title"));
+    smeta_description.val(target.data("meta_description"));
+    screated_date.val(target.data("created_date"));
+    sassigned_attributes.val(target.data("assigned_attributes"));
 
-console.log("[INFO] Editing Menu Item " + editButton.data("owner-id"));
+    // pending to set values for 2 switch
 
-menuEditor.fadeIn();
+    currentEditName.html(target.data("name"));
+    editButton.data("owner-id", target.data("id"));
+
+    console.log("[INFO] Editing Menu Item " + editButton.data("owner-id"));
+
+    menuEditor.fadeIn();
 };
 
 // Edits the Menu item and hides the Edit Form
 var editMenuItem = function () {
-var targetId = $(this).data('owner-id');
-var target = $('[data-id="' + targetId + '"]');
+    var targetId = $(this).data('owner-id');
+    var target = $('[data-id="' + targetId + '"]');
 
-var newName = editInputName.val();
-var newSlug = editInputSlug.val();
+    var newName = editInputName.val();
+    var newSlug = editInputSlug.val();
 
-target.data("name", newName);
-target.data("slug", newSlug);
+    target.data("name", newName);
+    target.data("slug", newSlug);
 
-target.find("> .dd-handle").html(newName);
+    target.find("> .dd-handle").html(newName);
 
-menuEditor.fadeOut();
+    menuEditor.fadeOut();
 
-// update JSON
-updateOutput($('#storfront_nestable').data('output', $('#json-output')));
+    // update JSON
+    updateOutput($('#storfront_nestable').data('output', $('#json-output')));
 };
 
 /***************************************/
@@ -108,33 +124,31 @@ updateOutput($('#storfront_nestable').data('output', $('#json-output')));
 
 $(function () {
 
-// output initial serialised data
-updateOutput($('#storfront_nestable').data('output', $('#json-output')));
+    // output initial serialised data
+    updateOutput($('#storfront_nestable').data('output', $('#json-output')));
 
-// set onclick events
-editButton.on("click", editMenuItem);
+    // set onclick events
+    editButton.on("click", editMenuItem);
 
-$("#storfront_nestable .button-delete").on("click", deleteFromMenu);
+    $("#storfront_nestable .button-delete").on("click", deleteFromMenu);
 
-$("#storfront_nestable .button-edit").on("click", prepareEdit);
+    $("#storfront_nestable .button-edit").on("click", prepareEdit);
 
-$("#menu-editor").submit(function (e) {
-    e.preventDefault();
+    $("#menu-editor").submit(function (e) {
+        e.preventDefault();
+    });
+
+
+
 });
 
-    
-
-});
 
 
-
-;(function($, window, document, undefined)
-{
+; (function ($, window, document, undefined) {
     var hasTouch = 'ontouchstart' in document;
 
-    var hasPointerEvents = (function()
-    {
-        var el    = document.createElement('div'),
+    var hasPointerEvents = (function () {
+        var el = document.createElement('div'),
             docEl = document.documentElement;
         if (!('pointerEvents' in el.style)) {
             return false;
@@ -148,27 +162,26 @@ $("#menu-editor").submit(function (e) {
     })();
 
     var defaults = {
-            listNodeName    : 'ol',
-            itemNodeName    : 'li',
-            rootClass       : 'dd',
-            listClass       : 'dd-list',
-            itemClass       : 'dd-item',
-            dragClass       : 'dd-dragel',
-            handleClass     : 'dd-handle',
-            collapsedClass  : 'dd-collapsed',
-            placeClass      : 'dd-placeholder',
-            noDragClass     : 'dd-nodrag',
-            emptyClass      : 'dd-empty',
-            expandBtnHTML   : '<button data-action="expand" type="button">Expand</button>',
-            collapseBtnHTML : '<button data-action="collapse" type="button">Collapse</button>',
-            group           : 0,
-            maxDepth        : 5,
-            threshold       : 20
-        };
+        listNodeName: 'ol',
+        itemNodeName: 'li',
+        rootClass: 'dd',
+        listClass: 'dd-list',
+        itemClass: 'dd-item',
+        dragClass: 'dd-dragel',
+        handleClass: 'dd-handle',
+        collapsedClass: 'dd-collapsed',
+        placeClass: 'dd-placeholder',
+        noDragClass: 'dd-nodrag',
+        emptyClass: 'dd-empty',
+        expandBtnHTML: '<button data-action="expand" type="button">Expand</button>',
+        collapseBtnHTML: '<button data-action="collapse" type="button">Collapse</button>',
+        group: 0,
+        maxDepth: 5,
+        threshold: 20
+    };
 
-    function Plugin(element, options)
-    {
-        this.w  = $(document);
+    function Plugin(element, options) {
+        this.w = $(document);
         this.el = $(element);
         this.options = $.extend({}, defaults, options);
         this.init();
@@ -176,8 +189,7 @@ $("#menu-editor").submit(function (e) {
 
     Plugin.prototype = {
 
-        init: function()
-        {
+        init: function () {
             var list = this;
 
             list.reset();
@@ -186,17 +198,17 @@ $("#menu-editor").submit(function (e) {
 
             list.placeEl = $('<div class="' + list.options.placeClass + '"/>');
 
-            $.each(this.el.find(list.options.itemNodeName), function(k, el) {
+            $.each(this.el.find(list.options.itemNodeName), function (k, el) {
                 list.setParent($(el));
             });
 
-            list.el.on('click', 'button', function(e) {
+            list.el.on('click', 'button', function (e) {
                 if (list.dragEl) {
                     return;
                 }
                 var target = $(e.currentTarget),
                     action = target.data('action'),
-                    item   = target.parent(list.options.itemNodeName);
+                    item = target.parent(list.options.itemNodeName);
                 if (action === 'collapse') {
                     list.collapseItem(item);
                 }
@@ -205,8 +217,7 @@ $("#menu-editor").submit(function (e) {
                 }
             });
 
-            var onStartEvent = function(e)
-            {
+            var onStartEvent = function (e) {
                 var handle = $(e.target);
                 if (!handle.hasClass(list.options.handleClass)) {
                     if (handle.closest('.' + list.options.noDragClass).length) {
@@ -228,16 +239,14 @@ $("#menu-editor").submit(function (e) {
                 list.dragStart(e.touches ? e.touches[0] : e);
             };
 
-            var onMoveEvent = function(e)
-            {
+            var onMoveEvent = function (e) {
                 if (list.dragEl) {
                     e.preventDefault();
                     list.dragMove(e.touches ? e.touches[0] : e);
                 }
             };
 
-            var onEndEvent = function(e)
-            {
+            var onEndEvent = function (e) {
                 if (list.dragEl) {
                     e.preventDefault();
                     list.dragStop(e.touches ? e.touches[0] : e);
@@ -257,76 +266,69 @@ $("#menu-editor").submit(function (e) {
 
         },
 
-        serialize: function()
-        {
+        serialize: function () {
             var data,
                 depth = 0,
-                list  = this;
-                step  = function(level, depth)
-                {
-                    var array = [ ],
-                        items = level.children(list.options.itemNodeName);
-                    items.each(function()
-                    {
-                        var li   = $(this),
-                            item = $.extend({}, li.data()),
-                            sub  = li.children(list.options.listNodeName);
-                        if (sub.length) {
-                            item.children = step(sub, depth + 1);
-                        }
-                        array.push(item);
-                    });
-                    return array;
-                };
+                list = this;
+            step = function (level, depth) {
+                var array = [],
+                    items = level.children(list.options.itemNodeName);
+                items.each(function () {
+                    var li = $(this),
+                        item = $.extend({}, li.data()),
+                        sub = li.children(list.options.listNodeName);
+                    if (sub.length) {
+                        item.children = step(sub, depth + 1);
+                    }
+                    array.push(item);
+                });
+                return array;
+            };
             data = step(list.el.find(list.options.listNodeName).first(), depth);
             return data;
         },
 
-        serialise: function()
-        {
+        serialise: function () {
             return this.serialize();
         },
 
-        reset: function()
-        {
+        reset: function () {
             this.mouse = {
-                offsetX   : 0,
-                offsetY   : 0,
-                startX    : 0,
-                startY    : 0,
-                lastX     : 0,
-                lastY     : 0,
-                nowX      : 0,
-                nowY      : 0,
-                distX     : 0,
-                distY     : 0,
-                dirAx     : 0,
-                dirX      : 0,
-                dirY      : 0,
-                lastDirX  : 0,
-                lastDirY  : 0,
-                distAxX   : 0,
-                distAxY   : 0
+                offsetX: 0,
+                offsetY: 0,
+                startX: 0,
+                startY: 0,
+                lastX: 0,
+                lastY: 0,
+                nowX: 0,
+                nowY: 0,
+                distX: 0,
+                distY: 0,
+                dirAx: 0,
+                dirX: 0,
+                dirY: 0,
+                lastDirX: 0,
+                lastDirY: 0,
+                distAxX: 0,
+                distAxY: 0
             };
-            this.isTouch    = false;
-            this.moving     = false;
-            this.dragEl     = null;
+            this.isTouch = false;
+            this.moving = false;
+            this.dragEl = null;
             this.dragRootEl = null;
-            this.dragDepth  = 0;
+            this.dragDepth = 0;
             this.hasNewRoot = false;
-            this.pointEl    = null;
+            this.pointEl = null;
         },
 
-        expandItem: function(li)
-        {
+        expandItem: function (li) {
             li.removeClass(this.options.collapsedClass);
             li.children('[data-action="expand"]').hide();
             li.children('[data-action="collapse"]').show();
             li.children(this.options.listNodeName).show();
         },
 
-        collapseItem: function(li)
-        {
+        collapseItem: function (li) {
             var lists = li.children(this.options.listNodeName);
             if (lists.length) {
                 li.addClass(this.options.collapsedClass);
@@ -336,24 +338,21 @@ $("#menu-editor").submit(function (e) {
             }
         },
 
-        expandAll: function()
-        {
+        expandAll: function () {
             var list = this;
-            list.el.find(list.options.itemNodeName).each(function() {
+            list.el.find(list.options.itemNodeName).each(function () {
                 list.expandItem($(this));
             });
         },
 
-        collapseAll: function()
-        {
+        collapseAll: function () {
             var list = this;
-            list.el.find(list.options.itemNodeName).each(function() {
+            list.el.find(list.options.itemNodeName).each(function () {
                 list.collapseItem($(this));
             });
         },
 
-        setParent: function(li)
-        {
+        setParent: function (li) {
             if (li.children(this.options.listNodeName).length) {
                 li.prepend($(this.options.expandBtnHTML));
                 li.prepend($(this.options.collapseBtnHTML));
@@ -361,17 +360,15 @@ $("#menu-editor").submit(function (e) {
             li.children('[data-action="expand"]').hide();
         },
 
-        unsetParent: function(li)
-        {
+        unsetParent: function (li) {
             li.removeClass(this.options.collapsedClass);
             li.children('[data-action]').remove();
             li.children(this.options.listNodeName).remove();
         },
 
-        dragStart: function(e)
-        {
-            var mouse    = this.mouse,
-                target   = $(e.target),
+        dragStart: function (e) {
+            var mouse = this.mouse,
+                target = $(e.target),
                 dragItem = target.closest(this.options.itemNodeName);
 
             this.placeEl.css('height', dragItem.height());
@@ -392,8 +389,8 @@ $("#menu-editor").submit(function (e) {
 
             $(document.body).append(this.dragEl);
             this.dragEl.css({
-                'left' : e.pageX - mouse.offsetX,
-                'top'  : e.pageY - mouse.offsetY
+                'left': e.pageX - mouse.offsetX,
+                'top': e.pageY - mouse.offsetY
             });
             // total depth of dragging item
             var i, depth,
@@ -406,8 +403,7 @@ $("#menu-editor").submit(function (e) {
             }
         },
 
-        dragStop: function(e)
-        {
+        dragStop: function (e) {
             var el = this.dragEl.children(this.options.itemNodeName).first();
             el[0].parentNode.removeChild(el[0]);
             this.placeEl.replaceWith(el);
@@ -420,23 +416,22 @@ $("#menu-editor").submit(function (e) {
             this.reset();
         },
 
-        dragMove: function(e)
-        {
+        dragMove: function (e) {
             var list, parent, prev, next, depth,
-                opt   = this.options,
+                opt = this.options,
                 mouse = this.mouse;
 
             this.dragEl.css({
-                'left' : e.pageX - mouse.offsetX,
-                'top'  : e.pageY - mouse.offsetY
+                'left': e.pageX - mouse.offsetX,
+                'top': e.pageY - mouse.offsetY
             });
 
             // mouse position last events
             mouse.lastX = mouse.nowX;
             mouse.lastY = mouse.nowY;
             // mouse position this events
-            mouse.nowX  = e.pageX;
-            mouse.nowY  = e.pageY;
+            mouse.nowX = e.pageX;
+            mouse.nowY = e.pageY;
             // distance mouse moved between events
             mouse.distX = mouse.nowX - mouse.lastX;
             mouse.distY = mouse.nowY - mouse.lastY;
@@ -447,11 +442,11 @@ $("#menu-editor").submit(function (e) {
             mouse.dirX = mouse.distX === 0 ? 0 : mouse.distX > 0 ? 1 : -1;
             mouse.dirY = mouse.distY === 0 ? 0 : mouse.distY > 0 ? 1 : -1;
             // axis mouse is now moving on
-            var newAx   = Math.abs(mouse.distX) > Math.abs(mouse.distY) ? 1 : 0;
+            var newAx = Math.abs(mouse.distX) > Math.abs(mouse.distY) ? 1 : 0;
 
             // do nothing on first move
             if (!mouse.moving) {
-                mouse.dirAx  = newAx;
+                mouse.dirAx = newAx;
                 mouse.moving = true;
                 return;
             }
@@ -535,7 +530,7 @@ $("#menu-editor").submit(function (e) {
 
             // find parent list of item under cursor
             var pointElRoot = this.pointEl.closest('.' + opt.rootClass),
-                isNewRoot   = this.dragRootEl.data('nestable-id') !== pointElRoot.data('nestable-id');
+                isNewRoot = this.dragRootEl.data('nestable-id') !== pointElRoot.data('nestable-id');
 
             /**
              * move vertical
@@ -551,7 +546,7 @@ $("#menu-editor").submit(function (e) {
                     return;
                 }
                 var before = e.pageY < (this.pointEl.offset().top + this.pointEl.height() / 2);
-                    parent = this.placeEl.parent();
+                parent = this.placeEl.parent();
                 // if empty create new list to replace empty placeholder
                 if (isEmpty) {
                     list = $(document.createElement(opt.listNodeName)).addClass(opt.listClass);
@@ -580,13 +575,11 @@ $("#menu-editor").submit(function (e) {
 
     };
 
-    $.fn.nestable = function(params)
-    {
-        var lists  = this,
+    $.fn.nestable = function (params) {
+        var lists = this,
             retval = this;
 
-        lists.each(function()
-        {
+        lists.each(function () {
             var plugin = $(this).data("nestable");
 
             if (!plugin) {

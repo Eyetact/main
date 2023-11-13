@@ -95,12 +95,54 @@
 @section('js')
 <script>
     $(document).ready(function(){
+        $('#storfront_form').validate({
+            rules: {
+                name: {
+                    required: true,
+                },
+                code: {
+                    required: true,
+                },
+                path: {
+                    required: true,
+                },
+                created_date: {
+                    required: true,
+                },
+                assigned_attributes: {
+                    required: true,
+                }
+            }
+        });
+
+        $('#admin_form').validate({
+            rules: {
+                module: {
+                    required: true,
+                },
+                name: {
+                    required: true,
+                },
+                code: {
+                    required: true,
+                },
+                path: {
+                    required: true,
+                },
+                created_date: {
+                    required: true,
+                },
+                assigned_attributes: {
+                    required: true,
+                }
+            }
+        });
         $("#storfront_save").click(function(e){
             var menu = $("#storfront_menu_list");
             var jsonResult = convertMenuToJson(menu,'storfront-menu');
             $("#storfront_json").text(JSON.stringify(jsonResult, null, 2));
 
-            $("#storfront_form").submit();
+            $("#storfront_nested_form").submit();
         });
 
         $("#admin_save").click(function(e){
@@ -108,7 +150,7 @@
             var jsonResult = convertMenuToJson(menu,'admin-menu');
             $("#admin_json").text(JSON.stringify(jsonResult, null, 2));
 
-            $("#admin_form").submit();
+            $("#admin_nested_form").submit();
         });
 
         $("#storfront_li").click(function(){
@@ -143,6 +185,7 @@
 
         return result;
     }
+
 </script>
 
 

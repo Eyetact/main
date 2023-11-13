@@ -1,4 +1,4 @@
-<form action="{{ route('menu.menu_update') }}" id="admin_form" method="POST" autocomplete="off" novalidate="novalidate">
+<form action="{{ route('menu.menu_update') }}" id="admin_nested_form" method="POST" autocomplete="off" novalidate="novalidate">
     @csrf
     <input type="hidden" name="type" value="admin">
     <textarea name="admin_json" class="hide" id="admin_json" cols="30" rows="10"></textarea>
@@ -6,7 +6,7 @@
 <div class="dd nestable" id="admin_nestable">
     <ol class="dd-list" id="admin_menu_list">
     @foreach ($adminMenu as $aMenu)
-        <li class="dd-item" data-id="{{$aMenu->id}}">
+        <li class="dd-item" data-id="{{$aMenu->id}}" data-name="{{$aMenu->name}}" data-module="{{$aMenu->module}}" data-code="{{$aMenu->code}}" data-path="{{$aMenu->path}}" data-is_enable="{{$aMenu->is_enable}}" data-include_in_menu="{{$aMenu->include_in_menu}}"  data-assigned_attributes="{{$aMenu->assigned_attributes}}" data-created_date="{{date('m-d-Y',strtotime($aMenu->created_date))}}">
             <div class="dd-handle">{{$aMenu->name}} <input type="hidden" class="admin-menu" value="{{$aMenu->id}}"></div>
 
 
@@ -23,7 +23,8 @@
             @if ($aMenu->children->count())
             <ol class="dd-list">
                 @foreach ($aMenu->children as $aaMenu)
-                    <li class="dd-item" data-id="{{$aaMenu->id}}">
+                    <li class="dd-item" data-id="{{$aaMenu->id}}" data-name="{{$aaMenu->name}}" data-module="{{$aaMenu->module}}" data-code="{{$aaMenu->code}}" data-path="{{$aaMenu->path}}" data-is_enable="{{$aaMenu->is_enable}}" data-include_in_menu="{{$aaMenu->include_in_menu}}"  data-assigned_attributes="{{$aaMenu->assigned_attributes}}" data-created_date="{{date('m-d-Y',strtotime($aaMenu->created_date))}}">
+
                         <div class="dd-handle">{{$aaMenu->name}}<input type="hidden" class="admin-menu" value="{{$aaMenu->id}}"></div>
 
                         <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
@@ -37,7 +38,8 @@
                         @if ($aaMenu->children->count())
                         <ol class="dd-list">
                             @foreach ($aaMenu->children as $aaaMenu)
-                                <li class="dd-item" data-id="{{$aaaMenu->id}}">
+                                <li class="dd-item" data-id="{{$aaaMenu->id}}" data-name="{{$aaaMenu->name}}" data-module="{{$aaaMenu->module}}" data-code="{{$aaaMenu->code}}" data-path="{{$aaaMenu->path}}" data-is_enable="{{$aaaMenu->is_enable}}" data-include_in_menu="{{$aaaMenu->include_in_menu}}"  data-assigned_attributes="{{$aaaMenu->assigned_attributes}}" data-created_date="{{date('m-d-Y',strtotime($aaaMenu->created_date))}}">
+
                                     <div class="dd-handle">{{$aaaMenu->name}}<input type="hidden" class="admin-menu" value="{{$aaaMenu->id}}"></div>
 
                                     <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
@@ -52,7 +54,8 @@
                                     @if ($aaaMenu->children->count())
                                     <ol class="dd-list">
                                         @foreach ($aaaMenu->children as $adMenu)
-                                            <li class="dd-item" data-id="{{$adMenu->id}}">
+                                            <li class="dd-item" data-id="{{$adMenu->id}}" data-name="{{$adMenu->name}}" data-module="{{$adMenu->module}}" data-code="{{$adMenu->code}}" data-path="{{$adMenu->path}}" data-is_enable="{{$adMenu->is_enable}}" data-include_in_menu="{{$adMenu->include_in_menu}}"  data-assigned_attributes="{{$adMenu->assigned_attributes}}" data-created_date="{{date('m-d-Y',strtotime($adMenu->created_date))}}">
+
                                                 <div class="dd-handle">{{$adMenu->name}}<input type="hidden" class="admin-menu" value="{{$adMenu->id}}"></div>
 
                                                 <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
