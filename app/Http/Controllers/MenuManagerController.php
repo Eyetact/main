@@ -51,8 +51,6 @@ class MenuManagerController extends Controller
      */
     public function store(ModulePostRequest $request)
     {
-        // dd($request->all());
-
         $request->validated();
         $requestData=$request->all();
         $lastSequenceData=MenuManager::where('parent','0')->where('menu_type',$requestData['menu_type'])->where('include_in_menu',1)->where('status',1)->orderBy('id','desc')->first();
@@ -85,6 +83,12 @@ class MenuManagerController extends Controller
         }
         $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
         return redirect()->route('menu.index');
+    }
+
+    public function menu_update(Request $request){
+        
+        $dataArray = json_decode($request['storfront_json'], true);
+        dd($request->all(),$dataArray);
     }
 
     /**

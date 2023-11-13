@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('css')
 <style>
-    /**
+/**
 *  Nestable css
 */
 .dd {
@@ -90,7 +90,7 @@
   line-height: 1;
   text-align: center;
   font-weight: bold;*/
-      position: relative;
+    position: relative;
     cursor: pointer;
     float: left;
     width: 25px;
@@ -365,11 +365,16 @@
 
                                             <div class="main-chat-contacts-wrapper">
                                                 <label class="form-label mb-2 fs-13">Storfront</label>
-                                                <div class="dd nestable" id="nestable">
-                                                    <ol class="dd-list">
+                                                <form action="{{ route('menu.menu_update') }}" id="storfront_form" method="POST" autocomplete="off" novalidate="novalidate">
+                                                    @csrf
+                                                    <textarea name="storfront_json" class="" id="storfront_json" cols="30" rows="10"></textarea>
+                                                </form>
+                                                <div class="dd nestable" id="nestable">                                                    
+                                                    <ol class="dd-list" id="storfront_menu_list">
                                                     @foreach ($storfrontMenu as $sMenu)
                                                         <li class="dd-item" data-id="1" data-name="Home" data-slug="home-slug-1" data-new="0" data-deleted="0">
                                                             <div class="dd-handle">{{$sMenu->name}} </div>
+                                                            <input type="text" class="storfront-menu" value="{{$sMenu->module_id}}">
 
                                                             <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
                                                                 data-owner-id="1">
@@ -383,10 +388,12 @@
 
                                                             @if (!empty($sMenu->children))
                                                             @foreach ($sMenu->children as $cMenu)
+                                                            
                                                                 <ol class="dd-list">
                                                                     <!--- Item4 --->
                                                                     <li class="dd-item" data-id="4" data-name="UI/UX Design" data-slug="uiux-slug-4" data-new="0" data-deleted="0">
                                                                         <div class="dd-handle">{{$cMenu->name}}</div>
+                                                                        <input type="text" class="storfront-menu" value="{{$cMenu->id}}">
                                                                         <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
                                                                             data-owner-id="4">
                                                                         <i class="fa fa-trash-o"></i>
@@ -395,6 +402,49 @@
                                                                             data-owner-id="4">
                                                                         <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
                                                                         </span>
+                                                                        @if (!empty($cMenu->children))
+                                                                        @foreach ($cMenu->children as $ccMenu)
+                                                                        
+                                                                            <ol class="dd-list">
+                                                                                <!--- Item4 --->
+                                                                                <li class="dd-item" data-id="4" data-name="UI/UX Design" data-slug="uiux-slug-4" data-new="0" data-deleted="0">
+                                                                                    <div class="dd-handle">{{$ccMenu->name}}</div>
+                                                                                    <input type="text" class="storfront-menu" value="{{$ccMenu->id}}">
+                                                                                    <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
+                                                                                        data-owner-id="4">
+                                                                                    <i class="fa fa-trash-o"></i>
+                                                                                    </span>
+                                                                                    <span class="button-edit btn btn-icon btn-warning"
+                                                                                        data-owner-id="4">
+                                                                                    <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
+                                                                                    </span>
+
+                                                                                    @if (!empty($ccMenu->children))
+                                                                                    @foreach ($ccMenu->children as $cccMenu)
+                                                                                    
+                                                                                        <ol class="dd-list">
+                                                                                            <!--- Item4 --->
+                                                                                            <li class="dd-item" data-id="4" data-name="UI/UX Design" data-slug="uiux-slug-4" data-new="0" data-deleted="0">
+                                                                                                <div class="dd-handle">{{$cccMenu->name}}</div>
+                                                                                                <input type="text" class="storfront-menu" value="{{$cccMenu->id}}">
+                                                                                                <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
+                                                                                                    data-owner-id="4">
+                                                                                                <i class="fa fa-trash-o"></i>
+                                                                                                </span>
+                                                                                                <span class="button-edit btn btn-icon btn-warning"
+                                                                                                    data-owner-id="4">
+                                                                                                <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
+                                                                                                </span>
+                                                                                            </li>
+
+                                                                                        </ol>
+                                                                                    @endforeach
+                                                                                    @endif
+                                                                                </li>
+
+                                                                            </ol>
+                                                                        @endforeach
+                                                                        @endif
                                                                     </li>
 
                                                                 </ol>
@@ -406,7 +456,7 @@
                                                 </div>
 
                                                 <div class="card-footer text-right">
-                                                    <input class="btn btn-primary" type="submit" value="Save Storfront Menu">
+                                                    <input class="btn btn-primary" id="storfront_save" type="submit" value="Save Storfront Menu">
                                                 </div>
                                             </div>
 
@@ -805,6 +855,14 @@ $(function () {
     addToMenu();
   });
 
+    $("#storfront_save").click(function(e){
+        var menu = $("#storfront_menu_list");
+        var jsonResult = convertMenuToJson(menu,'storfront-menu');
+        $("#storfront_json").text(JSON.stringify(jsonResult, null, 2));
+
+        $("#storfront_form").submit();
+    });
+
     $("#storfront_li").click(function(){
         $("#admin_div").hide();
         $("#storfront_div").show();
@@ -817,6 +875,25 @@ $(function () {
 
 });
 
+function convertMenuToJson(menu,includeClass){
+    var result = [];
+        menu.children("li").each(function() {
+            var menuItem = $(this).find('.' + includeClass);
+            console.log(menuItem);
+            var jsonItem = {
+                module: menuItem.val(),
+            };
+
+            var subMenu = $(this).children("ol");
+            if (subMenu.length > 0) {
+                jsonItem.children = convertMenuToJson(subMenu, includeClass);
+            }
+            console.log(jsonItem);
+            result.push(jsonItem);
+        });
+
+        return result;
+}
 
 ;(function($, window, document, undefined)
 {
