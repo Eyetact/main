@@ -24,4 +24,14 @@ class MenuManager extends Model
         'sequence',
         'parent'
     ];
+
+    public function children()
+    {
+        return $this->hasMany(MenuManager::class, 'parent');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(MenuManager::class, 'parent');
+    }
 }

@@ -348,7 +348,10 @@
     <!--End Page header-->
 @endsection
 @section('content')
-
+@php
+    $storfrontMenu=\App\Helpers\Helper::getMenu('storfront');
+    dump($storfrontMenu);
+@endphp
 
             <div class="row">
                 <div class="col-lg-12 col-md-12">
@@ -364,92 +367,41 @@
                                                 <label class="form-label mb-2 fs-13">Storfront</label>
                                                 <div class="dd nestable" id="nestable">
                                                     <ol class="dd-list">
-                                                    <li class="dd-item" data-id="1" data-name="Home" data-slug="home-slug-1" data-new="0" data-deleted="0">
-                                                        <div class="dd-handle">Home </div>
+                                                    @foreach ($storfrontMenu as $sMenu)
+                                                        <li class="dd-item" data-id="1" data-name="Home" data-slug="home-slug-1" data-new="0" data-deleted="0">
+                                                            <div class="dd-handle">{{$sMenu->name}} </div>
 
-                                                        <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
-                                                            data-owner-id="1">
-                                                        <i class="fa fa-trash-o"></i>
-                                                        </span>
-
-                                                        <span class="button-edit btn btn-icon btn-warning"
-                                                            data-owner-id="1">
-                                                        <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
-                                                        </span>
-                                                    </li>
-
-                                                    <!--- Item2 --->
-                                                    <li class="dd-item" data-id="2" data-name="About Us" data-slug="about-slug-2" data-new="0" data-deleted="0">
-                                                        <div class="dd-handle">About Us</div>
-                                                        <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
-                                                            data-owner-id="2">
-                                                        <i class="fa fa-trash-o"></i>
-                                                        </span>
-
-                                                        <span class="button-edit btn btn-icon btn-warning"
-                                                            data-owner-id="2">
-                                                        <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
-                                                        </span>
-                                                    </li>
-
-                                                    <!--- Item3 --->
-                                                    <li class="dd-item" data-id="3" data-name="Services" data-slug="services-slug-3" data-new="0" data-deleted="0">
-                                                        <div class="dd-handle">Services</div>
-                                                        <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
-                                                            data-owner-id="3">
-                                                        <i class="fa fa-trash-o"></i>
-                                                        </span>
-
-                                                        <span class="button-edit btn btn-icon btn-warning"
-                                                            data-owner-id="3">
-                                                        <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
-                                                        </span>
-                                                        <!--- Item3 children --->
-                                                        <ol class="dd-list">
-                                                        <!--- Item4 --->
-                                                        <li class="dd-item" data-id="4" data-name="UI/UX Design" data-slug="uiux-slug-4" data-new="0" data-deleted="0">
-                                                            <div class="dd-handle">UI/UX Design</div>
                                                             <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
-                                                            data-owner-id="4">
-                                                        <i class="fa fa-trash-o"></i>
-                                                        </span>
+                                                                data-owner-id="1">
+                                                            <i class="fa fa-trash-o"></i>
+                                                            </span>
 
-                                                        <span class="button-edit btn btn-icon btn-warning"
-                                                            data-owner-id="4">
-                                                        <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
-                                                        </span>
+                                                            <span class="button-edit btn btn-icon btn-warning"
+                                                                data-owner-id="1">
+                                                            <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
+                                                            </span>
+
+                                                            @if (!empty($sMenu->children))
+                                                            @foreach ($sMenu->children as $cMenu)
+                                                                <ol class="dd-list">
+                                                                    <!--- Item4 --->
+                                                                    <li class="dd-item" data-id="4" data-name="UI/UX Design" data-slug="uiux-slug-4" data-new="0" data-deleted="0">
+                                                                        <div class="dd-handle">{{$cMenu->name}}</div>
+                                                                        <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
+                                                                            data-owner-id="4">
+                                                                        <i class="fa fa-trash-o"></i>
+                                                                        </span>
+                                                                        <span class="button-edit btn btn-icon btn-warning"
+                                                                            data-owner-id="4">
+                                                                        <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
+                                                                        </span>
+                                                                    </li>
+
+                                                                </ol>
+                                                            @endforeach
+                                                            @endif
                                                         </li>
-
-                                                        <!--- Item5 --->
-                                                        <li class="dd-item" data-id="5" data-name="Web Design" data-slug="webdesign-slug-5" data-new="0" data-deleted="0">
-                                                            <div class="dd-handle">Web Design </div>
-                                                            <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
-                                                            data-owner-id="5">
-                                                        <i class="fa fa-trash-o"></i>
-                                                        </span>
-
-                                                        <span class="button-edit btn btn-icon btn-warning"
-                                                            data-owner-id="5">
-                                                        <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
-                                                        </span>
-                                                        </li>
-
-                                                        </ol>
-                                                    </li>
-                                                    <li class="dd-item" data-id="6" data-name="Contact Us" data-slug="contact-slug-6" data-new="0" data-deleted="0">
-                                                        <div class="dd-handle">Contact Us</div>
-                                                        <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
-                                                            data-owner-id="6">
-                                                        <i class="fa fa-trash-o"></i>
-                                                        </span>
-
-                                                        <span class="button-edit btn btn-icon btn-warning"
-                                                            data-owner-id="6">
-                                                        <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
-                                                        </span>
-                                                    </li>
-                                                    <!--------------------------->
-
+                                                    @endforeach
                                                     </ol>
                                                 </div>
 
@@ -505,33 +457,33 @@
                                                         </span>
                                                         <!--- Item3 children --->
                                                         <ol class="dd-list">
-                                                        <!--- Item4 --->
-                                                        <li class="dd-item" data-id="4" data-name="UI/UX Design" data-slug="uiux-slug-4" data-new="0" data-deleted="0">
-                                                            <div class="dd-handle">UI/UX Design</div>
-                                                            <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
-                                                            data-owner-id="4">
-                                                        <i class="fa fa-trash-o"></i>
-                                                        </span>
+                                                            <!--- Item4 --->
+                                                            <li class="dd-item" data-id="4" data-name="UI/UX Design" data-slug="uiux-slug-4" data-new="0" data-deleted="0">
+                                                                <div class="dd-handle">UI/UX Design</div>
+                                                                <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
+                                                                data-owner-id="4">
+                                                            <i class="fa fa-trash-o"></i>
+                                                            </span>
 
-                                                        <span class="button-edit btn btn-icon btn-warning"
-                                                            data-owner-id="4">
-                                                        <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
-                                                        </span>
-                                                        </li>
+                                                            <span class="button-edit btn btn-icon btn-warning"
+                                                                data-owner-id="4">
+                                                            <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
+                                                            </span>
+                                                            </li>
 
-                                                        <!--- Item5 --->
-                                                        <li class="dd-item" data-id="5" data-name="Web Design" data-slug="webdesign-slug-5" data-new="0" data-deleted="0">
-                                                            <div class="dd-handle">Web Design </div>
-                                                            <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
-                                                            data-owner-id="5">
-                                                        <i class="fa fa-trash-o"></i>
-                                                        </span>
+                                                            <!--- Item5 --->
+                                                            <li class="dd-item" data-id="5" data-name="Web Design" data-slug="webdesign-slug-5" data-new="0" data-deleted="0">
+                                                                <div class="dd-handle">Web Design </div>
+                                                                <span class="button-delete btn btn-icon  btn-danger delete-attribute delete-attribute"
+                                                                data-owner-id="5">
+                                                            <i class="fa fa-trash-o"></i>
+                                                            </span>
 
-                                                        <span class="button-edit btn btn-icon btn-warning"
-                                                            data-owner-id="5">
-                                                        <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
-                                                        </span>
-                                                        </li>
+                                                            <span class="button-edit btn btn-icon btn-warning"
+                                                                data-owner-id="5">
+                                                            <i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i>
+                                                            </span>
+                                                            </li>
 
                                                         </ol>
                                                     </li>
@@ -580,7 +532,8 @@
 											<div class="content-inner">
                                                 <div id="storfront_div">
                                                     <form action="{{ $menu->id == null ? route('menu.store') : route('menu.update', ['menu' => $menu->id]) }}" id="storfront_form" method="POST" autocomplete="off" novalidate="novalidate">
-                                                        <input type="hidden" name="_token" value="3QvNmDTLV9ji3quFYiNUp8C1RCpf3uajI9BmHAFn">
+                                                        @csrf
+                                                        <input type="hidden" name="menu_type" value="storfront">
                                                         <div class="row">
                                                             <div class="col-lg-12 col-md-12">
                                                                 <div class="card">
@@ -592,16 +545,25 @@
                                                                     <div class="card-body pb-2">
                                                                         <div class="row">
                                                                             <div class="col-sm-12 form-group">
+                                                                                <label class="form-label" for="module">Module<span class="text-red">*</span></label>
+                                                                                <select name="module" class="form-control module" id="module">
+                                                                                    <option value="" selected>Select Module</option>
+                                                                                    @foreach($moduleData as $module)
+                                                                                        <option value="{{$module->id}}" >{{$module->name}}</option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="col-sm-12 form-group">
                                                                                 <label class="form-label" for="name">Name <span class="text-red">*</span></label>
                                                                                 <input type="text" name="name" class="form-control" value="">
                                                                             </div>
                                                                             <div class="col-sm-12 form-group">
-                                                                                <label class="form-label" for="name">Code <span class="text-red">*</span></label>
-                                                                                <input type="text" name="name" class="form-control" value="">
+                                                                                <label class="form-label" for="code">Code <span class="text-red">*</span></label>
+                                                                                <input type="text" name="code" class="form-control" value="">
                                                                             </div>
                                                                             <div class="col-sm-12 form-group">
-                                                                                <label class="form-label" for="name">Path <span class="text-red">*</span></label>
-                                                                                <input type="text" name="name" class="form-control" value="">
+                                                                                <label class="form-label" for="path">Path <span class="text-red">*</span></label>
+                                                                                <input type="text" name="path" class="form-control" value="">
                                                                             </div>
                                                                             <div class="form-group col-sm-6">
                                                                                 <label class="custom-switch form-label">
@@ -612,26 +574,26 @@
                                                                             </div>
                                                                             <div class="form-group col-sm-6">
                                                                                 <label class="custom-switch form-label">
-                                                                                    <input type="checkbox" name="is_enable" class="custom-switch-input" id="is_enable" >
+                                                                                    <input type="checkbox" name="include_in_menu" class="custom-switch-input" id="is_enable" >
                                                                                     <span class="custom-switch-indicator"></span>
                                                                                     <span class="custom-switch-description">Include in menu</span>
                                                                                 </label>
                                                                             </div>
                                                                             <div class="col-sm-12 form-group">
-                                                                                <label class="form-label" for="name">Meta Title</label>
-                                                                                <input type="text" name="name" class="form-control" value="">
+                                                                                <label class="form-label" for="meta_title">Meta Title</label>
+                                                                                <input type="text" name="meta_title" class="form-control" value="">
                                                                             </div>
                                                                             <div class="form-group col-sm-12">
-                                                                                <label class="form-label" for="description">Meta Description</label>
-                                                                                <textarea class="form-control" name="description" autocomplete="off" id="description" rows="2"></textarea>
+                                                                                <label class="form-label" for="meta_description">Meta Description</label>
+                                                                                <textarea class="form-control" name="meta_description" autocomplete="off" id="description" rows="2"></textarea>
                                                                             </div>
                                                                             <div class="col-sm-12 form-group">
-                                                                                <label class="form-label" for="name">Created Date</label>
-                                                                                <input type="date" name="name" class="form-control" value="">
+                                                                                <label class="form-label" for="created_date">Created Date</label>
+                                                                                <input type="date" name="created_date" class="form-control" value="">
                                                                             </div>
                                                                             <div class="form-group col-sm-12">
-                                                                                <label class="form-label" for="description">Assigned Attributes</label>
-                                                                                <textarea class="form-control" name="description" autocomplete="off" id="description" rows="2"></textarea>
+                                                                                <label class="form-label" for="assigned_attributes">Assigned Attributes</label>
+                                                                                <textarea class="form-control" name="assigned_attributes" autocomplete="off" id="description" rows="2"></textarea>
                                                                             </div>
                                                                         </div>
                                                                     </div>

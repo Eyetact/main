@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MenuManager;
+use App\Models\Module;
 use App\Http\Requests\ModulePostRequest;
 use App\Repositories\FlashRepository;
 
@@ -28,7 +29,8 @@ class MenuManagerController extends Controller
     public function index()
     {
         $data=array();
-        return view('module.menu', ['menu' => new MenuManager(), 'data' => $data]);
+        $moduleData=Module::active()->get();
+        return view('module.menu', ['menu' => new MenuManager(), 'data' => $data,'moduleData'=>$moduleData]);
     }
 
     /**
@@ -47,9 +49,42 @@ class MenuManagerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ModulePostRequest $request)
     {
-        //
+        // dd($request->all());
+
+        $request->validated();
+        $requestData=$request->all();
+        $lastSequenceData=MenuManager::where('parent','0')->where('menu_type',$requestData['menu_type'])->where('include_in_menu',1)->where('status',1)->orderBy('id','desc')->first();
+        $sequence=0;
+        if($lastSequenceData){
+            $sequence=$lastSequenceData->sequence+1;
+        }
+
+        $createData=array(
+            'name' => $requestData['name'],
+            'module_id' => $requestData['module'],
+            'status'=> (isset($requestData['is_enable']) ?? 0),
+            'include_in_menu'=> (isset($requestData['include_in_menu']) ?? 0),
+            'menu_type' => $requestData['menu_type'],
+            'code' => $requestData['code'],
+            'path' => $requestData['path'],
+            'meta_title' => $requestData['meta_title'],
+            'meta_description' => $requestData['meta_description'],
+            'assigned_attributes' => $requestData['assigned_attributes'],
+            'sequence' => $sequence,
+            'parent' => 0,
+            'created_date' => date('Y-m-d',strtotime($requestData['created_date']))
+        );
+        // dd($createData);
+        $menuManager = MenuManager::create($createData);
+
+        if (!$menuManager) {
+            $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
+            return redirect()->route('menu.index');
+        }
+        $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
+        return redirect()->route('menu.index');
     }
 
     /**

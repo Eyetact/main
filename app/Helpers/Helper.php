@@ -2,9 +2,8 @@
 
 namespace App\Helpers;
 
-
-
 use App\Models\ThemeSetting;
+use App\Models\MenuManager;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -33,5 +32,10 @@ class Helper
             return $themeSetting->theme_classes;
             // Use $themeClasses as needed
         }
+    }
+
+    public static function getMenu($type) {
+        $data=MenuManager::with('children')->where('parent','0')->where('menu_type',$type)->where('include_in_menu',1)->where('status',1)->orderBy('id','asc')->get();
+        return $data;
     }
 }

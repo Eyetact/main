@@ -21,11 +21,11 @@
 				@csrf
 				<div class="row">
 					<div class="col-lg-12 col-md-12">
-						<div class="card">							
+						<div class="card">
 							<div class="card-header">
 								<h3 class="card-title">Basics</h3>
 							</div>
-							<div class="card-body pb-2">			
+							<div class="card-body pb-2">
 			                    <div class="row">
 			                        <div class="col-sm-12 form-group">
 										<label class="form-label" for="name">Name <span class="text-red">*</span></label>
@@ -40,7 +40,7 @@
 			                            <textarea class="form-control" name="description" autocomplete="off" id="description"
 			                                placeholder="Enter Description" rows="3">{{ old('description', $module->description) }}</textarea>
 			                        </div>
-			                    </div>	                        
+			                    </div>
 							</div>
 							<div class="card-footer text-right">
 								<input title="Save module" class="btn btn-primary" type="submit"
@@ -49,9 +49,9 @@
 			                    <a title="Cancel form" href="{{ route('module.index') }}" class="btn btn-danger">Cancel</a>
 							</div>
 						</div>
-					</div>					
+					</div>
 				</div>
-				
+
 			</form>
 			<!-- End Row -->
 
