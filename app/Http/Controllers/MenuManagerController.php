@@ -88,7 +88,20 @@ class MenuManagerController extends Controller
     public function menu_update(Request $request){
         
         $dataArray = json_decode($request['storfront_json'], true);
+        $data=$this->processArray($dataArray);
         dd($request->all(),$dataArray);
+    }
+
+    public function processArray($dataArray) {
+        foreach ($dataArray as $item) {
+            // Process the current item
+            // ...
+            dump($dataArray);
+            // Check if there are children and recursively process them
+            if (isset($item['children']) && is_array($item['children']) && count($item['children']) > 0) {
+                $this->processArray($item['children']);
+            }
+        }
     }
 
     /**
