@@ -19,7 +19,7 @@
 @section('content')
 @php
     $storfrontMenu=\App\Helpers\Helper::getMenu('storfront');
-    dump($storfrontMenu);
+    // dump($storfrontMenu);
 @endphp
 
             <div class="row">
@@ -40,8 +40,8 @@
                                             {{-- <div class="p-4 pb-0 border-bottom"></div> --}}
                                             <div class="main-chat-contacts-wrapper">
                                                 <label class="form-label mb-2 fs-13">Admin</label>
-                                                {{-- @include('module.admin_nested_menu') --}}
-                                                
+                                                @include('module.admin_nested_menu')
+
                                             </div>
 
                                         </div>
@@ -190,11 +190,11 @@
         var result = [];
         menu.children("li").each(function(index) {
             var menuItem = $(this).find('.' + includeClass);
-            
+
             var moduleId=menuItem.val();
-            var sequence = index; 
+            var sequence = index;
             // if(index > 0){
-            //     sequence = (index-1) + 1; 
+            //     sequence = (index-1) + 1;
             // }
             console.log(index,sequence);
             var jsonItem = {
