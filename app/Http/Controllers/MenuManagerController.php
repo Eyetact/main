@@ -61,14 +61,14 @@ class MenuManagerController extends Controller
 
         $createData=array(
             'name' => $requestData['name'],
-            'module_id' => $requestData['module'],
+            'module_id' => (isset($requestData['module']) ?? ''),
             'status'=> (isset($requestData['is_enable']) ?? 0),
             'include_in_menu'=> (isset($requestData['include_in_menu']) ?? 0),
             'menu_type' => $requestData['menu_type'],
             'code' => $requestData['code'],
             'path' => $requestData['path'],
-            'meta_title' => $requestData['meta_title'],
-            'meta_description' => $requestData['meta_description'],
+            'meta_title' => (isset($requestData['meta_title']) ?? ''),
+            'meta_description' => (isset($requestData['meta_description']) ?? ''),
             'assigned_attributes' => $requestData['assigned_attributes'],
             'sequence' => $sequence,
             'parent' => 0,
@@ -86,17 +86,23 @@ class MenuManagerController extends Controller
     }
 
     public function menu_update(Request $request){
-        
-        $dataArray = json_decode($request['storfront_json'], true);
+        if($request->type=='storfront'){
+            $dataArray = json_decode($request['storfront_json'], true);
+        }else{
+            $dataArray = json_decode($request['admin_json'], true);
+        }
+        // dd($request->all(),$dataArray);
         $data=$this->processArray($dataArray);
-        dd($request->all(),$dataArray);
+        return redirect()->route('menu.index');
+
     }
 
     public function processArray($dataArray) {
         foreach ($dataArray as $item) {
-            // Process the current item
-            // ...
-            dump($dataArray);
+            $data=MenuManager::find($item['id']);
+            $data->sequence=$item['sequence'];
+            $data->parent=$item['parent'];
+            $data->save();
             // Check if there are children and recursively process them
             if (isset($item['children']) && is_array($item['children']) && count($item['children']) > 0) {
                 $this->processArray($item['children']);

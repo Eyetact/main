@@ -19,7 +19,7 @@
 @section('content')
 @php
     $storfrontMenu=\App\Helpers\Helper::getMenu('storfront');
-    // dump($storfrontMenu);
+    $adminMenu=\App\Helpers\Helper::getMenu('admin');
 @endphp
 
             <div class="row">
@@ -67,83 +67,10 @@
                                         <div class="main-chat-body ps ps--active-y" id="ChatBody">
 											<div class="content-inner">
                                                 <div id="storfront_div">
-                                                    <form action="{{ $menu->id == null ? route('menu.store') : route('menu.update', ['menu' => $menu->id]) }}" id="storfront_form" method="POST" autocomplete="off" novalidate="novalidate">
-                                                        @csrf
-                                                        <input type="hidden" name="menu_type" value="storfront">
-                                                        <div class="row">
-                                                            <div class="col-lg-12 col-md-12">
-                                                                <div class="card">
-                                                                    <div class="card-header">
-                                                                        <h3 class="card-title">Storfront</h3>
-                                                                        &nbsp &nbsp
-                                                                        <span id="currentEditName"></span>
-                                                                    </div>
-                                                                    <div class="card-body pb-2">
-                                                                        <div class="row">
-                                                                            <div class="col-sm-12 form-group">
-                                                                                <label class="form-label" for="module">Module<span class="text-red">*</span></label>
-                                                                                <select name="module" class="form-control module" id="module">
-                                                                                    <option value="" selected>Select Module</option>
-                                                                                    @foreach($moduleData as $module)
-                                                                                        <option value="{{$module->id}}" >{{$module->name}}</option>
-                                                                                    @endforeach
-                                                                                </select>
-                                                                            </div>
-                                                                            <div class="col-sm-12 form-group">
-                                                                                <label class="form-label" for="name">Name <span class="text-red">*</span></label>
-                                                                                <input type="text" name="name" class="form-control" value="">
-                                                                            </div>
-                                                                            <div class="col-sm-12 form-group">
-                                                                                <label class="form-label" for="code">Code <span class="text-red">*</span></label>
-                                                                                <input type="text" name="code" class="form-control" value="">
-                                                                            </div>
-                                                                            <div class="col-sm-12 form-group">
-                                                                                <label class="form-label" for="path">Path <span class="text-red">*</span></label>
-                                                                                <input type="text" name="path" class="form-control" value="">
-                                                                            </div>
-                                                                            <div class="form-group col-sm-6">
-                                                                                <label class="custom-switch form-label">
-                                                                                    <input type="checkbox" name="is_enable" class="custom-switch-input" id="is_enable" >
-                                                                                    <span class="custom-switch-indicator"></span>
-                                                                                    <span class="custom-switch-description">Status</span>
-                                                                                </label>
-                                                                            </div>
-                                                                            <div class="form-group col-sm-6">
-                                                                                <label class="custom-switch form-label">
-                                                                                    <input type="checkbox" name="include_in_menu" class="custom-switch-input" id="is_enable" >
-                                                                                    <span class="custom-switch-indicator"></span>
-                                                                                    <span class="custom-switch-description">Include in menu</span>
-                                                                                </label>
-                                                                            </div>
-                                                                            <div class="col-sm-12 form-group">
-                                                                                <label class="form-label" for="meta_title">Meta Title</label>
-                                                                                <input type="text" name="meta_title" class="form-control" value="">
-                                                                            </div>
-                                                                            <div class="form-group col-sm-12">
-                                                                                <label class="form-label" for="meta_description">Meta Description</label>
-                                                                                <textarea class="form-control" name="meta_description" autocomplete="off" id="description" rows="2"></textarea>
-                                                                            </div>
-                                                                            <div class="col-sm-12 form-group">
-                                                                                <label class="form-label" for="created_date">Created Date</label>
-                                                                                <input type="date" name="created_date" class="form-control" value="">
-                                                                            </div>
-                                                                            <div class="form-group col-sm-12">
-                                                                                <label class="form-label" for="assigned_attributes">Assigned Attributes</label>
-                                                                                <textarea class="form-control" name="assigned_attributes" autocomplete="off" id="description" rows="2"></textarea>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="card-footer text-right">
-                                                                        <input title="Save module" class="btn btn-primary" type="submit" value="Create">
-                                                                        <input title="Reset form" class="btn btn-warning" type="reset" value="Reset">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </form>
+                                                    @include('module.storfront_form')
                                                 </div>
                                                 <div id="admin_div" class="hide">
-                                                    aaaa
+                                                    @include('module.admin_form')
                                                 </div>
                                             </div>
                                         </div>
@@ -176,6 +103,14 @@
             $("#storfront_form").submit();
         });
 
+        $("#admin_save").click(function(e){
+            var menu = $("#admin_menu_list");
+            var jsonResult = convertMenuToJson(menu,'admin-menu');
+            $("#admin_json").text(JSON.stringify(jsonResult, null, 2));
+
+            $("#admin_form").submit();
+        });
+
         $("#storfront_li").click(function(){
             $("#admin_div").hide();
             $("#storfront_div").show();
@@ -186,26 +121,22 @@
             $("#admin_div").show();
         });
     });
-    function convertMenuToJson(menu,includeClass, parentModuleId = null){
+    function convertMenuToJson(menu,includeClass, parentId = 0){
         var result = [];
         menu.children("li").each(function(index) {
             var menuItem = $(this).find('.' + includeClass);
-
-            var moduleId=menuItem.val();
+            var id=menuItem.val();
             var sequence = index;
-            // if(index > 0){
-            //     sequence = (index-1) + 1;
-            // }
-            console.log(index,sequence);
+
             var jsonItem = {
-                module: moduleId,
-                parent_module_id: parentModuleId,
+                id: id,
+                parent: parentId,
                 sequence: sequence,
             };
 
             var subMenu = $(this).children("ol");
             if (subMenu.length > 0) {
-                jsonItem.children = convertMenuToJson(subMenu, includeClass, moduleId);
+                jsonItem.children = convertMenuToJson(subMenu, includeClass, id);
             }
             result.push(jsonItem);
         });
