@@ -37,7 +37,7 @@
                     <h4 class="card-title">Admin</h4>
                 </div>
                 <div class="card-body">
-                    @include('module.admin_nested_menu')
+                    @include('module_manager.admin_nested_menu')
                 </div>
             </div>
         </div>
@@ -51,10 +51,10 @@
                 </div>
                 <div class="card-body">
                     <div class="content-inner">
-                        <div id="storfront_div">
+                        <div id="storfront_edit_div" class="">
                             @include('module_manager.storfront_form')
                         </div>
-                        <div id="admin_div" class="hide">
+                        <div id="admin_edit_div" class="">
                             @include('module_manager.admin_form')
                         </div>
                     </div>
@@ -80,6 +80,9 @@
         $("#storfront_div").hide();
         $("#admin_div").hide();
 
+        $("#storfront_edit_div").hide();
+        $("#admin_edit_div").hide();
+
         $('body').on('change', '#module_type', function() {
             console.log($(this).val())
             if($(this).val() == "storfront"){
@@ -92,6 +95,43 @@
                 $("#storfront_div").hide();
                 $("#admin_div").hide();
             }
+        });
+
+        $('#storfront_nestable').on('mousedown', '.dd-handle', function(event) {
+            var type = 'storfront_form';
+
+            $("#storfront_edit_div").show();
+            $("#admin_edit_div").hide();
+
+            var singleData = $(this).parent().data("json");
+
+            $("#storfront_form #sname").val(singleData.name);
+            $("#storfront_form #scode").val(singleData.code);
+            $("#storfront_form #spath").val(singleData.path);
+            $("#storfront_form #sis_enable").prop('checked', singleData.status);
+            $("#storfront_form #sinclude_in_menu").prop('checked', singleData.include_in_menu);
+            $("#storfront_form #smeta_title").val(singleData.meta_title);
+            $("#storfront_form #smeta_description").val(singleData.meta_description);
+            $("#storfront_form #screated_date").val(singleData.created_date);
+            $("#storfront_form #sassigned_attributes").val(singleData.assigned_attributes);
+        });
+
+        $('#admin_nestable').on('mousedown', '.dd-handle', function(event) {
+            var type = 'admin_form';
+
+            $("#admin_edit_div").show();
+            $("#storfront_edit_div").hide();
+
+            var singleData = $(this).parent().data("json");
+            console.log("PMD",singleData)
+
+            $("#admin_form #aname").val(singleData.name);
+            $("#admin_form #acode").val(singleData.code);
+            $("#admin_form #apath").val(singleData.path);
+            $("#admin_form #ais_enable").prop('checked', singleData.status);
+            $("#admin_form #ainclude_in_menu").prop('checked', singleData.include_in_menu);
+            $("#admin_form #acreated_date").val(singleData.created_date);
+            $("#admin_form #aassigned_attributes").val(singleData.assigned_attributes);
         });
 
         $('body').on('change', '.storfront_nested_form .nestable', function() {
@@ -130,9 +170,9 @@
                     'X-CSRF-TOKEN': csrfToken
                 },
                 success: function(response) {
-                    if (response.success) {
-                        alert('Menu change successfully.');
-                    }
+                    // if (response.success) {
+                    //     alert('Menu change successfully.');
+                    // }
                 },
                 error: function(error) {
                     console.error(error);
