@@ -48,7 +48,7 @@ class AttributeController extends Controller
      */
     public function create()
     {
-        $moduleData=Module::active()->get();
+        $moduleData=Module::get();
         return view('attribute.create', ['attribute' => new Attribute(),'moduleData'=>$moduleData]);
     }
 

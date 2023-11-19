@@ -29,7 +29,7 @@ class MenuManagerController extends Controller
     public function index()
     {
         $data=array();
-        $moduleData=Module::active()->get();
+        $moduleData=Module::get();
         return view('module.menu', ['menu' => new MenuManager(), 'data' => $data,'moduleData'=>$moduleData]);
     }
 
@@ -77,12 +77,13 @@ class MenuManagerController extends Controller
         // dd($createData);
         $menuManager = MenuManager::create($createData);
 
-        if (!$menuManager) {
-            $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
-            return redirect()->route('menu.index');
-        }
-        $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
-        return redirect()->route('menu.index');
+        // if (!$menuManager) {
+        //     $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
+        //     return redirect()->route('menu.index');
+        // }
+        // $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
+        // return redirect()->route('menu.index');
+        echo 1;exit;
     }
 
     public function menu_update(Request $request){
