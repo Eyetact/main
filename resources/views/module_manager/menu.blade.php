@@ -1,5 +1,12 @@
 <!-- https://codepen.io/Gobi_Ilai/pen/LLQdqJ -->
 @extends('layouts.master')
+<style>
+    /* Add your styles for the selected item here */
+    .selected-item {
+        background-color: #ffeeba !important; /* Change this to the desired color */
+        color: #856404 !important; /* Change this to the desired text color */
+    }
+</style>
 @section('css')
 <link rel="stylesheet" href="{{asset('assets/css/nested_menu.css')}}">
 @endsection
@@ -185,6 +192,10 @@
             $("#storfront_edit_div").show();
             $("#admin_edit_div").hide();
 
+            $('#storfront_nestable .dd-handle').removeClass('selected-item');
+            $('#admin_nestable .dd-handle').removeClass('selected-item');
+            $(this).addClass('selected-item');
+
             var singleData = $(this).parent().data("json");
 
             $("#storfront_form #sname").val(singleData.name);
@@ -203,6 +214,10 @@
 
             $("#admin_edit_div").show();
             $("#storfront_edit_div").hide();
+
+            $('#admin_nestable .dd-handle').removeClass('selected-item');
+            $('#storfront_nestable .dd-handle').removeClass('selected-item');
+            $(this).addClass('selected-item');
 
             var singleData = $(this).parent().data("json");
             console.log("PMD",singleData)
