@@ -1,4 +1,4 @@
-<form action="{{ $menu->id == null ? route('menu.store') : route('menu.update', ['menu' => $menu->id]) }}" id="admin_form" method="POST" autocomplete="off" novalidate="novalidate">
+<form action="{{ $menu->id == null ? route('module_manager.store') : route('module_manager.update', ['menu' => $menu->id]) }}" id="admin_form" method="POST" autocomplete="off" novalidate="novalidate">
     @csrf
     <input type="hidden" name="menu_type" value="admin">
     <div class="row">
@@ -22,26 +22,26 @@
                         </div>
                         <div class="col-sm-12 form-group">
                             <label class="form-label" for="name">Name <span class="text-red">*</span></label>
-                            <input type="text" name="name" class="form-control" value="">
+                            <input type="text" name="name" id="aname" class="form-control" value="">
                         </div>
                         <div class="col-sm-12 form-group">
                             <label class="form-label" for="code">Code <span class="text-red">*</span></label>
-                            <input type="text" name="code" class="form-control" value="">
+                            <input type="text" name="code" id="acode" class="form-control" value="">
                         </div>
                         <div class="col-sm-12 form-group">
                             <label class="form-label" for="path">Path <span class="text-red">*</span></label>
-                            <input type="text" name="path" class="form-control" value="">
+                            <input type="text" name="path" id="apath" class="form-control" value="">
                         </div>
                         <div class="form-group col-sm-6">
                             <label class="custom-switch form-label">
-                                <input type="checkbox" name="is_enable" class="custom-switch-input" id="is_enable" >
+                                <input type="checkbox" name="is_enable" id="ais_enable" class="custom-switch-input" id="is_enable" >
                                 <span class="custom-switch-indicator"></span>
                                 <span class="custom-switch-description">Status</span>
                             </label>
                         </div>
                         <div class="form-group col-sm-6">
                             <label class="custom-switch form-label">
-                                <input type="checkbox" name="include_in_menu" class="custom-switch-input" id="is_enable" >
+                                <input type="checkbox" name="include_in_menu" id="ainclude_in_menu" class="custom-switch-input" id="is_enable" >
                                 <span class="custom-switch-indicator"></span>
                                 <span class="custom-switch-description">Include in menu</span>
                             </label>
@@ -56,11 +56,11 @@
                         </div> --}}
                         <div class="col-sm-12 form-group">
                             <label class="form-label" for="created_date">Created Date <span class="text-red">*</span></label>
-                            <input type="date" name="created_date" class="form-control" value="">
+                            <input type="date" name="created_date" id="acreated_date" class="form-control" value="">
                         </div>
                         <div class="form-group col-sm-12">
                             <label class="form-label" for="assigned_attributes">Assigned Attributes <span class="text-red">*</span></label>
-                            <textarea class="form-control" name="assigned_attributes" autocomplete="off" id="description" rows="2"></textarea>
+                            <textarea class="form-control" id="aassigned_attributes" name="assigned_attributes" autocomplete="off" id="description" rows="2"></textarea>
                         </div>
                     </div>
                 </div>

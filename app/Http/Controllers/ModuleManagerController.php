@@ -217,6 +217,7 @@ class ModuleManagerController extends Controller
     }
 
     public function menu_update(Request $request){
+        // dd($request);
         if($request->type=='storfront'){
             $dataArray = json_decode($request['storfront_json'], true);
         }else{
@@ -224,8 +225,8 @@ class ModuleManagerController extends Controller
         }
         // dd($request->all(),$dataArray);
         $data=$this->processArray($dataArray);
-        return redirect()->route('menu.index');
 
+        return response()->json(['success' => true]);
     }
 
     public function processArray($dataArray) {

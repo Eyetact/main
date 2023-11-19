@@ -103,11 +103,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::controller(ModuleManagerController::class)->group(function () {
         Route::get('/module_manager', 'index')->name('module_manager.index');
-        // Route::get('module_manager/create', 'create')->name('menu.create');
+        Route::get('module_manager/create', 'create')->name('module_manager.create');
         Route::post('module_manager/store', 'store')->name('module_manager.store');
-        // Route::post('menu/menu_update', 'menu_update')->name('menu.menu_update');
-        // Route::get('menu/{menu}/edit', 'edit')->name('menu.edit');
-        // Route::post('menu/{menu}', 'update')->name('menu.update');
-        // Route::delete('menu/{menu}', 'destroy')->name('menu.destroy');
+        Route::post('module_manager/menu_update', 'menu_update')->name('module_manager.menu_update');
+        Route::get('module_manager/{menu}/edit', 'edit')->name('module_manager.edit');
+        Route::post('module_manager/{menu}', 'update')->name('module_manager.update');
+        Route::delete('module_manager/{menu}', 'destroy')->name('module_manager.destroy');
     });
 });

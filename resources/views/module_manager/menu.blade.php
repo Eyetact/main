@@ -22,77 +22,6 @@
         $adminMenu=\App\Helpers\Helper::getMenu('admin');
     @endphp
 
-    <div class="row" style= "display :none">
-        <div class="col-lg-12 col-md-12">
-            <div class="card">
-                <div class="row no-gutters">
-                    <div class="col-lg-6 col-xl-6">
-                        <div class="mb-0 mb-lg-0">
-                            <div class="card-body p-0">
-                                <div class="main-content-left main-content-left-chat">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h3 class="card-title">Storfront</h3>
-                                        </div>
-                                        <div class="card-body">
-
-                                        </div>
-                                    </div>
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h3 class="card-title">Admin</h3>
-                                        </div>
-                                        <div class="card-body">
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Menu Item</h3>
-                            </div>
-                            <div class="card-body">
-                                @include('module_manager.storfront_nested_menu')
-                            </div>
-                        </div>
-
-                        <div class="border-left">
-                            <div class="main-content-body main-content-body-chat">
-                                <div class="main-chat-header">
-                                    <ul>
-                                        <li class="slide">
-                                            <a class="side-menu__item" data-toggle="slide" href="">
-                                                <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"></path></svg>
-                                            <span class="side-menu__label">&nbsp;Menu Item</span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="angle fa fa-angle-right"></i></a>
-                                            <ul class="slide-menu">
-                                                <li><a href="javascript:void(0)" class="slide-item" id="storfront_li">Storfront</a></li>
-                                                <li><a href="javascript:void(0)" class="slide-item" id="admin_li">Admin</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="main-chat-body ps ps--active-y" id="ChatBody">
-                                    <div class="content-inner">
-                                        <div id="storfront_div">
-                                            @include('module.storfront_form')
-                                        </div>
-                                        <div id="admin_div" class="hide">
-                                            @include('module.admin_form')
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="row">
         <div class="col-lg-12 col-xl-6 col-md-12 col-sm-12">
             <div class="card">
@@ -102,6 +31,14 @@
                 {{-- @dump($errors->all()) --}}
                 <div class="card-body">
                     @include('module_manager.storfront_nested_menu')
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Admin</h4>
+                </div>
+                <div class="card-body">
+                    @include('module_manager.admin_nested_menu')
                 </div>
             </div>
         </div>
@@ -114,24 +51,11 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    {{-- <div class="main-chat-header">
-                        <ul>
-                            <li class="slide">
-                                <a class="side-menu__item" data-toggle="slide" href="">
-                                    <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"></path></svg>
-                                <span class="side-menu__label">&nbsp;Menu Item</span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="angle fa fa-angle-right"></i></a>
-                                <ul class="slide-menu">
-                                    <li><a href="javascript:void(0)" class="slide-item" id="storfront_li">Storfront</a></li>
-                                    <li><a href="javascript:void(0)" class="slide-item" id="admin_li">Admin</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div> --}}
                     <div class="content-inner">
-                        <div id="storfront_div">
+                        <div id="storfront_edit_div" class="">
                             @include('module_manager.storfront_form')
                         </div>
-                        <div id="admin_div" class="hide">
+                        <div id="admin_edit_div" class="">
                             @include('module_manager.admin_form')
                         </div>
                     </div>
@@ -140,18 +64,7 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-12 col-xl-6 col-md-12 col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Admin</h4>
-                </div>
-                <div class="card-body">
-                    @include('module.admin_nested_menu')
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 @endsection
 
@@ -160,6 +73,9 @@
 {{-- import model end --}}
 
 @section('js')
+<script src="{{asset('assets/js/storfront_nestable.js')}}"></script>
+<script src="{{asset('assets/js/admin_nestable.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     $(document).ready(function(){
 
@@ -213,6 +129,9 @@
         $("#storfront_div").hide();
         $("#admin_div").hide();
 
+        $("#storfront_edit_div").hide();
+        $("#admin_edit_div").hide();
+
         $('body').on('change', '#module_type', function() {
             console.log($(this).val())
             if($(this).val() == "storfront"){
@@ -226,6 +145,89 @@
                 $("#admin_div").hide();
             }
         });
+
+        $('#storfront_nestable').on('mousedown', '.dd-handle', function(event) {
+            var type = 'storfront_form';
+
+            $("#storfront_edit_div").show();
+            $("#admin_edit_div").hide();
+
+            var singleData = $(this).parent().data("json");
+
+            $("#storfront_form #sname").val(singleData.name);
+            $("#storfront_form #scode").val(singleData.code);
+            $("#storfront_form #spath").val(singleData.path);
+            $("#storfront_form #sis_enable").prop('checked', singleData.status);
+            $("#storfront_form #sinclude_in_menu").prop('checked', singleData.include_in_menu);
+            $("#storfront_form #smeta_title").val(singleData.meta_title);
+            $("#storfront_form #smeta_description").val(singleData.meta_description);
+            $("#storfront_form #screated_date").val(singleData.created_date);
+            $("#storfront_form #sassigned_attributes").val(singleData.assigned_attributes);
+        });
+
+        $('#admin_nestable').on('mousedown', '.dd-handle', function(event) {
+            var type = 'admin_form';
+
+            $("#admin_edit_div").show();
+            $("#storfront_edit_div").hide();
+
+            var singleData = $(this).parent().data("json");
+            console.log("PMD",singleData)
+
+            $("#admin_form #aname").val(singleData.name);
+            $("#admin_form #acode").val(singleData.code);
+            $("#admin_form #apath").val(singleData.path);
+            $("#admin_form #ais_enable").prop('checked', singleData.status);
+            $("#admin_form #ainclude_in_menu").prop('checked', singleData.include_in_menu);
+            $("#admin_form #acreated_date").val(singleData.created_date);
+            $("#admin_form #aassigned_attributes").val(singleData.assigned_attributes);
+        });
+
+        $('body').on('change', '.storfront_nested_form .nestable', function() {
+            var menu = $("#storfront_menu_list");
+            var jsonResult = convertMenuToJson(menu,'storfront-menu');
+
+            $("#storfront_json").text(JSON.stringify(jsonResult, null, 2));
+
+            var data = {
+                type:"storfront",
+                storfront_json : JSON.stringify(jsonResult, null, 2)
+            }
+            saveMenu(data);
+        });
+
+        $('body').on('change', '.admin_nested_form .nestable', function() {
+            var menu = $("#admin_menu_list");
+            var jsonResult = convertMenuToJson(menu,'admin-menu');
+
+            $("#admin_json").text(JSON.stringify(jsonResult, null, 2));
+            var data = {
+                type:"",
+                admin_json : JSON.stringify(jsonResult, null, 2)
+            }
+            saveMenu(data);
+        });
+
+        function saveMenu(menuData){
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            $.ajax({
+                url: '{{ route("module_manager.menu_update") }}',
+                type: 'POST',
+                data: menuData,
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                success: function(response) {
+                    // if (response.success) {
+                    //     alert('Menu change successfully.');
+                    // }
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        }
 
         $('#storfront_form').validate({
             rules: {
@@ -269,21 +271,6 @@
                 }
             }
         });
-        $("#storfront_save").click(function(e){
-            var menu = $("#storfront_menu_list");
-            var jsonResult = convertMenuToJson(menu,'storfront-menu');
-            $("#storfront_json").text(JSON.stringify(jsonResult, null, 2));
-
-            $("#storfront_nested_form").submit();
-        });
-
-        $("#admin_save").click(function(e){
-            var menu = $("#admin_menu_list");
-            var jsonResult = convertMenuToJson(menu,'admin-menu');
-            $("#admin_json").text(JSON.stringify(jsonResult, null, 2));
-
-            $("#admin_nested_form").submit();
-        });
 
         $("#storfront_li").click(function(){
             $("#admin_div").hide();
@@ -321,6 +308,5 @@
 </script>
 
 
-<script src="{{asset('assets/js/storfront_nestable.js')}}"></script>
-<script src="{{asset('assets/js/admin_nestable.js')}}"></script>
+
 @endsection
