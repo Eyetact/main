@@ -15,8 +15,4 @@ class Module extends Model
         'is_enable'
     ];
 
-    public function scopeActive($query)
-    {
-        return $query->where('is_enable', 1);
-    }
 }

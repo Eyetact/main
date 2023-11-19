@@ -35,6 +35,7 @@
                 <div class="card-header">
                     <h4 class="card-title">Storfront</h4>
                 </div>
+                {{-- @dump($errors->all()) --}}
                 <div class="card-body">
                     @include('module_manager.storfront_nested_menu')
                 </div>
@@ -53,7 +54,7 @@
                 <div class="card-header">
                     <h4 class="card-title">Menu Item</h4>
                     <div class="card-options">
-                        <button type="button" data-target="#largeModal" data-toggle="modal" class="btn btn-primary">Action</button>
+                        <button type="button" data-target="#addMenuModal" data-toggle="modal" class="btn btn-primary">Action</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -84,6 +85,54 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     $(document).ready(function(){
+
+        $('#storfront_form').submit(function (e) {
+            e.preventDefault(); // Prevent the form from submitting the traditional way
+
+            // Serialize the form data
+            var formData = $(this).serialize();
+
+            // Send an AJAX request
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('module_manager.store') }}', // Replace with your actual route
+                data: formData,
+                success: function (response) {
+                    // Handle the success response
+                    console.log('AJAX request succeeded:', response);
+                    $('#addMenuModal').modal('hide'); // Hide the modal after successful submission
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response
+                    console.error('AJAX request failed:', status, error);
+
+                    if (xhr.status === 422) {
+                        // If it's a validation error, display the errors in the modal
+                        var errors = xhr.responseJSON.errors;
+                        displayValidationErrors(errors);
+                    } else {
+                        // Handle other types of errors as needed
+                        alert('An unexpected error occurred. Please try again.');
+                    }
+                }
+            });
+        });
+
+        // Function to display validation errors in the modal
+        function displayValidationErrors(errors) {
+            var errorList = '<ul>';
+            $.each(errors, function (key, value) {
+                errorList += '<li>' + value[0] + '</li>'; // Assuming you only want to display the first error message
+            });
+            errorList += '</ul>';
+
+            // Display errors in the modal or wherever you want
+            $('#validationErrors').removeClass('hide');
+            $('#validationErrors').html(errorList);
+            $('.modal-body').scrollTop(0);
+        }
+
         $("#storfront_div").hide();
         $("#admin_div").hide();
 

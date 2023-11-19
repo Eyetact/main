@@ -1,4 +1,4 @@
-<div id="largeModal" class="modal fade">
+<div id="addMenuModal" class="modal fade">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header pd-x-20">
@@ -19,7 +19,8 @@
                             </select>
                         </div>
                     </div>
-
+                    <div id="validationErrors" class="alert alert-danger hide">
+                    </div>
                     {{-- <form class="form-horizontal"> --}}
                         <div id="storfront_div">
                             @include('module_manager.storfront_form')

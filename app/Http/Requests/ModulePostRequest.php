@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class ModulePostRequest extends FormRequest
 {
@@ -24,9 +25,16 @@ class ModulePostRequest extends FormRequest
      */
     public function rules()
     {
+        $moduleId = $this->route('module');
         return [
-            'name' => 'required',
-            'description' => ''
+            'name' =>  [
+                'required',
+                Rule::unique('modules', 'name')->ignore($moduleId),
+            ],
+            'code' => 'required | unique:menus,code',
+            'path' => 'required | unique:menus,path',
+            'created_date' => 'required',
+            'assigned_attributes' => 'required'
         ];
     }
 }
