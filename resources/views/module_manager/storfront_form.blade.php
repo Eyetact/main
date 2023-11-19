@@ -66,8 +66,8 @@
                     </div>
                 </div>
                 <div class="card-footer text-right">
-                    <input title="Save module" class="btn btn-primary" type="submit" value="Create">
-                    <input title="Reset form" class="btn btn-warning" type="reset" value="Reset">
+                    <input title="Save module" class="btn btn-primary" type="submit" value="Save">
+                    {{-- <input title="Reset form" class="btn btn-warning" type="reset" value="Reset"> --}}
                 </div>
             </div>
         </div>

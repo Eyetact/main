@@ -112,6 +112,39 @@
             });
         });
 
+        $('#admin_form').submit(function (e) {
+            e.preventDefault(); // Prevent the form from submitting the traditional way
+
+            // Serialize the form data
+            var formData = $(this).serialize();
+
+            // Send an AJAX request
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('module_manager.store') }}', // Replace with your actual route
+                data: formData,
+                success: function (response) {
+                    // Handle the success response
+                    console.log('AJAX request succeeded:', response);
+                    $('#addMenuModal').modal('hide'); // Hide the modal after successful submission
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response
+                    console.error('AJAX request failed:', status, error);
+
+                    if (xhr.status === 422) {
+                        // If it's a validation error, display the errors in the modal
+                        var errors = xhr.responseJSON.errors;
+                        displayValidationErrors(errors);
+                    } else {
+                        // Handle other types of errors as needed
+                        alert('An unexpected error occurred. Please try again.');
+                    }
+                }
+            });
+        });
+
         // Function to display validation errors in the modal
         function displayValidationErrors(errors) {
             var errorList = '<ul>';

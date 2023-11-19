@@ -12,15 +12,6 @@
                 <div class="card-body pb-2">
                     <div class="row">
                         <div class="col-sm-12 form-group">
-                            <label class="form-label" for="module">Module<span class="text-red">*</span></label>
-                            <select name="module" class="form-control module" id="module">
-                                <option value="" selected>Select Module</option>
-                                @foreach($moduleData as $module)
-                                    <option value="{{$module->id}}" >{{$module->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-sm-12 form-group">
                             <label class="form-label" for="name">Name <span class="text-red">*</span></label>
                             <input type="text" name="name" id="aname" class="form-control" value="">
                         </div>
@@ -65,8 +56,8 @@
                     </div>
                 </div>
                 <div class="card-footer text-right">
-                    <input title="Save module" class="btn btn-primary" type="submit" value="Create">
-                    <input title="Reset form" class="btn btn-warning" type="reset" value="Reset">
+                    <input title="Save module" class="btn btn-primary" type="submit" value="Save">
+                    {{-- <input title="Reset form" class="btn btn-warning" type="reset" value="Reset"> --}}
                 </div>
             </div>
         </div>
