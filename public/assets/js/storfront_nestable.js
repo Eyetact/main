@@ -79,6 +79,7 @@ var currentEditName = $("#currentEditName");
 
 // Prepares and shows the Edit Form
 var prepareEdit = function () {
+    debugger;
     var targetId = $(this).data('owner-id');
     var target = $('[data-id="' + targetId + '"]');
 
@@ -130,9 +131,9 @@ $(function () {
     // set onclick events
     editButton.on("click", editMenuItem);
 
-    $("#storfront_nestable .button-delete").on("click", deleteFromMenu);
+    $("#storfront_nestable .storfront_delete").on("click", deleteFromMenu);
 
-    $("#storfront_nestable .button-edit").on("click", prepareEdit);
+    $("#storfront_nestable .storfront_edit").on("click", prepareEdit);
 
     $("#menu-editor").submit(function (e) {
         e.preventDefault();

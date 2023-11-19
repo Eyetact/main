@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\MenuManagerController;
+use App\Http\Controllers\ModuleManagerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,4 +100,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
     Route::post('theme-setting/update',[Helper::class,'update'])->name('update.theme');
+
+    Route::controller(ModuleManagerController::class)->group(function () {
+        Route::get('/module_manager', 'index')->name('module_manager.index');
+        // Route::get('module_manager/create', 'create')->name('menu.create');
+        // Route::post('menu/store', 'store')->name('menu.store');
+        // Route::post('menu/menu_update', 'menu_update')->name('menu.menu_update');
+        // Route::get('menu/{menu}/edit', 'edit')->name('menu.edit');
+        // Route::post('menu/{menu}', 'update')->name('menu.update');
+        // Route::delete('menu/{menu}', 'destroy')->name('menu.destroy');
+    });
 });
