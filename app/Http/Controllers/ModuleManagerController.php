@@ -79,13 +79,14 @@ class ModuleManagerController extends Controller
 
         if (!$menuManager) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
-            return redirect()->route('menu.index');
+            return redirect()->route('module_manager.index');
         }
         $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
-        return redirect()->route('menu.index');
+        return redirect()->route('module_manager.index');
     }
 
     public function menu_update(Request $request){
+        // dd($request);
         if($request->type=='storfront'){
             $dataArray = json_decode($request['storfront_json'], true);
         }else{
@@ -93,8 +94,8 @@ class ModuleManagerController extends Controller
         }
         // dd($request->all(),$dataArray);
         $data=$this->processArray($dataArray);
-        return redirect()->route('menu.index');
 
+        return response()->json(['success' => true]);
     }
 
     public function processArray($dataArray) {

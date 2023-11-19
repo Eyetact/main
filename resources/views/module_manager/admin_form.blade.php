@@ -1,4 +1,4 @@
-<form action="{{ $menu->id == null ? route('menu.store') : route('menu.update', ['menu' => $menu->id]) }}" id="admin_form" method="POST" autocomplete="off" novalidate="novalidate">
+<form action="{{ $menu->id == null ? route('module_manager.store') : route('module_manager.update', ['menu' => $menu->id]) }}" id="admin_form" method="POST" autocomplete="off" novalidate="novalidate">
     @csrf
     <input type="hidden" name="menu_type" value="admin">
     <div class="row">
