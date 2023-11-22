@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UrlRequest;
 use App\Models\Setting;
+use Auth;
 use Illuminate\Http\Request;
 use App\Models\Country;
 use App\Models\State;
@@ -208,6 +210,22 @@ class SettingController extends Controller
                 ->make(true);
         }
         return view('setting.cities', ['city' => new City()]);
+    }
+
+    public function storeUrl( UrlRequest $request ){
+        $setting = Setting::updateOrCreate([
+            'created_by'   => Auth::user()->id,
+        ],[
+            'url'     => $request->main_url,
+            'footer_logo' => '',
+            'email' => '',
+            'password' => '',
+            'server' => '',
+            'port' => 0,
+            'encryption' => '',
+        ]);
+
+        return redirect()->back();
     }
 
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\MailboxController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SmtpController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\ModuleController;
@@ -79,6 +80,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 //        Route::get('/setting/states', 'states')->name('setting.states')->middleware('permission:states.setting');
 //        Route::get('/setting/cities', 'cities')->name('setting.cities')->middleware('permission:cities.setting');
         Route::post('/setting', 'store')->name('setting.store');
+        Route::post('/storeUrl', 'storeUrl')->name('setting.store.url');
     });
 
     Route::controller(SmtpController::class)->group(function () {
@@ -110,4 +112,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('module_manager/{menu}', 'update')->name('module_manager.update');
         Route::delete('module_manager/{menu}', 'destroy')->name('module_manager.destroy');
     });
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+    Route::get('add-user',[UserController::class, 'create'])->name('users.create');
+    Route::post('add-user',[UserController::class, 'store'])->name('users.store');
+
+    Route::get('/user/{id}', [UserController::class, 'show'])->name('users.view');
+
+    Route::post('/user/delete/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
 });
