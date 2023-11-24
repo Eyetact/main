@@ -11,6 +11,8 @@ use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\MenuManagerController;
 use App\Http\Controllers\ModuleManagerController;
+use App\Http\Controllers\PlanController;
+use App\Http\Controllers\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -121,4 +123,25 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/user/delete/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
+    //plan
+    Route::get('/plans', [planController::class, 'index'])->name('plans.index');
+
+    Route::get('add-plan',[planController::class, 'create'])->name('plans.create');
+    Route::post('add-plan',[planController::class, 'store'])->name('plans.store');
+
+    Route::get('/plan/{id}', [planController::class, 'show'])->name('plans.view');
+    Route::post('update-plan/{id}',[planController::class, 'update'])->name('plans.update');
+
+    Route::post('/plan/delete/{id}', [planController::class, 'destroy'])->name('plans.destroy');
+
+     //subscription
+     Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+
+     Route::get('add-subscription',[SubscriptionController::class, 'create'])->name('subscriptions.create');
+     Route::post('add-subscription',[SubscriptionController::class, 'store'])->name('subscriptions.store');
+
+     Route::get('/subscription/{id}', [SubscriptionController::class, 'show'])->name('subscriptions.view');
+     Route::post('update-subscription/{id}',[SubscriptionController::class, 'update'])->name('subscriptions.update');
+
+     Route::post('/subscription/delete/{id}', [SubscriptionController::class, 'destroy'])->name('subscriptions.destroy');
 });

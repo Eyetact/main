@@ -63,4 +63,10 @@ class User extends Authenticatable
             $this->attributes['avatar'] = 'uploads/users/'. $file_name;
         }
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
 }

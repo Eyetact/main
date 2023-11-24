@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Plan;
+use App\Models\Subscription;
 use Auth;
 use Hash;
 use Illuminate\Http\Request;
@@ -16,6 +18,43 @@ class ProfileController extends Controller
     {
         $user_id = !filled($id) ? Auth::id() : $id;
         $user = User::where("id",$user_id)->first();
+        $subscriptions=$user->subscriptions;
+
+        if (request()->ajax()) {
+            $subscriptions = Subscription::where('user_id', $user_id)->get();
+
+            return datatables()->of($subscriptions)
+
+            ->editColumn('plan_id', function($row){
+                return $row->plan_id ? $row->plan?->name : " ";
+            })
+
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="dropdown">
+                    <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li class="dropdown-item">
+                        <a  href="'. route('subscriptions.view',$row->id) . '">View or Edit</a>
+                        </li>
+
+                        <li class="dropdown-item">
+                        <a  href="#" data-id="'. $row->id .'" class="subscription-delete">Delete</a>
+                        </li>
+                    </ul>
+                </div>';
+
+                    return $btn;
+                })
+                ->rawColumns(['plan_id','action'])
+
+                ->addIndexColumn()
+                ->make(true);
+        }
         return view('profile.index',compact('user'));
     }
 

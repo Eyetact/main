@@ -1,4 +1,14 @@
 @extends('layouts.master')
+@section('css')
+    <!-- Data table css -->
+    <link href="{{ URL::asset('assets/plugins/datatable/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('assets/plugins/datatable/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.css') }}" rel="stylesheet" />
+    <!-- Slect2 css -->
+    <link href="{{ URL::asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
+    @endsection
 @section('page-header')
     <!--Page header-->
     <div class="page-header">
@@ -92,7 +102,7 @@
                 <div class="tabs-menu1 px-3">
                     <ul class="nav">
                         <li><a href="#myProfile" class="active fs-14" data-toggle="tab">My Profile</a></li>
-                        <li><a href="#changePassword" class=" fs-14" data-toggle="tab">Change Password</a></li>
+                        <li><a href="#sub" class=" fs-14" data-toggle="tab">My Subscriptions</a></li>
                     </ul>
                 </div>
             </div>
@@ -170,8 +180,6 @@
                             </div>
                         </form>
                     </div>
-                </div>
-                <div class="tab-pane" id="changePassword">
                     <div class="card">
                         <form action="{{ route('profile.change-password') }}" method="POST" id="changePasswordForm">
                             @csrf
@@ -207,13 +215,68 @@
                         </form>
                     </div>
                 </div>
+                <div class="tab-pane" id="sub">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Subscriptions Data</div>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered text-nowrap" id="attribute_table">
+                                    <thead>
+                                        <tr>
+                                            <th width="100px">No.</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>User</th>
+                                            <th>Plan</th>
+                                            <th>Status</th>
+                                            <th data-priority="1">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+@section('js')
+ <!-- INTERNAL Data tables -->
+ <script src="{{ URL::asset('assets/plugins/datatable/js/jquery.dataTables.js') }}"></script>
+ <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.bootstrap4.js') }}"></script>
+ <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
+ <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.bootstrap4.min.js') }}"></script>
+ <script src="{{ URL::asset('assets/plugins/datatable/js/jszip.min.js') }}"></script>
+ <script src="{{ URL::asset('assets/plugins/datatable/js/pdfmake.min.js') }}"></script>
+ <script src="{{ URL::asset('assets/plugins/datatable/js/vfs_fonts.js') }}"></script>
+ <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
+ <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
+ <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
+ <script src="{{ URL::asset('assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
+ <script src="{{ URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.js') }}"></script>
+ <script src="{{ URL::asset('assets/js/datatables.js') }}"></script>
+ <script src="{{ URL::asset('assets/js/popover.js') }}"></script>
 
-@push('script')
+ <!-- INTERNAL Sweet alert js -->
+ <script src="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.js') }}"></script>
+ <script src="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
+ <script src="{{ URL::asset('assets/js/sweet-alert.js') }}"></script>
+
+
+ <!-- INTERNAL Select2 js -->
+ <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
+
+{{-- @push('script') --}}
 <script>
     $(document).ready(function() {
         $("#ProfileUploadBtn").click(function(){
@@ -284,5 +347,105 @@
             },
         });
     });
+
+
+        var table = $('#attribute_table').DataTable({
+            processing: true,
+            serverSide: true,
+            lengthChange: false,
+            dom: 'lBftrip',
+            buttons: ['copy', 'excel', 'pdf', 'colvis'],
+            responsive: true,
+            language: {
+                searchPlaceholder: 'Search...',
+                sSearch: '',
+                lengthMenu: '_MENU_ ',
+            },
+            ajax: "{{ route('profile.index') }}",
+
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'start_date',
+                    name: 'start_date'
+                },
+                {
+                    data: 'end_date',
+                    name: 'end_date'
+                },
+                {
+                    data: 'user_id',
+                    name: 'user'
+                },
+                {
+                    data: 'plan_id',
+                    name: 'plan'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                },
+
+            ],
+            order: [
+                [1, 'asc']
+            ]
+        });
+
+        // console.log(table.buttons().container());
+
+        table.buttons().container()
+            .appendTo('#attribute_table_wrapper .col-md-6:eq(0)');
+
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        $(document).on('click', '.subscription-delete', function() {
+        	var id = $(this).attr("data-id");
+            swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this attribute!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    showCancelButton: true,
+
+
+                }, function (willDelete) {
+                    if (willDelete) {
+
+                        $.ajax({
+                            type: "POST",
+                            url: '{{url("/")}}/subscription/delete/' + id,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+	                            swal({
+	                				title: response.msg
+	                			}, function (result) {
+	                				location.reload();
+	                			});
+                            }
+                        });
+                    }
+                });
+        });
+
 </script>
-@endpush
+{{-- @endpush
+     --}}
+     @endsection
