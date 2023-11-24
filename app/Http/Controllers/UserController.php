@@ -16,11 +16,11 @@ class UserController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $users = User::all();
+            $users = User::role('vendor')->get();
 
             return datatables()->of($users)
                 ->editColumn('avatar', function($row){
-                    return $row->avatar ? '<img src="' . asset($row->avatar) .'" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
+                    return $row->avatar ? '<img src="' . $row->ProfileUrl .'" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown">
@@ -32,7 +32,7 @@ class UserController extends Controller
     
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
-                        <a  href="'. route('users.view',$row->id) . '">View or Edit</a>
+                        <a  href="'. route('profile.index',$row->id) . '">View or Edit</a>
                         </li>
 
                         <li class="dropdown-item">
@@ -51,6 +51,45 @@ class UserController extends Controller
         return view('users.list');
     }
 
+    public function admins()
+    {
+        if (request()->ajax()) {
+            $users = User::role('admin')->get();
+
+            return datatables()->of($users)
+                ->editColumn('avatar', function($row){
+                    return $row->avatar ? '<img src="' . $row->ProfileUrl .'" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="dropdown">
+                    <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+    
+                    </a>
+    
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li class="dropdown-item">
+                        <a  href="'. route('profile.index',$row->id) . '">View or Edit</a>
+                        </li>
+
+                        <li class="dropdown-item">
+                        <a  href="#" data-id="'. $row->id .'" class="user-delete">Delete</a>
+                        </li>
+                    </ul>
+                </div>';
+                   
+                    return $btn;
+                })
+                ->rawColumns(['avatar','action'])
+
+                ->addIndexColumn()
+                ->make(true);
+        }
+        return view('users.admins');
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *
@@ -59,6 +98,11 @@ class UserController extends Controller
     public function create()
     {
         return view('users.create');
+    }
+
+    public function createAdmin()
+    {
+        return view('users.create-admin');
     }
 
     /**
@@ -86,7 +130,7 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-        $user->assignRole($role);
+        $user->assignRole($request->role);
 
         return redirect()->back();
 

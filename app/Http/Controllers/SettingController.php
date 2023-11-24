@@ -217,6 +217,7 @@ class SettingController extends Controller
             'created_by'   => Auth::user()->id,
         ],[
             'url'     => $request->main_url,
+            'path'     => $request->path,
             'footer_logo' => '',
             'email' => '',
             'password' => '',

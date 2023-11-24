@@ -375,11 +375,19 @@
                     <div class=" card-body">
 
                         <div class="row">
-                            <div class="col-sm-12 col-md-12">
+                            <div class="col-sm-6 col-md-6">
                                 <div class="input-box">
                                     <label class="input-label">URL</label>
                                     <input type="text" class="google-input" name="main_url" id="main_url"
                                         value="{{ $data->url }}">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-6">
+                                <div class="input-box">
+                                    <label class="input-label">Path</label>
+                                    <input type="text" class="google-input" name="main_path" id="main_path"
+                                        value="{{ $data->path }}">
                                 </div>
                             </div>
                         </div>

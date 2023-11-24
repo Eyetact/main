@@ -49,7 +49,7 @@
             <form action="{{ route('users.store') }}" method="POST" id="mailboxForm" enctype="multipart/form-data">
                 @csrf
 
-                <input type="hidden" name="role" value="vendor"/>
+                <input type="hidden" name="role" value="admin"/>
                 <div class="row">
 
                     <div class="col-lg-12 col-sm-12">

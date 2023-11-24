@@ -46,7 +46,7 @@
         </div>
         <div class="page-rightheader">
             <div class="btn btn-list">
-                <a href="{{ route('users.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
+                <a href="{{ route('permission.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
                     data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
             </div>
         </div>
@@ -68,15 +68,11 @@
                         <table class="table table-bordered text-nowrap" id="attribute_table">
                             <thead>
                                 <tr>
-                                    <th width="100px">No.</th>
-                                    <th>Name</th>
-                                    <th>username</th>
-                                    <th>email</th>
-                                    <th >avatar</th>
-                                    <th>phone</th>
-                                    <th>address</th>
-                                    <th>website</th>
-                                    <th data-priority="1">Action</th>
+                                    <th style="width:15%">No.</th>
+                                    <th>Permission</th>
+                                    <th>plan_id</th>
+                                    <th>Guard</th>
+                                    <th width="300px">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -132,7 +128,7 @@
                 sSearch: '',
                 lengthMenu: '_MENU_ ',
             },
-            ajax: "{{ route('users.index') }}",
+            ajax: "{{ route('permission.index') }}",
 
             columns: [{
                     data: 'DT_RowIndex',
@@ -145,30 +141,13 @@
                     name: 'name'
                 },
                 {
-                    data: 'username',
-                    name: 'username'
+                    data: 'plan_id',
+                    name: 'plan_id'
                 },
                 {
-                    data: 'email',
-                    name: 'email'
+                    data: 'guard_name',
+                    name: 'guard_name'
                 },
-                {
-                    data: 'avatar',
-                    name: 'avatar',
-                },
-                {
-                    data: 'phone',
-                    name: 'phone'
-                },
-                {
-                    data: 'address',
-                    name: 'address'
-                },
-                {
-                    data: 'website',
-                    name: 'website'
-                },
-
                 {
                     data: 'action',
                     name: 'action',

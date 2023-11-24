@@ -2,7 +2,9 @@
 
 use App\Helpers\Helper;
 use App\Http\Controllers\MailboxController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Profile\ProfileController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SmtpController;
 use App\Http\Controllers\UserController;
@@ -113,12 +115,41 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('module_manager/{menu}', 'destroy')->name('module_manager.destroy');
     });
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/admins', [UserController::class, 'admins'])->name('users.admins');
 
     Route::get('add-user',[UserController::class, 'create'])->name('users.create');
     Route::post('add-user',[UserController::class, 'store'])->name('users.store');
 
+    Route::get('add-admin',[UserController::class, 'createAdmin'])->name('admin.create');
+
+
     Route::get('/user/{id}', [UserController::class, 'show'])->name('users.view');
 
     Route::post('/user/delete/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+
+
+    Route::controller(RoleController::class)->prefix('role')->group(function () {
+        Route::get('/', 'index')->name('role.index');
+        Route::get('create', 'create')->name('role.create')->middleware('can:create.role');
+        Route::post('store', 'store')->name('role.store')->middleware('can:create.role');
+        Route::get('{role}/edit', 'edit')->name('role.edit')->middleware('can:edit.role');
+        Route::post('{role}', 'update')->name('role.update')->middleware('can:edit.role');
+        Route::delete('{role}', 'destroy')->name('role.destroy')->middleware('can:delete.role');
+        Route::get('permission', 'assignPermissionList')->name('role.permission.index');
+    });
+
+    Route::controller(PermissionController::class)->prefix('permission')->group(function () {
+        Route::get('/', 'index')->name('permission.index')->middleware('can:view.permission');
+        Route::get('create', 'create')->name('permission.create')->middleware('can:create.permission');
+        Route::post('store', 'store')->name('permission.store')->middleware('can:create.permission');
+        Route::get('{permission}/edit', 'edit')->name('permission.edit')->middleware('can:edit.permission');
+        Route::post('update', 'update')->name('permission.update')->middleware('can:edit.can');
+        Route::delete('{permission}', 'destroy')->name('permission.destroy')->middleware('permission:delete.permission');
+
+        Route::post('permission/delete', 'deleteSinglePermission')->name('permission.delete')->middleware('can:delete.permission');
+
+        Route::post('module/store', 'moduleStore')->name('permission.module');
+    });
 
 });

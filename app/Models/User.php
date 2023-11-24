@@ -60,7 +60,7 @@ class User extends Authenticatable
             $ext = $value->getClientOriginalExtension();
             $file_name = time().mt_rand( 1000, 9000 ) . '.' . $ext;
             $value->move( public_path( 'uploads/users/' ), $file_name );
-            $this->attributes['avatar'] = 'uploads/users/'. $file_name;
+            $this->attributes['avatar'] =  $file_name;
         }
     }
 }
