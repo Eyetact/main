@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddModuleToPermissionsTable extends Migration
+class AddUserIdToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddModuleToPermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('permissions', function (Blueprint $table) {
-            $table->integer('module')->default('1');
+        Schema::table('users', function (Blueprint $table) {
+            $table->integer('user_id')->nullable();
         });
     }
 
@@ -25,7 +25,7 @@ class AddModuleToPermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('permissions', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
     }

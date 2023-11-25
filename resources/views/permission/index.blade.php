@@ -38,10 +38,10 @@
     <!--Page header-->
     <div class="page-header">
         <div class="page-leftheader">
-            <h4 class="page-title mb-0">Vendors</h4>
+            <h4 class="page-title mb-0">permissions</h4>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Users</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="#">Vendors</a></li>
+                <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>permissions</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">list</a></li>
             </ol>
         </div>
         <div class="page-rightheader">
@@ -61,7 +61,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Vendors Data</div>
+                    <div class="card-title">permissions Data</div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -70,7 +70,7 @@
                                 <tr>
                                     <th style="width:15%">No.</th>
                                     <th>Permission</th>
-                                    <th>plan_id</th>
+                                    <th>module</th>
                                     <th>Guard</th>
                                     <th width="300px">Action</th>
                                 </tr>
@@ -141,8 +141,8 @@
                     name: 'name'
                 },
                 {
-                    data: 'plan_id',
-                    name: 'plan_id'
+                    data: 'module',
+                    name: 'module'
                 },
                 {
                     data: 'guard_name',
@@ -187,7 +187,7 @@
                        
                         $.ajax({
                             type: "POST",
-                            url: '{{url("/")}}/user/delete/' + id,
+                            url: '{{url("/")}}/permission/permission/delete/' + id,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },

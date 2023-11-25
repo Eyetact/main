@@ -13,6 +13,8 @@ use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\MenuManagerController;
 use App\Http\Controllers\ModuleManagerController;
+use App\Http\Controllers\PlanController;
+use App\Http\Controllers\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,6 +116,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('module_manager/{menu}', 'update')->name('module_manager.update');
         Route::delete('module_manager/{menu}', 'destroy')->name('module_manager.destroy');
     });
+    Route::get('/myadmins/{user_id}', [UserController::class, 'myAdmins'])->name('users.myadmins');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/admins', [UserController::class, 'admins'])->name('users.admins');
 
@@ -145,11 +148,32 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('store', 'store')->name('permission.store')->middleware('can:create.permission');
         Route::get('{permission}/edit', 'edit')->name('permission.edit')->middleware('can:edit.permission');
         Route::post('update', 'update')->name('permission.update')->middleware('can:edit.can');
-        Route::delete('{permission}', 'destroy')->name('permission.destroy')->middleware('permission:delete.permission');
+        Route::delete('{permission}', 'destroy')->name('permission.destroy')->middleware('can:delete.permission');
 
-        Route::post('permission/delete', 'deleteSinglePermission')->name('permission.delete')->middleware('can:delete.permission');
+        Route::post('permission/delete/{id}', 'deleteSinglePermission')->name('permission.delete')->middleware('can:delete.permission');
 
         Route::post('module/store', 'moduleStore')->name('permission.module');
     });
 
+    //plan
+    Route::get('/plans', [planController::class, 'index'])->name('plans.index');
+
+    Route::get('add-plan',[planController::class, 'create'])->name('plans.create');
+    Route::post('add-plan',[planController::class, 'store'])->name('plans.store');
+
+    Route::get('/plan/{id}', [planController::class, 'show'])->name('plans.view');
+    Route::post('update-plan/{id}',[planController::class, 'update'])->name('plans.update');
+
+    Route::post('/plan/delete/{id}', [planController::class, 'destroy'])->name('plans.destroy');
+
+     //subscription
+     Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+
+     Route::get('add-subscription',[SubscriptionController::class, 'create'])->name('subscriptions.create');
+     Route::post('add-subscription',[SubscriptionController::class, 'store'])->name('subscriptions.store');
+
+     Route::get('/subscription/{id}', [SubscriptionController::class, 'show'])->name('subscriptions.view');
+     Route::post('update-subscription/{id}',[SubscriptionController::class, 'update'])->name('subscriptions.update');
+
+     Route::post('/subscription/delete/{id}', [SubscriptionController::class, 'destroy'])->name('subscriptions.destroy');
 });

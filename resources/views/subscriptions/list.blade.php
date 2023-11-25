@@ -38,15 +38,15 @@
     <!--Page header-->
     <div class="page-header">
         <div class="page-leftheader">
-            <h4 class="page-title mb-0">Vendors</h4>
+            <h4 class="page-title mb-0">Subscriptions</h4>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Users</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="#">Vendors</a></li>
+                <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Settings</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">Subscriptions</a></li>
             </ol>
         </div>
         <div class="page-rightheader">
             <div class="btn btn-list">
-                <a href="{{ route('users.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
+                <a href="{{ route('subscriptions.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
                     data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
             </div>
         </div>
@@ -61,7 +61,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Vendors Data</div>
+                    <div class="card-title">Subscriptions Data</div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -69,14 +69,11 @@
                             <thead>
                                 <tr>
                                     <th width="100px">No.</th>
-                                    <th>Name</th>
-                                    <th>username</th>
-                                    <th>admin</th>
-                                    <th>email</th>
-                                    <th >avatar</th>
-                                    <th>phone</th>
-                                    <th>address</th>
-                                    <th>website</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>User</th>
+                                    <th>Plan</th>
+                                    <th>Status</th>
                                     <th data-priority="1">Action</th>
                                 </tr>
                             </thead>
@@ -133,7 +130,7 @@
                 sSearch: '',
                 lengthMenu: '_MENU_ ',
             },
-            ajax: "{{ route('users.index') }}",
+            ajax: "{{ route('subscriptions.index') }}",
 
             columns: [{
                     data: 'DT_RowIndex',
@@ -142,36 +139,24 @@
                     searchable: false
                 },
                 {
-                    data: 'name',
-                    name: 'name'
+                    data: 'start_date',
+                    name: 'start_date'
                 },
                 {
-                    data: 'username',
-                    name: 'username'
+                    data: 'end_date',
+                    name: 'end_date'
                 },
                 {
-                    data: 'admin',
-                    name: 'admin'
+                    data: 'user_id',
+                    name: 'user'
                 },
                 {
-                    data: 'email',
-                    name: 'email'
+                    data: 'plan_id',
+                    name: 'plan'
                 },
                 {
-                    data: 'avatar',
-                    name: 'avatar',
-                },
-                {
-                    data: 'phone',
-                    name: 'phone'
-                },
-                {
-                    data: 'address',
-                    name: 'address'
-                },
-                {
-                    data: 'website',
-                    name: 'website'
+                    data: 'status',
+                    name: 'status'
                 },
 
                 {
@@ -197,7 +182,7 @@
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
 
-        $(document).on('click', '.user-delete', function() {
+        $(document).on('click', '.subscription-delete', function() {
         	var id = $(this).attr("data-id");
             swal({
                     title: "Are you sure?",
@@ -207,13 +192,13 @@
                     dangerMode: true,
                     showCancelButton: true,
 
-                    
+
                 }, function (willDelete) {
                     if (willDelete) {
-                       
+
                         $.ajax({
                             type: "POST",
-                            url: '{{url("/")}}/user/delete/' + id,
+                            url: '{{url("/")}}/subscription/delete/' + id,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
@@ -222,7 +207,7 @@
 	                				title: response.msg
 	                			}, function (result) {
 	                				location.reload();
-	                			});                               
+	                			});
                             }
                         });
                     }

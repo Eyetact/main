@@ -28,8 +28,10 @@ class PermissionController extends Controller
     {
         if(request()->ajax()) {
             return datatables()->of(Permission::select('*'))
-            ->addColumn('plan_id', function($row){
-                return ($row->permissionModule->name ?? $row->plan_id);
+            ->addColumn('module', function($row){
+
+                $module_name = Module::find($row->module);
+                return ($module_name->name ?? $row->module);
             })
             // ->addColumn('action', 'company-action')
             ->addColumn('action', function($row){
@@ -53,9 +55,7 @@ class PermissionController extends Controller
                     </a>
     
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li class="dropdown-item">
-                        <a  href="'. route('permission.edit',$row->id) . '">Edit</a>
-                        </li>
+                  
 
                         <li class="dropdown-item">
                         <a  href="#" data-id="'. $row->id .'" class="user-delete">Delete</a>
@@ -78,6 +78,7 @@ class PermissionController extends Controller
     public function create()
     {
         $moduleList = Module::all();
+        // dd( $moduleList );
         $permission = Permission::whereNull('id')->get();
 
         // dd($moduleList);
@@ -253,6 +254,15 @@ class PermissionController extends Controller
             return response()->json(['msg' => 'Permission deleted successfully!']);
 
         return response()->json(['msg' => 'Something went wrong, Please try again'],500);
+    }
+
+    public function deleteSinglePermission($id)
+    {
+        if (Permission::find($id)->delete()) {
+            return response()->json(['msg' => 'Permission deleted successfully!'], 200);
+        } else {
+            return response()->json(['msg' => 'Something went wrong, please try again.'], 200);
+        }
     }
 
 

@@ -160,6 +160,31 @@
                                 class="sub-side-menu__label">Permissions</span></a>
                     </li>
                 @endif
+                <li class="sub-slide">
+                    {{-- {{ url('module')}} --}}
+                    <a class="sub-side-menu__item" href="{{ route('users.index')}}"><span class="sub-side-menu__label">List</span></a>
+                </li>
+
+            </ul>
+        </li>
+
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . $page='#')}}">
+                <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                    <path d="M0 0h24v24H0V0z" fill="none"/>
+                    <path d="M12 2L2 7l10 5 9-4.5L12 2zm0 18l-9-4.5L2 17V7l10 5 10-5v10l-1.5-.75L12 20z"/>
+                </svg>
+                <span class="side-menu__label">Subscriptions</span><i class="angle fa fa-angle-right"></i>
+            </a>
+            <ul class="slide-menu ">
+                <li class="sub-slide">
+                    <a class="sub-side-menu__item" href="{{ route('subscriptions.index')}}"><span class="sub-side-menu__label">Subscriptions</span></a>
+                </li>
+                <li class="sub-slide">
+                    {{-- {{ url('module')}} --}}
+                    <a class="sub-side-menu__item" href="{{ route('plans.index')}}"><span class="sub-side-menu__label">Plans</span></a>
+                </li>
+
             </ul>
         </li>
     </ul>

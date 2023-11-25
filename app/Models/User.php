@@ -28,7 +28,8 @@ class User extends Authenticatable
         'address',
         'phone',
         'website',
-        'avatar'
+        'avatar',
+        'user_id'
     ];
 
     /**
@@ -63,4 +64,22 @@ class User extends Authenticatable
             $this->attributes['avatar'] =  $file_name;
         }
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function vendors(){
+        return $this->hasMany(User::class, 'user_id');
+    }
+
+    public function admins(){
+        return $this->hasMany(User::class, 'user_id');
+    }
+
+    public function admin(){
+        return $this->belongsTo( User::class, 'user_id' );
+    }
+
 }

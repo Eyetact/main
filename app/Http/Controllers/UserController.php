@@ -22,6 +22,9 @@ class UserController extends Controller
                 ->editColumn('avatar', function($row){
                     return $row->avatar ? '<img src="' . $row->ProfileUrl .'" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
                 })
+                ->addColumn('admin', function ($row) {
+                    return $row->admin->name;
+                })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown">
                     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
@@ -90,6 +93,47 @@ class UserController extends Controller
     }
 
 
+    public function myAdmins($user_id)
+    {
+        if (request()->ajax()) {
+            $users = User::where( 'user_id', $user_id )->get();
+
+            return datatables()->of($users)
+                ->editColumn('avatar', function($row){
+                    return $row->avatar ? '<img src="' . $row->ProfileUrl .'" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="dropdown">
+                    <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+    
+                    </a>
+    
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li class="dropdown-item">
+                        <a  href="'. route('profile.index',$row->id) . '">View or Edit</a>
+                        </li>
+
+                        <li class="dropdown-item">
+                        <a  href="#" data-id="'. $row->id .'" class="user-delete">Delete</a>
+                        </li>
+                    </ul>
+                </div>';
+                   
+                    return $btn;
+                })
+                ->rawColumns(['avatar','action'])
+
+                ->addIndexColumn()
+                ->make(true);
+        }
+        
+    }
+
+   
+
+
     /**
      * Show the form for creating a new resource.
      *
@@ -111,10 +155,12 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    
     public function store(Request $request)
     {
         
-
+        
         $role = 'vendor';
         if (Auth::user()->hasRole('super')) {
             $role = 'admin';
@@ -128,6 +174,7 @@ class UserController extends Controller
             'phone' => $request->phone,
             'avatar' => $request->avatar,
             'password' => bcrypt($request->password),
+            'user_id' => Auth::user()->id
         ]);
 
         $user->assignRole($request->role);

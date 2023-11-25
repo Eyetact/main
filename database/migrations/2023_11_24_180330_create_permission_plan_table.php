@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddModuleToPermissionsTable extends Migration
+class CreatePermissionPlanTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddModuleToPermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('permissions', function (Blueprint $table) {
-            $table->integer('module')->default('1');
+        Schema::create('permission_plan', function (Blueprint $table) {
+           $table->integer('plan_id');
+           $table->integer('permission_id');
         });
     }
 
@@ -25,8 +26,6 @@ class AddModuleToPermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('permissions', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('permission_plan');
     }
 }
