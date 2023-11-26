@@ -2,14 +2,19 @@
 
 use App\Helpers\Helper;
 use App\Http\Controllers\MailboxController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Profile\ProfileController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SmtpController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\MenuManagerController;
 use App\Http\Controllers\ModuleManagerController;
+use App\Http\Controllers\PlanController;
+use App\Http\Controllers\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +84,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 //        Route::get('/setting/states', 'states')->name('setting.states')->middleware('permission:states.setting');
 //        Route::get('/setting/cities', 'cities')->name('setting.cities')->middleware('permission:cities.setting');
         Route::post('/setting', 'store')->name('setting.store');
+        Route::post('/storeUrl', 'storeUrl')->name('setting.store.url');
     });
 
     Route::controller(SmtpController::class)->group(function () {
@@ -110,4 +116,64 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('module_manager/{menu}', 'update')->name('module_manager.update');
         Route::delete('module_manager/{menu}', 'destroy')->name('module_manager.destroy');
     });
+    Route::get('/myadmins/{user_id}', [UserController::class, 'myAdmins'])->name('users.myadmins');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/admins', [UserController::class, 'admins'])->name('users.admins');
+
+    Route::get('add-user',[UserController::class, 'create'])->name('users.create');
+    Route::post('add-user',[UserController::class, 'store'])->name('users.store');
+
+    Route::get('add-admin',[UserController::class, 'createAdmin'])->name('admin.create');
+
+
+    Route::get('/user/{id}', [UserController::class, 'show'])->name('users.view');
+
+    Route::post('/user/delete/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+
+
+    Route::controller(RoleController::class)->prefix('role')->group(function () {
+        Route::get('/', 'index')->name('role.index');
+        Route::get('create', 'create')->name('role.create')->middleware('can:create.role');
+        Route::post('store', 'store')->name('role.store')->middleware('can:create.role');
+        Route::get('{role}/edit', 'edit')->name('role.edit')->middleware('can:edit.role');
+        Route::post('{role}', 'update')->name('role.update')->middleware('can:edit.role');
+        Route::delete('{role}', 'destroy')->name('role.destroy')->middleware('can:delete.role');
+        Route::get('permission', 'assignPermissionList')->name('role.permission.index');
+    });
+
+    Route::controller(PermissionController::class)->prefix('permission')->group(function () {
+        Route::get('/', 'index')->name('permission.index')->middleware('can:view.permission');
+        Route::get('create', 'create')->name('permission.create')->middleware('can:create.permission');
+        Route::post('store', 'store')->name('permission.store')->middleware('can:create.permission');
+        Route::get('{permission}/edit', 'edit')->name('permission.edit')->middleware('can:edit.permission');
+        Route::post('update', 'update')->name('permission.update')->middleware('can:edit.can');
+        Route::delete('{permission}', 'destroy')->name('permission.destroy')->middleware('can:delete.permission');
+
+        Route::post('permission/delete/{id}', 'deleteSinglePermission')->name('permission.delete')->middleware('can:delete.permission');
+
+        Route::post('module/store', 'moduleStore')->name('permission.module');
+    });
+
+    //plan
+    Route::get('/plans', [planController::class, 'index'])->name('plans.index');
+
+    Route::get('add-plan',[planController::class, 'create'])->name('plans.create');
+    Route::post('add-plan',[planController::class, 'store'])->name('plans.store');
+
+    Route::get('/plan/{id}', [planController::class, 'show'])->name('plans.view');
+    Route::post('update-plan/{id}',[planController::class, 'update'])->name('plans.update');
+
+    Route::post('/plan/delete/{id}', [planController::class, 'destroy'])->name('plans.destroy');
+
+     //subscription
+     Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+
+     Route::get('add-subscription',[SubscriptionController::class, 'create'])->name('subscriptions.create');
+     Route::post('add-subscription',[SubscriptionController::class, 'store'])->name('subscriptions.store');
+
+     Route::get('/subscription/{id}', [SubscriptionController::class, 'show'])->name('subscriptions.view');
+     Route::post('update-subscription/{id}',[SubscriptionController::class, 'update'])->name('subscriptions.update');
+
+     Route::post('/subscription/delete/{id}', [SubscriptionController::class, 'destroy'])->name('subscriptions.destroy');
 });
