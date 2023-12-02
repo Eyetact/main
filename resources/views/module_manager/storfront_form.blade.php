@@ -1,4 +1,4 @@
-<form action="{{ $menu->id == null ? route('module_manager.store') : route('module_manager.update', ['menu' => $menu->id]) }}" id="storfront_form" method="POST" autocomplete="off" novalidate="novalidate">
+
     @csrf
     <input type="hidden" name="menu_type" value="storfront">
 
@@ -24,6 +24,7 @@
                         <div class="col-sm-12 form-group">
                             <label class="form-label" for="name">Name <span class="text-red">*</span></label>
                             <input type="text" name="name" id="sname" class="form-control" value="">
+                            <input type="hidden" name="id" id="sid" value="">
                         </div>
                         <div class="col-sm-12 form-group">
                             <label class="form-label" for="code">Code <span class="text-red">*</span></label>
@@ -66,11 +67,12 @@
                     </div>
                 </div>
                 <div class="card-footer text-right">
-                    <input title="Save module" class="btn btn-primary" type="submit" value="Save">
-                    {{-- <input title="Reset form" class="btn btn-warning" type="reset" value="Reset"> --}}
+                    <input title="Reset form" class="btn btn-danger d-none" id="remove-store-front-menu" type="button" value="Delete">
+                    <input title="Reset form" class="btn btn-success d-none" id="restore-store-front-menu" type="button" value="Restore">
+                    <input title="Save module" class="btn btn-primary" id="submit-store-front-menu" type="submit" value="Save">
                 </div>
             </div>
         </div>
     </div>
-</form>
+
 

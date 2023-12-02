@@ -57,17 +57,15 @@
             <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
             <span class="side-menu__label">Settings</span><i class="angle fa fa-angle-right"></i></a>
             <ul class="slide-menu ">
-                <li class="sub-slide">
+                {{-- <li class="sub-slide">
                     <a class="sub-side-menu__item" href="{{ url('attribute')}}"><span class="sub-side-menu__label">Attributes</span></a>
                 </li>
                 <li class="sub-slide">
-                    {{-- {{ url('module')}} --}}
                     <a class="sub-side-menu__item" href="{{ url('module')}}"><span class="sub-side-menu__label">Modules</span></a>
                 </li>
                 <li class="sub-slide">
-                    {{-- {{ url('module')}} --}}
                     <a class="sub-side-menu__item" href="{{ url('menu')}}"><span class="sub-side-menu__label">Menu Manager</span></a>
-                </li>
+                </li> --}}
                 <li class="sub-slide">
                     {{-- {{ url('module')}} --}}
                     <a class="sub-side-menu__item" href="{{ url('module_manager')}}"><span class="sub-side-menu__label">Modules Manager</span></a>

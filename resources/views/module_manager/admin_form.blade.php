@@ -1,4 +1,4 @@
-<form action="{{ $menu->id == null ? route('module_manager.store') : route('module_manager.update', ['menu' => $menu->id]) }}" id="admin_form" method="POST" autocomplete="off" novalidate="novalidate">
+
     @csrf
     <input type="hidden" name="menu_type" value="admin">
     <div class="row">
@@ -14,6 +14,7 @@
                         <div class="col-sm-12 form-group">
                             <label class="form-label" for="name">Name <span class="text-red">*</span></label>
                             <input type="text" name="name" id="aname" class="form-control" value="">
+                            <input type="hidden" name="id" id="aid" value="">
                         </div>
                         <div class="col-sm-12 form-group">
                             <label class="form-label" for="code">Code <span class="text-red">*</span></label>
@@ -62,5 +63,5 @@
             </div>
         </div>
     </div>
-</form>
+
 

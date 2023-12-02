@@ -22,7 +22,9 @@ class MenuManager extends Model
         'created_date',
         'assigned_attributes',
         'sequence',
-        'parent'
+        'parent',
+        'is_deleted',
+        'deleted_at'
     ];
 
     public function children()

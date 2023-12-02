@@ -23,10 +23,16 @@
                     </div>
                     {{-- <form class="form-horizontal"> --}}
                         <div id="storfront_div">
-                            @include('module_manager.storfront_form')
+                            <form action="{{ $menu->id == null ? route('module_manager.store') : route('module_manager.update', ['menu' => $menu->id]) }}" id="storfront_form" method="POST" autocomplete="off" novalidate="novalidate">
+                                @include('module_manager.storfront_form')
+                            </form>
                         </div>
                         <div id="admin_div">
-                            @include('module_manager.admin_form')
+                            <form
+                                action="{{ $menu->id == null ? route('module_manager.store') : route('module_manager.update', ['menu' => $menu->id]) }}"
+                                id="admin_form" method="POST" autocomplete="off" novalidate="novalidate">
+                                @include('module_manager.admin_form')
+                            </form>
                         </div>
 
                         {{-- <div class="modal-footer">

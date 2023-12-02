@@ -60,10 +60,14 @@
                 <div class="card-body">
                     <div class="content-inner">
                         <div id="storfront_edit_div" class="">
-                            @include('module_manager.storfront_form')
+                            <form action="{{ route('module_manager.store') }}" id="storfront_form_edit" method="POST" autocomplete="off" novalidate="novalidate">
+                                @include('module_manager.storfront_form')
+                            </form>
                         </div>
                         <div id="admin_edit_div" class="">
-                            @include('module_manager.admin_form')
+                            <form action="{{ route('module_manager.store') }}" id="admin_form_edit" method="POST" autocomplete="off" novalidate="novalidate">
+                                @include('module_manager.admin_form')
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -85,6 +89,42 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     $(document).ready(function(){
+        // console.log($(".storfront_nested_form").find('li:first').find('.dd-handle:first'));
+        // $(".storfront_nested_form").find('li:first').find('.dd-handle:first').trigger('mousedown');
+
+        $('#storfront_form_edit').submit(function (e) {
+            e.preventDefault(); // Prevent the form from submitting the traditional way
+
+            // Serialize the form data
+            var formData = $(this).serialize();
+
+            var edit_sid=$(this).find('#sid').val();
+            // Send an AJAX request
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('module_manager.update') }}'+'/'+edit_sid, // Replace with your actual route
+                data: formData,
+                success: function (response) {
+                    // Handle the success response
+                    console.log('AJAX request succeeded:', response);
+                    $('#addMenuModal').modal('hide'); // Hide the modal after successful submission
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response
+                    console.error('AJAX request failed:', status, error);
+
+                    if (xhr.status === 422) {
+                        // If it's a validation error, display the errors in the modal
+                        var errors = xhr.responseJSON.errors;
+                        displayValidationErrors(errors);
+                    } else {
+                        // Handle other types of errors as needed
+                        alert('An unexpected error occurred. Please try again.');
+                    }
+                }
+            });
+        });
 
         $('#storfront_form').submit(function (e) {
             e.preventDefault(); // Prevent the form from submitting the traditional way
@@ -187,7 +227,7 @@
         });
 
         $('#storfront_nestable').on('mousedown', '.dd-handle', function(event) {
-            var type = 'storfront_form';
+            var type = '#storfront_form_edit';
 
             $("#storfront_edit_div").show();
             $("#admin_edit_div").hide();
@@ -197,16 +237,22 @@
             $(this).addClass('selected-item');
 
             var singleData = $(this).parent().data("json");
+            console.log(singleData);
 
-            $("#storfront_form #sname").val(singleData.name);
-            $("#storfront_form #scode").val(singleData.code);
-            $("#storfront_form #spath").val(singleData.path);
-            $("#storfront_form #sis_enable").prop('checked', singleData.status);
-            $("#storfront_form #sinclude_in_menu").prop('checked', singleData.include_in_menu);
-            $("#storfront_form #smeta_title").val(singleData.meta_title);
-            $("#storfront_form #smeta_description").val(singleData.meta_description);
-            $("#storfront_form #screated_date").val(singleData.created_date);
-            $("#storfront_form #sassigned_attributes").val(singleData.assigned_attributes);
+            console.log("PMD isDeleted",singleData.is_deleted)
+
+            enabledDisabledFormField(type,singleData)
+
+            $("#storfront_form_edit #sid").val(singleData.id);
+            $("#storfront_form_edit #sname").val(singleData.name);
+            $("#storfront_form_edit #scode").val(singleData.code);
+            $("#storfront_form_edit #spath").val(singleData.path);
+            $("#storfront_form_edit #sis_enable").prop('checked', singleData.status);
+            $("#storfront_form_edit #sinclude_in_menu").prop('checked', singleData.include_in_menu);
+            $("#storfront_form_edit #smeta_title").val(singleData.meta_title);
+            $("#storfront_form_edit #smeta_description").val(singleData.meta_description);
+            $("#storfront_form_edit #screated_date").val(singleData.created_date);
+            $("#storfront_form_edit #sassigned_attributes").val(singleData.assigned_attributes);
         });
 
         $('#admin_nestable').on('mousedown', '.dd-handle', function(event) {
@@ -222,13 +268,15 @@
             var singleData = $(this).parent().data("json");
             console.log("PMD",singleData)
 
-            $("#admin_form #aname").val(singleData.name);
-            $("#admin_form #acode").val(singleData.code);
-            $("#admin_form #apath").val(singleData.path);
-            $("#admin_form #ais_enable").prop('checked', singleData.status);
-            $("#admin_form #ainclude_in_menu").prop('checked', singleData.include_in_menu);
-            $("#admin_form #acreated_date").val(singleData.created_date);
-            $("#admin_form #aassigned_attributes").val(singleData.assigned_attributes);
+
+            $("#admin_form_edit #aid").val(singleData.id);
+            $("#admin_form_edit #aname").val(singleData.name);
+            $("#admin_form_edit #acode").val(singleData.code);
+            $("#admin_form_edit #apath").val(singleData.path);
+            $("#admin_form_edit #ais_enable").prop('checked', singleData.status);
+            $("#admin_form_edit #ainclude_in_menu").prop('checked', singleData.include_in_menu);
+            $("#admin_form_edit #acreated_date").val(singleData.created_date);
+            $("#admin_form_edit #aassigned_attributes").val(singleData.assigned_attributes);
         });
 
         $('body').on('change', '.storfront_nested_form .nestable', function() {
@@ -329,7 +377,24 @@
             $("#storfront_div").hide();
             $("#admin_div").show();
         });
+
+        // Storefront remove event
+        $('body').on('click', '#remove-store-front-menu', function() {
+            var type = '#storfront_form_edit';
+            let menuId = $("#storfront_form_edit #sid").val();
+            let isDeleted = 1;
+            updateIsdeleted(type,menuId,isDeleted);
+        });
+
+        // Storefront restore event
+        $('body').on('click', '#restore-store-front-menu', function() {
+            var type = '#storfront_form_edit';
+            let menuId = $("#storfront_form_edit #sid").val();
+            let isDeleted = 0;
+            updateIsdeleted(type,menuId,isDeleted);
+        });
     });
+
     function convertMenuToJson(menu,includeClass, parentId = 0){
         var result = [];
         menu.children("li").each(function(index) {
@@ -351,6 +416,50 @@
         });
 
         return result;
+    }
+
+    function updateIsdeleted(type,menuId,isDeleted){
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        $.ajax({
+            url: '{{ route("module_manager.menu_delete") }}',
+            type: 'POST',
+            data: {
+                menu_id : menuId,
+                is_deleted : isDeleted
+            },
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            success: function(response) {
+                enabledDisabledFormField(type,response)
+                location.reload();
+                console.log(response)
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function enabledDisabledFormField(type,data){
+        if(data.is_deleted == 1){
+            $(type+' input').prop("disabled", true);
+            $(type+' input[type=checkbox]').attr('disabled', true);
+            $(type+' textarea').attr("disabled", true);
+            $(type+' #restore-store-front-menu').attr("disabled", false);
+            $(type+' #submit-store-front-menu').attr("disabled", false);
+
+            $(type+' #restore-store-front-menu').removeClass("d-none");
+            $(type+' #remove-store-front-menu').addClass("d-none");
+        }else{
+            $(type+' input').prop("disabled", false);
+            $(type+' input[type=checkbox]').attr('disabled', false);
+            $(type+' textarea').attr("disabled", false);
+
+            $(type+' #remove-store-front-menu').removeClass("d-none");
+            $(type+' #restore-store-front-menu').addClass("d-none");
+        }
     }
 
 </script>
