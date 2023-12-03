@@ -6,9 +6,17 @@
         background-color: #ffeeba !important; /* Change this to the desired color */
         color: #856404 !important; /* Change this to the desired text color */
     }
+
+    .tag-deleted{
+        float:right;
+        margin: -3px -10px 0 0;
+    }
 </style>
 @section('css')
 <link rel="stylesheet" href="{{asset('assets/css/nested_menu.css')}}">
+
+<link href="{{URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css')}}" rel="stylesheet" />
+<link href="{{URL::asset('assets/plugins/sweet-alert/sweetalert.css')}}" rel="stylesheet" />
 @endsection
 
 @section('page-header')
@@ -87,6 +95,11 @@
 <script src="{{asset('assets/js/storfront_nestable.js')}}"></script>
 <script src="{{asset('assets/js/admin_nestable.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<!-- INTERNAL Sweet alert js -->
+<script src="{{URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.js')}}"></script>
+<script src="{{URL::asset('assets/plugins/sweet-alert/sweetalert.min.js')}}"></script>
+<script src="{{URL::asset('assets/js/sweet-alert.js')}}"></script>
 <script>
     $(document).ready(function(){
         // console.log($(".storfront_nested_form").find('li:first').find('.dd-handle:first'));
@@ -240,8 +253,13 @@
             console.log(singleData);
 
             console.log("PMD isDeleted",singleData.is_deleted)
+            if(singleData.is_deleted == 1){
+                $(this).addClass('deleted-item');
+            }else{
+                $(this).removeClass('deleted-item');
+            }
 
-            enabledDisabledFormField(type,singleData)
+            enabledDisabledStoreFrontFormField(type,singleData)
 
             $("#storfront_form_edit #sid").val(singleData.id);
             $("#storfront_form_edit #sname").val(singleData.name);
@@ -256,7 +274,7 @@
         });
 
         $('#admin_nestable').on('mousedown', '.dd-handle', function(event) {
-            var type = 'admin_form';
+            var type = '#admin_form_edit';
 
             $("#admin_edit_div").show();
             $("#storfront_edit_div").hide();
@@ -267,7 +285,8 @@
 
             var singleData = $(this).parent().data("json");
             console.log("PMD",singleData)
-
+            console.log("PMD isDeleted",singleData.is_deleted)
+            enabledDisabledAdminFormField(type,singleData)
 
             $("#admin_form_edit #aid").val(singleData.id);
             $("#admin_form_edit #aname").val(singleData.name);
@@ -393,6 +412,26 @@
             let isDeleted = 0;
             updateIsdeleted(type,menuId,isDeleted);
         });
+
+        // Admin remove event
+        $('body').on('click', '#remove-admin-menu', function() {
+            var type = '#admin_form_edit';
+            let menuId = $("#admin_form_edit #aid").val();
+            let isDeleted = 1;
+            // let selectedItem = $('#admin_menu_list li[data-id="'+menuId+'"]');
+            // let selectedItemDataAttr = selectedItem.data("json");
+            // selectedItemDataAttr.is_deleted=1
+            // selectedItem.attr('json', selectedItemDataAttr);
+            updateIsdeleted(type,menuId,isDeleted);
+        });
+
+        // Admin restore event
+        $('body').on('click', '#restore-admin-menu', function() {
+            var type = '#admin_form_edit';
+            let menuId = $("#admin_form_edit #aid").val();
+            let isDeleted = 0;
+            updateIsdeleted(type,menuId,isDeleted);
+        });
     });
 
     function convertMenuToJson(menu,includeClass, parentId = 0){
@@ -418,32 +457,61 @@
         return result;
     }
 
-    function updateIsdeleted(type,menuId,isDeleted){
-        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    function updateIsdeleted(type,menuId,isDeleted,current){
+        var deleteText="Data would be there till 30 days and Once deleted, you will not be able to recover this details !"
+        swal({
+            title: "Are you sure?",
+            text: deleteText,
+            icon: "warning",
+            showCancelButton: true,
+            type: "warning",
+            // confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Yes, I am sure!',
+            cancelButtonText: "No, cancel it!",
+            // closeOnConfirm: false,
+            // closeOnCancel: false,
+            dangerMode: true,
+        }, function (willDelete) {
+            if (willDelete) {
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-        $.ajax({
-            url: '{{ route("module_manager.menu_delete") }}',
-            type: 'POST',
-            data: {
-                menu_id : menuId,
-                is_deleted : isDeleted
-            },
-            headers: {
-                'X-CSRF-TOKEN': csrfToken
-            },
-            success: function(response) {
-                enabledDisabledFormField(type,response)
-                location.reload();
-                console.log(response)
-            },
-            error: function(error) {
-                console.error(error);
+                $.ajax({
+                    url: '{{ route("module_manager.menu_delete") }}',
+                    type: 'POST',
+                    data: {
+                        menu_id : menuId,
+                        is_deleted : isDeleted
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    success: function(response) {
+                        if(type == "#storfront_form_edit"){
+                            enabledDisabledStoreFrontFormField(type,response,menuId);
+                        }else if(type == "#admin_form_edit"){
+                            enabledDisabledAdminFormField(type,response,menuId);
+                        }
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
             }
         });
     }
 
-    function enabledDisabledFormField(type,data){
+    function enabledDisabledStoreFrontFormField(type,data,menuId){
         if(data.is_deleted == 1){
+            let isDeletedHtml = `<span class="tag tag-deleted tag-red">Deleted</span>`;
+            $('#storfront_menu_list li[data-id="'+menuId+'"] .storfront-menu:first').after(isDeletedHtml)
+
+            let selectedItem = $('#storfront_menu_list li[data-id="'+menuId+'"]');
+            let selectedItemDataAttr = selectedItem.data("json");
+            if(selectedItemDataAttr && selectedItemDataAttr.is_deleted == 0){
+                selectedItemDataAttr.is_deleted=1
+            }
+            selectedItem.attr('json', selectedItemDataAttr);
+
             $(type+' input').prop("disabled", true);
             $(type+' input[type=checkbox]').attr('disabled', true);
             $(type+' textarea').attr("disabled", true);
@@ -453,12 +521,60 @@
             $(type+' #restore-store-front-menu').removeClass("d-none");
             $(type+' #remove-store-front-menu').addClass("d-none");
         }else{
+            $('#storfront_menu_list li[data-id="'+menuId+'"]').find(".tag-deleted").remove()
+
+            let selectedItem = $('#storfront_menu_list li[data-id="'+menuId+'"]');
+            let selectedItemDataAttr = selectedItem.data("json");
+            if(selectedItemDataAttr && selectedItemDataAttr.is_deleted == 1){
+                selectedItemDataAttr.is_deleted=0
+            }
+            selectedItem.attr('json', selectedItemDataAttr);
+
             $(type+' input').prop("disabled", false);
             $(type+' input[type=checkbox]').attr('disabled', false);
             $(type+' textarea').attr("disabled", false);
 
             $(type+' #remove-store-front-menu').removeClass("d-none");
             $(type+' #restore-store-front-menu').addClass("d-none");
+        }
+    }
+
+    function enabledDisabledAdminFormField(type,data,menuId){
+        if(data.is_deleted == 1){
+            let isDeletedHtml = `<span class="tag tag-deleted tag-red">Deleted</span>`;
+            $('#admin_menu_list li[data-id="'+menuId+'"] .admin-menu:first').after(isDeletedHtml)
+
+            let selectedItem = $('#admin_menu_list li[data-id="'+menuId+'"]');
+            let selectedItemDataAttr = selectedItem.data("json");
+            if(selectedItemDataAttr && selectedItemDataAttr.is_deleted == 0){
+                selectedItemDataAttr.is_deleted=1
+            }
+            selectedItem.attr('json', selectedItemDataAttr);
+
+            $(type+' input').prop("disabled", true);
+            $(type+' input[type=checkbox]').attr('disabled', true);
+            $(type+' textarea').attr("disabled", true);
+            $(type+' #restore-admin-menu').attr("disabled", false);
+            $(type+' #submit-admin-menu').attr("disabled", false);
+
+            $(type+' #restore-admin-menu').removeClass("d-none");
+            $(type+' #remove-admin-menu').addClass("d-none");
+        }else{
+            $('#admin_menu_list li[data-id="'+menuId+'"]').find(".tag-deleted").remove()
+
+            let selectedItem = $('#admin_menu_list li[data-id="'+menuId+'"]');
+            let selectedItemDataAttr = selectedItem.data("json");
+            if(selectedItemDataAttr && selectedItemDataAttr.is_deleted == 1){
+                selectedItemDataAttr.is_deleted=0
+            }
+            selectedItem.attr('json', selectedItemDataAttr);
+
+            $(type+' input').prop("disabled", false);
+            $(type+' input[type=checkbox]').attr('disabled', false);
+            $(type+' textarea').attr("disabled", false);
+
+            $(type+' #remove-admin-menu').removeClass("d-none");
+            $(type+' #restore-admin-menu').addClass("d-none");
         }
     }
 

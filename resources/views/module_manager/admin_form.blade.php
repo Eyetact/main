@@ -57,7 +57,9 @@
                     </div>
                 </div>
                 <div class="card-footer text-right">
-                    <input title="Save module" class="btn btn-primary" type="submit" value="Save">
+                    <input title="Reset form" class="btn btn-danger d-none" id="remove-admin-menu" type="button" value="Delete">
+                    <input title="Reset form" class="btn btn-success d-none" id="restore-admin-menu" type="button" value="Restore">
+                    <input title="Save module" class="btn btn-primary" id="submit-admin-menu" type="submit" value="Save">
                     {{-- <input title="Reset form" class="btn btn-warning" type="reset" value="Reset"> --}}
                 </div>
             </div>
