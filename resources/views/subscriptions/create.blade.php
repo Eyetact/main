@@ -90,12 +90,13 @@
                     </div>
 
                     <div class="col-sm-6 col-md-6">
+                        
                         <div class="input-box">
-                            <label class="form-label">User<span class="text-danger">*</span></label>
+                            <label class="form-label">Customer<span class="text-danger">*</span></label>
                             <select class="default-select form-control wide mb-3" name="user_id" tabindex="null">
-                                <option selected disabled>Select User</option>
+                                <option selected disabled>Select Customer</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{$user->id}}</option>
+                                    <option value="{{ $user->id }}">{{$user->id}} - {{$user->username}}</option>
                                 @endforeach
                             </select>
                         </div>

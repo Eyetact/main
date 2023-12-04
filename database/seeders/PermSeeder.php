@@ -44,7 +44,7 @@ class PermSeeder extends Seeder
         ];
         Module::insert($module);    
         Permission::insert($permission);
-        $role = Role::find(1);
+        $role = Role::where('name','super')->first();
         $role->givePermissionTo(Permission::all());
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\Helper;
+use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\MailboxController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Profile\ProfileController;
@@ -117,12 +118,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('module_manager/{menu}', 'destroy')->name('module_manager.destroy');
     });
     Route::get('/myadmins/{user_id}', [UserController::class, 'myAdmins'])->name('users.myadmins');
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/vendors', [UserController::class, 'vendors'])->name('users.vendors');
     Route::get('/admins', [UserController::class, 'admins'])->name('users.admins');
+    Route::get('/users', [UserController::class, 'users'])->name('users.users');
 
-    Route::get('add-user',[UserController::class, 'create'])->name('users.create');
     Route::post('add-user',[UserController::class, 'store'])->name('users.store');
 
+    Route::get('add-user',[UserController::class, 'create'])->name('users.create');
+    Route::get('add-vendor',[UserController::class, 'createvendor'])->name('vendor.create');
     Route::get('add-admin',[UserController::class, 'createAdmin'])->name('admin.create');
 
 
@@ -176,4 +179,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
      Route::post('update-subscription/{id}',[SubscriptionController::class, 'update'])->name('subscriptions.update');
 
      Route::post('/subscription/delete/{id}', [SubscriptionController::class, 'destroy'])->name('subscriptions.destroy');
+
+
+    
 });

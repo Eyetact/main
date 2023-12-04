@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CustomerGroup;
 use Illuminate\Http\Request;
 use App\Models\Subscription;
 use App\Models\User;
@@ -18,9 +19,14 @@ class SubscriptionController extends Controller
 
             return datatables()->of($subscriptions)
 
-            ->editColumn('plan_id', function($row){
-                return $row->plan_id ? $row->plan?->name : " ";
-            })
+                ->editColumn('plan_id', function ($row) {
+                    return $row->plan_id ? $row->plan?->name : " ";
+                })
+
+
+                ->editColumn('user_id', function ($row) {
+                    return $row->user->username;
+                })
 
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown">
@@ -32,18 +38,18 @@ class SubscriptionController extends Controller
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
-                        <a  href="'. route('subscriptions.view',$row->id) . '">View or Edit</a>
+                        <a  href="' . route('subscriptions.view', $row->id) . '">View or Edit</a>
                         </li>
 
                         <li class="dropdown-item">
-                        <a  href="#" data-id="'. $row->id .'" class="subscription-delete">Delete</a>
+                        <a  href="#" data-id="' . $row->id . '" class="subscription-delete">Delete</a>
                         </li>
                     </ul>
                 </div>';
 
                     return $btn;
                 })
-                ->rawColumns(['plan_id','action'])
+                ->rawColumns(['plan_id', 'action'])
 
                 ->addIndexColumn()
                 ->make(true);
@@ -57,25 +63,28 @@ class SubscriptionController extends Controller
 
         $users = User::all();
         $plans = Plan::all();
+        $groups = CustomerGroup::all();
 
-        return view('subscriptions.create',compact('users','plans'));
+        return view('subscriptions.create', compact('users', 'plans', 'groups'));
 
     }
 
     public function store(Request $request)
     {
 
-        $sub=Subscription::create($request->all());
+       
 
+        $sub = Subscription::create($request->all());
 
         $plan = Plan::find($sub->plan_id);
 
-    $sub->start_date = Carbon::today();
-    $sub->end_date = $sub->start_date->copy()->addDays($plan->period);
-    $sub->save();
+        $sub->start_date = Carbon::today();
+        $sub->end_date = $sub->start_date->copy()->addDays($plan->period);
+        $sub->save();
 
         return redirect()->route('subscriptions.index')
-         ->with('success','Subscription has been added successfully');;
+            ->with('success', 'Subscription has been added successfully');
+
 
 
     }
@@ -86,7 +95,7 @@ class SubscriptionController extends Controller
         $subscription = Subscription::findOrFail($id);
         $users = User::all();
         $plans = Plan::all();
-        return view('subscriptions.show',compact('subscription','users','plans'));
+        return view('subscriptions.show', compact('subscription', 'users', 'plans'));
 
     }
 
@@ -112,7 +121,7 @@ class SubscriptionController extends Controller
 
 
         return redirect()->route('subscriptions.index')
-                        ->with('success','Subscription has been updated successfully');
+            ->with('success', 'Subscription has been updated successfully');
     }
 
     public function destroy($id)

@@ -86,7 +86,7 @@
                         <ul class="mb-0 pro-details">
                             <p class="mb-3"><strong>Start Date: </strong> {{ $subscription->start_date }}</p>
                             <p class="mb-3"><strong>End Date: </strong> {{ $subscription->end_date }}</p>
-                            <p class="mb-3"><strong>User : </strong> <a href="{{ route('users.view', $subscription->user->id) }}"> {{ $subscription->user->name }}</a></p>
+                            <p class="mb-3"><strong>User : </strong> <a href="{{ route('profile.index', $subscription->user->id) }}"> {{ $subscription->user->name }}</a></p>
                             <p class="mb-3"><strong>Plan :</strong> <a href="{{ route("plans.view", $subscription->plan->id) }}">{{ $subscription->plan->name }}</a></p>
                             <p class="mb-3"><strong>Status: </strong> {{ $subscription->status }}</p>
                         </ul>

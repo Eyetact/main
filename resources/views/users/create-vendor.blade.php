@@ -16,9 +16,9 @@
     <!--Page header-->
     <div class="page-header">
         <div class="page-leftheader">
-            <h4 class="page-title mb-0">add Users</h4>
+            <h4 class="page-title mb-0">add vendor</h4>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Users</a></li>
+                <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>vendor</a></li>
                 <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('smtp.index') }}">add</a></li>
             </ol>
         </div>
@@ -43,7 +43,7 @@
     @endpush
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">add User</h3>
+            <h3 class="card-title">add vendor</h3>
         </div>
         <div class="card-body pb-2">
             <form action="{{ route('users.store') }}" method="POST" id="mailboxForm" enctype="multipart/form-data">
@@ -128,6 +128,20 @@
                         @error('password')
                             <label id="password-error" class="error" for="password">{{ $message }}</label>
                         @enderror
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                        <div class="input-box">
+                            <select class=" google-input" name="group_id" tabindex="null">
+                                <option selected disabled>Select Customer Group</option>
+                                @foreach ($groups as $group)
+                                    <option value="{{ $group->id }}">{{$group->id}} - {{$group->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @error('group_id')
+                            <label id="user_id-error" class="error" for="group_id">{{ $message }}</label>
+                        @enderror
+                       
                     </div>
                 </div>
 
