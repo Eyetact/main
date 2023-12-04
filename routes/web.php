@@ -2,6 +2,7 @@
 
 use App\Helpers\Helper;
 use App\Http\Controllers\AttributeController;
+use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\MailboxController;
 use App\Http\Controllers\MenuManagerController;
 use App\Http\Controllers\ModuleController;
@@ -116,11 +117,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('module_manager/{menu}', 'destroy')->name('module_manager.destroy');
     });
     Route::get('/myadmins/{user_id}', [UserController::class, 'myAdmins'])->name('users.myadmins');
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/vendors', [UserController::class, 'vendors'])->name('users.vendors');
     Route::get('/admins', [UserController::class, 'admins'])->name('users.admins');
+    Route::get('/users', [UserController::class, 'users'])->name('users.users');
 
-    Route::get('add-user', [UserController::class, 'create'])->name('users.create');
-    Route::post('add-user', [UserController::class, 'store'])->name('users.store');
+    Route::post('add-user',[UserController::class, 'store'])->name('users.store');
+
+    Route::get('add-user',[UserController::class, 'create'])->name('users.create');
+    Route::get('add-vendor',[UserController::class, 'createvendor'])->name('vendor.create');
+    Route::get('add-admin',[UserController::class, 'createAdmin'])->name('admin.create');
 
     Route::get('add-admin', [UserController::class, 'createAdmin'])->name('admin.create');
 

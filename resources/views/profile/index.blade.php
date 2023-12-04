@@ -236,7 +236,6 @@
                                             @error('group_id')
                                                 <label id="user_id-error" class="error" for="group_id">{{ $message }}</label>
                                             @enderror
-
                                         </div>
                                     </div>
                                 </div>

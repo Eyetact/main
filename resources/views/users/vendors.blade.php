@@ -46,7 +46,7 @@
         </div>
         <div class="page-rightheader">
             <div class="btn btn-list">
-                <a href="{{ route('users.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
+                <a href="{{ route('vendor.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
                     data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
             </div>
         </div>
@@ -133,7 +133,7 @@
                 sSearch: '',
                 lengthMenu: '_MENU_ ',
             },
-            ajax: "{{ route('users.index') }}",
+            ajax: "{{ route('users.vendors') }}",
 
             columns: [{
                     data: 'DT_RowIndex',

@@ -29,7 +29,9 @@ class User extends Authenticatable
         'phone',
         'website',
         'avatar',
-        'user_id'
+        'user_id',
+        'group_id',
+        'username'
     ];
 
     /**

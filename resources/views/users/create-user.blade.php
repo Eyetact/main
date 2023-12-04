@@ -16,10 +16,10 @@
     <!--Page header-->
     <div class="page-header">
         <div class="page-leftheader">
-            <h4 class="page-title mb-0">add Subscriptions</h4>
+            <h4 class="page-title mb-0">add Users</h4>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Plans</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('subscriptions.index') }}">add</a></li>
+                <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Users</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('smtp.index') }}">add</a></li>
             </ol>
         </div>
         <div class="page-rightheader">
@@ -43,58 +43,96 @@
     @endpush
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">add Subscription</h3>
+            <h3 class="card-title">add User</h3>
         </div>
         <div class="card-body pb-2">
-            <form action="{{ route('subscriptions.store') }}" method="POST" id="mailboxForm" enctype="multipart/form-data">
+            <form action="{{ route('users.store') }}" method="POST" id="mailboxForm" enctype="multipart/form-data">
                 @csrf
+
+                <input type="hidden" name="role" value="user"/>
                 <div class="row">
 
+                    <div class="col-lg-12 col-sm-12">
+                        <label class="form-label">avatar</label>
+                        <input type="file" class="dropify" name="avatar"
+                            data-default-file=""
+                            data-height="180" />
+                    </div>
 
-
-                    {{-- <div class="col-sm-6 col-md-6">
+                    <div class="col-sm-6 col-md-6">
                         <div class="input-box">
-                            <label class="form-label">Start Date<span class="text-danger">*</span></label>
-                            <input type="date" class="google-input" name="start_date" id="start_date" value="" />
+                            <label for="name" class="input-label">Name</label>
+                            <input type="text" class="google-input" name="name" id="name" value="" />
                         </div>
-                        @error('start_date')
-                            <label id="start_date-error" class="error" for="start_date">{{ $message }}</label>
+                        @error('name')
+                            <label id="name-error" class="error" for="name">{{ $message }}</label>
                         @enderror
                     </div>
 
 
                     <div class="col-sm-6 col-md-6">
                         <div class="input-box">
-                            <label class="form-label">End Date<span class="text-danger">*</span></label>
-                            <input type="date" class="google-input" name="end_date" id="end_date" value="" />
+                            <label for="username" class="input-label">username</label>
+                            <input type="text" class="google-input" name="username" id="username" value="" />
                         </div>
-                        @error('end_date')
-                            <label id="end_date-error" class="error" for="end_date">{{ $message }}</label>
-                        @enderror
-                    </div> --}}
-
-
-                    <div class="col-sm-6 col-md-6">
-                        <div class="input-box">
-                            <label class="form-label">Plan<span class="text-danger">*</span></label>
-                            <select class="default-select form-control wide mb-3" name="plan_id" tabindex="null">
-                                <option selected disabled>Select Plan</option>
-                                @foreach ($plans as $plan)
-                                    <option value="{{ $plan->id }}">{{$plan->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @error('plan_id')
-                            <label id="plan_id-error" class="error" for="plan_id">{{ $message }}</label>
+                        @error('username')
+                            <label id="username-error" class="error" for="username">{{ $message }}</label>
                         @enderror
                     </div>
 
                     <div class="col-sm-6 col-md-6">
-
                         <div class="input-box">
-                            <label class="form-label">Customer Group<span class="text-danger">*</span></label>
-                            <select class="default-select form-control wide mb-3" name="group_id" tabindex="null">
-                                <option selected disabled>Select Group</option>
+                            <label for="email" class="input-label">email</label>
+                            <input type="email" class="google-input" name="email" id="email" value="" />
+                        </div>
+                        @error('email')
+                            <label id="email-error" class="error" for="email">{{ $message }}</label>
+                        @enderror
+                    </div>
+
+                    <div class="col-sm-6 col-md-6">
+                        <div class="input-box">
+                            <label for="phone" class="input-label">phone</label>
+                            <input type="text" class="google-input" name="phone" id="phone" value="" />
+                        </div>
+                        @error('phone')
+                            <label id="phone-error" class="error" for="phone">{{ $message }}</label>
+                        @enderror
+                    </div>
+
+                    <div class="col-sm-6 col-md-6">
+                        <div class="input-box">
+                            <label for="address" class="input-label">address</label>
+                            <input type="text" class="google-input" name="address" id="address" value="" />
+                        </div>
+                        @error('address')
+                            <label id="address-error" class="error" for="address">{{ $message }}</label>
+                        @enderror
+                    </div>
+
+                    <div class="col-sm-6 col-md-6">
+                        <div class="input-box">
+                            <label for="website" class="input-label">website</label>
+                            <input type="text" class="google-input" name="website" id="website" value="" />
+                        </div>
+                        @error('website')
+                            <label id="website-error" class="error" for="website">{{ $message }}</label>
+                        @enderror
+                    </div>
+
+                    <div class="col-sm-6 col-md-6">
+                        <div class="input-box">
+                            <label for="name" class="input-label">password</label>
+                            <input type="password" class="google-input" name="password" id="password" value="" />
+                        </div>
+                        @error('password')
+                            <label id="password-error" class="error" for="password">{{ $message }}</label>
+                        @enderror
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                        <div class="input-box">
+                            <select class=" google-input" name="group_id" tabindex="null">
+                                <option selected disabled>Select Customer Group</option>
                                 @foreach ($groups as $group)
                                     <option value="{{ $group->id }}">{{$group->id}} - {{$group->name}}</option>
                                 @endforeach
@@ -103,32 +141,15 @@
                         @error('group_id')
                             <label id="user_id-error" class="error" for="group_id">{{ $message }}</label>
                         @enderror
-                        <span>OR</span>
-                        <div class="input-box">
-
-                            <label class="form-label">Customer<span class="text-danger">*</span></label>
-                            <select class="default-select form-control wide mb-3" name="user_id" tabindex="null">
-                                <option selected disabled>Select Customer</option>
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{$user->id}} - {{$user->username}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @error('user_id')
-                            <label id="user_id-error" class="error" for="user_id">{{ $message }}</label>
-                        @enderror
+                       
                     </div>
-
-
-
-
                 </div>
 
 
 
                 <div class="card-footer">
                     <button class="btn btn-primary" type="submit">Save</button>
-                    <a href="{{ route('subscriptions.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('main_mailbox.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>
@@ -138,21 +159,21 @@
     <!--INTERNAL Sumoselect js-->
     <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
     <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
-
+    
      <!-- INTERNAL File-Uploads Js-->
      <script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
      <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
      <script src="{{ asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
      <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
      <script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
-
+ 
      <!-- INTERNAL File uploads js -->
      <script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
      <script src="{{ asset('assets/js/filupload.js') }}"></script>
-
+ 
      <!--INTERNAL Sumoselect js-->
      <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
-
+ 
      <!--INTERNAL Form Advanced Element -->
      <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
      <script src="{{ asset('assets/js/form-elements.js') }}"></script>
@@ -177,7 +198,7 @@
                 password: {
                     required: true,
                 }
-
+                
             },
             messages: {},
             errorPlacement: function(error, element) {

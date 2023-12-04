@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Plan;
+use App\Models\CustomerGroup;
+use Illuminate\Http\Request;
 use App\Models\Subscription;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+
 
 class SubscriptionController extends Controller
 {
@@ -20,6 +22,11 @@ class SubscriptionController extends Controller
 
                 ->editColumn('plan_id', function ($row) {
                     return $row->plan_id ? $row->plan?->name : " ";
+                })
+
+
+                ->editColumn('user_id', function ($row) {
+                    return $row->user->username;
                 })
 
                 ->addColumn('action', function ($row) {
@@ -56,8 +63,9 @@ class SubscriptionController extends Controller
 
         $users = User::all();
         $plans = Plan::all();
+        $groups = CustomerGroup::all();
 
-        return view('subscriptions.create', compact('users', 'plans'));
+        return view('subscriptions.create', compact('users', 'plans', 'groups'));
 
     }
 
@@ -94,6 +102,8 @@ class SubscriptionController extends Controller
 
         return redirect()->route('subscriptions.index')
             ->with('success', 'Subscription has been added successfully');
+
+
 
     }
 

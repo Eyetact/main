@@ -19,8 +19,8 @@ class PlanController extends Controller
             $plans = Plan::all();
 
             return datatables()->of($plans)
-                ->editColumn('image', function($row){
-                    return $row->image ? '<img src="' . asset($row->image) .'" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
+                ->editColumn('image', function ($row) {
+                    return $row->image ? '<img src="' . asset($row->image) . '" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown">
@@ -32,18 +32,18 @@ class PlanController extends Controller
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
-                        <a  href="'. route('plans.view',$row->id) . '">View or Edit</a>
+                        <a  href="' . route('plans.view', $row->id) . '">View or Edit</a>
                         </li>
 
                         <li class="dropdown-item">
-                        <a  href="#" data-id="'. $row->id .'" class="plan-delete">Delete</a>
+                        <a  href="#" data-id="' . $row->id . '" class="plan-delete">Delete</a>
                         </li>
                     </ul>
                 </div>';
 
                     return $btn;
                 })
-                ->rawColumns(['image','action'])
+                ->rawColumns(['image', 'action'])
 
                 ->addIndexColumn()
                 ->make(true);
@@ -61,18 +61,22 @@ class PlanController extends Controller
 
     public function store(PlanRequest $request)
     {
-        
+
         $plan = Plan::create($request->except('permissions'));
 
-        foreach( $request->permissions as $p ){
+        if ($request->permissions) {
+            foreach ($request->permissions as $p) {
 
-            $per = Permission::find( $p );
+                $per = Permission::find($p);
 
-            $plan->permissions()->save( $per );
+                $plan->permissions()->save($per);
+            }
         }
 
+
         return redirect()->route('plans.index')
-         ->with('success','Plan has been added successfully');;
+            ->with('success', 'Plan has been added successfully');
+        ;
 
 
     }
@@ -83,7 +87,7 @@ class PlanController extends Controller
         $permissions = Permission::all();
 
         $plan = Plan::findOrFail($id);
-        return view('plans.show',compact('plan','permissions'));
+        return view('plans.show', compact('plan', 'permissions'));
     }
 
 
@@ -108,16 +112,16 @@ class PlanController extends Controller
 
         $plan->permissions()->detach();
 
-        foreach( $request->permissions as $p ){
+        foreach ($request->permissions as $p) {
 
-            $per = Permission::find( $p );
+            $per = Permission::find($p);
 
-            $plan->permissions()->save( $per );
+            $plan->permissions()->save($per);
         }
 
 
         return redirect()->route('plans.index')
-                        ->with('success','Plan has been updated successfully');
+            ->with('success', 'Plan has been updated successfully');
     }
 
     public function destroy($id)
