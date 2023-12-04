@@ -70,7 +70,7 @@ class ProfileController extends Controller
     public function update(Request $request, $id = null)
     {
         //        dd($request->all());
-        $user_id = !filled($id) ? Auth::id() : $id;
+        $user_id = $id == null ? Auth::id() : $id;
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'username' => 'required',
@@ -99,7 +99,7 @@ class ProfileController extends Controller
 
     public function changePassword(Request $request, $id = null)
     {
-        $user_id = !filled($id) ? Auth::id() : $id;
+        $user_id = $id == null ? Auth::id() : $id;
         $validator = Validator::make($request->all(), [
             'password' => 'required|confirmed|min:6',
         ]);
@@ -123,7 +123,7 @@ class ProfileController extends Controller
             $request->image_upload->move($destinationPath, $filename);
             $request->merge(['avatar' => $filename]);
 
-            $user_id = !filled($id) ? Auth::id() : $id;
+            $user_id = $id == null ? Auth::id() : $id;
             $user = User::where('id', $user_id)->first();
             $user->avatar = $request->avatar;
             $user->save();

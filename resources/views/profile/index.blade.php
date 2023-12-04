@@ -98,7 +98,7 @@
                                 <a href="javascript:void(0)" class="" id="ProfileUploadBtn"><i
                                         class="fa fa-camera"></i></a>
                             </div>
-                            <form id="profileImageForm" action="{{ route('profile.upload-image') }}"
+                            <form id="profileImageForm" action="{{ route('profile.upload-image',$user->id) }}"
                                 enctype="multipart/form-data" method="POST">
                                 @csrf
                                 <input type="file" id="ProfileUpload" name="image_upload" style="display:none;"
@@ -157,7 +157,7 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="myProfile">
                         <div class="card">
-                            <form action="{{ route('profile.update') }}" method="POST" id="editProfile">
+                            <form action="{{ route('profile.update',$user->id) }}" method="POST" id="editProfile">
                                 @csrf
                                 <div class="card-header">
                                     <div class="card-title">Edit Profile</div>
@@ -245,7 +245,7 @@
                             </form>
                         </div>
                         <div class="card">
-                            <form action="{{ route('profile.change-password') }}" method="POST"
+                            <form action="{{ route('profile.change-password',$user->id) }}" method="POST"
                                 id="changePasswordForm">
                                 @csrf
                                 <div class="card-header">
