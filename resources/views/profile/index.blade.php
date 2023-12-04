@@ -224,6 +224,20 @@
                                                     for="website">{{ $message }}</label>
                                             @enderror
                                         </div>
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="input-box">
+                                                <select class=" google-input" name="group_id" tabindex="null">
+                                                    <option selected disabled>Select Customer Group</option>
+                                                    @foreach ($groups as $group)
+                                                        <option @if( $user->group_id == $group->id ) selected @endif value="{{ $group->id }}">{{$group->id}} - {{$group->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            @error('group_id')
+                                                <label id="user_id-error" class="error" for="group_id">{{ $message }}</label>
+                                            @enderror
+
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="card-footer text-right">
@@ -302,7 +316,7 @@
 
                     </div>
 
-                    @if ($user->hasRole('super') || $user->hasRole('admin') ) 
+                    @if ($user->hasRole('super') || $user->hasRole('admin') )
                         <div class="tab-pane" id="admins">
 
                             <div class="card">
@@ -531,7 +545,7 @@
                 sSearch: '',
                 lengthMenu: '_MENU_ ',
             },
-            ajax: "{{ route('profile.index') }}",
+            ajax: "{{ route('profile.index',$user->id) }}",
 
             columns: [{
                     data: 'DT_RowIndex',

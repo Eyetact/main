@@ -91,6 +91,19 @@
 
                     <div class="col-sm-6 col-md-6">
                         <div class="input-box">
+                            <label class="form-label">Customer Group<span class="text-danger">*</span></label>
+                            <select class="default-select form-control wide mb-3" name="group_id" tabindex="null">
+                                <option selected disabled>Select Group</option>
+                                @foreach ($groups as $group)
+                                    <option value="{{ $group->id }}">{{$group->id}} - {{$group->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @error('group_id')
+                            <label id="user_id-error" class="error" for="group_id">{{ $message }}</label>
+                        @enderror
+                        <span>OR</span>
+                        <div class="input-box">
                             <label class="form-label">User<span class="text-danger">*</span></label>
                             <select class="default-select form-control wide mb-3" name="user_id" tabindex="null">
                                 <option selected disabled>Select User</option>

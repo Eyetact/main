@@ -30,9 +30,9 @@ class UserController extends Controller
                     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-    
+
                     </a>
-    
+
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
                         <a  href="'. route('profile.index',$row->id) . '">View or Edit</a>
@@ -43,7 +43,7 @@ class UserController extends Controller
                         </li>
                     </ul>
                 </div>';
-                   
+
                     return $btn;
                 })
                 ->rawColumns(['avatar','action'])
@@ -68,9 +68,9 @@ class UserController extends Controller
                     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-    
+
                     </a>
-    
+
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
                         <a  href="'. route('profile.index',$row->id) . '">View or Edit</a>
@@ -81,7 +81,7 @@ class UserController extends Controller
                         </li>
                     </ul>
                 </div>';
-                   
+
                     return $btn;
                 })
                 ->rawColumns(['avatar','action'])
@@ -107,9 +107,9 @@ class UserController extends Controller
                     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-    
+
                     </a>
-    
+
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
                         <a  href="'. route('profile.index',$row->id) . '">View or Edit</a>
@@ -120,7 +120,7 @@ class UserController extends Controller
                         </li>
                     </ul>
                 </div>';
-                   
+
                     return $btn;
                 })
                 ->rawColumns(['avatar','action'])
@@ -128,10 +128,10 @@ class UserController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
-        
+
     }
 
-   
+
 
 
     /**
@@ -156,11 +156,11 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    
+
     public function store(Request $request)
     {
-        
-        
+
+
         $role = 'vendor';
         if (Auth::user()->hasRole('super')) {
             $role = 'admin';
@@ -176,6 +176,24 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
             'user_id' => Auth::user()->id
         ]);
+
+        $plan = Plan::where('name', 'Free Plan')->first();
+
+        if (!$plan) {
+            $plan = new Plan();
+            $plan->name = 'Free Plan';
+            $plan->price = 0;
+            $plan->period = 14;
+            $plan->save();
+        }
+        $sub = new Subscription();
+        $sub->user_id = $user->id;
+        $sub->plan_id = $plan->id;
+        $sub->save();
+
+        $sub->start_date = Carbon::today();
+        $sub->end_date = $sub->start_date->copy()->addDays($plan->period);
+        $sub->save();
 
         $user->assignRole($request->role);
 

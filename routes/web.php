@@ -1,20 +1,20 @@
 <?php
 
 use App\Helpers\Helper;
+use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\MailboxController;
+use App\Http\Controllers\MenuManagerController;
+use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\ModuleManagerController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SmtpController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AttributeController;
-use App\Http\Controllers\ModuleController;
-use App\Http\Controllers\MenuManagerController;
-use App\Http\Controllers\ModuleManagerController;
-use App\Http\Controllers\PlanController;
-use App\Http\Controllers\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +25,7 @@ use App\Http\Controllers\SubscriptionController;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 Auth::routes();
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/dashboard', function () {
@@ -34,7 +34,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/', function () {
         return view('index');
     });
-
 
     Route::controller(ModuleController::class)->group(function () {
         Route::get('/module', 'index')->name('module.index');
@@ -67,13 +66,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
     Route::prefix('profile')->group(function () {
-        Route::get('{id?}',[ProfileController::class,'index'])->name('profile.index');
-        Route::post('update/{id?}',[ProfileController::class,'update'])->name('profile.update');
-        Route::post('change-password/{id?}',[ProfileController::class,'changePassword'])->name('profile.change-password');
-        Route::post('profile-upload/{id?}',[ProfileController::class,'uploadProfileImage'])->name('profile.upload-image');
+        Route::get('{id?}', [ProfileController::class, 'index'])->name('profile.index');
+        Route::post('update/{id?}', [ProfileController::class, 'update'])->name('profile.update');
+        Route::post('change-password/{id?}', [ProfileController::class, 'changePassword'])->name('profile.change-password');
+        Route::post('profile-upload/{id?}', [ProfileController::class, 'uploadProfileImage'])->name('profile.upload-image');
     });
 
-    Route::get('example-datatable',function (){
+    Route::get('example-datatable', function () {
         return view('example_datatable.index');
     });
 
@@ -105,7 +104,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('main_mailbox/{main_mailbox}', 'destroy')->name('main_mailbox.destroy');
     });
 
-    Route::post('theme-setting/update',[Helper::class,'update'])->name('update.theme');
+    Route::post('theme-setting/update', [Helper::class, 'update'])->name('update.theme');
 
     Route::controller(ModuleManagerController::class)->group(function () {
         Route::get('/module_manager', 'index')->name('module_manager.index');
@@ -120,17 +119,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/admins', [UserController::class, 'admins'])->name('users.admins');
 
-    Route::get('add-user',[UserController::class, 'create'])->name('users.create');
-    Route::post('add-user',[UserController::class, 'store'])->name('users.store');
+    Route::get('add-user', [UserController::class, 'create'])->name('users.create');
+    Route::post('add-user', [UserController::class, 'store'])->name('users.store');
 
-    Route::get('add-admin',[UserController::class, 'createAdmin'])->name('admin.create');
-
+    Route::get('add-admin', [UserController::class, 'createAdmin'])->name('admin.create');
 
     Route::get('/user/{id}', [UserController::class, 'show'])->name('users.view');
 
     Route::post('/user/delete/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-
-
 
     Route::controller(RoleController::class)->prefix('role')->group(function () {
         Route::get('/', 'index')->name('role.index');
@@ -158,22 +154,33 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //plan
     Route::get('/plans', [planController::class, 'index'])->name('plans.index');
 
-    Route::get('add-plan',[planController::class, 'create'])->name('plans.create');
-    Route::post('add-plan',[planController::class, 'store'])->name('plans.store');
+    Route::get('add-plan', [planController::class, 'create'])->name('plans.create');
+    Route::post('add-plan', [planController::class, 'store'])->name('plans.store');
 
     Route::get('/plan/{id}', [planController::class, 'show'])->name('plans.view');
-    Route::post('update-plan/{id}',[planController::class, 'update'])->name('plans.update');
+    Route::post('update-plan/{id}', [planController::class, 'update'])->name('plans.update');
 
     Route::post('/plan/delete/{id}', [planController::class, 'destroy'])->name('plans.destroy');
 
-     //subscription
-     Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+    //subscription
+    Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
 
-     Route::get('add-subscription',[SubscriptionController::class, 'create'])->name('subscriptions.create');
-     Route::post('add-subscription',[SubscriptionController::class, 'store'])->name('subscriptions.store');
+    Route::get('add-subscription', [SubscriptionController::class, 'create'])->name('subscriptions.create');
+    Route::post('add-subscription', [SubscriptionController::class, 'store'])->name('subscriptions.store');
 
-     Route::get('/subscription/{id}', [SubscriptionController::class, 'show'])->name('subscriptions.view');
-     Route::post('update-subscription/{id}',[SubscriptionController::class, 'update'])->name('subscriptions.update');
+    Route::get('/subscription/{id}', [SubscriptionController::class, 'show'])->name('subscriptions.view');
+    Route::post('update-subscription/{id}', [SubscriptionController::class, 'update'])->name('subscriptions.update');
 
-     Route::post('/subscription/delete/{id}', [SubscriptionController::class, 'destroy'])->name('subscriptions.destroy');
+    Route::post('/subscription/delete/{id}', [SubscriptionController::class, 'destroy'])->name('subscriptions.destroy');
+
+    //group
+    Route::get('/groups', [CustomerGroupController::class, 'index'])->name('groups.index');
+
+    Route::get('add-group', [CustomerGroupController::class, 'create'])->name('groups.create');
+    Route::post('add-group', [CustomerGroupController::class, 'store'])->name('groups.store');
+
+    Route::get('/group/{id}', [CustomerGroupController::class, 'show'])->name('groups.view');
+    Route::post('update-group/{id}', [CustomerGroupController::class, 'update'])->name('groups.update');
+
+    Route::post('/group/delete/{id}', [CustomerGroupController::class, 'destroy'])->name('groups.destroy');
 });
