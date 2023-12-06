@@ -165,12 +165,10 @@
                                 @enderror
                             </div>
                             <div class="col-sm-6 col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-md-12 form-label">Encryption Mode</label>
-                                    <div class="col-md-12">
-                                        <select id="encryption_mode" class="SlectBox form-control" name="encryption_mode"
-                                            data-placeholder="Select Encryption Mode">
-                                            <option value="">Select</option>
+                                <div class="input-box">
+                                        <select id="encryption_mode" class="google-input" name="encryption_mode">
+                                            <option selected disabled>Select Encryption Mode</option>
+
                                             <option value="tls" {{ $data->encryption == 'tls' ? 'selected' : '' }}>TLS
                                             </option>
                                             <option value="ssl" {{ $data->encryption == 'ssl' ? 'selected' : '' }}>SSL
@@ -180,7 +178,7 @@
                                             <label id="encryption_mode-error" class="error"
                                                 for="encryption_mode">{{ $message }}</label>
                                         @enderror
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -363,7 +361,7 @@
                 </div>
 
 
-                
+
             </form>
             <div class="card">
                 <div class="card-header">

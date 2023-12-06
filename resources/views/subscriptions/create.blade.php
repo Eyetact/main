@@ -77,7 +77,7 @@
                     <div class="col-sm-6 col-md-6">
                         <div class="input-box">
                             <label class="form-label">Plan<span class="text-danger">*</span></label>
-                            <select class="default-select form-control wide mb-3" name="plan_id" tabindex="null">
+                            <select class="google-input" name="plan_id" tabindex="null">
                                 <option selected disabled>Select Plan</option>
                                 @foreach ($plans as $plan)
                                     <option value="{{ $plan->id }}">{{$plan->name}}</option>
@@ -93,7 +93,7 @@
 
                         <div class="input-box">
                             <label class="form-label">Customer Group<span class="text-danger">*</span></label>
-                            <select class="default-select form-control wide mb-3" name="group_id" tabindex="null">
+                            <select class="google-input" name="group_id" tabindex="null">
                                 <option selected disabled>Select Group</option>
                                 @foreach ($groups as $group)
                                     <option value="{{ $group->id }}">{{$group->id}} - {{$group->name}}</option>
@@ -107,7 +107,7 @@
                         <div class="input-box">
 
                             <label class="form-label">Customer<span class="text-danger">*</span></label>
-                            <select class="default-select form-control wide mb-3" name="user_id" tabindex="null">
+                            <select class="google-input" name="user_id" tabindex="null">
                                 <option selected disabled>Select Customer</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{$user->id}} - {{$user->username}}</option>

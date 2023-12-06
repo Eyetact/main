@@ -72,7 +72,7 @@
                                     <th>Permission</th>
                                     <th>module</th>
                                     <th>Guard</th>
-                                    <th width="300px">Action</th>
+                                    <th width="300px"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -120,8 +120,8 @@
             processing: true,
             serverSide: true,
             lengthChange: false,
-            dom: 'lBftrip',
-            buttons: ['copy', 'excel', 'pdf', 'colvis'],
+            // dom: 'lBftrip',
+            // buttons: ['copy', 'excel', 'pdf', 'colvis'],
             responsive: true,
             language: {
                 searchPlaceholder: 'Search...',
@@ -181,10 +181,10 @@
                     dangerMode: true,
                     showCancelButton: true,
 
-                    
+
                 }, function (willDelete) {
                     if (willDelete) {
-                       
+
                         $.ajax({
                             type: "POST",
                             url: '{{url("/")}}/permission/permission/delete/' + id,
@@ -196,7 +196,7 @@
 	                				title: response.msg
 	                			}, function (result) {
 	                				location.reload();
-	                			});                               
+	                			});
                             }
                         });
                     }
