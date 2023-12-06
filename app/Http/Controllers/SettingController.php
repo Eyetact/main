@@ -71,29 +71,33 @@ class SettingController extends Controller
         $socialReq=$request->social;
         for($i=0;$i<count($socialReq);$i++){
             if(!isset($socialReq[$i]['id']) || $socialReq[$i]['id']==null){
-                $icon_file = $socialReq[$i]['icon'];
-                $icon = 'photo-' . time() . '.' . $icon_file->getClientOriginalExtension();
-                $destinationiconPath = public_path('uploads/socialmedia');
-                $icon_file->move($destinationiconPath, $icon);
+
+                //image refactor icon will be social nam
+
+                // $icon_file = $socialReq[$i]['icon'];
+                // $icon = 'photo-' . time() . '.' . $icon_file->getClientOriginalExtension();
+                // $destinationiconPath = public_path('uploads/socialmedia');
+                // $icon_file->move($destinationiconPath, $icon);
 
                 SocialMediaSetting::create([
-                    'icon'=>$icon,
-                    'title'=>$socialReq[$i]['title'],
+                    'icon'=>$socialReq[$i]['icon'],
+                    'title'=>$socialReq[$i]['icon'],
                     'url'=>$socialReq[$i]['url'],
                     'created_by'=>auth()->id()
                 ]);
             }else{
                 $updateArray=array(
-                    'title'=>$socialReq[$i]['title'],
+                    'title'=>$socialReq[$i]['icon'],
                     'url'=>$socialReq[$i]['url'],
+                    'icon'=>$socialReq[$i]['icon'],
                 );
-                if(isset($socialReq[$i]['icon'])){
-                    $icon_file = $socialReq[$i]['icon'];
-                    $icon = 'photo-' . time() . '.' . $icon_file->getClientOriginalExtension();
-                    $destinationiconPath = public_path('uploads/socialmedia');
-                    $icon_file->move($destinationiconPath, $icon);
-                    $updateArray['icon']=$icon;
-                }
+                // if(isset($socialReq[$i]['icon'])){
+                //     $icon_file = $socialReq[$i]['icon'];
+                //     $icon = 'photo-' . time() . '.' . $icon_file->getClientOriginalExtension();
+                //     $destinationiconPath = public_path('uploads/socialmedia');
+                //     $icon_file->move($destinationiconPath, $icon);
+                //     $updateArray['icon']=$icon;
+                // }
                 SocialMediaSetting::where('id',$socialReq[$i]['id'])->update($updateArray);
             }
         }
@@ -103,6 +107,13 @@ class SettingController extends Controller
             $logo = 'photo-' . time() . '.' . $request->file('logo')->getClientOriginalExtension();
             $destinationLogoPath = public_path('uploads/logo');
             $logo_file->move($destinationLogoPath, $logo);
+        }
+
+        if($request->file('dark_logo')){
+            $dark_logo_file = $request->file('dark_logo');
+            $dark_logo = 'photo-' . time() .time() . '.' . $request->file('dark_logo')->getClientOriginalExtension();
+            $destinationdark_logoPath = public_path('uploads/logo');
+            $dark_logo_file->move($destinationdark_logoPath, $dark_logo);
         }
 
         if($request->file('web_icon')){
@@ -135,6 +146,9 @@ class SettingController extends Controller
             $data->encryption = $request->encryption_mode;
             if($request->file('logo')){
                 $data->logo=$logo;
+            }
+            if($request->file('dark_logo')){
+                $data->dark_logo=$dark_logo;
             }
             if($request->file('footer_logo')){
                 $data->footer_logo=$footer_logo;

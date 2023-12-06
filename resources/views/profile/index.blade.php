@@ -8,6 +8,7 @@
     <link href="{{ URL::asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
 @endsection
 @section('page-header')
     <!--Page header-->
@@ -84,6 +85,9 @@
             width: AUTO;
             display: inline-block;
         }
+        .iti.iti--allow-dropdown.iti--show-flags {
+    width: 100%;
+}
     </style>
     <!--/app header-->
     <div class="main-proifle {{ $user->roles()->first()->name }}">
@@ -98,7 +102,7 @@
                                 <a href="javascript:void(0)" class="" id="ProfileUploadBtn"><i
                                         class="fa fa-camera"></i></a>
                             </div>
-                            <form id="profileImageForm" action="{{ route('profile.upload-image',$user->id) }}"
+                            <form id="profileImageForm" action="{{ route('profile.upload-image', $user->id) }}"
                                 enctype="multipart/form-data" method="POST">
                                 @csrf
                                 <input type="file" id="ProfileUpload" name="image_upload" style="display:none;"
@@ -157,7 +161,7 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="myProfile">
                         <div class="card">
-                            <form action="{{ route('profile.update',$user->id) }}" method="POST" id="editProfile">
+                            <form action="{{ route('profile.update', $user->id) }}" method="POST" id="editProfile">
                                 @csrf
                                 <div class="card-header">
                                     <div class="card-title">Edit Profile</div>
@@ -229,12 +233,15 @@
                                                 <select class=" google-input" name="group_id" tabindex="null">
                                                     <option selected disabled>Select Customer Group</option>
                                                     @foreach ($groups as $group)
-                                                        <option @if( $user->group_id == $group->id ) selected @endif value="{{ $group->id }}">{{$group->id}} - {{$group->name}}</option>
+                                                        <option @if ($user->group_id == $group->id) selected @endif
+                                                            value="{{ $group->id }}">{{ $group->id }} -
+                                                            {{ $group->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             @error('group_id')
-                                                <label id="user_id-error" class="error" for="group_id">{{ $message }}</label>
+                                                <label id="user_id-error" class="error"
+                                                    for="group_id">{{ $message }}</label>
                                             @enderror
                                         </div>
                                     </div>
@@ -245,7 +252,7 @@
                             </form>
                         </div>
                         <div class="card">
-                            <form action="{{ route('profile.change-password',$user->id) }}" method="POST"
+                            <form action="{{ route('profile.change-password', $user->id) }}" method="POST"
                                 id="changePasswordForm">
                                 @csrf
                                 <div class="card-header">
@@ -315,7 +322,7 @@
 
                     </div>
 
-                    @if ($user->hasRole('super') || $user->hasRole('admin') )
+                    @if ($user->hasRole('super') || $user->hasRole('admin'))
                         <div class="tab-pane" id="admins">
 
                             <div class="card">
@@ -349,17 +356,18 @@
                     @endif
 
                     @if ($user->hasRole('vendor'))
-                    <div class="tab-pane" id="vendor">
+                        <div class="tab-pane" id="vendor">
 
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">vendor</div>
-                            </div>
-                            <div class="card-body">
-                                This Vendor was Registered  By <a href="{{ route('profile.index',$user->admin->id) }}" >{{ $user->admin->name }}</a>
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">vendor</div>
+                                </div>
+                                <div class="card-body">
+                                    This Vendor was Registered By <a
+                                        href="{{ route('profile.index', $user->admin->id) }}">{{ $user->admin->name }}</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     @endif
                 </div>
             </div>
@@ -391,6 +399,20 @@
 
     <!-- INTERNAL Select2 js -->
     <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+    <script>
+        const input = document.querySelector("#phone");
+window.intlTelInput(input, {
+  initialCountry: "auto",
+  geoIpLookup: callback => {
+    fetch("https://ipapi.co/json")
+      .then(res => res.json())
+      .then(data => callback(data.country_code))
+      .catch(() => callback("us"));
+  },
+  utilsScript: "/intl-tel-input/js/utils.js?1695806485509" // just for formatting/placeholders etc
+});
+    </script>
 
     {{-- @push('script') --}}
     <script>
@@ -544,7 +566,7 @@
                 sSearch: '',
                 lengthMenu: '_MENU_ ',
             },
-            ajax: "{{ route('profile.index',$user->id) }}",
+            ajax: "{{ route('profile.index', $user->id) }}",
 
             columns: [{
                     data: 'DT_RowIndex',
