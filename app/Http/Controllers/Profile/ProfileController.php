@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Controller;
 use App\Models\CustomerGroup;
+use App\Models\UserGroup;
 use App\Models\User;
 use App\Models\Plan;
 use App\Models\Subscription;
@@ -22,6 +23,7 @@ class ProfileController extends Controller
         $user = User::find( $user_id );
         $subscriptions = $user->subscriptions;
         $groups = CustomerGroup::all();
+        $ugroups = UserGroup::all();
 
 
         if (request()->ajax()) {
@@ -64,7 +66,7 @@ class ProfileController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
-        return view('profile.index', compact('user','groups'));
+        return view('profile.index', compact('user','groups','ugroups'));
     }
 
     public function update(Request $request, $id = null)
@@ -90,7 +92,8 @@ class ProfileController extends Controller
         $user->phone = $request->phone;
         $user->address = $request->address;
         $user->website = $request->website;
-        $user->group_id = $request->group_id;
+        $user->group_id = $request->group_id ?? 1;
+        $user->ugroup_id = $request->ugroup_id ?? 1;
         $user->save();
 
         Session::flash('success', 'Profile updated successfully.');

@@ -224,6 +224,8 @@
                                                     for="website">{{ $message }}</label>
                                             @enderror
                                         </div>
+
+                                        @hasanyrole('super|admin|vendor')
                                         <div class="col-sm-6 col-md-6">
                                             <div class="input-box">
                                                 <select class=" google-input" name="group_id" tabindex="null">
@@ -237,6 +239,26 @@
                                                 <label id="user_id-error" class="error" for="group_id">{{ $message }}</label>
                                             @enderror
                                         </div>
+                                        @endhasanyrole
+
+
+                                        @role('user')
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="input-box">
+                                                <select class=" google-input" name="ugroup_id" tabindex="null">
+                                                    <option selected disabled>Select User Group</option>
+                                                    @foreach ($ugroups as $group)
+                                                        <option @if( $user->ugroup_id == $group->id ) selected @endif value="{{ $group->id }}">{{$group->id}} - {{$group->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            @error('ugroup_id')
+                                                <label id="user_id-error" class="error" for="ugroup_id">{{ $message }}</label>
+                                            @enderror
+                                        </div>
+                                        @endrole
+
+
                                     </div>
                                 </div>
                                 <div class="card-footer text-right">
@@ -302,7 +324,7 @@
                                                 <th>User</th>
                                                 <th>Plan</th>
                                                 <th>Status</th>
-                                                <th data-priority="1">Action</th>
+                                                <th data-priority="1"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -335,7 +357,7 @@
                                                     <th>phone</th>
                                                     <th>address</th>
                                                     <th>website</th>
-                                                    <th data-priority="1">Action</th>
+                                                    <th data-priority="1"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -398,8 +420,8 @@
             processing: true,
             serverSide: true,
             lengthChange: false,
-            dom: 'lBftrip',
-            buttons: ['copy', 'excel', 'pdf', 'colvis'],
+            // dom: 'lBftrip',
+            // buttons: ['copy', 'excel', 'pdf', 'colvis'],
             responsive: true,
             language: {
                 searchPlaceholder: 'Search...',
@@ -536,8 +558,8 @@
             processing: true,
             serverSide: true,
             lengthChange: false,
-            dom: 'lBftrip',
-            buttons: ['copy', 'excel', 'pdf', 'colvis'],
+            // dom: 'lBftrip',
+            // buttons: ['copy', 'excel', 'pdf', 'colvis'],
             responsive: true,
             language: {
                 searchPlaceholder: 'Search...',

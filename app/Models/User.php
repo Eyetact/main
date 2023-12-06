@@ -31,6 +31,7 @@ class User extends Authenticatable
         'avatar',
         'user_id',
         'group_id',
+        'ugroup_id',
         'username'
     ];
 

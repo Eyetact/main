@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CustomerGroup;
+use App\Models\UserGroup;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\User;
@@ -67,7 +68,7 @@ class UserController extends Controller
                     return $row->avatar ? '<img src="' . $row->ProfileUrl . '" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
                 })
                 ->addColumn('admin', function ($row) {
-                    return $row->admin->name;
+                    return $row?->admin?->name;
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown">
@@ -185,7 +186,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $groups = CustomerGroup::all();
+        $groups = UserGroup::all();
         return view('users.create-user',compact('groups'));
     }
 
@@ -223,7 +224,8 @@ class UserController extends Controller
             'avatar' => $request->avatar,
             'password' => bcrypt($request->password),
             'user_id' => Auth::user()->id,
-            'group_id' => $request->group_id,
+            'group_id' => $request->group_id ?? 1,
+            'ugroup_id' => $request->ugroup_id ?? 1,
         ]);
 
         $plan = Plan::where('name', 'Free Plan')->first();

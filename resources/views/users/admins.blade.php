@@ -76,7 +76,7 @@
                                     <th>phone</th>
                                     <th>address</th>
                                     <th>website</th>
-                                    <th data-priority="1">Action</th>
+                                    <th data-priority="1"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -202,10 +202,10 @@
                     dangerMode: true,
                     showCancelButton: true,
 
-                    
+
                 }, function (willDelete) {
                     if (willDelete) {
-                       
+
                         $.ajax({
                             type: "POST",
                             url: '{{url("/")}}/user/delete/' + id,
@@ -217,7 +217,7 @@
 	                				title: response.msg
 	                			}, function (result) {
 	                				location.reload();
-	                			});                               
+	                			});
                             }
                         });
                     }

@@ -131,17 +131,17 @@
                     </div>
                     <div class="col-sm-6 col-md-6">
                         <div class="input-box">
-                            <select class=" google-input" name="group_id" tabindex="null">
-                                <option selected disabled>Select Customer Group</option>
+                            <select class=" google-input" name="ugroup_id" tabindex="null">
+                                <option selected disabled>Select User Group</option>
                                 @foreach ($groups as $group)
                                     <option value="{{ $group->id }}">{{$group->id}} - {{$group->name}}</option>
                                 @endforeach
                             </select>
                         </div>
-                        @error('group_id')
-                            <label id="user_id-error" class="error" for="group_id">{{ $message }}</label>
+                        @error('ugroup_id')
+                            <label id="user_id-error" class="error" for="ugroup_id">{{ $message }}</label>
                         @enderror
-                       
+
                     </div>
                 </div>
 
@@ -159,21 +159,21 @@
     <!--INTERNAL Sumoselect js-->
     <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
     <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
-    
+
      <!-- INTERNAL File-Uploads Js-->
      <script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
      <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
      <script src="{{ asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
      <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
      <script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
- 
+
      <!-- INTERNAL File uploads js -->
      <script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
      <script src="{{ asset('assets/js/filupload.js') }}"></script>
- 
+
      <!--INTERNAL Sumoselect js-->
      <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
- 
+
      <!--INTERNAL Form Advanced Element -->
      <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
      <script src="{{ asset('assets/js/form-elements.js') }}"></script>
@@ -198,7 +198,7 @@
                 password: {
                     required: true,
                 }
-                
+
             },
             messages: {},
             errorPlacement: function(error, element) {

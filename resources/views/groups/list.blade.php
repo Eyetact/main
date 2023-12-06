@@ -70,7 +70,7 @@
                                 <tr>
                                     <th width="100px">No.</th>
                                     <th>Name</th>
-                                    <th data-priority="1">Action</th>
+                                    <th data-priority="1"></th>
                                 </tr>
                             </thead>
                             <tbody>

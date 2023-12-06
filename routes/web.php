@@ -15,7 +15,9 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SmtpController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserGroupController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -178,7 +180,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/subscription/delete/{id}', [SubscriptionController::class, 'destroy'])->name('subscriptions.destroy');
 
-    //group
+    //customer group
     Route::get('/groups', [CustomerGroupController::class, 'index'])->name('groups.index');
 
     Route::get('add-group', [CustomerGroupController::class, 'create'])->name('groups.create');
@@ -188,4 +190,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('update-group/{id}', [CustomerGroupController::class, 'update'])->name('groups.update');
 
     Route::post('/group/delete/{id}', [CustomerGroupController::class, 'destroy'])->name('groups.destroy');
+
+        //user group
+        Route::get('/user-groups', [UserGroupController::class, 'index'])->name('ugroups.index');
+
+        Route::get('add-user-group', [UserGroupController::class, 'create'])->name('ugroups.create');
+        Route::post('add-user-group', [UserGroupController::class, 'store'])->name('ugroups.store');
+
+        Route::get('/user/group/{id}', [UserGroupController::class, 'show'])->name('ugroups.view');
+        Route::post('update-user-group/{id}', [UserGroupController::class, 'update'])->name('ugroups.update');
+
+        Route::post('/user-group/delete/{id}', [UserGroupController::class, 'destroy'])->name('ugroups.destroy');
 });
