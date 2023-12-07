@@ -94,7 +94,7 @@ class ProfileController extends Controller
         $user->phone = $request->phone;
         $user->address = $request->address;
         $user->website = $request->website;
-<<<<<<< HEAD
+
         $user->group_id = $request->group_id;
         if( !$user->last_used ){
 
@@ -112,10 +112,9 @@ class ProfileController extends Controller
             $user->last_used = $ar;
 
         }
-=======
+
         $user->group_id = $request->group_id ?? 1;
         $user->ugroup_id = $request->ugroup_id ?? 1;
->>>>>>> a4d5fcfb7c92fea221466602e2125a652ca2f12e
         $user->save();
 
         Session::flash('success', 'Profile updated successfully.');
