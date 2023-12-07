@@ -74,7 +74,7 @@
                                     <th >image</th>
                                     <th>period</th>
                                     <th>price</th>
-                                    <th data-priority="1">Action</th>
+                                    <th data-priority="1"></th>
                                 </tr>
                             </thead>
                             <tbody>

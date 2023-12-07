@@ -38,10 +38,10 @@
     <!--Page header-->
     <div class="page-header">
         <div class="page-leftheader">
-            <h4 class="page-title mb-0">Vendors</h4>
+            <h4 class="page-title mb-0">Users</h4>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Users</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="#">Vendors</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">Users</a></li>
             </ol>
         </div>
         <div class="page-rightheader">
@@ -61,7 +61,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Vendors Data</div>
+                    <div class="card-title">Users Data</div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -133,7 +133,7 @@
                 sSearch: '',
                 lengthMenu: '_MENU_ ',
             },
-            ajax: "{{ route('users.index') }}",
+            ajax: "{{ route('users.users') }}",
 
             columns: [{
                     data: 'DT_RowIndex',
@@ -207,10 +207,10 @@
                     dangerMode: true,
                     showCancelButton: true,
 
-                    
+
                 }, function (willDelete) {
                     if (willDelete) {
-                       
+
                         $.ajax({
                             type: "POST",
                             url: '{{url("/")}}/user/delete/' + id,
@@ -222,7 +222,7 @@
 	                				title: response.msg
 	                			}, function (result) {
 	                				location.reload();
-	                			});                               
+	                			});
                             }
                         });
                     }

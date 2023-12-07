@@ -29,7 +29,10 @@ class User extends Authenticatable
         'phone',
         'website',
         'avatar',
-        'user_id'
+        'user_id',
+        'group_id',
+        'ugroup_id',
+        'username'
     ];
 
     /**
@@ -80,6 +83,9 @@ class User extends Authenticatable
 
     public function admin(){
         return $this->belongsTo( User::class, 'user_id' );
+    }
+    public function settings(){
+        return $this->hasOne( Setting::class, 'created_by' );
     }
 
 }

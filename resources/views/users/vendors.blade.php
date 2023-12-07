@@ -38,15 +38,15 @@
     <!--Page header-->
     <div class="page-header">
         <div class="page-leftheader">
-            <h4 class="page-title mb-0">Admins</h4>
+            <h4 class="page-title mb-0">Vendors</h4>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Users</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="#">Admins</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">Vendors</a></li>
             </ol>
         </div>
         <div class="page-rightheader">
             <div class="btn btn-list">
-                <a href="{{ route('admin.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
+                <a href="{{ route('vendor.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
                     data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
             </div>
         </div>
@@ -61,7 +61,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Admins Data</div>
+                    <div class="card-title">Vendors Data</div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -71,6 +71,7 @@
                                     <th width="100px">No.</th>
                                     <th>Name</th>
                                     <th>username</th>
+                                    <th>admin</th>
                                     <th>email</th>
                                     <th >avatar</th>
                                     <th>phone</th>
@@ -132,7 +133,7 @@
                 sSearch: '',
                 lengthMenu: '_MENU_ ',
             },
-            ajax: "{{ route('users.admins') }}",
+            ajax: "{{ route('users.vendors') }}",
 
             columns: [{
                     data: 'DT_RowIndex',
@@ -147,6 +148,10 @@
                 {
                     data: 'username',
                     name: 'username'
+                },
+                {
+                    data: 'admin',
+                    name: 'admin'
                 },
                 {
                     data: 'email',

@@ -129,6 +129,20 @@
                             <label id="password-error" class="error" for="password">{{ $message }}</label>
                         @enderror
                     </div>
+                    <div class="col-sm-6 col-md-6">
+                        <div class="input-box">
+                            <select class=" google-input" name="group_id" tabindex="null">
+                                <option selected disabled>Select Customer Group</option>
+                                @foreach ($groups as $group)
+                                    <option value="{{ $group->id }}">{{$group->id}} - {{$group->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @error('group_id')
+                            <label id="user_id-error" class="error" for="group_id">{{ $message }}</label>
+                        @enderror
+                       
+                    </div>
                 </div>
 
 

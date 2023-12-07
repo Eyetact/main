@@ -13,6 +13,7 @@ class SocialMediaSetting extends Model
         'icon',
         'title',
         'url',
-        'created_by'
+        'created_by',
+        'active'
     ];
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnsUsernameAndAvatarToUsersTable extends Migration
+class AddGroupIdToUsers extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class AddColumnsUsernameAndAvatarToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('username')->nullable()->after('name');
-            $table->string('avatar')->default('default.png')->after('email');
+            $table->integer('group_id')->default(1);
         });
     }
 
@@ -27,7 +26,7 @@ class AddColumnsUsernameAndAvatarToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['username','avatar']);
+            //
         });
     }
 }

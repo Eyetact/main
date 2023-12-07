@@ -74,7 +74,7 @@
                                     <th>User</th>
                                     <th>Plan</th>
                                     <th>Status</th>
-                                    <th data-priority="1">Action</th>
+                                    <th data-priority="1"></th>
                                 </tr>
                             </thead>
                             <tbody>

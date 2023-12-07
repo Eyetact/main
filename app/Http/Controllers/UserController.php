@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CustomerGroup;
+use App\Models\UserGroup;
+use App\Models\Plan;
+use App\Models\Subscription;
 use App\Models\User;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -13,14 +18,14 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function vendors()
     {
         if (request()->ajax()) {
             $users = User::role('vendor')->get();
 
             return datatables()->of($users)
-                ->editColumn('avatar', function($row){
-                    return $row->avatar ? '<img src="' . $row->ProfileUrl .'" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
+                ->editColumn('avatar', function ($row) {
+                    return $row->avatar ? '<img src="' . $row->ProfileUrl . '" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
                 })
                 ->addColumn('admin', function ($row) {
                     return $row->admin->name;
@@ -30,28 +35,68 @@ class UserController extends Controller
                     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-    
+
                     </a>
-    
+
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
-                        <a  href="'. route('profile.index',$row->id) . '">View or Edit</a>
+                        <a  href="' . route('profile.index', $row->id) . '">View or Edit</a>
                         </li>
 
                         <li class="dropdown-item">
-                        <a  href="#" data-id="'. $row->id .'" class="user-delete">Delete</a>
+                        <a  href="#" data-id="' . $row->id . '" class="user-delete">Delete</a>
                         </li>
                     </ul>
                 </div>';
-                   
+
                     return $btn;
                 })
-                ->rawColumns(['avatar','action'])
+                ->rawColumns(['avatar', 'action'])
 
                 ->addIndexColumn()
                 ->make(true);
         }
-        return view('users.list');
+        return view('users.vendors');
+    }
+    public function users()
+    {
+        if (request()->ajax()) {
+            $users = User::role('user')->get();
+
+            return datatables()->of($users)
+                ->editColumn('avatar', function ($row) {
+                    return $row->avatar ? '<img src="' . $row->ProfileUrl . '" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
+                })
+                ->addColumn('admin', function ($row) {
+                    return $row?->admin?->name;
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="dropdown">
+                    <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li class="dropdown-item">
+                        <a  href="' . route('profile.index', $row->id) . '">View or Edit</a>
+                        </li>
+
+                        <li class="dropdown-item">
+                        <a  href="#" data-id="' . $row->id . '" class="user-delete">Delete</a>
+                        </li>
+                    </ul>
+                </div>';
+
+                    return $btn;
+                })
+                ->rawColumns(['avatar', 'action'])
+
+                ->addIndexColumn()
+                ->make(true);
+        }
+        return view('users.users');
     }
 
     public function admins()
@@ -60,31 +105,31 @@ class UserController extends Controller
             $users = User::role('admin')->get();
 
             return datatables()->of($users)
-                ->editColumn('avatar', function($row){
-                    return $row->avatar ? '<img src="' . $row->ProfileUrl .'" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
+                ->editColumn('avatar', function ($row) {
+                    return $row->avatar ? '<img src="' . $row->ProfileUrl . '" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown">
                     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-    
+
                     </a>
-    
+
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
-                        <a  href="'. route('profile.index',$row->id) . '">View or Edit</a>
+                        <a  href="' . route('profile.index', $row->id) . '">View or Edit</a>
                         </li>
 
                         <li class="dropdown-item">
-                        <a  href="#" data-id="'. $row->id .'" class="user-delete">Delete</a>
+                        <a  href="#" data-id="' . $row->id . '" class="user-delete">Delete</a>
                         </li>
                     </ul>
                 </div>';
-                   
+
                     return $btn;
                 })
-                ->rawColumns(['avatar','action'])
+                ->rawColumns(['avatar', 'action'])
 
                 ->addIndexColumn()
                 ->make(true);
@@ -96,42 +141,42 @@ class UserController extends Controller
     public function myAdmins($user_id)
     {
         if (request()->ajax()) {
-            $users = User::where( 'user_id', $user_id )->get();
+            $users = User::where('user_id', $user_id)->get();
 
             return datatables()->of($users)
-                ->editColumn('avatar', function($row){
-                    return $row->avatar ? '<img src="' . $row->ProfileUrl .'" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
+                ->editColumn('avatar', function ($row) {
+                    return $row->avatar ? '<img src="' . $row->ProfileUrl . '" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown">
                     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-    
+
                     </a>
-    
+
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
-                        <a  href="'. route('profile.index',$row->id) . '">View or Edit</a>
+                        <a  href="' . route('profile.index', $row->id) . '">View or Edit</a>
                         </li>
 
                         <li class="dropdown-item">
-                        <a  href="#" data-id="'. $row->id .'" class="user-delete">Delete</a>
+                        <a  href="#" data-id="' . $row->id . '" class="user-delete">Delete</a>
                         </li>
                     </ul>
                 </div>';
-                   
+
                     return $btn;
                 })
-                ->rawColumns(['avatar','action'])
+                ->rawColumns(['avatar', 'action'])
 
                 ->addIndexColumn()
                 ->make(true);
         }
-        
+
     }
 
-   
+
 
 
     /**
@@ -141,12 +186,21 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $groups = UserGroup::all();
+        return view('users.create-user',compact('groups'));
     }
 
     public function createAdmin()
     {
-        return view('users.create-admin');
+        $groups = CustomerGroup::all();
+
+        return view('users.create-admin',compact('groups'));
+    }
+    public function createvendor()
+    {
+        $groups = CustomerGroup::all();
+
+        return view('users.create-vendor',compact('groups'));
     }
 
     /**
@@ -156,28 +210,61 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    
+
     public function store(Request $request)
     {
-        
-        
-        $role = 'vendor';
-        if (Auth::user()->hasRole('super')) {
-            $role = 'admin';
-        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'username' => $request->email,
-            'website' => $request->username,
+            'username' => $request->username,
+            'website' => $request->website,
             'address' => $request->address,
             'phone' => $request->phone,
             'avatar' => $request->avatar,
             'password' => bcrypt($request->password),
-            'user_id' => Auth::user()->id
+            'user_id' => Auth::user()->id,
+            'group_id' => $request->group_id ?? 1,
+            'ugroup_id' => $request->ugroup_id ?? 1,
         ]);
 
+        $plan = Plan::where('name', 'Free Plan')->first();
+
+        if (!$plan) {
+            $plan = new Plan();
+            $plan->name = 'Free Plan';
+            $plan->price = 0;
+            $plan->period = 14;
+            $plan->save();
+        }
+        $sub = new Subscription();
+        $sub->user_id = $user->id;
+        $sub->plan_id = $plan->id;
+        $sub->save();
+
+        $sub->start_date = Carbon::today();
+        $sub->end_date = $sub->start_date->copy()->addDays($plan->period);
+        $sub->save();
+
         $user->assignRole($request->role);
+
+        switch ($request->role) {
+            case 'admin':
+                return redirect()->route('users.admins')
+                    ->with('success', 'Subscription has been added successfully');
+                break;
+
+            case 'vendor':
+                return redirect()->route('users.vendors')
+                    ->with('success', 'Subscription has been added successfully');
+                break;
+            case 'user':
+                return redirect()->route('users.users')
+                    ->with('success', 'Subscription has been added successfully');
+                break;
+
+
+        }
 
         return redirect()->back();
 
