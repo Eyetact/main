@@ -97,7 +97,7 @@
                 <div class="tabs-menu1 px-3">
                     <ul class="nav">
                         <li><a href="#edit" class="active fs-14" data-toggle="tab"> Edit</a></li>
-                        <li><a href="#customers" class=" fs-14" data-toggle="tab"> Customers</a></li>
+                        <li><a href="#users" class=" fs-14" data-toggle="tab"> Users</a></li>
 
 
 
@@ -113,7 +113,7 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="edit">
                         <div class="card">
-                            <form action="{{ route('groups.update', $group->id) }}" method="POST" id="editProfile"
+                            <form action="{{ route('ugroups.update', $group->id) }}" method="POST" id="editProfile"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="card-header">
@@ -143,7 +143,7 @@
                             </form>
                         </div>
                     </div>
-                    <div class="tab-pane " id="customers">
+                    <div class="tab-pane " id="users">
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-title">Users Data</div>
@@ -242,7 +242,7 @@
                 sSearch: '',
                 lengthMenu: '_MENU_ ',
             },
-            ajax: "{{ route('groups.view', $group->id) }}",
+            ajax: "{{ route('ugroups.view', $group->id) }}",
 
             columns: [{
                     data: 'DT_RowIndex',

@@ -171,8 +171,13 @@
                 @endif
                 <li class="sub-slide">
                     {{-- {{ url('module')}} --}}
+                    <a class="sub-side-menu__item" href="{{ route('ugroups.index')}}"><span class="sub-side-menu__label">Groups</span></a>
+                </li>
+                <li class="sub-slide">
+                    {{-- {{ url('module')}} --}}
                     <a class="sub-side-menu__item" href="{{ route('users.users')}}"><span class="sub-side-menu__label">Users</span></a>
                 </li>
+
 
             </ul>
         </li>

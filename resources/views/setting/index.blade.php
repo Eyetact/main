@@ -244,7 +244,7 @@
                                                             for="title">{{ $message }}</label>
                                                     @enderror
                                                 </div> --}}
-                                                <div class="col-sm-4 col-md-4 ">
+                                                <div class="col-sm-3 col-md-3 ">
                                                     <div class="input-box">
                                                         <label class="input-label">URL</label>
                                                         <input type="text" name="url" class="google-input"
@@ -255,7 +255,14 @@
                                                             for="url">{{ $message }}</label>
                                                     @enderror
                                                 </div>
-                                                <div class="col-sm-2 col-md-2 text-center"
+                                                <div class="form-group col-sm-1">
+                                                    <label class="custom-switch form-label mt-5">
+                                                        <input type="checkbox" name="active" class="custom-switch-input" id="active" {{ $socialMedia->active == 1 ? 'checked' : '' }}>
+                                                        <span class="custom-switch-indicator"></span>
+                                                        <span class="custom-switch-description">Active</span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-1 col-md-2 text-center"
                                                     style="margin-top: 5px!important;">
                                                     <button type="button" class="btn btn-danger"
                                                         data-repeater-delete=""><i class="feather icon-x"></i> Delete
@@ -298,7 +305,7 @@
                                                         for="title">{{ $message }}</label>
                                                 @enderror
                                             </div> --}}
-                                            <div class="col-sm-4 col-md-4 ">
+                                            <div class="col-sm-3 col-md-3 ">
                                                 <div class="input-box">
                                                     <label class="input-label">URL</label>
                                                     <input type="text" name="url" class="google-input"
@@ -310,7 +317,14 @@
                                                         for="url">{{ $message }}</label>
                                                 @enderror
                                             </div>
-                                            <div class="col-sm-2 col-md-2 text-center"
+                                            <div class="form-group col-sm-1">
+                                                <label class="custom-switch form-label mt-5">
+                                                    <input type="checkbox" name="active" class="custom-switch-input" id="active" checked>
+                                                    <span class="custom-switch-indicator"></span>
+                                                    <span class="custom-switch-description">Active</span>
+                                                </label>
+                                            </div>
+                                            <div class="col-sm-1 col-md-2 text-center"
                                                 style="margin-top: 5px!important;">
                                                 <button type="button" class="btn btn-danger" data-repeater-delete=""><i
                                                         class="feather icon-x"></i> Delete
@@ -401,6 +415,7 @@
 
 
             </form>
+            @can('assigne.domain')
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Assigned domain </h3>
@@ -436,6 +451,7 @@
                 </form>
 
             </div>
+            @endcan
         </div>
     </div>
     <!-- End Row-->

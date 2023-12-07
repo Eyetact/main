@@ -56,7 +56,9 @@ class PlanController extends Controller
     {
 
         $permissions = Permission::all();
-        return view('plans.create', compact('permissions'));
+        $user_permissions = Permission::where('type', 'user')->get();
+        $customer_permissions = Permission::where('type', 'customer')->get();
+        return view('plans.create', compact('permissions','user_permissions','customer_permissions'));
     }
 
     public function store(PlanRequest $request)
@@ -85,9 +87,10 @@ class PlanController extends Controller
     public function show($id)
     {
         $permissions = Permission::all();
-
+        $user_permissions = Permission::where('type', 'user')->get();
+        $customer_permissions = Permission::where('type', 'customer')->get();
         $plan = Plan::findOrFail($id);
-        return view('plans.show', compact('plan', 'permissions'));
+        return view('plans.show', compact('plan', 'permissions','user_permissions','customer_permissions'));
     }
 
 

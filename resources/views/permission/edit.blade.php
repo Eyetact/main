@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('vendors/css/forms/selects/select2.min.css') }}">
     <style>
         .permissionLabel{
-            float: left; 
+            float: left;
             width: 100%;
         }
         .add-module, .add-module:focus{
@@ -38,7 +38,7 @@
         }
         .select2-search__field {
             width: 100% !important;
-        }        
+        }
     </style>
 @endsection
 
@@ -59,7 +59,7 @@
                     <div class="card-body">
                         @csrf
                         <div class="row">
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-4">
                                 <label for="name">Permission</label>
                                 <div class="permission">
                                 @foreach($permission as $key => $value)
@@ -74,15 +74,15 @@
                                         @endif
                                     </div>
                                 @endforeach
-                                <div class="append-list"></div>      
-                                </div> 
+                                <div class="append-list"></div>
+                                </div>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                                 <div class="valid-feedback">Looks good!</div>
                                 <div class="invalid-feedback">Please enter name.</div>
                             </div>
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-4">
                                 <label for="module">Module</label>
                                 <select class="form-control custom-select @error('module') is-invalid @enderror" name="module" id="moduleId">
                                     @if(count($moduleList))
@@ -100,7 +100,7 @@
                                 <div class="invalid-feedback">Please enter module.</div>
                             </div>
                             <input type="hidden" name="guard_name" value="web">
-                     
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -123,7 +123,7 @@
         console.log(Testcount);
         // alert(count);
         $('#add').on('click', function(){
-            
+
             let rules = '';
             let appendHtml = '<div class="each-input"> <input class="permissionInput form-control" name="name['+count+']" type="text" placeholder="Enter permission name"> <input class="permissionInput form-control" name="id['+count+']" type="hidden" placeholder="Enter permission name"> <button type="button" class="btn btn-danger btn-remove">Remove</button> </div>';
             $('.append-list').append(appendHtml);
@@ -164,7 +164,7 @@
             $('.each-input').each(function(i, obj) {
                 let permissionName = $(obj).find('input').val();
                 let permissionId  = $(obj).find('input').data("id");
-                permissionData.push([permissionId, permissionName]); 
+                permissionData.push([permissionId, permissionName]);
             });
         });
     });

@@ -57,7 +57,7 @@
                 @csrf
 
                 <div class="row">
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-4">
                         <label for="name">Permission</label>
                         <div class="permission">
                             <div class="each-input">
@@ -78,7 +78,7 @@
                         <div class="valid-feedback">Looks good!</div>
                         <div class="invalid-feedback">Please enter name.</div>
                     </div>
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-4">
                         <label for="module">Module</label>
 
                         <select class="form-control custom-select @error('module') is-invalid @enderror" name="module"
@@ -100,6 +100,21 @@
                         <div class="valid-feedback">Looks good!</div>
                         <div class="invalid-feedback">Please enter module.</div>
                     </div>
+
+                    <div class="form-group col-sm-4">
+
+                            <label>Type<span class="text-danger">*</span></label>
+                            <select class="form-control custom-select" name="type" tabindex="null">
+                                <option selected disabled>Select Type</option>
+                                <option value="user">User</option>
+                                <option value="customer">Customer</option>
+                            </select>
+
+                        @error('type')
+                            <label id="type-error" class="error" for="type">{{ $message }}</label>
+                        @enderror
+                    </div>
+
                     <input type="hidden" name="guard_name" value="web">
 
                 </div>
@@ -166,7 +181,7 @@
                 $(this).parent('.each-input').remove();
             });
 
-           
+
 
             $('#submitform').on('click', function() {
                 if ($("#submitform").hasClass("update-permission")) {

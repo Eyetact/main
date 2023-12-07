@@ -69,6 +69,8 @@ class SettingController extends Controller
         }
 
         $socialReq=$request->social;
+
+        // dd( $socialReq );
         for($i=0;$i<count($socialReq);$i++){
             if(!isset($socialReq[$i]['id']) || $socialReq[$i]['id']==null){
 
@@ -83,6 +85,7 @@ class SettingController extends Controller
                     'icon'=>$socialReq[$i]['icon'],
                     'title'=>$socialReq[$i]['icon'],
                     'url'=>$socialReq[$i]['url'],
+                    'active'=>!empty( $socialReq[$i]['active'] ) ? 1 : 0,
                     'created_by'=>auth()->id()
                 ]);
             }else{
@@ -90,6 +93,7 @@ class SettingController extends Controller
                     'title'=>$socialReq[$i]['icon'],
                     'url'=>$socialReq[$i]['url'],
                     'icon'=>$socialReq[$i]['icon'],
+                    'active'=>!empty( $socialReq[$i]['active'] ) ? 1 : 0,
                 );
                 // if(isset($socialReq[$i]['icon'])){
                 //     $icon_file = $socialReq[$i]['icon'];

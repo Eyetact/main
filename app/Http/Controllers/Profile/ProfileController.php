@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Controller;
 use App\Models\CustomerGroup;
+use App\Models\UserGroup;
 use App\Models\User;
 use App\Models\Plan;
 use App\Models\Subscription;
@@ -23,6 +24,7 @@ class ProfileController extends Controller
         $subscriptions = $user->subscriptions;
         $last_used = json_encode( $user->last_used );
         $groups = CustomerGroup::all();
+        $ugroups = UserGroup::all();
 
 
         if (request()->ajax()) {
@@ -65,7 +67,11 @@ class ProfileController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
+<<<<<<< HEAD
         return view('profile.index', compact('user','groups','last_used'));
+=======
+        return view('profile.index', compact('user','groups','ugroups'));
+>>>>>>> a4d5fcfb7c92fea221466602e2125a652ca2f12e
     }
 
     public function update(Request $request, $id = null)
@@ -91,6 +97,7 @@ class ProfileController extends Controller
         $user->phone = $request->phone;
         $user->address = $request->address;
         $user->website = $request->website;
+<<<<<<< HEAD
         $user->group_id = $request->group_id;
         if( !$user->last_used ){
 
@@ -108,6 +115,10 @@ class ProfileController extends Controller
             $user->last_used = $ar;
 
         }
+=======
+        $user->group_id = $request->group_id ?? 1;
+        $user->ugroup_id = $request->ugroup_id ?? 1;
+>>>>>>> a4d5fcfb7c92fea221466602e2125a652ca2f12e
         $user->save();
 
         Session::flash('success', 'Profile updated successfully.');

@@ -122,8 +122,8 @@
             processing: true,
             serverSide: true,
             lengthChange: false,
-            // dom: 'lBftrip',
-            // buttons: ['copy', 'excel', 'pdf', 'colvis'],
+            dom: 'lBftrip',
+            buttons: ['copy', 'excel', 'pdf', 'colvis'],
             responsive: true,
             language: {
                 searchPlaceholder: 'Search...',

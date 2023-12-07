@@ -44,18 +44,18 @@ class PermissionController extends Controller
                 // $btn = '<a href="'.route('permission.edit', ['permission' => $row->id]).'" class="btn btn-success btn-xs edit-permission" data-name="'.$row->name.'" data-id='.$row->id.'> <i class="fa fa-edit"></i> </a>';
 
                 // $btn = $btn.'<a class="btn btn-icon btn-danger mr-1 white delete-permission" data-id="'.$row->id.'" title="Delete"> <i class="fa fa-trash-o"></i> </a>';
-                
+
 
 
                 $btn = '<div class="dropdown">
                     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-    
+
                     </a>
-    
+
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                  
+
 
                         <li class="dropdown-item">
                         <a  href="#" data-id="'. $row->id .'" class="user-delete">Delete</a>
@@ -103,13 +103,13 @@ class PermissionController extends Controller
                                             return $query->where('guard_name', $request['guard_name']);
                                         })
                                     ];
-            $messages['name.'.$key.'.unique'] = 'The Permission Name has already been taken.';                                                                    
+            $messages['name.'.$key.'.unique'] = 'The Permission Name has already been taken.';
         }
 
         $rules['module'] = 'required|max:255';
         $rules['guard_name'] = 'required|max:255';
         $validator = Validator::make($request->all(),$rules,$messages);
-        
+
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator)
                         ->withInput();
@@ -122,6 +122,7 @@ class PermissionController extends Controller
                 'name' => $value,
                 'guard_name' => $request->guard_name,
                 'module' => $request->module,
+                'type' => $request->type,
                 'created_at' => $now,
                 'updated_at' => $now
             ];
@@ -179,7 +180,7 @@ class PermissionController extends Controller
 
         $permissionData = array();
         $inputData = array();
-        for ($i=0; $i < count($input['name']); $i++) { 
+        for ($i=0; $i < count($input['name']); $i++) {
             if(isset($input['id'][$i])){
                 $permissionData[$i]['id'] = $input['id'][$i];
                 $permissionData[$i]['name'] = $input['name'][$i];
@@ -212,9 +213,9 @@ class PermissionController extends Controller
                 $rules['name.'.$key] = ['required', Rule::unique('permissions','name')->where(function ($query) use ($request){
                         return $query->where('guard_name', $request['guardName']);
                     })
-                ]; 
+                ];
             }
-            $messages['name.'.$key.'.unique'] = 'The Permission Name has already been taken.';                                                                    
+            $messages['name.'.$key.'.unique'] = 'The Permission Name has already been taken.';
         }
 
         $rules['module'] = 'required|max:255';
@@ -225,8 +226,8 @@ class PermissionController extends Controller
             // dd($validator->getMessageBag()->toArray());
             return response()->json( array( 'errors' => $validator->getMessageBag()->toArray() ), 400);
         }else{
-           
-            for ($i=0; $i <count($permissionData) ; $i++) { 
+
+            for ($i=0; $i <count($permissionData) ; $i++) {
                 if(empty($permissionData[$i]['id'])){
                      Permission::insert($permissionData[$i]);
                 }else{
@@ -279,7 +280,7 @@ class PermissionController extends Controller
         } else {
             $module_name = strtolower($request->name);
         }
-        
+
         $module_name = strtolower($module_name);
 
         $permission_array = array(
