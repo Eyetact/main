@@ -166,25 +166,7 @@
                 $(this).parent('.each-input').remove();
             });
 
-            $('.remove-permission').on('click', function() {
-                let id = $(this).data("id");
-                $.ajax({
-                    type: 'POST',
-                    url: "{{ route('permission.delete') }}",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        'id': id
-                    },
-                    success: function(data) {
-                        toastr.success(data.msg);
-                    },
-                    error: function(data) {
-                        console.log('error while deleting')
-                    }
-                });
-            });
+           
 
             $('#submitform').on('click', function() {
                 if ($("#submitform").hasClass("update-permission")) {

@@ -1,9 +1,9 @@
 <aside class="app-sidebar">
     <div class="app-sidebar__logo">
         <a class="header-brand" href="{{ url('/dashboard') }}">
-            <img src="{{ URL::asset('assets/images/brand/logo.png') }}" class="header-brand-img desktop-lgo"
+            <img src="{{ Auth::user()?->settings?->logo ? URL::asset('uploads/logo/'.Auth::user()->settings->logo ) : '' }}" class="header-brand-img desktop-lgo"
                 alt="Admintro logo">
-            <img src="{{ URL::asset('assets/images/brand/logo1.png') }}" class="header-brand-img dark-logo"
+            <img src="{{Auth::user()?->settings?->logo ? URL::asset('uploads/logo/'.Auth::user()->settings->dark_logo ) : '' }}" class="header-brand-img dark-logo"
                 alt="Admintro logo">
             <img src="{{ URL::asset('assets/images/brand/favicon.png') }}" class="header-brand-img mobile-logo"
                 alt="Admintro logo">
@@ -118,6 +118,7 @@
                 </svg>
                 <span class="side-menu__label">Customers</span><i class="angle fa fa-angle-right"></i></a>
             <ul class="slide-menu ">
+
                 @role('super')
                     <li class="sub-slide">
                         {{-- {{ url('module')}} --}}

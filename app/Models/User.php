@@ -84,5 +84,8 @@ class User extends Authenticatable
     public function admin(){
         return $this->belongsTo( User::class, 'user_id' );
     }
+    public function settings(){
+        return $this->hasOne( Setting::class, 'created_by' );
+    }
 
 }

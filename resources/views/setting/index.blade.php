@@ -41,19 +41,26 @@
                     </div>
                     <div class=" card-body">
                         <div class="row">
-                            <div class="col-lg-4 col-sm-12">
+                            <div class="col-lg-3 col-sm-12">
                                 <label class="form-label">Logo</label>
                                 <input type="file" class="dropify" name="logo"
                                     data-default-file="{{ $data->logo ? asset('uploads/logo/' . $data->logo) : '' }}"
                                     data-height="180" />
                             </div>
-                            <div class="col-lg-4 col-sm-12">
+
+                            <div class="col-lg-3 col-sm-12">
+                                <label class="form-label">Dark Logo</label>
+                                <input type="file" class="dropify" name="dark_logo"
+                                    data-default-file="{{ $data->dark_logo ? asset('uploads/logo/' . $data->dark_logo) : '' }}"
+                                    data-height="180" />
+                            </div>
+                            <div class="col-lg-3 col-sm-12">
                                 <label class="form-label">Footer Logo</label>
                                 <input type="file" class="dropify" name="footer_logo"
                                     data-default-file="{{ $data->footer_logo ? asset('uploads/footer_logo/' . $data->footer_logo) : '' }}"
                                     data-height="180" />
                             </div>
-                            <div class="col-lg-4 col-sm-12">
+                            <div class="col-lg-3 col-sm-12">
                                 <label class="form-label">Web Icon</label>
                                 <input type="file" class="dropify" name="web_icon"
                                     data-default-file="{{ $data->web_icon ? asset('uploads/web_icon/' . $data->web_icon) : '' }}"
@@ -84,7 +91,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="input-box">
-                                    <textarea class="google-input" id="meta_keywords" name="meta_keywords" rows="1" placeholder="Meta Keywords">{{ $data->meta_keywords ?? '' }}</textarea>
+                                    <label class="input-label">Meta Keywords</label>
+                                    <input class="google-input" type="text" id="meta_keywords" name="meta_keywords"  value="{{ $data->meta_keywords ?? '' }}" />
                                 </div>
                                 @error('meta_keywords')
                                     <label id="meta_keywords-error" class="error"
@@ -93,8 +101,10 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="input-box">
-                                    <textarea class="google-input" id="meta_description" name="meta_description" rows="1"
-                                        placeholder="Meta Description">{{ $data->meta_description ?? '' }}</textarea>
+                                    <label class="input-label">Meta Description</label>
+
+                                    <input type="text" class="google-input" id="meta_description" name="meta_description" 
+                                         value="{{ $data->meta_description ?? '' }}" />
                                 </div>
                                 @error('meta_description')
                                     <label id="meta_description-error" class="error"
@@ -199,16 +209,30 @@
                                         <div data-repeater-item>
                                             <div class="form row">
                                                 <input type="hidden" name="id" value="{{ $socialMedia->id }}">
-                                                <div class="col-lg-4 col-sm-4 mt-3">
-                                                    <input type="file" class="dropify" name="icon"
+                                                <div class="col-sm-6 col-md-6">
+                                                    {{-- <input type="file" class="dropify" name="icon"
                                                         data-default-file="{{ filled($socialMedia->icon) ? asset('uploads/socialmedia/' . $socialMedia->icon) : '' }}"
-                                                        data-height="180" />
+                                                        data-height="180" /> --}}
+                                                        <div class="input-box">
+                                                        <select class="google-input" name="icon">
+                                                            <option value="">-- select network</option>
+                                                            <option @if( $socialMedia->icon == 'Facebook' ) selected @endif value="Facebook">Facebook</option>
+                                                            <option @if( $socialMedia->icon == 'YouTube' ) selected @endif value="YouTube">YouTube</option>
+                                                            <option @if( $socialMedia->icon == 'WhatsApp' ) selected @endif value="WhatsApp">WhatsApp</option>
+                                                            <option @if( $socialMedia->icon == 'Instagram' ) selected @endif value="Instagram">Instagram</option>
+                                                            <option @if( $socialMedia->icon == 'WeChat' ) selected @endif value="WeChat">WeChat</option>
+                                                            <option @if( $socialMedia->icon == 'TikTok' ) selected @endif value="TikTok">TikTok</option>
+                                                            <option @if( $socialMedia->icon == 'Telegram' ) selected @endif value="Telegram">Telegram</option>
+                                                            <option @if( $socialMedia->icon == 'Snapchat' ) selected @endif value="Snapchat">Snapchat</option>
+                                                            <option @if( $socialMedia->icon == 'X' ) selected @endif value="X">X (formerly Twitter)</option>
+                                                        </select>
                                                     @error('icon')
                                                         <label id="title-error" class="error"
                                                             for="title">{{ $message }}</label>
                                                     @enderror
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-4 col-md-4 mt-8">
+                                                {{-- <div class="col-sm-4 col-md-4 mt-8">
                                                     <div class="input-box">
                                                         <label class="input-label">Title</label>
                                                         <input type="text" class="google-input" name="title"
@@ -219,8 +243,8 @@
                                                         <label id="title-error" class="error"
                                                             for="title">{{ $message }}</label>
                                                     @enderror
-                                                </div>
-                                                <div class="col-sm-3 col-md-3 mt-8">
+                                                </div> --}}
+                                                <div class="col-sm-4 col-md-4 ">
                                                     <div class="input-box">
                                                         <label class="input-label">URL</label>
                                                         <input type="text" name="url" class="google-input"
@@ -231,8 +255,8 @@
                                                             for="url">{{ $message }}</label>
                                                     @enderror
                                                 </div>
-                                                <div class="col-sm-1 col-md-1 text-center"
-                                                    style="margin-top: 78px!important;">
+                                                <div class="col-sm-2 col-md-2 text-center"
+                                                    style="margin-top: 5px!important;">
                                                     <button type="button" class="btn btn-danger"
                                                         data-repeater-delete=""><i class="feather icon-x"></i> Delete
                                                     </button>
@@ -243,12 +267,26 @@
                                 @else
                                     <div data-repeater-item>
                                         <div class="form row">
-                                            <div class="col-lg-4 col-sm-4 mt-3">
-                                                <input type="file" class="dropify" name="icon"
+                                            <div class="col-sm-6 col-md-6 ">
+                                                {{-- <input type="file" class="dropify" name="icon"
                                                     data-default-file="{{ isset($socialMedia) && filled($socialMedia->icon) ? asset('uploads/socialmedia/' . $socialMedia->icon) : '' }}"
-                                                    data-height="180" />
+                                                    data-height="180" /> --}}
+                                                    <div class="input-box">
+                                                        <select class="google-input" name="icon">
+                                                            <option value="">-- select network</option>
+                                                            <option value="Facebook">Facebook</option>
+                                                            <option value="YouTube">YouTube</option>
+                                                            <option value="WhatsApp">WhatsApp</option>
+                                                            <option value="Instagram">Instagram</option>
+                                                            <option value="WeChat">WeChat</option>
+                                                            <option value="TikTok">TikTok</option>
+                                                            <option value="Telegram">Telegram</option>
+                                                            <option value="Snapchat">Snapchat</option>
+                                                            <option value="X">X (formerly Twitter)</option>
+                                                        </select>
                                             </div>
-                                            <div class="col-sm-4 col-md-4 mt-8">
+                                        </div>
+                                            {{-- <div class="col-sm-4 col-md-4 mt-8">
                                                 <div class="input-box">
                                                     <label class="input-label">Title</label>
                                                     <input type="text" class="google-input" name="title"
@@ -259,8 +297,8 @@
                                                     <label id="title-error" class="error"
                                                         for="title">{{ $message }}</label>
                                                 @enderror
-                                            </div>
-                                            <div class="col-sm-3 col-md-3 mt-8">
+                                            </div> --}}
+                                            <div class="col-sm-4 col-md-4 ">
                                                 <div class="input-box">
                                                     <label class="input-label">URL</label>
                                                     <input type="text" name="url" class="google-input"
@@ -272,8 +310,8 @@
                                                         for="url">{{ $message }}</label>
                                                 @enderror
                                             </div>
-                                            <div class="col-sm-1 col-md-1 text-center"
-                                                style="margin-top: 78px!important;">
+                                            <div class="col-sm-2 col-md-2 text-center"
+                                                style="margin-top: 5px!important;">
                                                 <button type="button" class="btn btn-danger" data-repeater-delete=""><i
                                                         class="feather icon-x"></i> Delete
                                                 </button>
