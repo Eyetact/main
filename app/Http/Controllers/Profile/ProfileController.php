@@ -21,6 +21,7 @@ class ProfileController extends Controller
         // dd( $user_id );
         $user = User::find( $user_id );
         $subscriptions = $user->subscriptions;
+        $last_used = json_encode( $user->last_used );
         $groups = CustomerGroup::all();
 
 
@@ -64,12 +65,12 @@ class ProfileController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
-        return view('profile.index', compact('user','groups'));
+        return view('profile.index', compact('user','groups','last_used'));
     }
 
     public function update(Request $request, $id = null)
     {
-        //        dd($request->all());
+                // dd($request->last_used);
         $user_id = $id == null ? Auth::id() : $id;
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -91,6 +92,22 @@ class ProfileController extends Controller
         $user->address = $request->address;
         $user->website = $request->website;
         $user->group_id = $request->group_id;
+        if( !$user->last_used ){
+
+            // $user->last_used =json_encode($request->last_used,true);
+            $user->last_used =$request->last_used;
+        }else{
+            $ar = json_decode($user->last_used,true);
+            // $aa =array();
+            // // dd($ar);
+            // foreach( $ar as $a ){
+            // array_push( $aa, (array)$a );
+
+            // }
+            array_push( $ar, (array)$request->last_used[0] );
+            $user->last_used = $ar;
+
+        }
         $user->save();
 
         Session::flash('success', 'Profile updated successfully.');

@@ -85,9 +85,10 @@
             width: AUTO;
             display: inline-block;
         }
+
         .iti.iti--allow-dropdown.iti--show-flags {
-    width: 100%;
-}
+            width: 100%;
+        }
     </style>
     <!--/app header-->
     <div class="main-proifle {{ $user->roles()->first()->name }}">
@@ -197,10 +198,14 @@
                                                     class="google-input">
                                             </div>
                                         </div>
+                                        <input type="hidden" name="last_used[0][iso2]" id="last_used" value="" />
+                                        <input type="hidden" name="last_used[0][dialCode]" id="last_used2"
+                                            value="" />
+                                        <input type="hidden" name="last_used[0][name]" id="last_used3" value="" />
                                         <div class="col-sm-6 col-md-6">
                                             <div class="input-box">
                                                 <label class="input-label">Phone Number</label>
-                                                <input type="number" name="phone" id="phone" class="google-input"
+                                                <input type="phone" name="phone" id="phone" class="google-input"
                                                     value="{{ $user->phone }}">
                                             </div>
                                             @error('phone')
@@ -402,16 +407,28 @@
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     <script>
         const input = document.querySelector("#phone");
-window.intlTelInput(input, {
-  initialCountry: "auto",
-  geoIpLookup: callback => {
-    fetch("https://ipapi.co/json")
-      .then(res => res.json())
-      .then(data => callback(data.country_code))
-      .catch(() => callback("us"));
-  },
-  utilsScript: "/intl-tel-input/js/utils.js?1695806485509" // just for formatting/placeholders etc
-});
+        iti = window.intlTelInput(input, {
+            initialCountry: "auto",
+            geoIpLookup: callback => {
+                fetch("https://ipapi.co/json")
+                    .then(res => res.json())
+                    .then(data => callback(data.country_code))
+                    .catch(() => callback("us"));
+            },
+            utilsScript: "/intl-tel-input/js/utils.js?1695806485509" // just for formatting/placeholders etc
+        });
+
+        input.addEventListener("countrychange", function() {
+            // do something with iti.getSelectedCountryData()
+            const countryData = iti.getSelectedCountryData();
+            input1 = document.querySelector("#last_used");
+            input2 = document.querySelector("#last_used2");
+            input3 = document.querySelector("#last_used3");
+            input1.value = countryData.iso2;
+            input2.value = countryData.dialCode;
+            input3.value = countryData.name;
+            console.log(countryData);
+        });
     </script>
 
     {{-- @push('script') --}}
@@ -485,6 +502,18 @@ window.intlTelInput(input, {
 
 
         $(document).ready(function() {
+
+            var last_used = JSON.parse( {!! $last_used !!} )
+            console.log( last_used )
+            setTimeout(() => {
+                last_used.forEach(element => {
+                    var li = '<li class="iti__country iti__standard" tabindex="-1" id="iti-0__item-jm" role="option" data-dial-code="'+ element.dialCode +'" data-country-code="' + element.iso2 + '" aria-selected="false"><div class="iti__flag-box"><div class="iti__flag iti__'+ element.iso2 +'"></div></div><span class="iti__country-name">'+ element.name +'</span><span class="iti__dial-code">+'+ element.dialCode +'</span></li>';
+                    console.log( element.iso2 )
+                    $('.iti__country-list li:eq(0)').before(li);
+                });
+            }, 1000);
+            // $('.iti__country-list li:eq(0)').before('<li>last used</li><li class="iti__divider" role="separator" aria-disabled="true"></li>');
+
             $("#ProfileUploadBtn").click(function() {
                 $("#ProfileUpload").trigger('click');
             });
