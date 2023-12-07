@@ -15,7 +15,7 @@ class AddColumnsUsernameAndAvatarToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('username')->nullable()->after('name');
-            $table->string('avatar')->nullable()->after('email');
+            $table->string('avatar')->default('default.png')->after('email');
         });
     }
 

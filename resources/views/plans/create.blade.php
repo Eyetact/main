@@ -115,7 +115,7 @@
                             <label id="price-error" class="error" for="price">{{ $message }}</label>
                         @enderror
                     </div>
-                    <div class="col-sm-12 col-md-12">
+                    {{-- <div class="col-sm-12 col-md-12">
                         <div class="form-group ">
                             <label class="form-label">Permissions</label>
                             <div class="selectgroup selectgroup-pills">
@@ -126,11 +126,34 @@
                                     <span class="selectgroup-button">{{$p->name}}</span>
                                 </label>
                                 @endforeach
-                               
+
                             </div>
                         </div>
+                    </div> --}}
+
+                    <div class="col-sm-6 col-md-6">
+
+                        <div class="input-box">
+                        {{-- <label for="permission_type">Permission Type:</label> --}}
+                        <select class="google-input"  id="permission_type">
+                            <option selected disabled>Select Permission Type</option>
+                            <option value="user">User</option>
+                            <option value="customer">Customer</option>
+                        </select>
+                    </div>
                     </div>
 
+
+
+                    <div class="col-sm-6 col-md-6">
+
+                        <div class="input-box">
+                        {{-- <label for="permissions">Permissions:</label> --}}
+                        <select class="google-input" name="permissions[]" multiple id="permissions">
+                            <!-- Permissions for the selected type will be dynamically loaded here -->
+                        </select>
+                    </div>
+                    </div>
 
                 </div>
 
@@ -169,6 +192,8 @@
     <script src="{{ asset('assets/js/file-upload.js') }}"></script>
     <script src="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/plugins/wysiwyag/jquery.richtext.js">
     </script>
+
+    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 
     <script type="text/javascript">
         // $(document).ready(function() {
@@ -222,5 +247,32 @@
             $('.content').richText();
             $('.content2').richText();
         });
+
+
+    $(document).ready(function() {
+        $('#permission_type').change(function() {
+            var selectedType = $(this).val();
+            getPermissionsByType(selectedType);
+        });
+
+        function getPermissionsByType(type) {
+            var permissionsSelect = $('#permissions');
+            permissionsSelect.empty();
+
+            if (type === 'user') {
+                @foreach ($user_permissions as $permission)
+                    permissionsSelect.append($('<option></option>')
+                        .attr('value', '{{ $permission->id }}')
+                        .text('{{ $permission->name }}'));
+                @endforeach
+            } else if (type === 'customer') {
+                @foreach ($customer_permissions as $permission)
+                    permissionsSelect.append($('<option></option>')
+                        .attr('value', '{{ $permission->id }}')
+                        .text('{{ $permission->name }}'));
+                @endforeach
+            }
+        }
+    });
     </script>
 @endpush

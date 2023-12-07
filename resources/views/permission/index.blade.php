@@ -70,6 +70,7 @@
                                 <tr>
                                     <th style="width:15%">No.</th>
                                     <th>Permission</th>
+                                    <th>type</th>
                                     <th>module</th>
                                     <th>Guard</th>
                                     <th width="300px"></th>
@@ -139,6 +140,10 @@
                 {
                     data: 'name',
                     name: 'name'
+                },
+                {
+                    data: 'type',
+                    name: 'type'
                 },
                 {
                     data: 'module',

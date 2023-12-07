@@ -56,7 +56,9 @@ class PlanController extends Controller
     {
 
         $permissions = Permission::all();
-        return view('plans.create', compact('permissions'));
+        $user_permissions = Permission::where('type', 'user')->get();
+        $customer_permissions = Permission::where('type', 'customer')->get();
+        return view('plans.create', compact('permissions','user_permissions','customer_permissions'));
     }
 
     public function store(PlanRequest $request)
