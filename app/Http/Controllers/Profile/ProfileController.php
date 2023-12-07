@@ -67,11 +67,8 @@ class ProfileController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
-<<<<<<< HEAD
-        return view('profile.index', compact('user','groups','last_used'));
-=======
-        return view('profile.index', compact('user','groups','ugroups'));
->>>>>>> a4d5fcfb7c92fea221466602e2125a652ca2f12e
+
+        return view('profile.index', compact('user','groups','ugroups','last_used'));
     }
 
     public function update(Request $request, $id = null)
