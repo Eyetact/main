@@ -8,6 +8,7 @@
     <link href="{{ URL::asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
 @endsection
 @section('page-header')
     <!--Page header-->
@@ -84,6 +85,10 @@
             width: AUTO;
             display: inline-block;
         }
+
+        .iti.iti--allow-dropdown.iti--show-flags {
+            width: 100%;
+        }
     </style>
     <!--/app header-->
     <div class="main-proifle {{ $user->roles()->first()->name }}">
@@ -98,7 +103,7 @@
                                 <a href="javascript:void(0)" class="" id="ProfileUploadBtn"><i
                                         class="fa fa-camera"></i></a>
                             </div>
-                            <form id="profileImageForm" action="{{ route('profile.upload-image') }}"
+                            <form id="profileImageForm" action="{{ route('profile.upload-image', $user->id) }}"
                                 enctype="multipart/form-data" method="POST">
                                 @csrf
                                 <input type="file" id="ProfileUpload" name="image_upload" style="display:none;"
@@ -157,7 +162,7 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="myProfile">
                         <div class="card">
-                            <form action="{{ route('profile.update') }}" method="POST" id="editProfile">
+                            <form action="{{ route('profile.update', $user->id) }}" method="POST" id="editProfile">
                                 @csrf
                                 <div class="card-header">
                                     <div class="card-title">Edit Profile</div>
@@ -193,10 +198,14 @@
                                                     class="google-input">
                                             </div>
                                         </div>
+                                        <input type="hidden" name="last_used[0][iso2]" id="last_used" value="" />
+                                        <input type="hidden" name="last_used[0][dialCode]" id="last_used2"
+                                            value="" />
+                                        <input type="hidden" name="last_used[0][name]" id="last_used3" value="" />
                                         <div class="col-sm-6 col-md-6">
                                             <div class="input-box">
                                                 <label class="input-label">Phone Number</label>
-                                                <input type="number" name="phone" id="phone" class="google-input"
+                                                <input type="phone" name="phone" id="phone" class="google-input"
                                                     value="{{ $user->phone }}">
                                             </div>
                                             @error('phone')
@@ -224,6 +233,44 @@
                                                     for="website">{{ $message }}</label>
                                             @enderror
                                         </div>
+
+                                        @hasanyrole('super|admin|vendor')
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="input-box">
+                                                <select class=" google-input" name="group_id" tabindex="null">
+                                                    <option selected disabled>Select Customer Group</option>
+                                                    @foreach ($groups as $group)
+                                                        <option @if ($user->group_id == $group->id) selected @endif
+                                                            value="{{ $group->id }}">{{ $group->id }} -
+                                                            {{ $group->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            @error('group_id')
+                                                <label id="user_id-error" class="error"
+                                                    for="group_id">{{ $message }}</label>
+                                            @enderror
+                                        </div>
+                                        @endhasanyrole
+
+
+                                        @role('user')
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="input-box">
+                                                <select class=" google-input" name="ugroup_id" tabindex="null">
+                                                    <option selected disabled>Select User Group</option>
+                                                    @foreach ($ugroups as $group)
+                                                        <option @if( $user->ugroup_id == $group->id ) selected @endif value="{{ $group->id }}">{{$group->id}} - {{$group->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            @error('ugroup_id')
+                                                <label id="user_id-error" class="error" for="ugroup_id">{{ $message }}</label>
+                                            @enderror
+                                        </div>
+                                        @endrole
+
+
                                     </div>
                                 </div>
                                 <div class="card-footer text-right">
@@ -232,7 +279,7 @@
                             </form>
                         </div>
                         <div class="card">
-                            <form action="{{ route('profile.change-password') }}" method="POST"
+                            <form action="{{ route('profile.change-password', $user->id) }}" method="POST"
                                 id="changePasswordForm">
                                 @csrf
                                 <div class="card-header">
@@ -289,7 +336,7 @@
                                                 <th>User</th>
                                                 <th>Plan</th>
                                                 <th>Status</th>
-                                                <th data-priority="1">Action</th>
+                                                <th data-priority="1"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -302,7 +349,7 @@
 
                     </div>
 
-                    @if ($user->hasRole('super') || $user->hasRole('admin') ) 
+                    @if ($user->hasRole('super') || $user->hasRole('admin'))
                         <div class="tab-pane" id="admins">
 
                             <div class="card">
@@ -322,7 +369,7 @@
                                                     <th>phone</th>
                                                     <th>address</th>
                                                     <th>website</th>
-                                                    <th data-priority="1">Action</th>
+                                                    <th data-priority="1"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -336,17 +383,18 @@
                     @endif
 
                     @if ($user->hasRole('vendor'))
-                    <div class="tab-pane" id="vendor">
+                        <div class="tab-pane" id="vendor">
 
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">vendor</div>
-                            </div>
-                            <div class="card-body">
-                                This Vendor was Registered  By <a href="{{ route('profile.index',$user->admin->id) }}" >{{ $user->admin->name }}</a>
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">vendor</div>
+                                </div>
+                                <div class="card-body">
+                                    This Vendor was Registered By <a
+                                        href="{{ route('profile.index', $user->admin->id) }}">{{ $user->admin->name }}</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     @endif
                 </div>
             </div>
@@ -378,6 +426,32 @@
 
     <!-- INTERNAL Select2 js -->
     <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+    <script>
+        const input = document.querySelector("#phone");
+        iti = window.intlTelInput(input, {
+            initialCountry: "auto",
+            geoIpLookup: callback => {
+                fetch("https://ipapi.co/json")
+                    .then(res => res.json())
+                    .then(data => callback(data.country_code))
+                    .catch(() => callback("us"));
+            },
+            utilsScript: "/intl-tel-input/js/utils.js?1695806485509" // just for formatting/placeholders etc
+        });
+
+        input.addEventListener("countrychange", function() {
+            // do something with iti.getSelectedCountryData()
+            const countryData = iti.getSelectedCountryData();
+            input1 = document.querySelector("#last_used");
+            input2 = document.querySelector("#last_used2");
+            input3 = document.querySelector("#last_used3");
+            input1.value = countryData.iso2;
+            input2.value = countryData.dialCode;
+            input3.value = countryData.name;
+            console.log(countryData);
+        });
+    </script>
 
     {{-- @push('script') --}}
     <script>
@@ -385,8 +459,8 @@
             processing: true,
             serverSide: true,
             lengthChange: false,
-            dom: 'lBftrip',
-            buttons: ['copy', 'excel', 'pdf', 'colvis'],
+            // dom: 'lBftrip',
+            // buttons: ['copy', 'excel', 'pdf', 'colvis'],
             responsive: true,
             language: {
                 searchPlaceholder: 'Search...',
@@ -450,6 +524,18 @@
 
 
         $(document).ready(function() {
+
+            var last_used = JSON.parse( {!! $last_used !!} )
+            console.log( last_used )
+            setTimeout(() => {
+                last_used.forEach(element => {
+                    var li = '<li class="iti__country iti__standard" tabindex="-1" id="iti-0__item-jm" role="option" data-dial-code="'+ element.dialCode +'" data-country-code="' + element.iso2 + '" aria-selected="false"><div class="iti__flag-box"><div class="iti__flag iti__'+ element.iso2 +'"></div></div><span class="iti__country-name">'+ element.name +'</span><span class="iti__dial-code">+'+ element.dialCode +'</span></li>';
+                    console.log( element.iso2 )
+                    $('.iti__country-list li:eq(0)').before(li);
+                });
+            }, 1000);
+            // $('.iti__country-list li:eq(0)').before('<li>last used</li><li class="iti__divider" role="separator" aria-disabled="true"></li>');
+
             $("#ProfileUploadBtn").click(function() {
                 $("#ProfileUpload").trigger('click');
             });
@@ -523,15 +609,15 @@
             processing: true,
             serverSide: true,
             lengthChange: false,
-            dom: 'lBftrip',
-            buttons: ['copy', 'excel', 'pdf', 'colvis'],
+            // dom: 'lBftrip',
+            // buttons: ['copy', 'excel', 'pdf', 'colvis'],
             responsive: true,
             language: {
                 searchPlaceholder: 'Search...',
                 sSearch: '',
                 lengthMenu: '_MENU_ ',
             },
-            ajax: "{{ route('profile.index') }}",
+            ajax: "{{ route('profile.index', $user->id) }}",
 
             columns: [{
                     data: 'DT_RowIndex',

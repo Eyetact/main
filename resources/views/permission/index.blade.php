@@ -70,9 +70,10 @@
                                 <tr>
                                     <th style="width:15%">No.</th>
                                     <th>Permission</th>
+                                    <th>type</th>
                                     <th>module</th>
                                     <th>Guard</th>
-                                    <th width="300px">Action</th>
+                                    <th width="300px"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -141,6 +142,10 @@
                     name: 'name'
                 },
                 {
+                    data: 'type',
+                    name: 'type'
+                },
+                {
                     data: 'module',
                     name: 'module'
                 },
@@ -181,10 +186,10 @@
                     dangerMode: true,
                     showCancelButton: true,
 
-                    
+
                 }, function (willDelete) {
                     if (willDelete) {
-                       
+
                         $.ajax({
                             type: "POST",
                             url: '{{url("/")}}/permission/permission/delete/' + id,
@@ -196,7 +201,7 @@
 	                				title: response.msg
 	                			}, function (result) {
 	                				location.reload();
-	                			});                               
+	                			});
                             }
                         });
                     }

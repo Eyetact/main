@@ -6,11 +6,11 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::rename('wilmaferrells', 'wilmaferrell1s');
+        //Schema::rename('wilmaferrells', 'wilmaferrell1s');
     }
 
     public function down()
     {
-        Schema::rename('wilmaferrell1s', 'wilmaferrells');
+        //Schema::rename('wilmaferrell1s', 'wilmaferrells');
     }
 };

@@ -38,15 +38,15 @@
     <!--Page header-->
     <div class="page-header">
         <div class="page-leftheader">
-            <h4 class="page-title mb-0">Admins</h4>
+            <h4 class="page-title mb-0">groups</h4>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Users</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="#">Admins</a></li>
+                <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Settings</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">groups</a></li>
             </ol>
         </div>
         <div class="page-rightheader">
             <div class="btn btn-list">
-                <a href="{{ route('admin.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
+                <a href="{{ route('ugroups.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
                     data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
             </div>
         </div>
@@ -61,7 +61,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Admins Data</div>
+                    <div class="card-title">groups Data</div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -70,12 +70,6 @@
                                 <tr>
                                     <th width="100px">No.</th>
                                     <th>Name</th>
-                                    <th>username</th>
-                                    <th>email</th>
-                                    <th >avatar</th>
-                                    <th>phone</th>
-                                    <th>address</th>
-                                    <th>website</th>
                                     <th data-priority="1"></th>
                                 </tr>
                             </thead>
@@ -132,7 +126,7 @@
                 sSearch: '',
                 lengthMenu: '_MENU_ ',
             },
-            ajax: "{{ route('users.admins') }}",
+            ajax: "{{ route('ugroups.index') }}",
 
             columns: [{
                     data: 'DT_RowIndex',
@@ -143,30 +137,6 @@
                 {
                     data: 'name',
                     name: 'name'
-                },
-                {
-                    data: 'username',
-                    name: 'username'
-                },
-                {
-                    data: 'email',
-                    name: 'email'
-                },
-                {
-                    data: 'avatar',
-                    name: 'avatar',
-                },
-                {
-                    data: 'phone',
-                    name: 'phone'
-                },
-                {
-                    data: 'address',
-                    name: 'address'
-                },
-                {
-                    data: 'website',
-                    name: 'website'
                 },
 
                 {
@@ -192,7 +162,7 @@
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
 
-        $(document).on('click', '.user-delete', function() {
+        $(document).on('click', '.group-delete', function() {
         	var id = $(this).attr("data-id");
             swal({
                     title: "Are you sure?",
@@ -208,7 +178,7 @@
 
                         $.ajax({
                             type: "POST",
-                            url: '{{url("/")}}/user/delete/' + id,
+                            url: '{{url("/")}}/user-group/delete/' + id,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
