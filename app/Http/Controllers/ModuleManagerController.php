@@ -54,7 +54,7 @@ class ModuleManagerController extends Controller
      */
     public function store(ModulePostRequest $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $requestData=$request->all();
 
         $request->validated();
