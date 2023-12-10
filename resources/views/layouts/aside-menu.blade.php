@@ -158,11 +158,22 @@
                 <span class="side-menu__label">permissions</span><i class="angle fa fa-angle-right"></i></a>
             <ul class="slide-menu ">
 
-
-                {{-- @if (Auth::user()->hasAnyPermission(['view.role']))
+{{--
+                @if (Auth::user()->hasAnyPermission(['view.role']))
                 <li class="{{ request()->is('role') ? 'active' : '' }}"><a class="menu-item" href="{{ route('role.index') }}" data-i18n="Roles">Roles</a>
                 </li>
                 @endif --}}
+
+
+
+                @if (Auth::user()->hasAnyPermission(['view.role']))
+                <li class="sub-slide {{ request()->is('role') ? 'active' : '' }}"><a class="sub-side-menu__item"
+                    href="{{ route('role.index') }}"><span
+                            class="sub-side-menu__label">Roles</span></a>
+                </li>
+            @endif
+
+
                 @if (Auth::user()->hasAnyPermission(['view.permission']))
                     <li class="sub-slide"><a class="sub-side-menu__item"
                             href="{{ route('permission.index') }}"><span

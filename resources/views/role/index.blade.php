@@ -1,33 +1,57 @@
 @extends('layouts.master')
-
-@section('title')
-    Roles
-@endsection
-
 @section('css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/css/tables/datatable/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/css/tables/extensions/rowReorder.dataTables.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/css/tables/extensions/responsive.dataTables.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('vendors/css/forms/selects/select2.min.css') }}">
-
+    <!-- Data table css -->
+    <link href="{{ URL::asset('assets/plugins/datatable/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('assets/plugins/datatable/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.css') }}" rel="stylesheet" />
+    <!-- Slect2 css -->
+    <link href="{{ URL::asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
+    <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
     <style>
-        .permission .nav-sidebar .nav-item {
-            position: relative;
+        .dropdown-toggle:after {
+            content: none !important;
         }
 
-        .permission .nav-sidebar .menu-open .nav-link i.right {
-            -webkit-transform: rotate(-90deg);
-            transform: rotate(-90deg);
+        li.dropdown-item button,
+        li.dropdown-item a {
+            border: none;
+            background: transparent;
+            color: #333;
+            padding: 0px 10px;
         }
 
-        .checkbox input[type="checkbox"] {
-            display: none;
+        li.dropdown-item {
+            padding: 10px;
+            text-align: left;
         }
 
-        .custom-control{
-            padding-left: 10px;
+        .dt-buttons.btn-group {
+            float: left;
         }
+        .parent {
+    animation: unset !important;
+}
     </style>
+@endsection
+@section('page-header')
+    <!--Page header-->
+    <div class="page-header">
+        <div class="page-leftheader">
+            <h4 class="page-title mb-0">Roles</h4>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>roles</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">list</a></li>
+            </ol>
+        </div>
+        <div class="page-rightheader">
+            <div class="btn btn-list">
+                <a href="{{ route('role.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
+                    data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
+            </div>
+        </div>
+    </div>
+    <!--End Page header-->
 @endsection
 
 @section('content')
@@ -40,9 +64,9 @@
                     <div class="card-header">
                         <h4 class="inline">Roles</h4>
                         <div class="heading-elements mt-0">
-                            <button class="btn btn-primary btn-md" id="add_new">
+                            {{-- <button class="btn btn-primary btn-md" id="add_new">
                                 <i class="d-md-none d-block feather icon-plus white" ></i><span class="d-md-block d-none" href="javascript:void(0)"> &nbsp; Add Roles</span>
-                            </button>
+                            </button> --}}
                         </div>
                     </div>
                 </div>
@@ -82,7 +106,32 @@
     </div>
 @endsection
 
-@section('scripts')
+@section('js')
+  <!-- INTERNAL Data tables -->
+  <script src="{{ URL::asset('assets/plugins/datatable/js/jquery.dataTables.js') }}"></script>
+  <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.bootstrap4.js') }}"></script>
+  <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
+  <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.bootstrap4.min.js') }}"></script>
+  <script src="{{ URL::asset('assets/plugins/datatable/js/jszip.min.js') }}"></script>
+  <script src="{{ URL::asset('assets/plugins/datatable/js/pdfmake.min.js') }}"></script>
+  <script src="{{ URL::asset('assets/plugins/datatable/js/vfs_fonts.js') }}"></script>
+  <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
+  <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
+  <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
+  <script src="{{ URL::asset('assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
+  <script src="{{ URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.js') }}"></script>
+  <script src="{{ URL::asset('assets/js/datatables.js') }}"></script>
+  <script src="{{ URL::asset('assets/js/popover.js') }}"></script>
+
+  <!-- INTERNAL Sweet alert js -->
+  <script src="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.js') }}"></script>
+  <script src="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
+  <script src="{{ URL::asset('assets/js/sweet-alert.js') }}"></script>
+
+
+  <!-- INTERNAL Select2 js -->
+  <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
+
       <script type="text/javascript">
         var table = $('#role-tabel').DataTable({
             processing: true,
@@ -146,8 +195,8 @@
                 $(this).parent().find('.schedule_time').removeAttr('disabled');
             }
         });
-            
-        
+
+
             $(document).on('click', '#add_new', function() {
             // window.addEventListener('load', function() {
 
