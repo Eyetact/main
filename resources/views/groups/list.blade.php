@@ -29,9 +29,10 @@
         .dt-buttons.btn-group {
             float: left;
         }
+
         .parent {
-    animation: unset !important;
-}
+            animation: unset !important;
+        }
     </style>
 @endsection
 @section('page-header')
@@ -46,8 +47,8 @@
         </div>
         <div class="page-rightheader">
             <div class="btn btn-list">
-                <a href="{{ route('groups.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
-                    data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
+                <a id="add_new" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="Add new"><i
+                        class="fe fe-plus mr-1"></i> Add new </a>
             </div>
         </div>
     </div>
@@ -86,6 +87,22 @@
     </div>
     </div><!-- end app-content-->
     </div>
+
+    <div class="modal fade bd-example-modal-lg" id="role_form_modal" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('js')
     <!-- INTERNAL Data tables -->
@@ -112,8 +129,60 @@
 
     <!-- INTERNAL Select2 js -->
     <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
+    <!-- INTERNAL File-Uploads Js-->
+    <script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
+    <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
+    <script src="{{ asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
+    <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
+    <script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
+
+    <!-- INTERNAL File uploads js -->
+    <script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
+    <script src="{{ asset('assets/js/filupload.js') }}"></script>
+
+    <!--INTERNAL Sumoselect js-->
+    <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
+
+    <!--INTERNAL Form Advanced Element -->
+    <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
+    <script src="{{ asset('assets/js/form-elements.js') }}"></script>
+    <script src="{{ asset('assets/js/file-upload.js') }}"></script>
 
     <script type="text/javascript">
+        $(document).on('click', '#add_new', function() {
+            // window.addEventListener('load', function() {
+
+            // }, false);
+            $.ajax({
+                url: "{{ route('groups.create') }}",
+                success: function(response) {
+                    //  console.log(response);
+                    $(".modal-body").html(response);
+                    $(".modal-title").html("Add Group");
+                    $("#role_form_modal").modal('show');
+                    $('.dropify').dropify();
+                }
+            });
+        });
+
+        $(document).on('click', '#edit_item', function() {
+            // window.addEventListener('load', function() {
+
+            // }, false);
+            var path = $(this).data('path')
+            $.ajax({
+                url: path,
+                success: function(response) {
+                     console.log(path);
+                     console.log(response);
+                    $(".modal-body").html(response);
+                    $(".modal-title").html("edit Group");
+                    $("#role_form_modal").modal('show');
+                    $('.dropify').dropify();
+                }
+            });
+        });
+        
         var table = $('#attribute_table').DataTable({
             processing: true,
             serverSide: true,
@@ -163,35 +232,35 @@
         }
 
         $(document).on('click', '.group-delete', function() {
-        	var id = $(this).attr("data-id");
+            var id = $(this).attr("data-id");
             swal({
-                    title: "Are you sure?",
-                    text: "Once deleted, you will not be able to recover this attribute!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                    showCancelButton: true,
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this attribute!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                showCancelButton: true,
 
 
-                }, function (willDelete) {
-                    if (willDelete) {
+            }, function(willDelete) {
+                if (willDelete) {
 
-                        $.ajax({
-                            type: "POST",
-                            url: '{{url("/")}}/group/delete/' + id,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(response) {
-	                            swal({
-	                				title: response.msg
-	                			}, function (result) {
-	                				location.reload();
-	                			});
-                            }
-                        });
-                    }
-                });
+                    $.ajax({
+                        type: "POST",
+                        url: '{{ url('/') }}/group/delete/' + id,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            swal({
+                                title: response.msg
+                            }, function(result) {
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
         });
     </script>
 @endsection

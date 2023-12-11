@@ -24,7 +24,7 @@ class CustomerGroupController extends Controller
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
-                        <a  href="' . route('groups.view', $row->id) . '">View or Edit</a>
+                        <a id="edit_item" data-path="' . route('groups.view', $row->id) . '" href="#">View or Edit</a>
                         </li>
 
                         <li class="dropdown-item">
@@ -64,6 +64,16 @@ class CustomerGroupController extends Controller
 
 
     public function show($id)
+    {
+        $group = CustomerGroup::findOrFail($id);
+
+
+    
+
+        return view('groups.show', compact('group'));
+    }
+
+    public function showCustomer($id)
     {
         $group = CustomerGroup::findOrFail($id);
 

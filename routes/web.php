@@ -187,6 +187,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('add-group', [CustomerGroupController::class, 'store'])->name('groups.store');
 
     Route::get('/group/{id}', [CustomerGroupController::class, 'show'])->name('groups.view');
+    Route::get('/showCustomer/{id}', [CustomerGroupController::class, 'showCustomer'])->name('groups.view2');
     Route::post('update-group/{id}', [CustomerGroupController::class, 'update'])->name('groups.update');
 
     Route::post('/group/delete/{id}', [CustomerGroupController::class, 'destroy'])->name('groups.destroy');
