@@ -8,6 +8,10 @@
     <link href="{{ URL::asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
+
+    
+        <!-- INTERNAL Sumoselect css-->
+        <link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
     <style>
         .dropdown-toggle:after {
             content: none !important;
@@ -46,13 +50,23 @@
         </div>
         <div class="page-rightheader">
             <div class="btn btn-list">
-                <a href="{{ route('users.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
+                <a id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
                     data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
             </div>
         </div>
     </div>
     <!--End Page header-->
 @endsection
+@push('styles')
+<!-- INTERNAL Sumoselect css-->
+<link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
+
+<!-- INTERNAL File Uploads css -->
+<link href="{{ asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
+
+<!-- INTERNAL File Uploads css-->
+<link href="{{ asset('assets/plugins/fileupload/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
+@endpush
 @section('content')
     <!-- Row -->
     <div class="row">
@@ -93,6 +107,22 @@
     </div>
     </div><!-- end app-content-->
     </div>
+
+    <div class="modal fade bd-example-modal-lg" id="role_form_modal" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('js')
     <!-- INTERNAL Data tables -->
@@ -119,6 +149,94 @@
 
     <!-- INTERNAL Select2 js -->
     <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
+
+ <!--INTERNAL Sumoselect js-->
+ <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
+ <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
+
+  <!-- INTERNAL File-Uploads Js-->
+  <script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
+  <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
+  <script src="{{ asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
+  <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
+  <script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
+
+  <!-- INTERNAL File uploads js -->
+  <script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
+  <script src="{{ asset('assets/js/filupload.js') }}"></script>
+
+  <!--INTERNAL Sumoselect js-->
+  <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
+
+  <!--INTERNAL Form Advanced Element -->
+  <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
+  <script src="{{ asset('assets/js/form-elements.js') }}"></script>
+  <script src="{{ asset('assets/js/file-upload.js') }}"></script>
+
+ <script type="text/javascript">
+
+$(document).on('click', '#add_new', function() {
+            // window.addEventListener('load', function() {
+
+            // }, false);
+            $.ajax({
+                url: "{{ route('users.create') }}",
+                success: function(response) {
+                    //  console.log(response);
+                    $(".modal-body").html(response);
+                    $(".modal-title").html("Add User");
+                    $("#role_form_modal").modal('show');
+                    $('.dropify').dropify();
+                }
+            });
+        });
+     // $(document).ready(function() {
+     $("#mailboxForm").validate({
+         onkeyup: function(el, e) {
+             $(el).valid();
+         },
+         // errorClass: "invalid-feedback is-invalid",
+         // validClass: 'valid-feedback is-valid',
+         ignore: ":hidden",
+         rules: {
+             name: {
+                 required: true,
+             },
+             email: {
+                 required: true,
+             },
+             password: {
+                 required: true,
+             }
+
+         },
+         messages: {},
+         errorPlacement: function(error, element) {
+             error.insertAfter($(element).parent());
+         },
+     });
+
+     $("input[type='text'], input[type='number'], input[type='password'], input[type='email'], input[type='tel']").on(
+         "keyup",
+         function() {
+             var $input = $(this);
+             if ($input.val() != '') {
+                 $input.parents(".input-box").addClass("focus");
+             } else {
+                 $input.parents(".input-box").removeClass("focus");
+             }
+         });
+     $("input[type='text'], input[type='number'], input[type='password'], input[type='email'], input[type='tel']").each(
+         function(index, element) {
+             var value = $(element).val();
+             if (value != '') {
+                 $(this).parents('.input-box').addClass('focus');
+             } else {
+                 $(this).parents('.input-box').removeClass('focus');
+             }
+         });
+     // });
+ </script>
 
     <script type="text/javascript">
         var table = $('#attribute_table').DataTable({
@@ -229,4 +347,6 @@
                 });
         });
     </script>
+    
+  
 @endsection
