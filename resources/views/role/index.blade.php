@@ -29,9 +29,25 @@
         .dt-buttons.btn-group {
             float: left;
         }
+
         .parent {
-    animation: unset !important;
-}
+            animation: unset !important;
+        }
+    </style>
+    <style>
+        .role-group .input-box {
+            border: 1px solid #f1f1f1;
+            align-items: center;
+            margin: 0;
+            border-bottom: 0;
+            padding: 10px 30px 10px;
+            line-height: 0;
+        }
+
+        .role-group {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #f1f1f1;
+        }
     </style>
 @endsection
 @section('page-header')
@@ -46,7 +62,7 @@
         </div>
         <div class="page-rightheader">
             <div class="btn btn-list">
-                <a href="{{ route('role.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
+                <a href="javascript:void(0)" id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
                     data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
             </div>
         </div>
@@ -55,7 +71,6 @@
 @endsection
 
 @section('content')
-
     <div class="row">
         <!-- Zero Configuration  Starts-->
         <div class="col-sm-12">
@@ -64,18 +79,16 @@
                     <div class="card-header">
                         <h4 class="inline">Roles</h4>
                         <div class="heading-elements mt-0">
-                            {{-- <button class="btn btn-primary btn-md" id="add_new">
-                                <i class="d-md-none d-block feather icon-plus white" ></i><span class="d-md-block d-none" href="javascript:void(0)"> &nbsp; Add Roles</span>
-                            </button> --}}
+
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="display" id="role-tabel">
+                        <table class="table table-bordered text-nowrap" id="role_table">
                             <thead>
                                 <tr>
-                                    <th style="width:15%">No.</th>
+                                    <th width="30px"></th>
                                     <th>Role</th>
                                     <th>Guard</th>
                                     <th width="300px">Action</th>
@@ -96,7 +109,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">×</span> </button>
                 </div>
                 <div class="modal-body">
 
@@ -107,41 +121,53 @@
 @endsection
 
 @section('js')
-  <!-- INTERNAL Data tables -->
-  <script src="{{ URL::asset('assets/plugins/datatable/js/jquery.dataTables.js') }}"></script>
-  <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.bootstrap4.js') }}"></script>
-  <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
-  <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.bootstrap4.min.js') }}"></script>
-  <script src="{{ URL::asset('assets/plugins/datatable/js/jszip.min.js') }}"></script>
-  <script src="{{ URL::asset('assets/plugins/datatable/js/pdfmake.min.js') }}"></script>
-  <script src="{{ URL::asset('assets/plugins/datatable/js/vfs_fonts.js') }}"></script>
-  <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
-  <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
-  <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
-  <script src="{{ URL::asset('assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
-  <script src="{{ URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.js') }}"></script>
-  <script src="{{ URL::asset('assets/js/datatables.js') }}"></script>
-  <script src="{{ URL::asset('assets/js/popover.js') }}"></script>
+    <!-- INTERNAL Data tables -->
+    <script src="{{ URL::asset('assets/plugins/datatable/js/jquery.dataTables.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.bootstrap4.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.bootstrap4.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/jszip.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/pdfmake.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/vfs_fonts.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/js/datatables.js') }}"></script>
+    <script src="{{ URL::asset('assets/js/popover.js') }}"></script>
 
-  <!-- INTERNAL Sweet alert js -->
-  <script src="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.js') }}"></script>
-  <script src="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
-  <script src="{{ URL::asset('assets/js/sweet-alert.js') }}"></script>
+    <!-- INTERNAL Sweet alert js -->
+    <script src="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
+    <script src="{{ URL::asset('assets/js/sweet-alert.js') }}"></script>
 
 
-  <!-- INTERNAL Select2 js -->
-  <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
+    <!-- INTERNAL Select2 js -->
+    <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
 
-      <script type="text/javascript">
-        var table = $('#role-tabel').DataTable({
+    <script type="text/javascript">
+        var table = $('#role_table').DataTable({
             processing: true,
             serverSide: true,
+            lengthChange: false,
+            dom: 'lBftrip',
+            buttons: ['copy', 'excel', 'pdf', 'colvis'],
+            responsive: true,
+            language: {
+                searchPlaceholder: 'Search...',
+                sSearch: '',
+                lengthMenu: '_MENU_ ',
+            },
             ajax: "{{ route('role.index') }}",
-            columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
+            columns: [
+                {
+                    data: 'active',
+                    label:"",
+                    render: (data, type, row) =>
+                        type === 'display' ? '<input type="checkbox" class="editor-active">' : data,
+                    className: 'dt-body-center',
+                    orderable:false
                 },
                 {
                     data: 'name',
@@ -158,20 +184,30 @@
                     orderable: false,
                     searchable: false
                 },
+               
+
             ],
+            
+
             order: [
                 [1, 'asc']
             ]
         });
+
+        // console.log(table.buttons().container());
+
+        table.buttons().container()
+            .appendTo('#attribute_table_wrapper .col-md-6:eq(0)');
 
         $(function() {
             checkInput();
         });
 
         function checkInput() {
-            $('.permission .check-all').click(function() {
+            $('body').on('click', '.permission .check-all', function() {
+                // alert("aaa");
                 var check = this.checked;
-                $(this).parents('.nav-item').find('.check-one').prop("checked", check);
+                $(this).parents('.role-group').find('.check-one').prop("checked", check);
             });
             $('.permission .check-one').click(function() {
                 var parentItem = $(this).parents('.nav-treeview').parents('.nav-item');
@@ -188,23 +224,23 @@
         }
 
         $(document).on('change', '.schedule_no', function() {
-            console.log($(this),$(this).parent().find('.schedule_time'));
-            if($(this).val()==0){
-                $(this).parent().find('.schedule_time').attr('disabled','disabled');
-            }else{
+            console.log($(this), $(this).parent().find('.schedule_time'));
+            if ($(this).val() == 0) {
+                $(this).parent().find('.schedule_time').attr('disabled', 'disabled');
+            } else {
                 $(this).parent().find('.schedule_time').removeAttr('disabled');
             }
         });
 
 
-            $(document).on('click', '#add_new', function() {
+        $(document).on('click', '#add_new', function() {
             // window.addEventListener('load', function() {
 
             // }, false);
             $.ajax({
                 url: "{{ route('role.create') }}",
                 success: function(response) {
-                    // console.log(response);
+                    //  console.log(response);
                     $(".modal-body").html(response);
                     $(".modal-title").html("Add Role");
                     checkValidation();
@@ -230,29 +266,59 @@
             });
         });
         $(document).on('click', '.delete-role', function() {
-            if (confirm("Are you sure to delete this role?")) {
-                let id = $(this).data("id");
+            let id = $(this).data("id");
 
-                $.ajax({
-                    type: 'DELETE',
-                    url: 'role/' + id,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        'id': id,
-                        _token: "{{ csrf_token() }}",
-                    },
-                    success: function(data) {
-                        // toastr.success(data.msg);
-                        table.draw();
-                    },
-                    error: function(data) {
-                        table.draw();
-                        // toastr.error('Something went wrong, Please try again');
-                    }
-                });
-            }
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this attribute!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                showCancelButton: true,
+
+
+            }, function(willDelete) {
+                if (willDelete) {
+
+                    $.ajax({
+                        type: "POST",
+                        url: '{{ url('/') }}/role/delete/' + id,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            swal({
+                                title: response.msg
+                            }, function(result) {
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
+            // if (confirm("Are you sure to delete this role?")) {
+            //     let id = $(this).data("id");
+
+            //     $.ajax({
+            //         type: 'DELETE',
+            //         url: 'role/' + id,
+            //         headers: {
+            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //         },
+            //         data: {
+            //             'id': id,
+            //             _token: "{{ csrf_token() }}",
+            //         },
+            //         success: function(data) {
+            //             // toastr.success(data.msg);
+            //             table.draw();
+            //         },
+            //         error: function(data) {
+            //             table.draw();
+            //             // toastr.error('Something went wrong, Please try again');
+            //         }
+            //     });
+            // }
         });
 
         function checkValidation() {

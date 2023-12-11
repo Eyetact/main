@@ -141,7 +141,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('store', 'store')->name('role.store')->middleware('can:create.role');
         Route::get('{role}/edit', 'edit')->name('role.edit')->middleware('can:edit.role');
         Route::post('{role}', 'update')->name('role.update')->middleware('can:edit.role');
-        Route::delete('{role}', 'destroy')->name('role.destroy')->middleware('can:delete.role');
+        Route::post('delete/{role}', 'destroy')->name('role.destroy')->middleware('can:delete.role');
         Route::get('permission', 'assignPermissionList')->name('role.permission.index');
     });
 
