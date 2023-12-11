@@ -80,6 +80,8 @@
                         <table class="table table-bordered text-nowrap" id="attribute_table">
                             <thead>
                                 <tr>
+
+
                                     <th width="100px">No.</th>
                                     <th>Name</th>
                                     <th>details</th>

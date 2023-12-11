@@ -46,7 +46,7 @@
         </div>
         <div class="page-rightheader">
             <div class="btn btn-list">
-                <a href="{{ route('subscriptions.create') }}" class="btn btn-info" data-toggle="tooltip" title=""
+                <a id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
                     data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
             </div>
         </div>
@@ -90,6 +90,22 @@
     </div>
     </div><!-- end app-content-->
     </div>
+
+    <div class="modal fade bd-example-modal-lg" id="role_form_modal" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('js')
     <!-- INTERNAL Data tables -->
@@ -118,6 +134,40 @@
     <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
 
     <script type="text/javascript">
+
+$(document).on('click', '#add_new', function() {
+            // window.addEventListener('load', function() {
+
+            // }, false);
+            $.ajax({
+                url: "{{ route('subscriptions.create') }}",
+                success: function(response) {
+                    //  console.log(response);
+                    $(".modal-body").html(response);
+                    $(".modal-title").html("Add User");
+                    $("#role_form_modal").modal('show');
+                    $('.dropify').dropify();
+                }
+            });
+        });
+
+        $(document).on('click', '#edit_item', function() {
+            // window.addEventListener('load', function() {
+
+            // }, false);
+            var path = $(this).data('path')
+            $.ajax({
+                url: path,
+                success: function(response) {
+                     console.log(path);
+                     console.log(response);
+                    $(".modal-body").html(response);
+                    $(".modal-title").html("edit Group");
+                    $("#role_form_modal").modal('show');
+                    $('.dropify').dropify();
+                }
+            });
+        });
         var table = $('#attribute_table').DataTable({
             processing: true,
             serverSide: true,

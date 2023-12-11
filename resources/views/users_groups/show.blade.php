@@ -1,44 +1,4 @@
-@extends('layouts.master')
-@section('css')
-    <!-- Data table css -->
-    <link href="{{ URL::asset('assets/plugins/datatable/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" />
-    <link href="{{ URL::asset('assets/plugins/datatable/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
-    <link href="{{ URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.css') }}" rel="stylesheet" />
-    <!-- Slect2 css -->
-    <link href="{{ URL::asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
-    <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
-    <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
 
-    <link href="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/plugins/wysiwyag/richtext.css"
-        rel="stylesheet" />
-    <!-- INTERNAL Sumoselect css-->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
-@endsection
-@section('page-header')
-    <!--Page header-->
-    <div class="page-header">
-        <div class="page-leftheader">
-            <h4 class="page-title mb-0">group Details</h4>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url('/' . ($page = '#')) }}"><i
-                            class="fe fe-home mr-2 fs-14"></i>group</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="{{ url('/' . ($page = '#')) }}">Details</a></li>
-            </ol>
-        </div>
-    </div>
-    <!--End Page header-->
-@endsection
-@section('content')
-    @push('styles')
-        <!-- INTERNAL Sumoselect css-->
-        <link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
-
-        <!-- INTERNAL File Uploads css -->
-        <link href="{{ asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
-
-        <!-- INTERNAL File Uploads css-->
-        <link href="{{ asset('assets/plugins/fileupload/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
-    @endpush
     <style>
         .profile-upload {
             transition: .5s ease;
@@ -122,7 +82,7 @@
                                 <div class="card-body">
                                     <div class="row">
 
-                                        <div class="col-lg-12 col-sm-12">
+                                        <div class="col-lg-6 col-sm-6">
                                             <div class="input-box">
                                                 <label class="input-label">Name</label>
                                                 <input type="text" class="google-input" name="name" id="name"
@@ -134,6 +94,20 @@
                                             @enderror
                                         </div>
 
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="input-box">
+
+                                                <select class="google-input" name="role" tabindex="null">
+                                                    <option selected disabled>Select Role</option>
+                                                    @foreach ($roles as $role)
+                                                        <option @if($group->hasRole($role->name)) selected @endif value="{{ $role->name }}">{{$role->id}} - {{$role->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            @error('role')
+                                            <div class="text-danger">{{ $message }}</div>
+                                         @enderror
+                                        </div>
 
                                     </div>
                                 </div>
@@ -150,7 +124,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered text-nowrap" id="attribute_table" style="width: 100%;">
+                                    <table class="table table-bordered text-nowrap" id="groub_users" style="width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th width="100px">No.</th>
@@ -176,9 +150,7 @@
             </div>
         </div>
     </div>
-@endsection
 
-@push('script')
     <!--INTERNAL Sumoselect js-->
     <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
     <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
@@ -230,7 +202,7 @@
     <script src="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/plugins/wysiwyag/jquery.richtext.js">
     </script>
     <script>
-        var table = $('#attribute_table').DataTable({
+        var table = $('#groub_users').DataTable({
             processing: true,
             serverSide: true,
             lengthChange: false,
@@ -242,7 +214,7 @@
                 sSearch: '',
                 lengthMenu: '_MENU_ ',
             },
-            ajax: "{{ route('ugroups.view', $group->id) }}",
+            ajax: "{{ route('ugroups.view2', $group->id) }}",
 
             columns: [{
                     data: 'DT_RowIndex',
@@ -296,7 +268,7 @@
         // console.log(table.buttons().container());
 
         table.buttons().container()
-            .appendTo('#attribute_table_wrapper .col-md-6:eq(0)');
+            .appendTo('#groub_users_wrapper .col-md-6:eq(0)');
 
 
         $(document).ready(function() {
@@ -354,5 +326,4 @@
             $('.content').richText();
             $('.content2').richText();
         });
-    </script>
-@endpush
+

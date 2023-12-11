@@ -9,9 +9,9 @@
     <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
 
-    
-        <!-- INTERNAL Sumoselect css-->
-        <link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
+
+    <!-- INTERNAL Sumoselect css-->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
     <style>
         .dropdown-toggle:after {
             content: none !important;
@@ -33,9 +33,10 @@
         .dt-buttons.btn-group {
             float: left;
         }
+
         .parent {
-    animation: unset !important;
-}
+            animation: unset !important;
+        }
     </style>
 @endsection
 @section('page-header')
@@ -50,22 +51,22 @@
         </div>
         <div class="page-rightheader">
             <div class="btn btn-list">
-                <a id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
-                    data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
+                <a id="add_new" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="Add new"><i
+                        class="fe fe-plus mr-1"></i> Add new </a>
             </div>
         </div>
     </div>
     <!--End Page header-->
 @endsection
 @push('styles')
-<!-- INTERNAL Sumoselect css-->
-<link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
+    <!-- INTERNAL Sumoselect css-->
+    <link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
 
-<!-- INTERNAL File Uploads css -->
-<link href="{{ asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
+    <!-- INTERNAL File Uploads css -->
+    <link href="{{ asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
 
-<!-- INTERNAL File Uploads css-->
-<link href="{{ asset('assets/plugins/fileupload/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
+    <!-- INTERNAL File Uploads css-->
+    <link href="{{ asset('assets/plugins/fileupload/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
 @endpush
 @section('content')
     <!-- Row -->
@@ -87,7 +88,7 @@
                                     <th>username</th>
                                     <th>admin</th>
                                     <th>email</th>
-                                    <th >avatar</th>
+                                    <th>avatar</th>
                                     <th>phone</th>
                                     <th>address</th>
                                     <th>website</th>
@@ -150,32 +151,31 @@
     <!-- INTERNAL Select2 js -->
     <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
 
- <!--INTERNAL Sumoselect js-->
- <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
- <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
+    <!--INTERNAL Sumoselect js-->
+    <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
+    <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
 
-  <!-- INTERNAL File-Uploads Js-->
-  <script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
-  <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
-  <script src="{{ asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
-  <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
-  <script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
+    <!-- INTERNAL File-Uploads Js-->
+    <script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
+    <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
+    <script src="{{ asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
+    <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
+    <script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
 
-  <!-- INTERNAL File uploads js -->
-  <script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
-  <script src="{{ asset('assets/js/filupload.js') }}"></script>
+    <!-- INTERNAL File uploads js -->
+    <script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
+    <script src="{{ asset('assets/js/filupload.js') }}"></script>
 
-  <!--INTERNAL Sumoselect js-->
-  <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
+    <!--INTERNAL Sumoselect js-->
+    <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
 
-  <!--INTERNAL Form Advanced Element -->
-  <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
-  <script src="{{ asset('assets/js/form-elements.js') }}"></script>
-  <script src="{{ asset('assets/js/file-upload.js') }}"></script>
+    <!--INTERNAL Form Advanced Element -->
+    <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
+    <script src="{{ asset('assets/js/form-elements.js') }}"></script>
+    <script src="{{ asset('assets/js/file-upload.js') }}"></script>
 
- <script type="text/javascript">
-
-$(document).on('click', '#add_new', function() {
+    <script type="text/javascript">
+        $(document).on('click', '#add_new', function() {
             // window.addEventListener('load', function() {
 
             // }, false);
@@ -190,53 +190,53 @@ $(document).on('click', '#add_new', function() {
                 }
             });
         });
-     // $(document).ready(function() {
-     $("#mailboxForm").validate({
-         onkeyup: function(el, e) {
-             $(el).valid();
-         },
-         // errorClass: "invalid-feedback is-invalid",
-         // validClass: 'valid-feedback is-valid',
-         ignore: ":hidden",
-         rules: {
-             name: {
-                 required: true,
-             },
-             email: {
-                 required: true,
-             },
-             password: {
-                 required: true,
-             }
+        // $(document).ready(function() {
+        $("#mailboxForm").validate({
+            onkeyup: function(el, e) {
+                $(el).valid();
+            },
+            // errorClass: "invalid-feedback is-invalid",
+            // validClass: 'valid-feedback is-valid',
+            ignore: ":hidden",
+            rules: {
+                name: {
+                    required: true,
+                },
+                email: {
+                    required: true,
+                },
+                password: {
+                    required: true,
+                }
 
-         },
-         messages: {},
-         errorPlacement: function(error, element) {
-             error.insertAfter($(element).parent());
-         },
-     });
+            },
+            messages: {},
+            errorPlacement: function(error, element) {
+                error.insertAfter($(element).parent());
+            },
+        });
 
-     $("input[type='text'], input[type='number'], input[type='password'], input[type='email'], input[type='tel']").on(
-         "keyup",
-         function() {
-             var $input = $(this);
-             if ($input.val() != '') {
-                 $input.parents(".input-box").addClass("focus");
-             } else {
-                 $input.parents(".input-box").removeClass("focus");
-             }
-         });
-     $("input[type='text'], input[type='number'], input[type='password'], input[type='email'], input[type='tel']").each(
-         function(index, element) {
-             var value = $(element).val();
-             if (value != '') {
-                 $(this).parents('.input-box').addClass('focus');
-             } else {
-                 $(this).parents('.input-box').removeClass('focus');
-             }
-         });
-     // });
- </script>
+        $("input[type='text'], input[type='number'], input[type='password'], input[type='email'], input[type='tel']").on(
+            "keyup",
+            function() {
+                var $input = $(this);
+                if ($input.val() != '') {
+                    $input.parents(".input-box").addClass("focus");
+                } else {
+                    $input.parents(".input-box").removeClass("focus");
+                }
+            });
+        $("input[type='text'], input[type='number'], input[type='password'], input[type='email'], input[type='tel']").each(
+            function(index, element) {
+                var value = $(element).val();
+                if (value != '') {
+                    $(this).parents('.input-box').addClass('focus');
+                } else {
+                    $(this).parents('.input-box').removeClass('focus');
+                }
+            });
+        // });
+    </script>
 
     <script type="text/javascript">
         var table = $('#attribute_table').DataTable({
@@ -316,37 +316,35 @@ $(document).on('click', '#add_new', function() {
         }
 
         $(document).on('click', '.user-delete', function() {
-        	var id = $(this).attr("data-id");
+            var id = $(this).attr("data-id");
             swal({
-                    title: "Are you sure?",
-                    text: "Once deleted, you will not be able to recover this attribute!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                    showCancelButton: true,
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this attribute!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                showCancelButton: true,
 
 
-                }, function (willDelete) {
-                    if (willDelete) {
+            }, function(willDelete) {
+                if (willDelete) {
 
-                        $.ajax({
-                            type: "POST",
-                            url: '{{url("/")}}/user/delete/' + id,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(response) {
-	                            swal({
-	                				title: response.msg
-	                			}, function (result) {
-	                				location.reload();
-	                			});
-                            }
-                        });
-                    }
-                });
+                    $.ajax({
+                        type: "POST",
+                        url: '{{ url('/') }}/user/delete/' + id,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            swal({
+                                title: response.msg
+                            }, function(result) {
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
         });
     </script>
-    
-  
 @endsection

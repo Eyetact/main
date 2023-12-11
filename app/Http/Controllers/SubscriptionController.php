@@ -37,7 +37,7 @@ class SubscriptionController extends Controller {
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
-                        <a  href="'.route('subscriptions.view', $row->id).'">View or Edit</a>
+                        <a  href="#" id="edit_item" data-path="'.route('subscriptions.view', $row->id).'">View or Edit</a>
                         </li>
 
                         <li class="dropdown-item">
