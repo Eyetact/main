@@ -52,7 +52,7 @@
                 @csrf
                 <div class="row">
 
-                    <div class="col-lg-12 col-sm-12">
+                    <div class="col-lg-6 col-sm-6">
                         <div class="input-box">
                             <label for="name" class="input-label">Name</label>
                             <input type="text" class="google-input" name="name" id="name" value="" />
@@ -63,6 +63,20 @@
                     </div>
 
 
+                    <div class="col-sm-6 col-md-6">
+                        <div class="input-box">
+                            <select class=" google-input" name="role" tabindex="null">
+                                <option selected disabled>Select Role</option>
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role->name }}">{{$role->id}} - {{$role->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @error('role_name')
+                            <label id="role_name-error" class="error" for="role_name">{{ $message }}</label>
+                        @enderror
+
+                    </div>
 
 
                 </div>

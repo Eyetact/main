@@ -10,6 +10,7 @@ class UserGroup extends Model
 {
     use HasFactory, HasRoles;
     protected $guarded = [];
+    protected $guard_name = 'web';
 
     public function users(){
         return $this->hasMany(User::class, 'ugroup_id' );

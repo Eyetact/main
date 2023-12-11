@@ -122,7 +122,7 @@
                                 <div class="card-body">
                                     <div class="row">
 
-                                        <div class="col-lg-12 col-sm-12">
+                                        <div class="col-lg-6 col-sm-6">
                                             <div class="input-box">
                                                 <label class="input-label">Name</label>
                                                 <input type="text" class="google-input" name="name" id="name"
@@ -134,6 +134,20 @@
                                             @enderror
                                         </div>
 
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="input-box">
+
+                                                <select class="google-input" name="role" tabindex="null">
+                                                    <option selected disabled>Select Role</option>
+                                                    @foreach ($roles as $role)
+                                                        <option @if($group->hasRole($role->name)) selected @endif value="{{ $role->name }}">{{$role->id}} - {{$role->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            @error('role')
+                                            <div class="text-danger">{{ $message }}</div>
+                                         @enderror
+                                        </div>
 
                                     </div>
                                 </div>

@@ -68,6 +68,8 @@
                         <table class="table table-bordered text-nowrap" id="attribute_table">
                             <thead>
                                 <tr>
+
+
                                     <th width="100px">No.</th>
                                     <th>Name</th>
                                     <th>details</th>
@@ -116,6 +118,9 @@
 
     <!-- INTERNAL Select2 js -->
     <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
+
+
+
 
     <script type="text/javascript">
         var table = $('#attribute_table').DataTable({

@@ -9,7 +9,7 @@
     <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
 
-    
+
         <!-- INTERNAL Sumoselect css-->
         <link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
     <style>
@@ -113,7 +113,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
+                    <h4 class="modal-title" id="myLargeModalLabel">Add User</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
                             aria-hidden="true">×</span> </button>
                 </div>
@@ -347,6 +347,6 @@ $(document).on('click', '#add_new', function() {
                 });
         });
     </script>
-    
-  
+
+
 @endsection

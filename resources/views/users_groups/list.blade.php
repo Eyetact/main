@@ -70,6 +70,7 @@
                                 <tr>
                                     <th width="100px">No.</th>
                                     <th>Name</th>
+                                    <th>Role</th>
                                     <th data-priority="1"></th>
                                 </tr>
                             </thead>
@@ -139,6 +140,10 @@
                     name: 'name'
                 },
 
+                {
+                    data: 'role',
+                    name: 'role'
+                },
                 {
                     data: 'action',
                     name: 'action',
