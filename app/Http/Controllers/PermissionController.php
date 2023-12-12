@@ -123,11 +123,12 @@ class PermissionController extends Controller
                 'guard_name' => $request->guard_name,
                 'module' => $request->module,
                 'type' => $request->type,
-                'count' => (int)$request->count,
+                'count' => $request->count,
                 'created_at' => $now,
                 'updated_at' => $now
             ];
         }
+        // dd($request->count);
         $permission = Permission::insert($permissionData);
 
         if(empty($permission)){

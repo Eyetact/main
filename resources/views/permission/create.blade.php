@@ -65,8 +65,8 @@
                             <div class="each-input">
                                 <input
                                     class="permission Input permissionInput form-control @error('count') is-invalid @enderror"
-                                    name="count[0]" type="number" 
-                                    value="{{ old('count[0]') }}">
+                                    name="count" type="number" 
+                                    value="{{ old('count') }}">
                               
                             </div>
                             <div class="append-list"></div>
