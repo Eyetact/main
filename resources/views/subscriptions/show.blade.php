@@ -1,41 +1,4 @@
-@extends('layouts.master')
-@section('css')
-    <!-- Data table css -->
-    <link href="{{ URL::asset('assets/plugins/datatable/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" />
-    <link href="{{ URL::asset('assets/plugins/datatable/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
-    <link href="{{ URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.css') }}" rel="stylesheet" />
-    <!-- Slect2 css -->
-    <link href="{{ URL::asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
-    <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
-    <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
 
-    <!-- INTERNAL Sumoselect css-->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
-@endsection
-@section('page-header')
-    <!--Page header-->
-    <div class="page-header">
-        <div class="page-leftheader">
-            <h4 class="page-title mb-0">Subscription Details</h4>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{url('/' . $page='#')}}"><i class="fe fe-home mr-2 fs-14"></i>Plan</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="{{url('/' . $page='#')}}">Details</a></li>
-            </ol>
-        </div>
-    </div>
-    <!--End Page header-->
-@endsection
-@section('content')
-@push('styles')
-<!-- INTERNAL Sumoselect css-->
-<link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
-
-  <!-- INTERNAL File Uploads css -->
-<link href="{{ asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
-
-<!-- INTERNAL File Uploads css-->
-<link href="{{ asset('assets/plugins/fileupload/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
-@endpush
     <style>
         .profile-upload {
             transition: .5s ease;
@@ -200,9 +163,7 @@
         </div>
     </div>
 </div>
-@endsection
 
-@push('script')
   <!--INTERNAL Sumoselect js-->
   <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
   <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
@@ -278,4 +239,3 @@
 
     });
 </script>
-@endpush

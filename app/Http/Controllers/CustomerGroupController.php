@@ -10,10 +10,10 @@ class CustomerGroupController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $groups = CustomerGroup::all();
+            $groups = CustomerGroup::where('group_id', null)->get();
 
             return datatables()->of($groups)
-               
+
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown">
                     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
@@ -24,7 +24,11 @@ class CustomerGroupController extends Controller
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
-                        <a  href="' . route('groups.view', $row->id) . '">View or Edit</a>
+                        <a id="edit_item" data-path="' . route('groups.view', $row->id) . '" href="#">View or Edit</a>
+                        </li>
+
+                        <li class="dropdown-item">
+                        <a href="' . route('groups.sub', $row->id) . '" href="#">View sub Groups</a>
                         </li>
 
                         <li class="dropdown-item">
@@ -35,7 +39,7 @@ class CustomerGroupController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns([ 'action'])
+                ->rawColumns(['action'])
 
                 ->addIndexColumn()
                 ->make(true);
@@ -43,11 +47,47 @@ class CustomerGroupController extends Controller
         return view('groups.list');
     }
 
-    
+    public function sub($id)
+    {
+        if (request()->ajax()) {
+            $groups = CustomerGroup::where('group_id', $id)->get();
+
+            return datatables()->of($groups)
+
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="dropdown">
+                    <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li class="dropdown-item">
+                        <a id="edit_item" data-path="' . route('groups.view', $row->id) . '" href="#">View or Edit</a>
+                        </li>
+
+                        <li class="dropdown-item">
+                        <a  href="#" data-id="' . $row->id . '" class="group-delete">Delete</a>
+                        </li>
+                    </ul>
+                </div>';
+
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+
+                ->addIndexColumn()
+                ->make(true);
+        }
+        return view('groups.list-sub', compact('id'));
+    }
+
+
     public function create()
     {
-
-        return view('groups.create');
+        $parents_group = CustomerGroup::where('group_id', null)->get();
+        return view('groups.create', compact('parents_group'));
     }
 
     public function store(Request $request)
@@ -68,6 +108,16 @@ class CustomerGroupController extends Controller
         $group = CustomerGroup::findOrFail($id);
 
 
+
+
+        return view('groups.show', compact('group'));
+    }
+
+    public function showCustomer($id)
+    {
+        $group = CustomerGroup::findOrFail($id);
+
+
         if (request()->ajax()) {
             // $subscriptions = Subscription::where('user_id', $user_id)->get();
             $users = $group->customers;
@@ -75,7 +125,7 @@ class CustomerGroupController extends Controller
                 ->editColumn('avatar', function ($row) {
                     return $row->avatar ? '<img src="' . $row->ProfileUrl . '" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
                 })
-               
+
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown">
                     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserGroup;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
 class UserGroupController extends Controller
@@ -14,6 +15,10 @@ class UserGroupController extends Controller
 
             return datatables()->of($groups)
 
+            ->addColumn('role', function ($row) {
+                return $row->roles?->first()?->name;
+            })
+
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="dropdown">
                     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
@@ -24,7 +29,7 @@ class UserGroupController extends Controller
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
-                        <a  href="' . route('ugroups.view', $row->id) . '">View or Edit</a>
+                        <a href="#" id="edit_item"  data-path="' . route('ugroups.view', $row->id) . '">View or Edit</a>
                         </li>
 
                         <li class="dropdown-item">
@@ -35,7 +40,7 @@ class UserGroupController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns([ 'action'])
+                ->rawColumns([ 'action','role'])
 
                 ->addIndexColumn()
                 ->make(true);
@@ -47,13 +52,20 @@ class UserGroupController extends Controller
     public function create()
     {
 
-        return view('users_groups.create');
+        $roles = Role::where('name','!=','admin')
+        ->where('name','!=','vendor')
+        ->where('name','!=','super')
+        ->get();
+
+        return view('users_groups.create',compact('roles'));
     }
 
     public function store(Request $request)
     {
 
-        $group = UserGroup::create($request->all());
+        $group = UserGroup::create($request->except('role'));
+
+        $group->assignRole($request->role);
 
         return redirect()->route('ugroups.index')
             ->with('success', 'group has been added successfully');
@@ -67,8 +79,20 @@ class UserGroupController extends Controller
     {
         $group = UserGroup::findOrFail($id);
 
+        $roles = Role::where('name','!=','admin')
+        ->where('name','!=','vendor')
+        ->where('name','!=','super')
+        ->get();
 
+        
+
+        return view('users_groups.show', compact('group','roles'));
+    }
+
+    public function showUsers($id){
         if (request()->ajax()) {
+        $group = UserGroup::findOrFail($id);
+
             // $subscriptions = Subscription::where('user_id', $user_id)->get();
             $users = $group->users;
             return datatables()->of($users)
@@ -102,8 +126,6 @@ class UserGroupController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
-
-        return view('users_groups.show', compact('group'));
     }
 
 
@@ -120,7 +142,9 @@ class UserGroupController extends Controller
     {
         $group = UserGroup::findOrFail($id);
 
-        $group->update($request->all());
+        $group->update($request->except('role'));
+
+        $group->assignRole($request->role);
 
         return redirect()->route('ugroups.index')
             ->with('success', 'group has been updated successfully');

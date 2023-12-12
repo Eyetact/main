@@ -7,6 +7,7 @@ use App\Models\UserGroup;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Models\Role;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -61,7 +62,10 @@ class UserController extends Controller
     public function users()
     {
         if (request()->ajax()) {
-            $users = User::role('user')->get();
+            // $users = User::role('user')->get();
+            $users = User::whereDoesntHave('roles', function ($query) {
+                $query->whereIn('name', ['super', 'vendor', 'admin']);
+            })->get();
 
             return datatables()->of($users)
                 ->editColumn('avatar', function ($row) {
@@ -187,7 +191,11 @@ class UserController extends Controller
     public function create()
     {
         $groups = UserGroup::all();
-        return view('users.create-user',compact('groups'));
+        $roles = Role::where('name','!=','admin')
+        ->where('name','!=','vendor')
+        ->where('name','!=','super')
+        ->get();
+        return view('users.create-user',compact('groups','roles'));
     }
 
     public function createAdmin()

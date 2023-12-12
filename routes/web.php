@@ -147,7 +147,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('store', 'store')->name('role.store')->middleware('can:create.role');
         Route::get('{role}/edit', 'edit')->name('role.edit')->middleware('can:edit.role');
         Route::post('{role}', 'update')->name('role.update')->middleware('can:edit.role');
-        Route::delete('{role}', 'destroy')->name('role.destroy')->middleware('can:delete.role');
+        Route::post('delete/{role}', 'destroy')->name('role.destroy')->middleware('can:delete.role');
         Route::get('permission', 'assignPermissionList')->name('role.permission.index');
     });
 
@@ -188,11 +188,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //customer group
     Route::get('/groups', [CustomerGroupController::class, 'index'])->name('groups.index');
+    Route::get('/groups/sub/{id}', [CustomerGroupController::class, 'sub'])->name('groups.sub');
 
     Route::get('add-group', [CustomerGroupController::class, 'create'])->name('groups.create');
     Route::post('add-group', [CustomerGroupController::class, 'store'])->name('groups.store');
 
     Route::get('/group/{id}', [CustomerGroupController::class, 'show'])->name('groups.view');
+    Route::get('/showCustomer/{id}', [CustomerGroupController::class, 'showCustomer'])->name('groups.view2');
     Route::post('update-group/{id}', [CustomerGroupController::class, 'update'])->name('groups.update');
 
     Route::post('/group/delete/{id}', [CustomerGroupController::class, 'destroy'])->name('groups.destroy');
@@ -204,6 +206,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('add-user-group', [UserGroupController::class, 'store'])->name('ugroups.store');
 
         Route::get('/user/group/{id}', [UserGroupController::class, 'show'])->name('ugroups.view');
+        Route::get('/user/group/users/{id}', [UserGroupController::class, 'showUsers'])->name('ugroups.view2');
         Route::post('update-user-group/{id}', [UserGroupController::class, 'update'])->name('ugroups.update');
 
         Route::post('/user-group/delete/{id}', [UserGroupController::class, 'destroy'])->name('ugroups.destroy');

@@ -32,7 +32,7 @@ class PlanController extends Controller
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
-                        <a  href="' . route('plans.view', $row->id) . '">View or Edit</a>
+                        <a href="#" id="edit_item"  data-path="' . route('plans.view', $row->id) . '">View or Edit</a>
                         </li>
 
                         <li class="dropdown-item">

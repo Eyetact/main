@@ -8,10 +8,6 @@
     <link href="{{ URL::asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
-
-
-    <!-- INTERNAL Sumoselect css-->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
     <style>
         .dropdown-toggle:after {
             content: none !important;
@@ -37,6 +33,7 @@
         .parent {
             animation: unset !important;
         }
+
         table {
             max-width: 99% !important;
             width: 99% !important;
@@ -47,10 +44,10 @@
     <!--Page header-->
     <div class="page-header">
         <div class="page-leftheader">
-            <h4 class="page-title mb-0">Users</h4>
+            <h4 class="page-title mb-0">groups</h4>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Users</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="#">Users</a></li>
+                <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Settings</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">groups</a></li>
             </ol>
         </div>
         <div class="page-rightheader">
@@ -62,16 +59,6 @@
     </div>
     <!--End Page header-->
 @endsection
-@push('styles')
-    <!-- INTERNAL Sumoselect css-->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
-
-    <!-- INTERNAL File Uploads css -->
-    <link href="{{ asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
-
-    <!-- INTERNAL File Uploads css-->
-    <link href="{{ asset('assets/plugins/fileupload/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
-@endpush
 @section('content')
     <!-- Row -->
     <div class="row">
@@ -80,7 +67,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Users Data</div>
+                    <div class="card-title">groups Data</div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -89,14 +76,7 @@
                                 <tr>
                                     <th width="30px"></th>
                                     <th>Name</th>
-                                    <th>username</th>
-                                    <th>admin</th>
-                                    <th>email</th>
-                                    <th>avatar</th>
-                                    <th>phone</th>
-                                    <th>address</th>
-                                    <th>website</th>
-                                    <th data-priority="1">Action</th>
+                                    <th data-priority="1"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -154,11 +134,6 @@
 
     <!-- INTERNAL Select2 js -->
     <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
-
-    <!--INTERNAL Sumoselect js-->
-    <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
-    <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
-
     <!-- INTERNAL File-Uploads Js-->
     <script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
     <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
@@ -186,65 +161,35 @@
 
             // }, false);
             $.ajax({
-                url: "{{ route('users.create') }}",
+                url: "{{ route('groups.create') }}",
                 success: function(response) {
                     //  console.log(response);
                     $(".modal-body").html(response);
-                    $(".modal-title").html("Add User");
+                    $(".modal-title").html("Add Group");
                     $("#role_form_modal").modal('show');
                     $('.dropify').dropify();
                 }
             });
         });
-        // $(document).ready(function() {
-        $("#mailboxForm").validate({
-            onkeyup: function(el, e) {
-                $(el).valid();
-            },
-            // errorClass: "invalid-feedback is-invalid",
-            // validClass: 'valid-feedback is-valid',
-            ignore: ":hidden",
-            rules: {
-                name: {
-                    required: true,
-                },
-                email: {
-                    required: true,
-                },
-                password: {
-                    required: true,
-                }
 
-            },
-            messages: {},
-            errorPlacement: function(error, element) {
-                error.insertAfter($(element).parent());
-            },
+        $(document).on('click', '#edit_item', function() {
+            // window.addEventListener('load', function() {
+
+            // }, false);
+            var path = $(this).data('path')
+            $.ajax({
+                url: path,
+                success: function(response) {
+                     console.log(path);
+                     console.log(response);
+                    $(".modal-body").html(response);
+                    $(".modal-title").html("edit Group");
+                    $("#role_form_modal").modal('show');
+                    $('.dropify').dropify();
+                }
+            });
         });
-
-        $("input[type='text'], input[type='number'], input[type='password'], input[type='email'], input[type='tel']").on(
-            "keyup",
-            function() {
-                var $input = $(this);
-                if ($input.val() != '') {
-                    $input.parents(".input-box").addClass("focus");
-                } else {
-                    $input.parents(".input-box").removeClass("focus");
-                }
-            });
-        $("input[type='text'], input[type='number'], input[type='password'], input[type='email'], input[type='tel']").each(
-            function(index, element) {
-                var value = $(element).val();
-                if (value != '') {
-                    $(this).parents('.input-box').addClass('focus');
-                } else {
-                    $(this).parents('.input-box').removeClass('focus');
-                }
-            });
-        // });
-    </script>
-
-    <script type="text/javascript">
+        
         var table = $('#attribute_table').DataTable({
             processing: true,
             serverSide: true,
@@ -257,7 +202,7 @@
                 sSearch: '',
                 lengthMenu: '_MENU_ ',
             },
-            ajax: "{{ route('users.users') }}",
+            ajax: "{{ route('groups.sub', $id) }}",
 
             columnDefs: [{
                 orderable: false,
@@ -281,34 +226,6 @@
                 {
                     data: 'name',
                     name: 'name'
-                },
-                {
-                    data: 'username',
-                    name: 'username'
-                },
-                {
-                    data: 'admin',
-                    name: 'admin'
-                },
-                {
-                    data: 'email',
-                    name: 'email'
-                },
-                {
-                    data: 'avatar',
-                    name: 'avatar',
-                },
-                {
-                    data: 'phone',
-                    name: 'phone'
-                },
-                {
-                    data: 'address',
-                    name: 'address'
-                },
-                {
-                    data: 'website',
-                    name: 'website'
                 },
 
                 {
@@ -334,7 +251,7 @@
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
 
-        $(document).on('click', '.user-delete', function() {
+        $(document).on('click', '.group-delete', function() {
             var id = $(this).attr("data-id");
             swal({
                 title: "Are you sure?",
@@ -350,7 +267,7 @@
 
                     $.ajax({
                         type: "POST",
-                        url: '{{ url('/') }}/user/delete/' + id,
+                        url: '{{ url('/') }}/group/delete/' + id,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },

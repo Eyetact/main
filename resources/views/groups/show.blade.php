@@ -1,44 +1,4 @@
-@extends('layouts.master')
-@section('css')
-    <!-- Data table css -->
-    <link href="{{ URL::asset('assets/plugins/datatable/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" />
-    <link href="{{ URL::asset('assets/plugins/datatable/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
-    <link href="{{ URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.css') }}" rel="stylesheet" />
-    <!-- Slect2 css -->
-    <link href="{{ URL::asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
-    <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
-    <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
 
-    <link href="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/plugins/wysiwyag/richtext.css"
-        rel="stylesheet" />
-    <!-- INTERNAL Sumoselect css-->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
-@endsection
-@section('page-header')
-    <!--Page header-->
-    <div class="page-header">
-        <div class="page-leftheader">
-            <h4 class="page-title mb-0">group Details</h4>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url('/' . ($page = '#')) }}"><i
-                            class="fe fe-home mr-2 fs-14"></i>group</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="{{ url('/' . ($page = '#')) }}">Details</a></li>
-            </ol>
-        </div>
-    </div>
-    <!--End Page header-->
-@endsection
-@section('content')
-    @push('styles')
-        <!-- INTERNAL Sumoselect css-->
-        <link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
-
-        <!-- INTERNAL File Uploads css -->
-        <link href="{{ asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
-
-        <!-- INTERNAL File Uploads css-->
-        <link href="{{ asset('assets/plugins/fileupload/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
-    @endpush
     <style>
         .profile-upload {
             transition: .5s ease;
@@ -150,7 +110,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered text-nowrap" id="attribute_table" style="width: 100%;">
+                                    <table class="table table-bordered text-nowrap" id="attribute_table2" style="width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th width="100px">No.</th>
@@ -176,183 +136,69 @@
             </div>
         </div>
     </div>
-@endsection
 
-@push('script')
-    <!--INTERNAL Sumoselect js-->
-    <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
-    <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
-
-    <!-- INTERNAL File-Uploads Js-->
-    <script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
-    <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
-    <script src="{{ asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
-    <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
-    <script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
-
-    <!-- INTERNAL File uploads js -->
-    <script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
-    <script src="{{ asset('assets/js/filupload.js') }}"></script>
-
-    <!-- INTERNAL Data tables -->
-    <script src="{{ URL::asset('assets/plugins/datatable/js/jquery.dataTables.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.bootstrap4.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.bootstrap4.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/jszip.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/pdfmake.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/vfs_fonts.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/js/datatables.js') }}"></script>
-    <script src="{{ URL::asset('assets/js/popover.js') }}"></script>
-
-    <!-- INTERNAL Sweet alert js -->
-    <script src="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
-    <script src="{{ URL::asset('assets/js/sweet-alert.js') }}"></script>
-
-
-    <!-- INTERNAL Select2 js -->
-    <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
-
-    <!--INTERNAL Sumoselect js-->
-    <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
-
-    <!--INTERNAL Form Advanced Element -->
-    <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
-    <script src="{{ asset('assets/js/form-elements.js') }}"></script>
-    <script src="{{ asset('assets/js/file-upload.js') }}"></script>
-
-    <script src="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/plugins/wysiwyag/jquery.richtext.js">
-    </script>
     <script>
-        var table = $('#attribute_table').DataTable({
-            processing: true,
-            serverSide: true,
-            lengthChange: false,
-            // dom: 'lBftrip',
-            // buttons: ['copy', 'excel', 'pdf', 'colvis'],
-            responsive: true,
-            language: {
-                searchPlaceholder: 'Search...',
-                sSearch: '',
-                lengthMenu: '_MENU_ ',
-            },
-            ajax: "{{ route('groups.view', $group->id) }}",
+        var table = $('#attribute_table2').DataTable({
+           processing: true,
+           serverSide: true,
+           lengthChange: false,
+           // dom: 'lBftrip',
+           // buttons: ['copy', 'excel', 'pdf', 'colvis'],
+           responsive: true,
+           language: {
+               searchPlaceholder: 'Search...',
+               sSearch: '',
+               lengthMenu: '_MENU_ ',
+           },
+           ajax: "{{ route('groups.view2', $group->id) }}",
 
-            columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'username',
-                    name: 'username'
-                },
+           columns: [{
+                   data: 'DT_RowIndex',
+                   name: 'DT_RowIndex',
+                   orderable: false,
+                   searchable: false
+               },
+               {
+                   data: 'name',
+                   name: 'name'
+               },
+               {
+                   data: 'username',
+                   name: 'username'
+               },
 
-                {
-                    data: 'email',
-                    name: 'email'
-                },
-                {
-                    data: 'avatar',
-                    name: 'avatar',
-                },
-                {
-                    data: 'phone',
-                    name: 'phone'
-                },
-                {
-                    data: 'address',
-                    name: 'address'
-                },
-                {
-                    data: 'website',
-                    name: 'website'
-                },
+               {
+                   data: 'email',
+                   name: 'email'
+               },
+               {
+                   data: 'avatar',
+                   name: 'avatar',
+               },
+               {
+                   data: 'phone',
+                   name: 'phone'
+               },
+               {
+                   data: 'address',
+                   name: 'address'
+               },
+               {
+                   data: 'website',
+                   name: 'website'
+               },
 
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
+               {
+                   data: 'action',
+                   name: 'action',
+                   orderable: false,
+                   searchable: false
+               },
 
-            ],
-            order: [
-                [1, 'asc']
-            ]
-        });
+           ],
+           order: [
+               [1, 'asc']
+           ]
+       });
 
-        // console.log(table.buttons().container());
-
-        table.buttons().container()
-            .appendTo('#attribute_table_wrapper .col-md-6:eq(0)');
-
-
-        $(document).ready(function() {
-            $("#ProfileUploadBtn").click(function() {
-                $("#ProfileUpload").trigger('click');
-            });
-            $('#ProfileUpload').change(function() {
-                $('#profileImageForm').submit()
-            })
-            $("#editProfile").validate({
-                onkeyup: function(el, e) {
-                    $(el).valid();
-                },
-                // errorClass: "invalid-feedback is-invalid",
-                // validClass: 'valid-feedback is-valid',
-                ignore: ":hidden",
-                rules: {
-                    name: {
-                        required: true,
-                        maxlength: 255,
-                    },
-                    username: {
-                        required: true,
-                        maxlength: 255,
-                    },
-                    email: {
-                        required: true,
-                        email: true,
-                        maxlength: 255,
-                    },
-                    address: {
-                        required: true,
-                        maxlength: 500,
-                    },
-                    phone: {
-                        required: true,
-                        maxlength: 255,
-                    },
-                    website: {
-                        required: true,
-                        url: true,
-                        maxlength: 255,
-                    }
-                },
-                messages: {},
-                errorPlacement: function(error, element) {
-                    error.insertAfter($(element).parent());
-                },
-            });
-
-
-        });
-
-        $(function(e) {
-            $('.content').richText();
-            $('.content2').richText();
-        });
-    </script>
-@endpush
+</script> 
