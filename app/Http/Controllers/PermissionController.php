@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use App\Repositories\FlashRepository;
 use Illuminate\Validation\Rule;
@@ -9,7 +10,6 @@ use App\Models\Module;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
-use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
