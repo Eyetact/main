@@ -120,11 +120,17 @@ class RoleController extends Controller
             $this->flashRepository->setFlashSession('alert-danger', 'Role not created.');
             return redirect()->route('role.index');
         }
-
+        
         //assigne all permission to role
         if ($request->has('permission_data') && $role) {
             $permissions = Permission::whereIn('id',$inputData['permission_data'])->get();
-            $role->syncPermissions();
+            // dd($permissions);
+            foreach ($permissions as $p) {
+                $role->givePermissionTo($p);
+                $p->assignRole($role);
+                // dd($p);
+            }
+            // $role->syncPermissions($permissions);
         }
 
         $insertData = array();
