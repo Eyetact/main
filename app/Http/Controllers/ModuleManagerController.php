@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 
 class ModuleManagerController extends Controller
@@ -53,6 +54,7 @@ class ModuleManagerController extends Controller
      */
     public function store(ModulePostRequest $request)
     {
+        // dd($request->all());
         $requestData=$request->all();
 
         $request->validated();
@@ -242,41 +244,60 @@ class ModuleManagerController extends Controller
         }
     }
 
-    public function update(ModulePostRequest $request, Module $module)
+    public function update(ModulePostRequest $request,$id)
     {
+        // dump($request->all());
         $request->validated();
 
-        $module = Module::find($module->id);
-        $oldName = $module->name;
+        $requestData=$request->all();
+
+        $menuData=MenuManager::find($id);
+        // dump($menuData->toArray());
+
+        $module = Module::find($menuData->module_id);
+        $oldName = $menuData->name;
         if ($oldName !== $request->name) {
             $pluralWord = str_replace(' ', '', $this->pluralize($request->name));
             $moduleName = str_replace(' ', '', $this->pluralize($module->name));
+
             $migrationName = "rename_" . strtolower($moduleName) . "_table";
             $modelClassName = Str::studly($pluralWord);
-            // Create the migration
-            Artisan::call('make:migration', [
-                'name' => $migrationName,
-                '--table' => strtolower($moduleName),
-            ]);
 
             $migrationFilePath = database_path("migrations") . "/" . date('Y_m_d_His') . "_$migrationName.php";
+
             File::put($migrationFilePath, $this->generateMigrationContentforRename(strtolower($pluralWord), strtolower($moduleName)));
+
             // Create the model
             Artisan::call('make:model', [
                 'name' => str_replace(' ', '', $request->name),
             ]);
             Artisan::call('migrate');
         }
+
         $module->update(
             [
-                'name' => $request->name,
-                'description' => $request->description,
+                'name' => $request->name
             ]
         );
         if (!$module) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
             return redirect()->route('module.index');
         }
+
+        $updateData=array(
+            'name' => $requestData['name'],
+            'status'=> (isset($requestData['is_enable']) ?? 0),
+            'include_in_menu'=> (isset($requestData['include_in_menu']) ?? 0),
+            'menu_type' => $requestData['menu_type'],
+            'code' => str_replace(' ', '', $requestData['code']),
+            'path' => str_replace(' ', '', $requestData['path']),
+            'meta_title' => (isset($requestData['meta_title']) ?? ''),
+            'meta_description' => (isset($requestData['meta_description']) ?? ''),
+            'assigned_attributes' => $requestData['assigned_attributes'],
+            'created_date' => date('Y-m-d',strtotime($requestData['created_date']))
+        );
+        dd($updateData);
+
         $this->flashRepository->setFlashSession('alert-success', 'Module updated successfully.');
         return redirect()->route('module.index');
     }
@@ -334,5 +355,23 @@ class ModuleManagerController extends Controller
         $module->is_enable = $request->state === 'enabled' ? 1 : 0;
         $module->save();
         return response()->json(['message' => 'Module status toggled successfully']);
+    }
+
+    public function menuDelete(Request $request)
+    {
+        $menuManager = MenuManager::find($request->menu_id);
+        if($menuManager){
+            $menuManager->is_deleted = $request->is_deleted;
+            $menuManager->deleted_at = $request->is_deleted == 1 ? Carbon::now()->format('Y-m-d H:i:s') : null;
+            $menuManager->save();
+            if($request->is_deleted == 1){
+                $message = 'Menu Temperory Deleted successfully, You can restore within 30 days.';
+            }else{
+                $message = 'Menu Restored successfully.';
+            }
+            return response()->json(['is_deleted' => $menuManager->is_deleted,'message' => $message], 200);
+        }else{
+            return response()->json(['message' => 'Menu not found.'], 200);
+        }
     }
 }

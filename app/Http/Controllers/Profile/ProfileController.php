@@ -67,6 +67,7 @@ class ProfileController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
+
         return view('profile.index', compact('user','groups','ugroups','last_used'));
     }
 
@@ -93,6 +94,7 @@ class ProfileController extends Controller
         $user->phone = $request->phone;
         $user->address = $request->address;
         $user->website = $request->website;
+
         $user->group_id = $request->group_id;
         if( !$user->last_used ){
 
@@ -110,6 +112,7 @@ class ProfileController extends Controller
             $user->last_used = $ar;
 
         }
+
         $user->group_id = $request->group_id ?? 1;
         $user->ugroup_id = $request->ugroup_id ?? 1;
         $user->save();

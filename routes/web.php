@@ -66,6 +66,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('menu/{menu}/edit', 'edit')->name('menu.edit');
         Route::post('menu/{menu}', 'update')->name('menu.update');
         Route::delete('menu/{menu}', 'destroy')->name('menu.destroy');
+
+
     });
 
     Route::prefix('profile')->group(function () {
@@ -115,8 +117,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('module_manager/store', 'store')->name('module_manager.store');
         Route::post('module_manager/menu_update', 'menu_update')->name('module_manager.menu_update');
         Route::get('module_manager/{menu}/edit', 'edit')->name('module_manager.edit');
-        Route::post('module_manager/{menu}', 'update')->name('module_manager.update');
+        // Route::post('module_manager/{menu}', 'update')->name('module_manager.update');
+        Route::post('module_manager/update/{menu?}', 'update')->name('module_manager.update');
         Route::delete('module_manager/{menu}', 'destroy')->name('module_manager.destroy');
+
+        // update is deleted menu item
+        Route::post('module_manager/menu_delete', 'menuDelete')->name('module_manager.menu_delete');
     });
     Route::get('/myadmins/{user_id}', [UserController::class, 'myAdmins'])->name('users.myadmins');
     Route::get('/vendors', [UserController::class, 'vendors'])->name('users.vendors');

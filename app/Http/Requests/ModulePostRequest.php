@@ -25,14 +25,16 @@ class ModulePostRequest extends FormRequest
      */
     public function rules()
     {
-        $moduleId = $this->route('module');
+        $menuId = $this->route('menu');
+        // dd($menuId);
         return [
-            'name' =>  [
-                'required',
-                Rule::unique('modules', 'name')->ignore($moduleId),
-            ],
-            'code' => 'required | unique:menus,code',
-            'path' => 'required | unique:menus,path',
+            // 'name' =>  [
+            //     'required',
+            //     Rule::unique('modules', 'name')->ignore($menuId),
+            // ],
+            'name' => 'required | unique:menus,name,' . $menuId,
+            'code' => 'required | unique:menus,code,' . $menuId,
+            'path' => 'required | unique:menus,path,' . $menuId ,
             'created_date' => 'required',
             'assigned_attributes' => 'required'
         ];
