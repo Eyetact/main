@@ -33,6 +33,11 @@
         .parent {
             animation: unset !important;
         }
+
+        table {
+            max-width: 99% !important;
+            width: 99% !important;
+        }
     </style>
 @endsection
 @push('styles')
@@ -79,7 +84,7 @@
                         <table class="table table-bordered text-nowrap" id="attribute_table">
                             <thead>
                                 <tr>
-                                    <th width="100px">No.</th>
+                                    <th width="30px"></th>
                                     <th>Name</th>
                                     <th>username</th>
                                     <th>email</th>
@@ -163,6 +168,8 @@
     <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
     <script src="{{ asset('assets/js/form-elements.js') }}"></script>
     <script src="{{ asset('assets/js/file-upload.js') }}"></script>
+    <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+
 
     <script type="text/javascript">
         $(document).on('click', '#add_new', function() {
@@ -194,12 +201,25 @@
             },
             ajax: "{{ route('users.admins') }}",
 
-            columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
-                },
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }],
+            select: {
+                style: 'multi',
+                selector: 'td:first-child'
+            },
+            columns: [
+                {
+                'data':null,
+                'defaultContent':'',
+                'checkboxes':{
+ 
+ 
+                    'selectRow':true
+                }
+            },  
                 {
                     data: 'name',
                     name: 'name'

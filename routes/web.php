@@ -182,6 +182,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //customer group
     Route::get('/groups', [CustomerGroupController::class, 'index'])->name('groups.index');
+    Route::get('/groups/sub/{id}', [CustomerGroupController::class, 'sub'])->name('groups.sub');
 
     Route::get('add-group', [CustomerGroupController::class, 'create'])->name('groups.create');
     Route::post('add-group', [CustomerGroupController::class, 'store'])->name('groups.store');

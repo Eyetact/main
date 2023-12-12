@@ -68,7 +68,7 @@
                     </div>
                     
 
-                    <div class="col-sm-6 col-md-6">
+                    <div class="col-sm-6 col-md-6" style="display: none">
 
                         <div class="input-box">
                             {{-- <label for="permission_type">Permission Type:</label> --}}
@@ -181,7 +181,7 @@
 
 
         $(document).ready(function() {
-            $('#permission_type option[value=user]').attr('selected','selected');
+            $('#permission_type option[value=customer]').attr('selected','selected');
             getPermissionsByType($('#permission_type').val());
             $('#permission_type').change(function() {
                 var selectedType = $(this).val();

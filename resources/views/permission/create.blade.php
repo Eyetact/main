@@ -3,7 +3,7 @@
                 @csrf
 
                 <div class="row">
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-3">
                         <label for="name">Permission</label>
                         <div class="permission">
                             <div class="each-input">
@@ -23,7 +23,7 @@
                         <div class="valid-feedback">Looks good!</div>
                         <div class="invalid-feedback">Please enter name.</div>
                     </div>
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-3">
                         <label for="module">Module</label>
 
                         <select class="form-control custom-select @error('module') is-invalid @enderror" name="module"
@@ -46,7 +46,7 @@
                         <div class="invalid-feedback">Please enter module.</div>
                     </div>
 
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-3">
 
                             <label>Type<span class="text-danger">*</span></label>
                             <select class="form-control custom-select" name="type" tabindex="null">
@@ -58,6 +58,26 @@
                         @error('type')
                             <label id="type-error" class="error" for="type">{{ $message }}</label>
                         @enderror
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="count">Count</label>
+                        <div class="permission">
+                            <div class="each-input">
+                                <input
+                                    class="permission Input permissionInput form-control @error('count') is-invalid @enderror"
+                                    name="count[0]" type="number" 
+                                    value="{{ old('count[0]') }}">
+                              
+                            </div>
+                            <div class="append-list"></div>
+                        </div>
+
+                        <!-- <input class="form-control @error('count') is-invalid @enderror" count="count" type="text" required="" placeholder="Name"> -->
+                        @error('count')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please enter count.</div>
                     </div>
 
                     <input type="hidden" name="guard_name" value="web">

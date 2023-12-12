@@ -29,9 +29,15 @@
         .dt-buttons.btn-group {
             float: left;
         }
+
         .parent {
-    animation: unset !important;
-}
+            animation: unset !important;
+        }
+
+        table {
+            max-width: 99% !important;
+            width: 99% !important;
+        }
     </style>
 @endsection
 @section('page-header')
@@ -46,8 +52,8 @@
         </div>
         <div class="page-rightheader">
             <div class="btn btn-list">
-                <a id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
-                    data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
+                <a id="add_new" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="Add new"><i
+                        class="fe fe-plus mr-1"></i> Add new </a>
             </div>
         </div>
     </div>
@@ -68,10 +74,11 @@
                         <table class="table table-bordered text-nowrap" id="attribute_table">
                             <thead>
                                 <tr>
-                                    <th style="width:15%">No.</th>
+                                    <th style="width:30px"></th>
                                     <th>Permission</th>
                                     <th>type</th>
                                     <th>module</th>
+                                    <th>count</th>
                                     <th>Guard</th>
                                     <th width="300px"></th>
                                 </tr>
@@ -91,20 +98,20 @@
     </div>
 
     <div class="modal fade bd-example-modal-lg" id="role_form_modal" tabindex="-1" role="dialog"
-    aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
-                        aria-hidden="true">×</span> </button>
-            </div>
-            <div class="modal-body">
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
 
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 @section('js')
     <!-- INTERNAL Data tables -->
@@ -150,6 +157,7 @@
     <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
     <script src="{{ asset('assets/js/form-elements.js') }}"></script>
     <script src="{{ asset('assets/js/file-upload.js') }}"></script>
+    <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
 
     <script type="text/javascript">
         $(document).on('click', '#add_new', function() {
@@ -181,11 +189,23 @@
             },
             ajax: "{{ route('permission.index') }}",
 
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }],
+            select: {
+                style: 'multi',
+                selector: 'td:first-child'
+            },
             columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
+                    'data': null,
+                    'defaultContent': '',
+                    'checkboxes': {
+
+
+                        'selectRow': true
+                    }
                 },
                 {
                     data: 'name',
@@ -198,6 +218,11 @@
                 {
                     data: 'module',
                     name: 'module'
+                },
+                
+                {
+                    data: 'count',
+                    name: 'count'
                 },
                 {
                     data: 'guard_name',
@@ -227,35 +252,35 @@
         }
 
         $(document).on('click', '.user-delete', function() {
-        	var id = $(this).attr("data-id");
+            var id = $(this).attr("data-id");
             swal({
-                    title: "Are you sure?",
-                    text: "Once deleted, you will not be able to recover this attribute!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                    showCancelButton: true,
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this attribute!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                showCancelButton: true,
 
 
-                }, function (willDelete) {
-                    if (willDelete) {
+            }, function(willDelete) {
+                if (willDelete) {
 
-                        $.ajax({
-                            type: "POST",
-                            url: '{{url("/")}}/permission/permission/delete/' + id,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(response) {
-	                            swal({
-	                				title: response.msg
-	                			}, function (result) {
-	                				location.reload();
-	                			});
-                            }
-                        });
-                    }
-                });
+                    $.ajax({
+                        type: "POST",
+                        url: '{{ url('/') }}/permission/permission/delete/' + id,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            swal({
+                                title: response.msg
+                            }, function(result) {
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
         });
     </script>
     <script type="text/javascript">

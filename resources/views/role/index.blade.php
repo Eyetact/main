@@ -48,6 +48,9 @@
             margin-bottom: 30px;
             border-bottom: 1px solid #f1f1f1;
         }
+        table{
+            max-width: 99% !important;
+        }
     </style>
 @endsection
 @section('page-header')
@@ -91,7 +94,7 @@
                                     <th width="30px"></th>
                                     <th>Role</th>
                                     <th>Guard</th>
-                                    <th width="300px">Action</th>
+                                    <th width="300px" >Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -141,6 +144,7 @@
     <script src="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.js') }}"></script>
     <script src="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
     <script src="{{ URL::asset('assets/js/sweet-alert.js') }}"></script>
+    <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
 
 
     <!-- INTERNAL Select2 js -->
@@ -150,8 +154,17 @@
         var table = $('#role_table').DataTable({
             processing: true,
             serverSide: true,
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }],
+            select: {
+                style: 'multi',
+                selector: 'td:first-child'
+            },
             lengthChange: false,
-            dom: 'lBftrip',
+            dom: 'Bfrtip',
             buttons: ['copy', 'excel', 'pdf', 'colvis'],
             responsive: true,
             language: {
@@ -162,14 +175,15 @@
             ajax: "{{ route('role.index') }}",
             columns: [
                 {
-                    data: 'active',
-                    label:"",
-                    render: (data, type, row) =>
-                        type === 'display' ? '<input type="checkbox" class="editor-active">' : data,
-                    className: 'dt-body-center',
-                    orderable:false
-                },
-                {
+                'data':null,
+                'defaultContent':'',
+                'checkboxes':{
+ 
+ 
+                    'selectRow':true
+                }
+            },    
+            {
                     data: 'name',
                     name: 'name'
                 },
@@ -184,10 +198,10 @@
                     orderable: false,
                     searchable: false
                 },
-               
+
 
             ],
-            
+
 
             order: [
                 [1, 'asc']
@@ -197,7 +211,9 @@
         // console.log(table.buttons().container());
 
         table.buttons().container()
-            .appendTo('#attribute_table_wrapper .col-md-6:eq(0)');
+            .appendTo('#role_table_wrapper .col-md-6:eq(0)');
+
+
 
         $(function() {
             checkInput();
