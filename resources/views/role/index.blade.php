@@ -50,6 +50,7 @@
         }
         table{
             max-width: 99% !important;
+            width: 99% !important;
         }
     </style>
 @endsection
@@ -154,15 +155,7 @@
         var table = $('#role_table').DataTable({
             processing: true,
             serverSide: true,
-            columnDefs: [{
-                orderable: false,
-                className: 'select-checkbox',
-                targets: 0
-            }],
-            select: {
-                style: 'multi',
-                selector: 'td:first-child'
-            },
+            
             lengthChange: false,
             dom: 'Bfrtip',
             buttons: ['copy', 'excel', 'pdf', 'colvis'],
@@ -173,6 +166,15 @@
                 lengthMenu: '_MENU_ ',
             },
             ajax: "{{ route('role.index') }}",
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }],
+            select: {
+                style: 'multi',
+                selector: 'td:first-child'
+            },
             columns: [
                 {
                 'data':null,
