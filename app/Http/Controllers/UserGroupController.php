@@ -11,7 +11,7 @@ class UserGroupController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $groups = UserGroup::all();
+            $groups = UserGroup::where('group_id', null)->get();
 
             return datatables()->of($groups)
 
@@ -33,6 +33,10 @@ class UserGroupController extends Controller
                         </li>
 
                         <li class="dropdown-item">
+                        <a href="' . route('ugroups.sub', $row->id) . '" href="#">View sub Groups</a>
+                        </li>
+
+                        <li class="dropdown-item">
                         <a  href="#" data-id="' . $row->id . '" class="group-delete">Delete</a>
                         </li>
                     </ul>
@@ -48,16 +52,52 @@ class UserGroupController extends Controller
         return view('users_groups.list');
     }
 
+    public function sub($id)
+    {
+        if (request()->ajax()) {
+            $groups = UserGroup::where('group_id', $id)->get();
+
+            return datatables()->of($groups)
+
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="dropdown">
+                    <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+
+                    </a>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li class="dropdown-item">
+                        <a id="edit_item" data-path="' . route('ugroups.view', $row->id) . '" href="#">View or Edit</a>
+                        </li>
+
+                        <li class="dropdown-item">
+                        <a  href="#" data-id="' . $row->id . '" class="group-delete">Delete</a>
+                        </li>
+                    </ul>
+                </div>';
+
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+
+                ->addIndexColumn()
+                ->make(true);
+        }
+        return view('users_groups.list-sub', compact('id'));
+    }
 
     public function create()
     {
+        $parents_group = UserGroup::where('group_id', null)->get();
 
         $roles = Role::where('name','!=','admin')
         ->where('name','!=','vendor')
         ->where('name','!=','super')
         ->get();
 
-        return view('users_groups.create',compact('roles'));
+        return view('users_groups.create',compact('roles','parents_group'));
     }
 
     public function store(Request $request)
@@ -84,7 +124,7 @@ class UserGroupController extends Controller
         ->where('name','!=','super')
         ->get();
 
-        
+
 
         return view('users_groups.show', compact('group','roles'));
     }

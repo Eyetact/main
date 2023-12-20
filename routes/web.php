@@ -201,6 +201,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
         //user group
         Route::get('/user-groups', [UserGroupController::class, 'index'])->name('ugroups.index');
+        Route::get('/user-groups/sub/{id}', [UserGroupController::class, 'sub'])->name('ugroups.sub');
 
         Route::get('add-user-group', [UserGroupController::class, 'create'])->name('ugroups.create');
         Route::post('add-user-group', [UserGroupController::class, 'store'])->name('ugroups.store');
