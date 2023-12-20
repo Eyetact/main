@@ -76,6 +76,7 @@
                                 <tr>
                                     <th width="30px"></th>
                                     <th>Name</th>
+                                    <th>parent</th>
                                     <th>Role</th>
                                     <th data-priority="1"></th>
                                 </tr>
@@ -206,9 +207,13 @@
                     'selectRow':true
                 }
             },  
-                {
+            {
                     data: 'name',
                     name: 'name'
+                },
+                {
+                    data: 'parent',
+                    name: 'parent'
                 },
 
                 {
@@ -224,7 +229,7 @@
 
             ],
             order: [
-                [1, 'asc']
+                [2, 'asc']
             ]
         });
 
