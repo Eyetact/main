@@ -3,6 +3,7 @@
 use App\Helpers\Helper;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\CustomerGroupController;
+use App\Http\Controllers\FileManagerController;
 use App\Http\Controllers\MailboxController;
 use App\Http\Controllers\MenuManagerController;
 use App\Http\Controllers\ModuleController;
@@ -83,7 +84,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::controller(SettingController::class)->group(function () {
         Route::get('/setting', 'index')->name('setting.index');
-//        Route::get('/setting/countries', 'countries')->name('setting.countries')->middleware('permission:countries.setting');
+        //        Route::get('/setting/countries', 'countries')->name('setting.countries')->middleware('permission:countries.setting');
 //        Route::get('/setting/status/{id}/{status}', 'settingCountry')->name('setting.status')->middleware('permission:countries.status');
 //        Route::get('/setting/states', 'states')->name('setting.states')->middleware('permission:states.setting');
 //        Route::get('/setting/cities', 'cities')->name('setting.cities')->middleware('permission:cities.setting');
@@ -129,11 +130,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/admins', [UserController::class, 'admins'])->name('users.admins');
     Route::get('/users', [UserController::class, 'users'])->name('users.users');
 
-    Route::post('add-user',[UserController::class, 'store'])->name('users.store');
+    Route::post('add-user', [UserController::class, 'store'])->name('users.store');
 
-    Route::get('add-user',[UserController::class, 'create'])->name('users.create');
-    Route::get('add-vendor',[UserController::class, 'createvendor'])->name('vendor.create');
-    Route::get('add-admin',[UserController::class, 'createAdmin'])->name('admin.create');
+    Route::get('add-user', [UserController::class, 'create'])->name('users.create');
+    Route::get('add-vendor', [UserController::class, 'createvendor'])->name('vendor.create');
+    Route::get('add-admin', [UserController::class, 'createAdmin'])->name('admin.create');
 
     Route::get('add-admin', [UserController::class, 'createAdmin'])->name('admin.create');
 
@@ -199,16 +200,29 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/group/delete/{id}', [CustomerGroupController::class, 'destroy'])->name('groups.destroy');
 
-        //user group
-        Route::get('/user-groups', [UserGroupController::class, 'index'])->name('ugroups.index');
-        Route::get('/user-groups/sub/{id}', [UserGroupController::class, 'sub'])->name('ugroups.sub');
+    //user group
+    Route::get('/user-groups', [UserGroupController::class, 'index'])->name('ugroups.index');
+    Route::get('/user-groups/sub/{id}', [UserGroupController::class, 'sub'])->name('ugroups.sub');
 
-        Route::get('add-user-group', [UserGroupController::class, 'create'])->name('ugroups.create');
-        Route::post('add-user-group', [UserGroupController::class, 'store'])->name('ugroups.store');
+    Route::get('add-user-group', [UserGroupController::class, 'create'])->name('ugroups.create');
+    Route::post('add-user-group', [UserGroupController::class, 'store'])->name('ugroups.store');
 
-        Route::get('/user/group/{id}', [UserGroupController::class, 'show'])->name('ugroups.view');
-        Route::get('/user/group/users/{id}', [UserGroupController::class, 'showUsers'])->name('ugroups.view2');
-        Route::post('update-user-group/{id}', [UserGroupController::class, 'update'])->name('ugroups.update');
+    Route::get('/user/group/{id}', [UserGroupController::class, 'show'])->name('ugroups.view');
+    Route::get('/user/group/users/{id}', [UserGroupController::class, 'showUsers'])->name('ugroups.view2');
+    Route::post('update-user-group/{id}', [UserGroupController::class, 'update'])->name('ugroups.update');
 
-        Route::post('/user-group/delete/{id}', [UserGroupController::class, 'destroy'])->name('ugroups.destroy');
+    Route::post('/user-group/delete/{id}', [UserGroupController::class, 'destroy'])->name('ugroups.destroy');
+
+
+
+    Route::get('/files', [FileManagerController::class, 'index'])->name('files');
+    Route::get('/new-folder', [FileManagerController::class, 'newFolder'])->name('newfolder');
+    Route::post('/new-folder', [FileManagerController::class, 'newFolder'])->name('newfolder');
+
+    Route::get('/new-file', [FileManagerController::class, 'newFile'])->name('newfile');
+    Route::post('/new-file', [FileManagerController::class, 'newFile'])->name('newfile');
+
+
+
+    Route::get('/view-folder/{id}', [FileManagerController::class, 'viewfolder'])->name('viewfolder');
 });

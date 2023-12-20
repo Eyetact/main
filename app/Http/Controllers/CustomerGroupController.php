@@ -13,14 +13,14 @@ class CustomerGroupController extends Controller
             $groups = CustomerGroup::all();
 
             return datatables()->of($groups)
-            ->addColumn('name',function($row){
-                if($row->group_id == null){
-                    return $row->name;
-                }
-                return "---->  " .  $row->name;
-            })
-                ->addColumn('parent',function($row){
-                    if($row->group_id == null){
+                ->addColumn('name', function ($row) {
+                    if ($row->group_id == null) {
+                        return $row->name;
+                    }
+                    return "---->  " . $row->name;
+                })
+                ->addColumn('parent', function ($row) {
+                    if ($row->group_id == null) {
                         return $row->name;
                     }
                     return $row->parent->name;
