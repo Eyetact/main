@@ -234,7 +234,8 @@
                                             @enderror
                                         </div>
 
-                                        @hasanyrole('super|admin|vendor')
+                                        {{-- @hasanyrole('super|admin|vendor') --}}
+                                        @if((auth()->user()->hasRole('super') || auth()->user()->id == $user->user_id) && ($user->hasanyrole('super|admin|vendor') ))
                                         <div class="col-sm-6 col-md-6">
                                             <div class="input-box">
                                                 <select class=" google-input" name="group_id" tabindex="null">
@@ -251,10 +252,12 @@
                                                     for="group_id">{{ $message }}</label>
                                             @enderror
                                         </div>
-                                        @endhasanyrole
+                                        {{-- @endhasanyrole --}}
+                                        @endif
 
 
-                                        @role('user')
+                                        {{-- @role('user') --}}
+                                    @if((auth()->user()->hasRole('super') || auth()->user()->id == $user->user_id) && ($user->hasanyrole('user') ))
                                         <div class="col-sm-6 col-md-6">
                                             <div class="input-box">
                                                 <select class=" google-input" name="ugroup_id" tabindex="null">
@@ -268,7 +271,8 @@
                                                 <label id="user_id-error" class="error" for="ugroup_id">{{ $message }}</label>
                                             @enderror
                                         </div>
-                                        @endrole
+                                        {{-- @endrole --}}
+                                        @endif
 
 
                                     </div>
