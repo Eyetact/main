@@ -33,6 +33,7 @@
         .parent {
             animation: unset !important;
         }
+
         table {
             max-width: 99% !important;
             width: 99% !important;
@@ -75,6 +76,7 @@
                                 <tr>
                                     <th width="30px"></th>
                                     <th>Name</th>
+                                    <th>Parent</th>
                                     <th data-priority="1"></th>
                                 </tr>
                             </thead>
@@ -179,8 +181,8 @@
             $.ajax({
                 url: path,
                 success: function(response) {
-                     console.log(path);
-                     console.log(response);
+                    console.log(path);
+                    console.log(response);
                     $(".modal-body").html(response);
                     $(".modal-title").html("edit Group");
                     $("#role_form_modal").modal('show');
@@ -188,7 +190,7 @@
                 }
             });
         });
-        
+
         var table = $('#attribute_table').DataTable({
             processing: true,
             serverSide: true,
@@ -212,19 +214,23 @@
                 style: 'multi',
                 selector: 'td:first-child'
             },
-            columns: [
-                {
-                'data':null,
-                'defaultContent':'',
-                'checkboxes':{
- 
- 
-                    'selectRow':true
-                }
-            },  
+            
+            columns: [{
+                    'data': null,
+                    'defaultContent': '',
+                    'checkboxes': {
+
+
+                        'selectRow': true
+                    }
+                },
                 {
                     data: 'name',
                     name: 'name'
+                },
+                {
+                    data: 'parent',
+                    name: 'parent'
                 },
 
                 {
@@ -236,7 +242,7 @@
 
             ],
             order: [
-                [1, 'asc']
+                [2, 'asc']
             ]
         });
 

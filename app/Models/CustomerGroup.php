@@ -14,4 +14,8 @@ class CustomerGroup extends Model
     public function customers(){
         return $this->hasMany(User::class, 'group_id' );
     }
+
+    public function parent(){
+        return $this->belongsTo( CustomerGroup::class, 'group_id' );
+    }
 }

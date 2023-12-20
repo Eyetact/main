@@ -88,4 +88,8 @@ class User extends Authenticatable
         return $this->hasOne( Setting::class, 'created_by' );
     }
 
+    public function groups(){
+        return $this->hasMany( UCGroup::class, 'user_id' );
+    }
+
 }

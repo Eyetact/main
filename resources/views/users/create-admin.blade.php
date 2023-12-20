@@ -83,7 +83,7 @@
         </div>
         <div class="col-sm-6 col-md-6">
             <div class="input-box">
-                <select class=" google-input" name="group_id" tabindex="null">
+                <select class=" google-input" name="group_id[]" tabindex="null" multiple>
                     <option selected disabled>Select Customer Group</option>
                     @foreach ($groups as $group)
                         <option value="{{ $group->id }}">{{$group->id}} - {{$group->name}}</option>

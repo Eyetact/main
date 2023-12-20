@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CustomerGroup;
+use App\Models\UCGroup;
 use App\Models\UserGroup;
 use App\Models\Plan;
 use App\Models\Subscription;
@@ -191,24 +192,24 @@ class UserController extends Controller
     public function create()
     {
         $groups = UserGroup::all();
-        $roles = Role::where('name','!=','admin')
-        ->where('name','!=','vendor')
-        ->where('name','!=','super')
-        ->get();
-        return view('users.create-user',compact('groups','roles'));
+        $roles = Role::where('name', '!=', 'admin')
+            ->where('name', '!=', 'vendor')
+            ->where('name', '!=', 'super')
+            ->get();
+        return view('users.create-user', compact('groups', 'roles'));
     }
 
     public function createAdmin()
     {
         $groups = CustomerGroup::all();
 
-        return view('users.create-admin',compact('groups'));
+        return view('users.create-admin', compact('groups'));
     }
     public function createvendor()
     {
         $groups = CustomerGroup::all();
 
-        return view('users.create-vendor',compact('groups'));
+        return view('users.create-vendor', compact('groups'));
     }
 
     /**
@@ -221,7 +222,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-
+        // dd( $request->group_id );
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -232,9 +233,17 @@ class UserController extends Controller
             'avatar' => $request->avatar,
             'password' => bcrypt($request->password),
             'user_id' => Auth::user()->id,
-            'group_id' => $request->group_id ?? 1,
-            'ugroup_id' => $request->ugroup_id ?? 1,
+            'group_id' => 1,
+            'ugroup_id' => 1,
         ]);
+        if ($request->group_id):
+            foreach ($request->group_id as $id) {
+                $c = new UCGroup();
+                $c->group_id = $id;
+                $c->user_id = $user->id;
+                $c->save();
+            }
+        endif;
 
         $plan = Plan::where('name', 'Free Plan')->first();
 

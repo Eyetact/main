@@ -83,7 +83,7 @@
         </div>
         <div class="col-sm-6 col-md-6">
             <div class="input-box">
-                <select class=" google-input" name="ugroup_id" tabindex="null">
+                <select class=" google-input" name="group_id[]" tabindex="null" multiple>
                     <option selected disabled>Select User Group</option>
                     @foreach ($groups as $group)
                         <option value="{{ $group->id }}">{{$group->id}} - {{$group->name}}</option>
@@ -98,7 +98,7 @@
 
         <div class="col-sm-6 col-md-6">
             <div class="input-box">
-                <select class=" google-input" name="role" tabindex="null">
+                <select class=" google-input" name="role" tabindex="null" >
                     <option selected disabled>Select Role</option>
                     @foreach ($roles as $role)
                         <option value="{{ $role->name }}">{{$role->id}} - {{$role->name}}</option>
