@@ -6,6 +6,9 @@ use App\Models\Folder;
 use App\Models\File;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Str;
 
 class FileManagerController extends Controller
 {
@@ -35,7 +38,7 @@ class FileManagerController extends Controller
 
             return redirect()->route('files')
                 ->with('success', 'Folder has been added successfully');
-            
+
         }
         return view('files.new-folder');
     }
@@ -66,10 +69,98 @@ class FileManagerController extends Controller
 
             return redirect()->route('files')
                 ->with('success', 'Filde has been added successfully');
-            
+
         }
         return view('files.new-file');
     }
+
+
+    public function showFolder($id)
+    {
+        $folder = Folder::find($id);
+        return view('files.show-folder', compact('folder'));
+    }
+
+    public function updateFolder(Request $request, string $id)
+    {
+        $folder = Folder::findOrFail($id);
+
+
+        $folder->update($request->all());
+
+
+
+        return redirect()->route('files')
+            ->with('success', 'File has been updated successfully');
+    }
+
+    public function showFile($id)
+    {
+        $file = File::find($id);
+        return view('files.show-file', compact('file'));
+    }
+
+    public function updateFile(Request $request, string $id)
+    {
+        $file = File::findOrFail($id);
+
+        $value = $request->file;
+        $ext = $value->getClientOriginalExtension();
+        $file->type = $ext;
+
+        $file_name = time() . mt_rand(1000, 9000) . '.' . $ext;
+        $file->name = $file_name;
+
+        $value->move(public_path('uploads/users/'), $file_name);
+        $file->path = 'uploads/users/' . $file_name;
+        $file->folder_id = 0 ;
+        $file->user_id = Auth::user()->id;
+        $file->save();
+
+
+
+
+        return redirect()->route('files')
+            ->with('success', 'File has been updated successfully');
+    }
+
+    public function destroyFolder($id)
+    {
+        if (Folder::find($id)->delete()) {
+            return response()->json(['msg' => 'Folder deleted successfully!'], 200);
+        } else {
+            return response()->json(['msg' => 'Something went wrong, please try again.'], 200);
+        }
+    }
+
+    public function destroyFile($id)
+    {
+        if (File::find($id)->delete()) {
+            return response()->json(['msg' => 'File deleted successfully!'], 200);
+        } else {
+            return response()->json(['msg' => 'Something went wrong, please try again.'], 200);
+        }
+    }
+
+    public function downloadFile($id)
+{
+    $file = File::findOrFail($id);
+
+    $filePath = public_path($file->path);
+
+    return response()->download($filePath, $file->name);
+}
+
+public function shareFile($id)
+{
+    $file = File::findOrFail($id);
+
+    $file->share_token = url($file->path);
+    $file->save();
+
+
+    return response()->json(['share_url' => $file->share_token],200);
+}
 
     /**
      * Show the form for creating a new resource.
@@ -132,8 +223,5 @@ class FileManagerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
-    }
+
 }

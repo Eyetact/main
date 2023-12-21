@@ -219,10 +219,27 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/new-folder', [FileManagerController::class, 'newFolder'])->name('newfolder');
     Route::post('/new-folder', [FileManagerController::class, 'newFolder'])->name('newfolder');
 
+
     Route::get('/new-file', [FileManagerController::class, 'newFile'])->name('newfile');
     Route::post('/new-file', [FileManagerController::class, 'newFile'])->name('newfile');
 
 
 
     Route::get('/view-folder/{id}', [FileManagerController::class, 'viewfolder'])->name('viewfolder');
+
+    Route::get('/show-folder/{id}', [FileManagerController::class, 'showFolder'])->name('showfolder');
+    Route::post('update-folder/{id}', [FileManagerController::class, 'updateFolder'])->name('folder.update');
+
+
+    Route::post('/folder/delete/{id}', [FileManagerController::class, 'destroyFolder'])->name('folder.destroy');
+
+    Route::get('/show-file/{id}', [FileManagerController::class, 'showFile'])->name('showfile');
+    Route::post('update-file/{id}', [FileManagerController::class, 'updateFile'])->name('file.update');
+
+
+    Route::post('/file/delete/{id}', [FileManagerController::class, 'destroyFile'])->name('file.destroy');
+
+    Route::get('/file/download/{id}', [FileManagerController::class,'downloadFile'])->name('downloadfile');
+
+    Route::get('/file/share/{id}', [FileManagerController::class,'shareFile'])->name('sharefile');
 });

@@ -23,7 +23,7 @@
 
     <div class="card-footer">
         <button class="btn btn-primary" type="submit">Save</button>
-        <a href="{{ route('plans.index') }}" class="btn btn-secondary">Cancel</a>
+        <a href="{{ route('files') }}" class="btn btn-secondary">Cancel</a>
     </div>
 </form>
 

@@ -5,7 +5,57 @@
 
     <!-- INTERNAL File Uploads css-->
     <link href="{{ asset('assets/plugins/fileupload/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
-@endsection
+
+      <!-- Data table css -->
+      <link href="{{ URL::asset('assets/plugins/datatable/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" />
+      <link href="{{ URL::asset('assets/plugins/datatable/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
+      <link href="{{ URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.css') }}" rel="stylesheet" />
+      <!-- Slect2 css -->
+      <link href="{{ URL::asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
+      <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
+      <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
+      <link href="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/plugins/wysiwyag/richtext.css"
+          rel="stylesheet" />
+          <style>
+            .dropdown-toggle:after {
+                content: none !important;
+            }
+
+            li.dropdown-item button,
+            li.dropdown-item a {
+                border: none;
+                background: transparent;
+                color: #333;
+                padding: 0px 10px;
+            }
+
+            li.dropdown-item {
+                padding: 10px;
+                text-align: left;
+            }
+
+            .dt-buttons.btn-group {
+                float: left;
+            }
+            .parent {
+        animation: unset !important;
+    }
+    table {
+                max-width: 99% !important;
+                width: 99% !important;
+            }
+        </style>
+    @endsection
+    @push('styles')
+        <!-- INTERNAL Sumoselect css-->
+        <link rel="stylesheet" href="{{ asset('assets/plugins/sumoselect/sumoselect.css') }}    ">
+
+        <!-- INTERNAL File Uploads css -->
+        <link href="{{ asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
+
+        <!-- INTERNAL File Uploads css-->
+        <link href="{{ asset('assets/plugins/fileupload/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
+    @endpush
 @section('page-header')
     <div class="page-header">
 
@@ -56,11 +106,12 @@
                                 <a href="#" class="option-dots" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false"><i class="fe fe-more-vertical"></i></a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="#"><i class="fe fe-edit mr-2"></i> Edit</a>
+
+                                    <a class="dropdown-item folder-edit" data-path="{{ route('showfolder', $folder->id) }}" href="#"><i class="fe fe-edit mr-2"></i> View Or Edit</a>
                                     <a class="dropdown-item" href="#"><i class="fe fe-share mr-2"></i> Share</a>
                                     <a class="dropdown-item" href="#"><i class="fe fe-download mr-2"></i>
                                         Download</a>
-                                    <a class="dropdown-item" href="#"><i class="fe fe-trash mr-2"></i>
+                                    <a class="dropdown-item folder-delete" data-id="{{ $folder->id }}" href="#"><i class="fe fe-trash mr-2"></i>
                                         Delete</a>
                                 </div>
                             </div>
@@ -89,11 +140,17 @@
                                     <a href="#" class="option-dots" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false"><i class="fe fe-more-vertical"></i></a>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#"><i class="fe fe-edit mr-2"></i> Edit</a>
-                                        <a class="dropdown-item" href="#"><i class="fe fe-share mr-2"></i> Share</a>
-                                        <a class="dropdown-item" href="#"><i class="fe fe-download mr-2"></i>
-                                            Download</a>
-                                        <a class="dropdown-item" href="#"><i class="fe fe-trash mr-2"></i> Delete</a>
+                                        <a class="dropdown-item file-edit" data-path="{{ route('showfile', $file->id) }}" href="#"><i class="fe fe-edit mr-2"></i>View Or Edit</a>
+                                        {{-- <a class="dropdown-item" href="#"><i class="fe fe-share mr-2"></i> Share</a> --}}
+                                        <a class="dropdown-item" href="{{ route('sharefile', $file->id) }}">
+                                            <i class="fe fe-share mr-2"></i> Share
+                                        </a>
+
+                                        <a class="dropdown-item" href="{{ route('downloadfile', $file->id) }}">
+                                            <i class="fe fe-download mr-2"></i> Download
+                                        </a>
+
+                                        <a class="dropdown-item file-delete" data-id="{{ $file->id }}" href="#"><i class="fe fe-trash mr-2"></i> Delete</a>
                                     </div>
                                 </div>
                             </div>
@@ -106,7 +163,7 @@
                         </div>
                     </div>
                 @endforeach
-            
+
 
 
             </div>
@@ -134,6 +191,55 @@
     <!-- INTERNAL File uploads js -->
     <script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
     <script src="{{ asset('assets/js/filupload.js') }}"></script>
+
+
+     <!-- INTERNAL Data tables -->
+     <script src="{{ URL::asset('assets/plugins/datatable/js/jquery.dataTables.js') }}"></script>
+     <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.bootstrap4.js') }}"></script>
+     <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
+     <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.bootstrap4.min.js') }}"></script>
+     <script src="{{ URL::asset('assets/plugins/datatable/js/jszip.min.js') }}"></script>
+     <script src="{{ URL::asset('assets/plugins/datatable/js/pdfmake.min.js') }}"></script>
+     <script src="{{ URL::asset('assets/plugins/datatable/js/vfs_fonts.js') }}"></script>
+     <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.html5.min.js') }}"></script>
+     <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.print.min.js') }}"></script>
+     <script src="{{ URL::asset('assets/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
+     <script src="{{ URL::asset('assets/plugins/datatable/dataTables.responsive.min.js') }}"></script>
+     <script src="{{ URL::asset('assets/plugins/datatable/responsive.bootstrap4.min.js') }}"></script>
+     <script src="{{ URL::asset('assets/js/datatables.js') }}"></script>
+     <script src="{{ URL::asset('assets/js/popover.js') }}"></script>
+
+     <!-- INTERNAL Sweet alert js -->
+     <script src="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.js') }}"></script>
+     <script src="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
+     <script src="{{ URL::asset('assets/js/sweet-alert.js') }}"></script>
+
+
+     <!-- INTERNAL Select2 js -->
+     <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
+
+     <!-- INTERNAL File-Uploads Js-->
+     <script src="{{ asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
+     <script src="{{ asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
+     <script src="{{ asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
+     <script src="{{ asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
+     <script src="{{ asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
+
+     <!-- INTERNAL File uploads js -->
+     <script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
+     <script src="{{ asset('assets/js/filupload.js') }}"></script>
+
+     <!--INTERNAL Sumoselect js-->
+     <script src="{{ asset('assets/plugins/sumoselect/jquery.sumoselect.js') }}"></script>
+
+     <!--INTERNAL Form Advanced Element -->
+     <script src="{{ asset('assets/js/formelementadvnced.js') }}"></script>
+     <script src="{{ asset('assets/js/form-elements.js') }}"></script>
+     <script src="{{ asset('assets/js/file-upload.js') }}"></script>
+     <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+
+
+
     <script type="text/javascript">
         $(document).on('click', '#new_folder', function() {
             // window.addEventListener('load', function() {
@@ -164,5 +270,108 @@
                 }
             });
         });
+
+
+
+        $(document).on('click', '.folder-edit', function(e) {
+    e.preventDefault(); // Prevent the default link behavior
+
+    var path = $(this).data('path'); // Get the path from the data-path attribute
+
+    $.ajax({
+        url: path,
+        success: function(response) {
+            $(".modal-body").html(response);
+            $(".modal-title").html("Edit Folder");
+            $("#role_form_modal").modal('show');
+            $('.dropify').dropify();
+        }
+    });
+});
+
+
+
+$(document).on('click', '.file-edit', function(e) {
+    e.preventDefault(); // Prevent the default link behavior
+
+    var path = $(this).data('path'); // Get the path from the data-path attribute
+
+    $.ajax({
+        url: path,
+        success: function(response) {
+            $(".modal-body").html(response);
+            $(".modal-title").html("Edit File");
+            $("#role_form_modal").modal('show');
+            $('.dropify').dropify();
+        }
+    });
+});
+
+        $(document).on('click', '.folder-delete', function() {
+        var id = $(this).attr("data-id");
+            swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this attribute!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    showCancelButton: true,
+
+
+                }, function (willDelete) {
+                    if (willDelete) {
+
+                        $.ajax({
+                            type: "POST",
+                            url: '{{url("/")}}/folder/delete/' + id,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+	                            swal({
+	                				title: response.msg
+	                			}, function (result) {
+	                				location.reload();
+	                			});
+                            }
+                        });
+                    }
+                });
+        });
+
+        $(document).on('click', '.file-delete', function() {
+        var id = $(this).attr("data-id");
+            swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this attribute!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    showCancelButton: true,
+
+
+                }, function (willDelete) {
+                    if (willDelete) {
+
+                        $.ajax({
+                            type: "POST",
+                            url: '{{url("/")}}/file/delete/' + id,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+	                            swal({
+	                				title: response.msg
+	                			}, function (result) {
+	                				location.reload();
+	                			});
+                            }
+                        });
+                    }
+                });
+        });
+
+
+
     </script>
 @endsection
