@@ -242,4 +242,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/file/download/{id}', [FileManagerController::class,'downloadFile'])->name('downloadfile');
 
     Route::get('/file/share/{id}', [FileManagerController::class,'shareFile'])->name('sharefile');
+
+
+    Route::get('/file/images/{id}', [FileManagerController::class,'images'])->name('images');
+    Route::get('/file/videos/{id}', [FileManagerController::class,'videos'])->name('videos');
+    Route::get('/file/search/{key}', [FileManagerController::class,'search'])->name('search');
+
+
 });

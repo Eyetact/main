@@ -13,10 +13,13 @@
         </div>
         <div class="card-body pt-3 pb-3">
             <div class="list-group list-group-transparent mb-0 file-manger">
-                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center px-0">
+                <a href="#" id="home" class="list-group-item list-group-item-action d-flex align-items-center px-0">
+                    <i class="fe fe-home fs-18 mr-2"></i>Home
+                </a>
+                <a href="#" id="images" class="list-group-item list-group-item-action d-flex align-items-center px-0">
                     <i class="fe fe-image fs-18 mr-2"></i>Images
                 </a>
-                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center px-0">
+                <a href="#" id="videos" class="list-group-item list-group-item-action d-flex align-items-center px-0">
                     <i class="fe fe-video fs-18 mr-2"></i>Videos
                 </a>
                 <a href="#" class="list-group-item list-group-item-action d-flex align-items-center px-0">

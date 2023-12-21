@@ -19,6 +19,10 @@ class FileManagerController extends Controller
      */
     public function index()
     {
+        if (request()->ajax()) {
+        return view('files.index-content');
+
+        }
         return view('files.index');
     }
 
@@ -223,5 +227,30 @@ public function shareFile($id)
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+     public function images($id){
+        $files = File::where('type','png')
+        ->orWhere('type','gif')
+        ->orWhere('type','jpeg')
+        ->orWhere('type','jpg')
+        ->where('user_id',$id)
+        ->get();
+
+        return view('files.images',compact('files'));
+     }
+
+     public function videos($id){
+        $files = File::where('type','mp4')
+     
+        ->get();
+
+        return view('files.images',compact('files'));
+     }
+
+     public function search( $key){
+        $files = File::where('name','like','%' . $key . '%')->get();
+        // dd($files);
+        return view('files.images',compact('files'));
+     }
 
 }
