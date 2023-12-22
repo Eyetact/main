@@ -146,6 +146,13 @@
                                     <a href="#" class="option-dots" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false"><i class="fe fe-more-vertical"></i></a>
                                     <div class="dropdown-menu dropdown-menu-right">
+
+
+
+
+                                        <a class="dropdown-item"
+                                            href="{{ route('open.file',$file->id) }}"> <i class="fe fe-play-circle mr-2"></i>Play</a>
+
                                         <a class="dropdown-item file-edit" data-path="{{ route('showfile', $file->id) }}"
                                             href="#"><i class="fe fe-edit mr-2"></i>View Or Edit</a>
                                         {{-- <a class="dropdown-item" href="#"><i class="fe fe-share mr-2"></i> Share</a> --}}
@@ -341,6 +348,35 @@
             return false;
         });
 
+        $(document).on('click', '#docs', function(event) {
+            event.preventDefault()
+            // window.addEventListener('load', function() {
+            // }, false);
+            $.ajax({
+                url: "{{ route('docs', auth()->user()->id) }}",
+                success: function(response) {
+                    //  console.log(response);
+                    $("#files_container").html(response);
+
+                }
+            });
+            return false;
+        });
+
+        $(document).on('click', '#music', function(event) {
+            event.preventDefault()
+            // window.addEventListener('load', function() {
+            // }, false);
+            $.ajax({
+                url: "{{ route('music', auth()->user()->id) }}",
+                success: function(response) {
+                    //  console.log(response);
+                    $("#files_container").html(response);
+
+                }
+            });
+            return false;
+        });
 
 
 

@@ -22,10 +22,10 @@
                 <a href="#" id="videos" class="list-group-item list-group-item-action d-flex align-items-center px-0">
                     <i class="fe fe-video fs-18 mr-2"></i>Videos
                 </a>
-                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center px-0">
+                <a href="#" id="docs" class="list-group-item list-group-item-action d-flex align-items-center px-0">
                     <i class="fe fe-file-text fs-18 mr-2"></i> Docs
                 </a>
-                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center px-0">
+                <a href="#" id="music" class="list-group-item list-group-item-action d-flex align-items-center px-0">
                     <i class="fe fe-music fs-18 mr-2"></i> Music
                 </a>
                 <a href="#" class="list-group-item list-group-item-action d-flex align-items-center px-0">
