@@ -16,10 +16,36 @@ class FileManagerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index( Request $request)
     {
         if (request()->ajax()) {
             return view('files.index-content');
+
+        }
+
+        if ($request->isMethod('post')) {
+            $file = new File();
+
+            $value = $request->file;
+            $ext = $value->getClientOriginalExtension();
+            $file->type = $ext;
+
+            $file_name = time() . mt_rand(1000, 9000) . '.' . $ext;
+            $file->name = $file_name;
+
+            $value->move(public_path('uploads/users/'), $file_name);
+            $file->path = 'uploads/users/' . $file_name;
+            $file->folder_id = $request->folder_id;
+            $file->user_id = Auth::user()->id;
+            $file->save();
+
+            if ($request->folder_id != 0) {
+                $folder = Folder::find($request->folder_id);
+                return view('files.index',compact('folder'));
+            }
+
+            return redirect()->route('files')
+                ->with('success', 'File has been added successfully');
 
         }
         return view('files.index');
@@ -65,12 +91,12 @@ class FileManagerController extends Controller
             $file->save();
 
             if ($request->folder_id != 0) {
-                return redirect()->route('viewfolder', $request->folder_id)
-                    ->with('success', 'Fild has been added successfully');
+                $folder = Folder::find($request->folder_id);
+                return view('files.index',compact('folder'));
             }
 
             return redirect()->route('files')
-                ->with('success', 'Filde has been added successfully');
+                ->with('success', 'File has been added successfully');
 
         }
         return view('files.new-file');
@@ -150,10 +176,7 @@ class FileManagerController extends Controller
     {
         $file = File::findOrFail($id);
 
-        $file->share_token = url($file->path);
-        $file->save();
-
-        return response()->json(['share_url' => $file->share_token], 200);
+        return view('files.share', compact('file'));
     }
 
     /**
@@ -227,7 +250,7 @@ class FileManagerController extends Controller
             ->where('user_id', $id)
             ->get();
 
-        return view('files.images', compact('files'));
+        return view('files.files', compact('files'));
     }
 
     public function videos($id)
@@ -236,41 +259,44 @@ class FileManagerController extends Controller
 
             ->get();
 
-        return view('files.images', compact('files'));
+        return view('files.files', compact('files'));
     }
 
     public function search($key)
     {
         $files = File::where('name', 'like', '%' . $key . '%')->get();
         // dd($files);
-        return view('files.images', compact('files'));
+        return view('files.files', compact('files'));
     }
 
     public function docs($id)
     {
         $files = File::where('type', 'pdf')
             ->orWhere('type', 'xlsx')
+            ->orWhere('type', 'xls')
             ->orWhere('type', 'docx')
+            ->orWhere('type', 'doc')
+            ->orWhere('type', 'ppt')
+            ->orWhere('type', 'pptx')
             ->get();
 
-        return view('files.images', compact('files'));
+        return view('files.files', compact('files'));
     }
 
     public function music($id)
     {
         $files = File::where('type', 'mp3')
-            ->orWhere('type', 'mp4')
             ->orWhere('type', 'wav')
             ->orWhere('type', 'flac')
             ->get();
 
-        return view('files.images', compact('files'));
+        return view('files.files', compact('files'));
     }
 
     public function openFile($id)
     {
         $file = File::findOrFail($id);
-        return response()->file($file->path);
+        return view('files.view', compact('file'));
     }
 
 }

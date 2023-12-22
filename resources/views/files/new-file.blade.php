@@ -1,5 +1,5 @@
 
-<form action="{{ route('newfile') }}" method="POST" id="mailboxForm" enctype="multipart/form-data">
+<form action="{{ route('files') }}" method="POST" id="mailboxForm" enctype="multipart/form-data">
     @csrf
     <div class="row">
 

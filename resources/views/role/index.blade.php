@@ -48,9 +48,45 @@
             margin-bottom: 30px;
             border-bottom: 1px solid #f1f1f1;
         }
-        table{
+
+        table {
             max-width: 99% !important;
             width: 99% !important;
+        }
+
+        .role-group .input-box .col-md-6 {
+            display: flex;
+            align-items: center;
+        }
+
+        .role-group .input-box {
+            min-height: 43px;
+            padding-bottom: 0;
+            display: flex;
+            align-items: center !important;
+            padding-top: 0;
+        }
+
+        label {
+            margin: 0;
+            padding-left: 5px;
+        }
+
+        .role-group .input-box:first-child {
+            background: #f1f1f1;
+            padding: 0 18px;
+        }
+
+        .role-group .input-box {
+            padding-left: 15px !important;
+        }
+
+        .col-md-6.select-box {
+            padding: 6px 3px;
+        }
+
+        .modal-lg {
+            max-width: 1024px;
         }
     </style>
 @endsection
@@ -95,7 +131,7 @@
                                     <th width="30px"></th>
                                     <th>Role</th>
                                     <th>Guard</th>
-                                    <th width="300px" >Action</th>
+                                    <th width="300px">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -155,7 +191,7 @@
         var table = $('#role_table').DataTable({
             processing: true,
             serverSide: true,
-            
+
             lengthChange: false,
             dom: 'Bfrtip',
             buttons: ['copy', 'excel', 'pdf', 'colvis'],
@@ -175,17 +211,16 @@
                 style: 'multi',
                 selector: 'td:first-child'
             },
-            columns: [
+            columns: [{
+                    'data': null,
+                    'defaultContent': '',
+                    'checkboxes': {
+
+
+                        'selectRow': true
+                    }
+                },
                 {
-                'data':null,
-                'defaultContent':'',
-                'checkboxes':{
- 
- 
-                    'selectRow':true
-                }
-            },    
-            {
                     data: 'name',
                     name: 'name'
                 },

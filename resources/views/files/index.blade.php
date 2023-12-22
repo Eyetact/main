@@ -46,6 +46,72 @@
             max-width: 99% !important;
             width: 99% !important;
         }
+
+        .spinner3 {
+            margin: 100px auto;
+            width: 40px;
+            height: 40px;
+            position: relative;
+            text-align: center;
+            -webkit-animation: sk-rotate 2.0s infinite linear;
+            animation: sk-rotate 2.0s infinite linear;
+        }
+
+        .dot1 {
+            width: 60%;
+            height: 60%;
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            border-radius: 100%;
+            -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+            animation: sk-bounce 2.0s infinite ease-in-out;
+        }
+
+        .dot2 {
+            width: 60%;
+            height: 60%;
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            border-radius: 100%;
+            -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+            animation: sk-bounce 2.0s infinite ease-in-out;
+            top: auto;
+            bottom: 0;
+            -webkit-animation-delay: -1.0s;
+            animation-delay: -1.0s;
+        }
+
+        @-webkit-keyframes sk-rotate {
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes sk-rotate {
+            100% {
+                transform: rotate(360deg);
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        .cloader {
+            position: absolute;
+            z-index: 999;
+            background: #ffffff94;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .view-folder {
+            cursor: pointer;
+        }
     </style>
 @endsection
 @push('styles')
@@ -62,10 +128,10 @@
     <div class="page-header">
 
         <div class="page-leftheader">
-            <h4 class="page-title mb-0">File Manager 01</h4>
+            <h4 class="page-title mb-0">File Manager</h4>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#"><i class="fe fe-grid mr-2 fs-14"></i>Apps</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="#">File Manager 01</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">File Manager </a></li>
             </ol>
         </div>
     </div>
@@ -96,91 +162,17 @@
                 </div>
             </div>
             <div class="row" id="files_container">
-                @foreach (auth()->user()->folders as $folder)
-                    <div class="col-xl-3 col-md-4 col-sm-6">
-                        <div class="card border p-0 shadow-none">
-                            <div class="d-flex align-items-center px-4 pt-4">
-                                <label class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" name="example-checkbox2"
-                                        value="option2">
-                                    <span class="custom-control-label"></span>
-                                </label>
-                                <div class="float-right ml-auto">
-                                    <a href="#" class="option-dots" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false"><i class="fe fe-more-vertical"></i></a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-
-                                        <a class="dropdown-item folder-edit"
-                                            data-path="{{ route('showfolder', $folder->id) }}" href="#"><i
-                                                class="fe fe-edit mr-2"></i> View Or Edit</a>
-                                        <a class="dropdown-item" href="#"><i class="fe fe-share mr-2"></i> Share</a>
-                                        <a class="dropdown-item" href="#"><i class="fe fe-download mr-2"></i>
-                                            Download</a>
-                                        <a class="dropdown-item folder-delete" data-id="{{ $folder->id }}"
-                                            href="#"><i class="fe fe-trash mr-2"></i>
-                                            Delete</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body pt-0 text-center">
-                                <div class="file-manger-icon">
-                                    <img src="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/images/files/folder.png"
-                                        alt="img" class="br-7">
-                                </div>
-                                <h6 class="mb-1 font-weight-semibold mt-4"><a
-                                        href="{{ route('viewfolder', $folder->id) }}">{{ $folder->name }}</a></h6>
-                            </div>
-                        </div>
+                <div class="cloader">
+                    <div class="spinner3">
+                        <div class="dot1"></div>
+                        <div class="dot2"></div>
                     </div>
-                @endforeach
-                @foreach (auth()->user()->files->where('folder_id', 0) as $file)
-                    <div class="col-xl-3 col-md-4 col-sm-6">
-                        <div class="card border p-0 shadow-none">
-                            <div class="d-flex align-items-center px-4 pt-4">
-                                <label class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" name="example-checkbox2"
-                                        value="option2">
-                                    <span class="custom-control-label"></span>
-                                </label>
-                                <div class="float-right ml-auto">
-                                    <a href="#" class="option-dots" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false"><i class="fe fe-more-vertical"></i></a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-
-
-
-
-                                        <a class="dropdown-item"
-                                            href="{{ route('open.file',$file->id) }}"> <i class="fe fe-play-circle mr-2"></i>Play</a>
-
-                                        <a class="dropdown-item file-edit" data-path="{{ route('showfile', $file->id) }}"
-                                            href="#"><i class="fe fe-edit mr-2"></i>View Or Edit</a>
-                                        {{-- <a class="dropdown-item" href="#"><i class="fe fe-share mr-2"></i> Share</a> --}}
-                                        <a class="dropdown-item" href="{{ route('sharefile', $file->id) }}">
-                                            <i class="fe fe-share mr-2"></i> Share
-                                        </a>
-
-                                        <a class="dropdown-item" href="{{ route('downloadfile', $file->id) }}">
-                                            <i class="fe fe-download mr-2"></i> Download
-                                        </a>
-
-                                        <a class="dropdown-item file-delete" data-id="{{ $file->id }}"
-                                            href="#"><i class="fe fe-trash mr-2"></i> Delete</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body pt-0 text-center">
-                                <div class="file-manger-icon">
-                                    <img src="{{ asset($file->path) }}" alt="img" class="br-7">
-                                </div>
-                                <h6 class="mb-1 font-weight-semibold mt-4">{{ $file->name }}</h6>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-
-
-
+                </div>
+                @if (!empty($folder))
+                    @include('files.folder', ['folder' => $folder])
+                @else
+                    @include('files.index-content')
+                @endif
             </div>
 
         </div>
@@ -201,6 +193,7 @@
             </div>
         </div>
     </div>
+    <input type="hidden" id="current-id" value="0" />
 @endsection
 @section('js')
     <!-- INTERNAL File uploads js -->
@@ -254,9 +247,15 @@
     <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
 
 
-
     <script type="text/javascript">
-        $(document).on('click', '#new_folder', function() {
+        $(".cloader").hide('slow');
+        $(document).ajaxStart(function() {
+            $(".cloader").show();
+        }).ajaxStop(function() {
+            $(".cloader").hide('slow');
+        });
+        $(document).on('click', '#new_folder', function(event) {
+            event.preventDefault()
             // window.addEventListener('load', function() {
             // }, false);
             $.ajax({
@@ -269,9 +268,11 @@
                     $('.dropify').dropify();
                 }
             });
+            return false
         });
 
-        $(document).on('click', '#new_file', function() {
+        $(document).on('click', '#new_file', function(event) {
+            event.preventDefault()
             // window.addEventListener('load', function() {
             // }, false);
             $.ajax({
@@ -282,9 +283,74 @@
                     $(".modal-title").html("Add File");
                     $("#role_form_modal").modal('show');
                     $('.dropify').dropify();
+                    $('#folder_id').val($('#current-id').val())
                 }
             });
+            return false
         });
+
+        $(document).on('click', '.play-file', function(event) {
+            event.preventDefault()
+            path = $(this).data('path');
+            name = $(this).data('name');
+            $.ajax({
+                url: path,
+                success: function(response) {
+                    //  console.log(response);
+                    $(".modal-body").html(response);
+                    $(".modal-title").html(name);
+                    $("#role_form_modal").modal('show');
+                    $('.dropify').dropify();
+                }
+            });
+            return false
+        });
+
+        $(document).on('click', '.share-file', function(event) {
+            event.preventDefault()
+            path = $(this).data('path');
+            name = $(this).data('name');
+            $.ajax({
+                url: path,
+                success: function(response) {
+                    //  console.log(response);
+                    $(".modal-body").html(response);
+                    $(".modal-title").html(name);
+                    $("#role_form_modal").modal('show');
+                    $('.dropify').dropify();
+                }
+            });
+            return false
+        });
+
+        $(document).on('click', '#copyt', function(event) {
+            event.preventDefault()
+
+            $('#texttocopy').select();
+            document.execCommand("copy");
+            $temp.remove();
+
+
+            // Create a "hidden" input
+            var aux = document.createElement("input");
+
+            // Assign it the value of the specified element
+            aux.setAttribute("value", document.getElementById('texttocopy').innerHTML);
+
+            // Append it to the body
+            document.body.appendChild(aux);
+
+            // Highlight its content
+            aux.select();
+
+            // Copy the highlighted text
+            document.execCommand("copy");
+
+            // Remove it from the body
+            document.body.removeChild(aux);
+            return false
+        });
+
         //TODO :: change id
         $(document).on('click', '#images', function(event) {
             event.preventDefault()
@@ -295,6 +361,7 @@
                 success: function(response) {
                     //  console.log(response);
                     $("#files_container").html(response);
+                    $('#new_folder').show()
 
                 }
             });
@@ -310,6 +377,7 @@
                 success: function(response) {
                     //  console.log(response);
                     $("#files_container").html(response);
+                    $('#new_folder').show()
 
                 }
             });
@@ -325,6 +393,26 @@
                 success: function(response) {
                     //  console.log(response);
                     $("#files_container").html(response);
+                    $('#current-id').val(0)
+                    $('#new_folder').show()
+
+                }
+            });
+            return false;
+        });
+
+        $(document).on('click', '.view-folder', function(event) {
+            event.preventDefault()
+            path = $(this).data('path');
+            id = $(this).data('id');
+            $.ajax({
+                url: path,
+                success: function(response) {
+                    //  console.log(response);
+                    $("#files_container").html(response);
+                    $('#current-id').val(id)
+                    $('#new_folder').hide()
+
 
                 }
             });
@@ -357,6 +445,7 @@
                 success: function(response) {
                     //  console.log(response);
                     $("#files_container").html(response);
+                    $('#new_folder').show()
 
                 }
             });
@@ -372,6 +461,7 @@
                 success: function(response) {
                     //  console.log(response);
                     $("#files_container").html(response);
+                    $('#new_folder').show()
 
                 }
             });
