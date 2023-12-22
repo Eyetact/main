@@ -139,7 +139,7 @@
 @section('content')
     <div class="row">
         @include('files.sidebar')
-        <div class="col-lg-8 col-xl-9">
+        <div class="col-lg-9 col-xl-9">
             <div class="row">
                 <div class="col-6 mb-4">
                     <div class="btn-list">
@@ -424,7 +424,7 @@
             // window.addEventListener('load', function() {
             // }, false);
             $.ajax({
-                url: "/file/search/" + $('#search').val(),
+                url: "file/search/" + $('#search').val(),
                 success: function(response) {
                     // alert('works')
 

@@ -1,4 +1,4 @@
-<div class="col-lg-4 col-xl-3">
+<div class="col-lg-3 col-xl-3">
     <div class="card">
         {{-- <div class="card-body d-flex">
             <div class="chart-circle chart-circle-sm chart-circle ml-0 mr-4" data-value="0.85" data-thickness="5"
