@@ -103,7 +103,7 @@
                                 <div class="input-box">
                                     <label class="input-label">Meta Description</label>
 
-                                    <input type="text" class="google-input" id="meta_description" name="meta_description" 
+                                    <input type="text" class="google-input" id="meta_description" name="meta_description"
                                          value="{{ $data->meta_description ?? '' }}" />
                                 </div>
                                 @error('meta_description')
@@ -568,6 +568,10 @@
                     error.insertAfter($(element).parent());
                 },
             });
+
+            $("[name='logo']").rules('remove');
+            $("[name='footer_logo']").rules('remove');
+            $("[name='web_icon']").rules('remove');
         });
     </script>
 @endpush

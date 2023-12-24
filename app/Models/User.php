@@ -59,14 +59,15 @@ class User extends Authenticatable
         return asset('uploads/users/'.$this->avatar);
     }
 
-    public function setAvatarAttribute($value){
-        if( $value ){
-            $ext = $value->getClientOriginalExtension();
-            $file_name = time().mt_rand( 1000, 9000 ) . '.' . $ext;
-            $value->move( public_path( 'uploads/users/' ), $file_name );
-            $this->attributes['avatar'] =  $file_name;
-        }
-    }
+    // public function setAvatarAttribute($value){
+    //     if( $value ){
+    //         // dd($value);
+    //         $ext = $value->getClientOriginalExtension();
+    //         $file_name = time().mt_rand( 1000, 9000 ) . '.' . $ext;
+    //         $value->move( public_path( 'uploads/users/' ), $file_name );
+    //         $this->attributes['avatar'] =  $file_name;
+    //     }
+    // }
 
     public function subscriptions()
     {
