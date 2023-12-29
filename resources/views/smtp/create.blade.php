@@ -183,30 +183,30 @@
                 </div>
             </div>
             <hr class="mt-4 mb-4">
-            <div class="row">
-            <div class="col-sm-6 col-md-6">
-                <div class="input-box">
-                    <label for="sender_address" class="input-label">Sender Address</label>
-                    <input type="text" class="google-input" name="sender_address"
-                           id="sender_address" value="{{ old('sender_address', $smtp->sender_address) }}"/>
+            <div class="row ">
+                <div class="col-sm-6 col-md-6 hide">
+                    <div class="input-box">
+                        <label for="sender_address" class="input-label">Sender Address</label>
+                        <input type="text" class="google-input" name="sender_address"
+                            id="sender_address" value="{{ old('sender_address', $smtp->sender_address) }}"/>
+                    </div>
+                    @error('sender_address')
+                    <label id="sender_address-error" class="error"
+                        for="sender_address">{{ $message }}</label>
+                    @enderror
                 </div>
-                @error('sender_address')
-                <label id="sender_address-error" class="error"
-                       for="sender_address">{{ $message }}</label>
-                @enderror
-            </div>
-            <div class="col-sm-6 col-md-6">
-                <div class="input-box">
-                    <label for="delivery_address" class="input-label">Delivery Address</label>
-                    <input type="text" class="google-input" name="delivery_address"
-                           id="delivery_address" value="{{ old('delivery_address', $smtp->delivery_address) }}"/>
+                <div class="col-sm-6 col-md-6 hide">
+                    <div class="input-box">
+                        <label for="delivery_address" class="input-label">Delivery Address</label>
+                        <input type="text" class="google-input" name="delivery_address"
+                            id="delivery_address" value="{{ old('delivery_address', $smtp->delivery_address) }}"/>
+                    </div>
+                    @error('delivery_address')
+                    <label id="delivery_address-error" class="error"
+                        for="delivery_address">{{ $message }}</label>
+                    @enderror
                 </div>
-                @error('delivery_address')
-                <label id="delivery_address-error" class="error"
-                       for="delivery_address">{{ $message }}</label>
-                @enderror
             </div>
-        </div>
         </div>
         <div class="card-footer">
             <button class="btn btn-primary" type="submit">{{ $smtp->id == null ? 'Save' : 'Update' }}</button>

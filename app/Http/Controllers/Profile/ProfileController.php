@@ -127,7 +127,8 @@ class ProfileController extends Controller
     {
         $user_id = $id == null ? Auth::id() : $id;
         $validator = Validator::make($request->all(), [
-            'password' => 'required|confirmed|min:6',
+            'old_password'=>'required|current_password',
+            'password' => 'required|confirmed|min:8',
         ]);
         if (count($validator->errors()) > 0) {
             return redirect()->route('profile.index')->withErrors($validator->errors());

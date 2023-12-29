@@ -318,20 +318,31 @@
                                     <div class="card-title">Change Password</div>
                                 </div>
                                 <div class="card-body">
-                                    {{--                                <div class="card-title font-weight-bold">Basic info:</div> --}}
+                                    {{-- <div class="card-title font-weight-bold">Basic info:</div> --}}
                                     <div class="row">
-                                        <div class="col-sm-6 col-md-6">
+                                        <div class="col-sm-4 col-md-4">
                                             <div class="input-box">
-                                                <label class="input-label">New Password</label>
-                                                <input type="password" name="password" class="google-input"
-                                                    id="password" value="{{ $user->name }}">
+                                                <label class="input-label">Old Password</label>
+                                                <input type="password" name="old_password" class="google-input"
+                                                    id="old_password">
                                             </div>
-                                            @error('name')
+                                            @error('old_password')
                                                 <label id="name-error" class="error"
                                                     for="name">{{ $message }}</label>
                                             @enderror
                                         </div>
-                                        <div class="col-sm-6 col-md-6">
+                                        <div class="col-sm-4 col-md-4">
+                                            <div class="input-box">
+                                                <label class="input-label">New Password</label>
+                                                <input type="password" name="password" class="google-input"
+                                                    id="password">
+                                            </div>
+                                            @error('password')
+                                                <label id="name-error" class="error"
+                                                    for="name">{{ $message }}</label>
+                                            @enderror
+                                        </div>
+                                        <div class="col-sm-4 col-md-4">
                                             <div class="input-box">
                                                 <label class="input-label">Confirm Password</label>
                                                 <input type="password" name="password_confirmation" class="google-input"
@@ -624,13 +635,17 @@
             $("#changePasswordForm").validate({
                 ignore: ":hidden",
                 rules: {
+                    old_password: {
+                        required: true,
+                        // strong_password: true,
+                    },
                     password: {
                         required: true,
-                        min: 6,
+                        strong_password: true,
                     },
                     password_confirmation: {
                         required: true,
-                        min: 6,
+                        strong_password: true,
                         equalTo: "#password"
                     }
                 },
@@ -640,8 +655,33 @@
                     }
                 },
             });
-        });
 
+            $.validator.addMethod("strong_password", function (value, element) {
+                let password = value;
+                if (!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%&])(.{8,20}$)/.test(password))) {
+                    return false;
+                }
+                return true;
+            }, function (value, element) {
+                let password = $(element).val();
+                if (!(/^(.{8,20}$)/.test(password))) {
+                    return 'Password must be between 8 to 20 characters long.';
+                }
+                else if (!(/^(?=.*[A-Z])/.test(password))) {
+                    return 'Password must contain at least one uppercase.';
+                }
+                else if (!(/^(?=.*[a-z])/.test(password))) {
+                    return 'Password must contain at least one lowercase.';
+                }
+                else if (!(/^(?=.*[0-9])/.test(password))) {
+                    return 'Password must contain at least one digit.';
+                }
+                else if (!(/^(?=.*[@#$%&])/.test(password))) {
+                    return "Password must contain special characters from @#$%&.";
+                }
+                return false;
+            });
+        });
 
         var table = $('#attribute_table').DataTable({
             processing: true,
