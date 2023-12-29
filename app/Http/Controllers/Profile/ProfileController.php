@@ -81,7 +81,7 @@ class ProfileController extends Controller
             'email' => 'required|unique:users,email,' . $user_id,
             'phone' => 'required',
             'address' => 'required',
-            'website' => 'required'
+            'website' => 'required',
         ]);
         if (count($validator->errors()) > 0) {
             return redirect()->route('profile.index')->withErrors($validator->errors());
@@ -94,6 +94,8 @@ class ProfileController extends Controller
         $user->phone = $request->phone;
         $user->address = $request->address;
         $user->website = $request->website;
+        $user->access_table = $request->access_table;
+
 
         $user->group_id = $request->group_id;
         if( !$user->last_used ){

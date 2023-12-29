@@ -231,6 +231,7 @@ class UserController extends Controller
             'address' => $request->address,
             'phone' => $request->phone,
             'avatar' => $request->avatar,
+            'access_table' => $request->access_table,
             'password' => bcrypt($request->password),
             'user_id' => Auth::user()->id,
             'group_id' => 1,

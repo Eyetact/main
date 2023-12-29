@@ -201,7 +201,8 @@
                                         <input type="hidden" name="last_used[0][iso2]" id="last_used" value="" />
                                         <input type="hidden" name="last_used[0][dialCode]" id="last_used2"
                                             value="" />
-                                        <input type="hidden" name="last_used[0][name]" id="last_used3" value="" />
+                                        <input type="hidden" name="last_used[0][name]" id="last_used3"
+                                            value="" />
                                         <div class="col-sm-6 col-md-6">
                                             <div class="input-box">
                                                 <label class="input-label">Phone Number</label>
@@ -234,44 +235,71 @@
                                             @enderror
                                         </div>
 
-                                        {{-- @hasanyrole('super|admin|vendor') --}}
-                                        @if((auth()->user()->hasRole('super') || auth()->user()->id == $user->user_id) && ($user->hasanyrole('super|admin|vendor') ))
-                                        <div class="col-sm-6 col-md-6">
-                                            <div class="input-box">
-                                                <select class=" google-input" name="group_id" tabindex="null">
-                                                    <option selected disabled>Select Customer Group</option>
-                                                    @foreach ($groups as $group)
-                                                        <option @if ($user->group_id == $group->id) selected @endif
-                                                            value="{{ $group->id }}">{{ $group->id }} -
-                                                            {{ $group->name }}</option>
-                                                    @endforeach
-                                                </select>
+                                        @if (
+                                            (auth()->user()->hasRole('super') ||
+                                                auth()->user()->id == $user->user_id) &&
+                                                $user->hasanyrole('super|admin|vendor'))
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="input-box">
+                                                    <select class=" google-input" name="group_id" tabindex="null">
+                                                        <option selected disabled>Select Customer Group</option>
+                                                        @foreach ($groups as $group)
+                                                            <option @if ($user->group_id == $group->id) selected @endif
+                                                                value="{{ $group->id }}">{{ $group->id }} -
+                                                                {{ $group->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                @error('group_id')
+                                                    <label id="user_id-error" class="error"
+                                                        for="group_id">{{ $message }}</label>
+                                                @enderror
                                             </div>
-                                            @error('group_id')
-                                                <label id="user_id-error" class="error"
-                                                    for="group_id">{{ $message }}</label>
-                                            @enderror
-                                        </div>
-                                        {{-- @endhasanyrole --}}
+                                        @endif
+
+
+
+                                        @if ((auth()->user()->hasRole('super') || auth()->user()->id == $user->user_id) && $user->hasanyrole('super|admin|vendor'))
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="input-box">
+                                                    <select class=" google-input" name="access_table" tabindex="null">
+                                                        <option disabled>Select Access Scoup</option>
+                                                        <option @if($user->access_table == 'Global') selected @endif value="Global">Global</option>
+                                                        <option @if($user->access_table == 'Group') selected @endif value="Group">Group</option>
+                                                        <option @if($user->access_table == 'Individual') selected @endif value="Individual">Individual</option>
+                                                        
+                                                    </select>
+                                                </div>
+                                                @error('access_table')
+                                                    <label id="user_id-error" class="error"
+                                                        for="access_table">{{ $message }}</label>
+                                                @enderror
+                                            </div>
                                         @endif
 
 
                                         {{-- @role('user') --}}
-                                    @if((auth()->user()->hasRole('super') || auth()->user()->id == $user->user_id) && ($user->hasanyrole('user') ))
-                                        <div class="col-sm-6 col-md-6">
-                                            <div class="input-box">
-                                                <select class=" google-input" name="ugroup_id" tabindex="null">
-                                                    <option selected disabled>Select User Group</option>
-                                                    @foreach ($ugroups as $group)
-                                                        <option @if( $user->ugroup_id == $group->id ) selected @endif value="{{ $group->id }}">{{$group->id}} - {{$group->name}}</option>
-                                                    @endforeach
-                                                </select>
+                                        @if (
+                                            (auth()->user()->hasRole('super') ||
+                                                auth()->user()->id == $user->user_id) &&
+                                                $user->hasanyrole('user'))
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="input-box">
+                                                    <select class=" google-input" name="ugroup_id" tabindex="null">
+                                                        <option selected disabled>Select User Group</option>
+                                                        @foreach ($ugroups as $group)
+                                                            <option @if ($user->ugroup_id == $group->id) selected @endif
+                                                                value="{{ $group->id }}">{{ $group->id }} -
+                                                                {{ $group->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                @error('ugroup_id')
+                                                    <label id="user_id-error" class="error"
+                                                        for="ugroup_id">{{ $message }}</label>
+                                                @enderror
                                             </div>
-                                            @error('ugroup_id')
-                                                <label id="user_id-error" class="error" for="ugroup_id">{{ $message }}</label>
-                                            @enderror
-                                        </div>
-                                        {{-- @endrole --}}
+                                            {{-- @endrole --}}
                                         @endif
 
 
@@ -529,12 +557,18 @@
 
         $(document).ready(function() {
 
-            var last_used = JSON.parse( {!! $last_used !!} )
-            console.log( last_used )
+            var last_used = JSON.parse({!! $last_used !!})
+            console.log(last_used)
             setTimeout(() => {
                 last_used.forEach(element => {
-                    var li = '<li class="iti__country iti__standard" tabindex="-1" id="iti-0__item-jm" role="option" data-dial-code="'+ element.dialCode +'" data-country-code="' + element.iso2 + '" aria-selected="false"><div class="iti__flag-box"><div class="iti__flag iti__'+ element.iso2 +'"></div></div><span class="iti__country-name">'+ element.name +'</span><span class="iti__dial-code">+'+ element.dialCode +'</span></li>';
-                    console.log( element.iso2 )
+                    var li =
+                        '<li class="iti__country iti__standard" tabindex="-1" id="iti-0__item-jm" role="option" data-dial-code="' +
+                        element.dialCode + '" data-country-code="' + element.iso2 +
+                        '" aria-selected="false"><div class="iti__flag-box"><div class="iti__flag iti__' +
+                        element.iso2 + '"></div></div><span class="iti__country-name">' + element
+                        .name + '</span><span class="iti__dial-code">+' + element.dialCode +
+                        '</span></li>';
+                    console.log(element.iso2)
                     $('.iti__country-list li:eq(0)').before(li);
                 });
             }, 1000);

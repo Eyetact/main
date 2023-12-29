@@ -32,7 +32,8 @@ class User extends Authenticatable
         'user_id',
         'group_id',
         'ugroup_id',
-        'username'
+        'username',
+        'access_table'
     ];
 
     /**

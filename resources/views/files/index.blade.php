@@ -256,6 +256,8 @@
         });
         $(document).on('click', '#new_folder', function(event) {
             event.preventDefault()
+            $(".cloader").show();
+
             // window.addEventListener('load', function() {
             // }, false);
             $.ajax({
@@ -273,6 +275,8 @@
 
         $(document).on('click', '#new_file', function(event) {
             event.preventDefault()
+            $(".cloader").show();
+
             // window.addEventListener('load', function() {
             // }, false);
             $.ajax({
@@ -293,6 +297,8 @@
             event.preventDefault()
             path = $(this).data('path');
             name = $(this).data('name');
+            $(".cloader").show();
+
             $.ajax({
                 url: path,
                 success: function(response) {
@@ -310,6 +316,8 @@
             event.preventDefault()
             path = $(this).data('path');
             name = $(this).data('name');
+            $(".cloader").show();
+
             $.ajax({
                 url: path,
                 success: function(response) {
@@ -354,6 +362,8 @@
         //TODO :: change id
         $(document).on('click', '#images', function(event) {
             event.preventDefault()
+            $(".cloader").show();
+
             // window.addEventListener('load', function() {
             // }, false);
             $.ajax({
@@ -370,6 +380,8 @@
 
         $(document).on('click', '#videos', function(event) {
             event.preventDefault()
+            $(".cloader").show();
+
             // window.addEventListener('load', function() {
             // }, false);
             $.ajax({
@@ -386,6 +398,8 @@
 
         $(document).on('click', '#home', function(event) {
             event.preventDefault()
+            $(".cloader").show();
+
             // window.addEventListener('load', function() {
             // }, false);
             $.ajax({
@@ -405,6 +419,8 @@
             event.preventDefault()
             path = $(this).data('path');
             id = $(this).data('id');
+            $(".cloader").show();
+
             $.ajax({
                 url: path,
                 success: function(response) {
@@ -421,6 +437,8 @@
 
         $(document).on('change', '#search', function(event) {
             event.preventDefault()
+            $(".cloader").show();
+
             // window.addEventListener('load', function() {
             // }, false);
             $.ajax({
@@ -438,6 +456,8 @@
 
         $(document).on('click', '#docs', function(event) {
             event.preventDefault()
+            $(".cloader").show();
+
             // window.addEventListener('load', function() {
             // }, false);
             $.ajax({
@@ -454,6 +474,8 @@
 
         $(document).on('click', '#music', function(event) {
             event.preventDefault()
+            $(".cloader").show();
+
             // window.addEventListener('load', function() {
             // }, false);
             $.ajax({
