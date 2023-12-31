@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attribute;
+use App\Services\GeneratorService;
 use Illuminate\Http\Request;
 use App\Models\MenuManager;
 use App\Models\Module;
@@ -18,10 +20,15 @@ use Carbon\Carbon;
 class ModuleManagerController extends Controller
 {
     private $flashRepository;
+    protected $generatorService;
+
+  
 
     public function __construct()
     {
         $this->flashRepository = new FlashRepository;
+        $this->generatorService = new GeneratorService();
+
     }
 
     /**
@@ -31,9 +38,9 @@ class ModuleManagerController extends Controller
      */
     public function index()
     {
-        $data=array();
-        $moduleData=Module::get();
-        return view('module_manager.menu', ['menu' => new MenuManager(), 'data' => $data,'moduleData'=>$moduleData]);
+        $data = array();
+        $moduleData = Module::get();
+        return view('module_manager.menu', ['menu' => new MenuManager(), 'data' => $data, 'moduleData' => $moduleData]);
     }
 
     /**
@@ -54,70 +61,92 @@ class ModuleManagerController extends Controller
      */
     public function store(ModulePostRequest $request)
     {
-        // dd($request->all());
-        $requestData=$request->all();
+        // dd($request->attr);
+        $requestData = $request->all();
 
         $request->validated();
-        $pluralWord = $this->pluralize($requestData['name']);
 
-        $migrationName = "create_" . strtolower(str_replace(' ', '', $pluralWord)) . "_table";
-        $modelClassName = Str::studly(str_replace(' ', '', $pluralWord));
-
-        // // Create the migration
-        // Artisan::call('make:migration', [
-        //     'name' => $migrationName,
-        //     '--create' => strtolower(str_replace(' ', '', $pluralWord)),
-        // ]);
-
-        // Log::info('Migration created: '.$migrationName);
-
-        $migrationFilePath = database_path("migrations") . "/" . date('Y_m_d_His') . "_$migrationName.php";
-
-        // // Check if the file exists
-        // if (File::exists($migrationFilePath)) {
-        //     Log::info('migration exist');
-        //     // File exists, append the content
-        //     File::append($migrationFilePath, $this->generateMigrationContent(str_replace(' ', '', $pluralWord)));
-        // } else {
-            Log::info('migration not exist');
-            // File doesn't exist, create it and write the content
-            File::put($migrationFilePath, $this->generateMigrationContent(str_replace(' ', '', $pluralWord)));
-        // }
-
-        // File::put($migrationFilePath, $this->generateMigrationContent(str_replace(' ', '', $pluralWord)));
-
-        // Create the model
-        Artisan::call('make:model', [
-            'name' => str_replace(' ', '', $request->name),
-        ]);
-
-        Artisan::call('migrate');
+        $this->generatorService->generateModel($request->all());
 
         $module = Module::create([
             'name' => $request->name
         ]);
 
-        if($module){
-            $lastSequenceData=MenuManager::where('parent','0')->where('menu_type',$requestData['menu_type'])->where('include_in_menu',1)->where('status',1)->orderBy('id','desc')->first();
-            $sequence=0;
-            if($lastSequenceData){
-                $sequence=$lastSequenceData->sequence+1;
+        foreach ($request->attr as $attr) {
+
+
+            $fields_info = array();
+            if ($attr['field_type'] == 'select' && $attr['field_type'] == 'multiselect' && $attr['field_type'] == 'radio' && $attr['field_type'] == 'checkbox') {
+                $order = 1;
+                $fields_info = array_map(function ($key, $arr) use (&$order) {
+                    if (is_array($arr)) {
+                        return array_merge($arr, ['order' => $order++]);
+                    }
+                }, array_keys($fields_info), $fields_info);
+            } elseif ($attr['field_type'] == 'text' || $attr['field_type'] == 'file') {
+                $fields_info = array_filter($fields_info, function ($element, $key) {
+                    return $key === 'file_ext' || !is_array($element);
+                }, ARRAY_FILTER_USE_BOTH);
+            } else {
+                $fields_info = [];
             }
 
-            $createData=array(
+
+            $createArr = [
+                'module' => $module->id,
+                'name' => $attr['name'],
+                'field_type' => $attr['field_type'],
+                'input_name' => $attr['input_name'],
+                'input_class' => $attr['input_class'],
+                'input_id' => $attr['input_id'],
+                'scope' => 'aaa',
+                'depend' => 'aaaa',
+                'attribute' => 'aaaa',
+                'validation' => 'aaa',
+                'is_required' => isset($attr['is_required']) ? 1 : 0,
+                'is_enable' => isset($attr['is_enable']) ? 1 : 0,
+                'is_system' => isset($attr['is_system']) ? 1 : 0,
+                'fields_info' => json_encode($fields_info),
+                'description' => 'aaaaaa'
+            ];
+
+            // dd($createArr);
+            $attribute = Attribute::create($createArr);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        if ($module) {
+            $lastSequenceData = MenuManager::where('parent', '0')->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->where('status', 1)->orderBy('id', 'desc')->first();
+            $sequence = 0;
+            if ($lastSequenceData) {
+                $sequence = $lastSequenceData->sequence + 1;
+            }
+
+            $createData = array(
                 'name' => $requestData['name'],
                 'module_id' => $module->id,
-                'status'=> (isset($requestData['is_enable']) ?? 0),
-                'include_in_menu'=> (isset($requestData['include_in_menu']) ?? 0),
+                'status' => (isset($requestData['is_enable']) ?? 0),
+                'include_in_menu' => (isset($requestData['include_in_menu']) ?? 0),
                 'menu_type' => $requestData['menu_type'],
                 'code' => str_replace(' ', '', $requestData['code']),
                 'path' => str_replace(' ', '', $requestData['path']),
                 'meta_title' => (isset($requestData['meta_title']) ?? ''),
                 'meta_description' => (isset($requestData['meta_description']) ?? ''),
-                'assigned_attributes' => $requestData['assigned_attributes'],
+                'assigned_attributes' => 'aaaa',
                 'sequence' => $sequence,
                 'parent' => 0,
-                'created_date' => date('Y-m-d',strtotime($requestData['created_date']))
+                'created_date' => date('Y-m-d', strtotime($requestData['created_date']))
             );
             // dd($createData);
             $menuManager = MenuManager::create($createData);
@@ -218,24 +247,26 @@ class ModuleManagerController extends Controller
         return $content;
     }
 
-    public function menu_update(Request $request){
+    public function menu_update(Request $request)
+    {
         // dd($request);
-        if($request->type=='storfront'){
+        if ($request->type == 'storfront') {
             $dataArray = json_decode($request['storfront_json'], true);
-        }else{
+        } else {
             $dataArray = json_decode($request['admin_json'], true);
         }
         // dd($request->all(),$dataArray);
-        $data=$this->processArray($dataArray);
+        $data = $this->processArray($dataArray);
 
         return response()->json(['success' => true]);
     }
 
-    public function processArray($dataArray) {
+    public function processArray($dataArray)
+    {
         foreach ($dataArray as $item) {
-            $data=MenuManager::find($item['id']);
-            $data->sequence=$item['sequence'];
-            $data->parent=$item['parent'];
+            $data = MenuManager::find($item['id']);
+            $data->sequence = $item['sequence'];
+            $data->parent = $item['parent'];
             $data->save();
             // Check if there are children and recursively process them
             if (isset($item['children']) && is_array($item['children']) && count($item['children']) > 0) {
@@ -244,14 +275,14 @@ class ModuleManagerController extends Controller
         }
     }
 
-    public function update(ModulePostRequest $request,$id)
+    public function update(ModulePostRequest $request, $id)
     {
         // dump($request->all());
         $request->validated();
 
-        $requestData=$request->all();
+        $requestData = $request->all();
 
-        $menuData=MenuManager::find($id);
+        $menuData = MenuManager::find($id);
         // dump($menuData->toArray());
 
         $module = Module::find($menuData->module_id);
@@ -284,17 +315,17 @@ class ModuleManagerController extends Controller
             return redirect()->route('module.index');
         }
 
-        $updateData=array(
+        $updateData = array(
             'name' => $requestData['name'],
-            'status'=> (isset($requestData['is_enable']) ?? 0),
-            'include_in_menu'=> (isset($requestData['include_in_menu']) ?? 0),
+            'status' => (isset($requestData['is_enable']) ?? 0),
+            'include_in_menu' => (isset($requestData['include_in_menu']) ?? 0),
             'menu_type' => $requestData['menu_type'],
             'code' => str_replace(' ', '', $requestData['code']),
             'path' => str_replace(' ', '', $requestData['path']),
             'meta_title' => (isset($requestData['meta_title']) ?? ''),
             'meta_description' => (isset($requestData['meta_description']) ?? ''),
             'assigned_attributes' => $requestData['assigned_attributes'],
-            'created_date' => date('Y-m-d',strtotime($requestData['created_date']))
+            'created_date' => date('Y-m-d', strtotime($requestData['created_date']))
         );
         dd($updateData);
 
@@ -302,7 +333,8 @@ class ModuleManagerController extends Controller
         return redirect()->route('module.index');
     }
 
-    private function generateMigrationContentforDelete($table){
+    private function generateMigrationContentforDelete($table)
+    {
         // Define the migration schema here based on $newTable
         $content = <<<EOT
         <?php
@@ -360,17 +392,17 @@ class ModuleManagerController extends Controller
     public function menuDelete(Request $request)
     {
         $menuManager = MenuManager::find($request->menu_id);
-        if($menuManager){
+        if ($menuManager) {
             $menuManager->is_deleted = $request->is_deleted;
             $menuManager->deleted_at = $request->is_deleted == 1 ? Carbon::now()->format('Y-m-d H:i:s') : null;
             $menuManager->save();
-            if($request->is_deleted == 1){
+            if ($request->is_deleted == 1) {
                 $message = 'Menu Temperory Deleted successfully, You can restore within 30 days.';
-            }else{
+            } else {
                 $message = 'Menu Restored successfully.';
             }
-            return response()->json(['is_deleted' => $menuManager->is_deleted,'message' => $message], 200);
-        }else{
+            return response()->json(['is_deleted' => $menuManager->is_deleted, 'message' => $message], 200);
+        } else {
             return response()->json(['message' => 'Menu not found.'], 200);
         }
     }

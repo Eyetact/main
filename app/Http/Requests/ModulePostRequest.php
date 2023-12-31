@@ -36,7 +36,6 @@ class ModulePostRequest extends FormRequest
             'code' => 'required | unique:menus,code,' . $menuId,
             'path' => 'required | unique:menus,path,' . $menuId ,
             'created_date' => 'required',
-            'assigned_attributes' => 'required'
         ];
     }
 }

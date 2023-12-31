@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\GeneratorService;
 use Illuminate\Http\Request;
 use App\Models\Module;
 use App\Http\Requests\ModulePostRequest;
@@ -15,9 +16,12 @@ class ModuleController extends Controller
 {
     private $flashRepository;
 
+    public $generatorService;
+
     public function __construct()
     {
         $this->flashRepository = new FlashRepository;
+        $this->generatorService = new GeneratorService();
     }
 
     /**

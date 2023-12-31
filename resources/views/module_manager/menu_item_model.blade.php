@@ -1,5 +1,5 @@
 <div id="addMenuModal" class="modal fade">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header pd-x-20">
                 <h6 class="modal-title">Message Preview</h6>
