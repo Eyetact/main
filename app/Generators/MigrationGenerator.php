@@ -24,7 +24,7 @@ class MigrationGenerator
 
         foreach ($request['attr'] as $i => $field) {
             
-            $setFields .= "\$table->" . $field['field_type'] . "('" . str()->snake($field['input_name']) ."');" ;
+            $setFields .= "\$table->" . $field['field_type'] . "('" . str()->snake($field['input_name']) ."');\n" ;
 
             
             // if ($request['column_types'][$i] == 'enum') {
