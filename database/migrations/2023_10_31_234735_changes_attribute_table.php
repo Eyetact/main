@@ -16,12 +16,7 @@ class ChangesAttributeTable extends Migration
         Schema::table('attributes', function (Blueprint $table) {
             $table->integer('module');
             $table->integer('is_system')->default(0);
-            $table->string('scope')->nullable();
-            $table->string('depend')->nullable();
-            $table->string('attribute')->nullable();
-            $table->string('validation')->nullable();
 
-            $table->dropColumn('validation_message');
         });
     }
 

@@ -16,15 +16,19 @@ class CreateAttr extends Migration
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('field_type');
-            $table->string('input_name')->nullable();
-            $table->string('input_class')->nullable();
-            $table->string('input_id')->nullable();
-            $table->boolean('is_required')->default(0)->comment('0: not required, 1: required');
-            $table->string('validation_message')->nullable();
-            $table->json('fields_info')->nullable();
-            $table->text('description')->nullable();
+            $table->enum('type', ['string', 'integer', 'text', 'bigInteger', 'boolean', 'char', 'date', 'time', 'year', 'dateTime', 'decimal', 'double', 'enum', 'float', 'foreignId', 'tinyInteger', 'mediumInteger', 'tinyText', 'mediumText', 'longText']);
+            $table->integer('min_length')->nullable();
+            $table->integer('max_length')->nullable();
+            $table->string('input');
+            $table->string('required')->default('yes');
+            $table->string('default_value')->nullable();
+            $table->text('select_option')->nullable(); // for enum;
+            $table->string('constrain')->nullable(); // for relation;
+            $table->string('on_update_foreign')->nullable(); // for relation;
+            $table->string('on_delete_foreign')->nullable(); // for relation;
             $table->boolean('is_enable')->default(1)->comment('0: disable, 1: enable');
+
+
             $table->timestamps();
         });
     }

@@ -59,78 +59,82 @@
                     value="+ Add">
                     </div>
 
-                    <table class="table table-bordered text-nowrap" id="attr_tbl">
+                    <table class="table table-bordered align-items-center mb-0" id="tbl-field">
                         <thead>
                             <tr>
-                                <td>Label</td>
-                                <td>Name</td>
-                                <td>Option</td>
-                                <td>Type</td>
+                                <th width="30">#</th>
+                                <th>{{ __('Field name') }}</th>
+                                <th>{{ __('Column Type') }}</th>
+                                <th width="310">{{ __('Length') }}</th>
+                                <th>{{ __('Input Type') }}</th>
+                                <th>{{ __('Required') }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="tbl_drag">
+                            <tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">
+                                <td class="text-center">1</td>
                                 <td>
-                                    <div class="col-sm-12 form-group">
-                                        <label class="form-label" for="name">Label<span
-                                                class="text-red">*</span></label>
-                                        <input type="text" name="attr[0][name]" class="form-control " value="">
-                                        <label id="name-error" class="error text-red hide" for="name"></label>
+                                    <div class="form-group">
+                                        <input type="text" name="fields[]" class="form-control google-input"
+                                            placeholder="{{ __('Field Name') }}" required>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="col-sm-12 form-group">
-                                        <label class="form-label" for="name">Name<span
-                                                class="text-red">*</span></label>
-                                        <input type="text" name="attr[0][input_name]" class="form-control "
-                                            value="">
-                                        <label id="name-error" class="error text-red hide" for="name"></label>
+                                    <div class="form-group">
+                                        <select name="column_types[]" class="form-select  google-input form-column-types" required>
+                                            <option value="" disabled selected>--{{ __('Select column type') }}--</option>
+                                            @foreach (['string', 'integer', 'text', 'bigInteger', 'boolean', 'char', 'date', 'time', 'year', 'dateTime', 'decimal', 'double', 'enum', 'float', 'foreignId', 'tinyInteger', 'mediumInteger', 'tinyText', 'mediumText', 'longText'] as $type)
+                                                <option value="{{ $type }}">{{ ucwords($type) }}</option>
+                                            @endforeach
+                                        </select>
+                                        <input type="hidden" name="select_options[]" class="form-option">
+                                        <input type="hidden" name="constrains[]" class="form-constrain">
+                                        <input type="hidden" name="foreign_ids[]" class="form-foreign-id">
                                     </div>
                                 </td>
-                         
                                 <td>
                                     <div class="row">
-                                        <div class="form-group col-sm-12">
-                                            <label class="custom-switch form-label">
-                                                <input type="checkbox" name="attr[0][is_enable]" class="custom-switch-input" id="is_enable" >
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">Status</span>
-                                            </label>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <input type="number" name="min_lengths[]" class=" google-input form-control form-min-lengths"
+                                                    min="1" placeholder="Min Length">
+                                            </div>
                                         </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="custom-switch form-label">
-                                                <input type="checkbox" name="attr[0][is_system]" class="custom-switch-input" id="is_system">
-                                                <span class="custom-switch-indicator"></span>
-                                                <span class="custom-switch-description">System </span>
-                                            </label>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <input type="number" name="max_lengths[]" class="  google-input form-control form-max-lengths"
+                                                    min="1" placeholder="Max Length">
+                                            </div>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="form-group col-sm-12">
-                                        <label class="form-label">Select Attribute type<span
-                                                class="text-red">*</span></label>
-                                        <select name="attr[0][field_type]" class="form-control field_type" id="field_type">
-                                            <option value="" selected="">Please select attribute field type
-                                            </option>
-                                            <option value="text">Text</option>
-                                            <option value="email">Email</option>
-                                            <option value="number">Number</option>
-                                            <option value="date">Date</option>
-                                            <option value="date">Date and Time</option>
-                                            <option value="textarea">Textarea</option>
-                                            <option value="select">Dropdown</option>
-                                            <option value="multiselect">Multiple Select</option>
-                                            <option value="switch">Yes/No</option>
-                                            <option value="radio">Radiobox</option>
-                                            <option value="checkbox">Checkbox</option>
-                                            <option value="file">File</option>
+                                    <div class="form-group">
+                                        <select name="input_types[]" class="form-select form-input-types  google-input" required>
+                                            <option value="" disabled selected>-- {{ __('Select input type') }} --</option>
+                                            <option value="" disabled>{{ __('Select the column type first') }}</option>
                                         </select>
-                                        <label id="field_type-error" class="error text-red hide"
-                                            for="field_type"></label>
                                     </div>
+                                    <input type="hidden" name="mimes[]" class="form-mimes">
+                                    <input type="hidden" name="file_types[]" class="form-file-types">
+                                    <input type="hidden" name="files_sizes[]" class="form-file-sizes">
+                                    <input type="hidden" name="steps[]" class="form-step" placeholder="step">
                                 </td>
+                                <td class="d-flex align-items-center justify-center custom-td">
+
+                                    <div class="form-check form-switch ">
+                                        <input class="form-check-input switch-requireds" name="requireds[]" id="switch-1"
+                                            type="checkbox" checked>
+                                    </div>
+                                    <input type="hidden" name="default_values[]" class="form-default-value"
+                                        placeholder="{{ __('Default Value (optional)') }}">
+                                </td>
+
                             </tr>
+
+
+
+
                         </tbody>
                     </table>
 
