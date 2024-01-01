@@ -47,12 +47,12 @@
                             <label class="form-label" for="meta_description">Meta Description</label>
                             <textarea class="form-control" name="meta_description" autocomplete="off" id="description" rows="2"></textarea>
                         </div> --}}
-                    <div class="col-sm-12 form-group">
+                    {{-- <div class="col-sm-12 form-group">
                         <label class="form-label" for="created_date">Created Date <span
                                 class="text-red">*</span></label>
                         <input type="date" name="created_date" id="acreated_date" class="form-control"
                             value="">
-                    </div>
+                    </div> --}}
 
                     <div class="attr_header row flex justify-content-end my-5 align-items-end">
                         <input title="Reset form" class="btn btn-success" id="add_new" type="button"
@@ -64,7 +64,6 @@
                             <tr>
                                 <td>Label</td>
                                 <td>Name</td>
-                                <td>class + id</td>
                                 <td>Option</td>
                                 <td>Type</td>
                             </tr>
@@ -88,16 +87,7 @@
                                         <label id="name-error" class="error text-red hide" for="name"></label>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="col-sm-12 form-group">
-                                        <input type="text" name="attr[0][input_id]" class="form-control "
-                                            value="" placeholder="ID">
-                                    </div>
-                                    <div class="col-sm-12 form-group">
-                                        <input type="text" name="attr[0][input_class]" class="form-control "
-                                            value="" placeholder="Class">
-                                    </div>
-                                </td>
+                         
                                 <td>
                                     <div class="row">
                                         <div class="form-group col-sm-12">

@@ -66,58 +66,56 @@ class ModuleManagerController extends Controller
 
         $request->validated();
 
-        $this->generatorService->generateModel($request->all());
+        $this->generatorService->generateModel($request->all()); // model
 
-        $module = Module::create([
-            'name' => $request->name
-        ]);
+        $this->generatorService->generateMigration($request->all()); // migration
 
-        foreach ($request->attr as $attr) {
+        Artisan::call('migrate');// run php artisan mnigrate in background
 
 
-            $fields_info = array();
-            if ($attr['field_type'] == 'select' && $attr['field_type'] == 'multiselect' && $attr['field_type'] == 'radio' && $attr['field_type'] == 'checkbox') {
-                $order = 1;
-                $fields_info = array_map(function ($key, $arr) use (&$order) {
-                    if (is_array($arr)) {
-                        return array_merge($arr, ['order' => $order++]);
-                    }
-                }, array_keys($fields_info), $fields_info);
-            } elseif ($attr['field_type'] == 'text' || $attr['field_type'] == 'file') {
-                $fields_info = array_filter($fields_info, function ($element, $key) {
-                    return $key === 'file_ext' || !is_array($element);
-                }, ARRAY_FILTER_USE_BOTH);
-            } else {
-                $fields_info = [];
-            }
+        // $module = Module::create([
+        //     'name' => $request->name
+        // ]);
+
+        // foreach ($request->attr as $attr) {
 
 
-            $createArr = [
-                'module' => $module->id,
-                'name' => $attr['name'],
-                'field_type' => $attr['field_type'],
-                'input_name' => $attr['input_name'],
-                'input_class' => $attr['input_class'],
-                'input_id' => $attr['input_id'],
-                'scope' => 'aaa',
-                'depend' => 'aaaa',
-                'attribute' => 'aaaa',
-                'validation' => 'aaa',
-                'is_required' => isset($attr['is_required']) ? 1 : 0,
-                'is_enable' => isset($attr['is_enable']) ? 1 : 0,
-                'is_system' => isset($attr['is_system']) ? 1 : 0,
-                'fields_info' => json_encode($fields_info),
-                'description' => 'aaaaaa'
-            ];
-
-            // dd($createArr);
-            $attribute = Attribute::create($createArr);
-        }
+        //     $fields_info = array();
+        //     if ($attr['field_type'] == 'select' && $attr['field_type'] == 'multiselect' && $attr['field_type'] == 'radio' && $attr['field_type'] == 'checkbox') {
+        //         $order = 1;
+        //         $fields_info = array_map(function ($key, $arr) use (&$order) {
+        //             if (is_array($arr)) {
+        //                 return array_merge($arr, ['order' => $order++]);
+        //             }
+        //         }, array_keys($fields_info), $fields_info);
+        //     } elseif ($attr['field_type'] == 'text' || $attr['field_type'] == 'file') {
+        //         $fields_info = array_filter($fields_info, function ($element, $key) {
+        //             return $key === 'file_ext' || !is_array($element);
+        //         }, ARRAY_FILTER_USE_BOTH);
+        //     } else {
+        //         $fields_info = [];
+        //     }
 
 
+        //     $createArr = [
+        //         'module' => $module->id,
+        //         'name' => $attr['name'],
+        //         'field_type' => $attr['field_type'],
+        //         'input_id' => $attr['input_id'],
+        //         'scope' => 'aaa',
+        //         'depend' => 'aaaa',
+        //         'attribute' => 'aaaa',
+        //         'validation' => 'aaa',
+        //         'is_required' => isset($attr['is_required']) ? 1 : 0,
+        //         'is_enable' => isset($attr['is_enable']) ? 1 : 0,
+        //         'is_system' => isset($attr['is_system']) ? 1 : 0,
+        //         'fields_info' => json_encode($fields_info),
+        //         'description' => 'aaaaaa'
+        //     ];
 
-
-
+        //     // dd($createArr);
+        //     $attribute = Attribute::create($createArr);
+        // }
 
 
 
@@ -126,38 +124,42 @@ class ModuleManagerController extends Controller
 
 
 
-        if ($module) {
-            $lastSequenceData = MenuManager::where('parent', '0')->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->where('status', 1)->orderBy('id', 'desc')->first();
-            $sequence = 0;
-            if ($lastSequenceData) {
-                $sequence = $lastSequenceData->sequence + 1;
-            }
 
-            $createData = array(
-                'name' => $requestData['name'],
-                'module_id' => $module->id,
-                'status' => (isset($requestData['is_enable']) ?? 0),
-                'include_in_menu' => (isset($requestData['include_in_menu']) ?? 0),
-                'menu_type' => $requestData['menu_type'],
-                'code' => str_replace(' ', '', $requestData['code']),
-                'path' => str_replace(' ', '', $requestData['path']),
-                'meta_title' => (isset($requestData['meta_title']) ?? ''),
-                'meta_description' => (isset($requestData['meta_description']) ?? ''),
-                'assigned_attributes' => 'aaaa',
-                'sequence' => $sequence,
-                'parent' => 0,
-                'created_date' => date('Y-m-d', strtotime($requestData['created_date']))
-            );
-            // dd($createData);
-            $menuManager = MenuManager::create($createData);
-        }
 
-        if (!$menuManager) {
-            $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
-            return redirect()->route('module_manager.index');
-        }
-        $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
-        return redirect()->route('module_manager.index');
+
+
+
+        // if ($module) {
+        //     $lastSequenceData = MenuManager::where('parent', '0')->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->where('status', 1)->orderBy('id', 'desc')->first();
+        //     $sequence = 0;
+        //     if ($lastSequenceData) {
+        //         $sequence = $lastSequenceData->sequence + 1;
+        //     }
+
+        //     $createData = array(
+        //         'name' => $requestData['name'],
+        //         'module_id' => $module->id,
+        //         'status' => (isset($requestData['is_enable']) ?? 0),
+        //         'include_in_menu' => (isset($requestData['include_in_menu']) ?? 0),
+        //         'menu_type' => $requestData['menu_type'],
+        //         'code' => str_replace(' ', '', $requestData['code']),
+        //         'path' => str_replace(' ', '', $requestData['path']),
+        //         'meta_title' => (isset($requestData['meta_title']) ?? ''),
+        //         'meta_description' => (isset($requestData['meta_description']) ?? ''),
+        //         'assigned_attributes' => 'aaaa',
+        //         'sequence' => $sequence,
+        //         'parent' => 0,
+        //     );
+        //     // dd($createData);
+        //     $menuManager = MenuManager::create($createData);
+        // }
+
+        // if (!$menuManager) {
+        //     $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
+        //     return redirect()->route('module_manager.index');
+        // }
+        // $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
+        // return redirect()->route('module_manager.index');
     }
 
     private function pluralize($singular)
