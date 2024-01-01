@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('attributes', function (Blueprint $table) {
-            $table->dropColumn('input_id');
-            $table->dropColumn('input_class');
+            // $table->dropColumn('input_id');
+            // $table->dropColumn('input_class');
         });
     }
 
