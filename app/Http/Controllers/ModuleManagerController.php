@@ -22,7 +22,7 @@ class ModuleManagerController extends Controller
     private $flashRepository;
     protected $generatorService;
 
-  
+
 
     public function __construct()
     {
@@ -70,6 +70,9 @@ class ModuleManagerController extends Controller
         $this->generatorService->generateMigration($request->all()); // migration
 
         Artisan::call('migrate');// run php artisan mnigrate in background
+
+        $this->generatorService->generateController($request->all()); // migration
+
 
 
         // $module = Module::create([

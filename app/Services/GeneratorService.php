@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Generators\MigrationGenerator;
 use App\Generators\ModelGenerator;
+use App\Generators\WebControllerGenerator;
 
 
 
@@ -26,6 +27,11 @@ class GeneratorService
         (new MigrationGenerator)->generate($request);
     }
 
-    
+    public function generateController(array $request): void
+    {
+        (new WebControllerGenerator)->generate($request);
+    }
+
+
 
 }

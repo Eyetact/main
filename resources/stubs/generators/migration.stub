@@ -14,7 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('{{tableNamePluralLowecase}}', function (Blueprint $table) {
-            $table->id();{{fields}}
+            $table->id();
+            {{fields}}
             $table->timestamps();
         });
     }
