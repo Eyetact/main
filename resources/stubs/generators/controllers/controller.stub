@@ -7,18 +7,11 @@ use Yajra\DataTables\Facades\DataTables;
 
 class {{modelNameSingularPascalCase}}Controller extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:{{modelNameSpaceLowercase}} view')->only('index', 'show');
-        $this->middleware('permission:{{modelNameSpaceLowercase}} create')->only('create', 'store');
-        $this->middleware('permission:{{modelNameSpaceLowercase}} edit')->only('edit', 'update');
-        $this->middleware('permission:{{modelNameSpaceLowercase}} delete')->only('destroy');
-    }
 
     /**
      * Display a listing of the resource.
      *
-     * @return 
+     * @return
      */
     public function index()
     {
@@ -36,7 +29,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return 
+     * @return
      */
     public function create()
     {
@@ -47,7 +40,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return 
+     * @return
      */
     public function store(Store{{modelNameSingularPascalCase}}Request $request)
     {
@@ -62,7 +55,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\{{modelNameSingularPascalCase}}  ${{modelNameSingularCamelCase}}
-     * @return 
+     * @return
      */
     public function show({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
     {
@@ -73,7 +66,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\{{modelNameSingularPascalCase}}  ${{modelNameSingularCamelCase}}
-     * @return 
+     * @return
      */
     public function edit({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
     {
@@ -85,7 +78,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\{{modelNameSingularPascalCase}}  ${{modelNameSingularCamelCase}}
-     * @return 
+     * @return
      */
     public function update(Update{{modelNameSingularPascalCase}}Request $request, {{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
     {
@@ -100,7 +93,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\{{modelNameSingularPascalCase}}  ${{modelNameSingularCamelCase}}
-     * @return 
+     * @return
      */
     public function destroy({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
     {
