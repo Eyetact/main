@@ -253,5 +253,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/file/open/{id}', [FileManagerController::class, 'openFile'])->name('open.file');
 
+    Route::get('/file/open/{id}', [FileManagerController::class, 'openFile'])->name('open.file');
+
+
+    Route::get('testview', function(){
+        return view('test');
+    });
 
 });
