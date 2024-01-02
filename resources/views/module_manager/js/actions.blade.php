@@ -7,17 +7,18 @@
 
         let list = getColumnTypes()
         let no = table.find('tr').length + 1
+        
         let tr = `
             <tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">
                 <td class="text-center">${no}</td>
                 <td>
-                    <div class="form-group">
-                        <input type="text" name="fields[]" class="form-control" placeholder="Field Name" required>
+                    <div class="input-box">
+                        <input type="text" name="fields[]" class="google-input" placeholder="Field Name" required>
                     </div>
                 </td>
                 <td>
-                    <div class="form-group">
-                        <select name="column_types[]" class="form-select form-column-types" required>
+                    <div class="input-box">
+                        <select name="column_types[]" class="form-select google-input form-column-types" required>
                             <option value="" disabled selected>--Select column type--</option>
                             ${list}
                         </select>
@@ -29,22 +30,22 @@
                 <td>
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="number" name="min_lengths[]" class="form-control form-min-lengths" min="1"
+                            <div class="input-box">
+                                <input type="number" name="min_lengths[]" class="google-input form-min-lengths" min="1"
                                     placeholder="Min Length">
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="number" name="max_lengths[]" class="form-control form-max-lengths" min="1"
+                            <div class="input-box">
+                                <input type="number" name="max_lengths[]" class="google-input form-max-lengths" min="1"
                                     placeholder="Max Length">
                             </div>
                         </div>
                     </div>
                 </td>
                 <td>
-                    <div class="form-group">
-                        <select name="input_types[]" class="form-select form-input-types" required>
+                    <div class="input-box">
+                        <select name="input_types[]" class="google-input form-input-types" required>
                             <option value="" disabled selected>-- Select input type --</option>
                             <option value="" disabled>Select the column type first</option>
                         </select>
@@ -55,16 +56,42 @@
                     <input type="hidden" name="steps[]" class="form-step" placeholder="step">
                 </td>
                 <td class="d-flex align-items-center justify-center custom-td">
-                    <div class="form-check form-switch mt-2">
-                        <input class="form-check-input switch-requireds" type="checkbox" id="switch-${no}" name="requireds[]" checked>
+
+                    <div class="form-check form-switch ">
+                        
+
+                        <div class="form-group col-sm-6">
+                            <label class="custom-switch form-label">
+                                <input type="checkbox" name="requireds[]" class="custom-switch-input switch-requireds"
+                                    id="switch-${no}" checked>
+                                <span class="custom-switch-indicator"></span>
+                            </label>
+                        </div>
                     </div>
-                    <div class="form-group form-default-value ">
-                        <input type="hidden" name="default_values[]" class="form-control" placeholder="Default Value (optional)">
-                    </div>
+                    <input type="hidden" name="default_values[]" class="form-default-value"
+                        placeholder="{{ __('Default Value (optional)') }}">
                 </td>
                 <td>
+                                    <div class="row">
+                                        <div class="form-group col-sm-12">
+                                            <label class="custom-switch form-label">
+                                                <input type="checkbox" name="is_enable" class="custom-switch-input" id="is_enable[]" >
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">Status</span>
+                                            </label>
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="custom-switch form-label">
+                                                <input type="checkbox" name="is_system" class="custom-switch-input" id="is_system[]" >
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">System</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                <td>
                     <button type="button" class="btn btn-outline-danger btn-xs btn-delete">
-                        <i class="fa fa-trash-alt"></i>
+                        x
                     </button>
                 </td>
             </tr>
@@ -286,7 +313,7 @@
             `)
         } else {
             $(`#tbl-field tbody tr:eq(${index}) td:eq(5)`).append(`
-                <div class="form-group form-default-value ">
+                <div class="input-box form-default-value ">
                     <input type="${inputTypeDefaultValue}" name="default_values[]" class="form-control" placeholder="Default Value (optional)">
                 </div>
             `)
@@ -377,7 +404,7 @@
             $(`#tbl-field tbody tr:eq(${index}) td:eq(5) .form-default-value`).remove()
 
             $(`#tbl-field tbody tr:eq(${index}) td:eq(5)`).append(`
-                <div class="form-group form-default-value ">
+                <div class="input-box form-default-value ">
                     <input type="${inputTypeDefaultValue}" name="default_values[]" class="form-control" placeholder="Default Value (optional)">
                 </div>
             `)
@@ -385,12 +412,12 @@
             switchRequired.prop('checked', false)
             switchRequired.prop('disabled', true)
             addInputTypeHidden(index)
-        }else if(
+        } else if (
             $(this).val() == 'time' ||
             $(this).val() == 'week' ||
             $(this).val() == 'color' ||
             $(this).val() == 'datetime-local'
-        ){
+        ) {
             minLength.prop('readonly', true)
             maxLength.prop('readonly', true)
             minLength.val('')
@@ -439,6 +466,4 @@
         $(this).parent().parent().remove()
         generateNo()
     })
-
-
 </script>

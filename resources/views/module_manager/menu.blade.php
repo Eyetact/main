@@ -25,6 +25,28 @@
     #attr_tbl {
         cursor: move;
     }
+
+    #tbl-field>tbody>tr>td {
+        min-height: 97px;
+        text-align: center !important;
+        line-height: 70px;
+    }
+
+    #tbl-field>tbody>tr>td label {
+        line-height: 1;
+    }
+
+    #tbl-field .form-check.form-switch {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        /* justify-content: center; */
+        min-height: 50px;
+    }
+
+    #tbl-field .form-check.form-switch div {
+        margin: 0;
+    }
 </style>
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/css/nested_menu.css') }}">
@@ -86,13 +108,13 @@
                         <div id="storfront_edit_div" class="">
                             <form action="{{ route('module_manager.store') }}" id="storfront_form_edit" method="POST"
                                 autocomplete="off" novalidate="novalidate">
-                                @include('module_manager.storfront_form')
+                                {{-- @include('module_manager.storfront_form') --}}
                             </form>
                         </div>
                         <div id="admin_edit_div" class="">
                             <form action="{{ route('module_manager.store') }}" id="admin_form_edit" method="POST"
                                 autocomplete="off" novalidate="novalidate">
-                                @include('module_manager.admin_form')
+                                {{-- @include('module_manager.admin_form') --}}
                             </form>
                         </div>
                     </div>
@@ -132,13 +154,13 @@
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('module_manager.update') }}' + '/' +
-                    edit_sid, // Replace with your actual route
+                        edit_sid, // Replace with your actual route
                     data: formData,
                     success: function(response) {
                         // Handle the success response
                         console.log('AJAX request succeeded:', response);
                         $('#addMenuModal').modal(
-                        'hide'); // Hide the modal after successful submission
+                            'hide'); // Hide the modal after successful submission
                         location.reload();
                     },
                     error: function(xhr, status, error) {
@@ -172,7 +194,7 @@
                         // Handle the success response
                         console.log('AJAX request succeeded:', response);
                         $('#addMenuModal').modal(
-                        'hide'); // Hide the modal after successful submission
+                            'hide'); // Hide the modal after successful submission
                         location.reload();
                     },
                     error: function(xhr, status, error) {
@@ -206,7 +228,7 @@
                         // Handle the success response
                         console.log('AJAX request succeeded:', response);
                         $('#addMenuModal').modal(
-                        'hide'); // Hide the modal after successful submission
+                            'hide'); // Hide the modal after successful submission
                         // location.reload();
                     },
                     error: function(xhr, status, error) {
@@ -230,7 +252,7 @@
                 var errorList = '<ul>';
                 $.each(errors, function(key, value) {
                     errorList += '<li>' + value[0] +
-                    '</li>'; // Assuming you only want to display the first error message
+                        '</li>'; // Assuming you only want to display the first error message
                 });
                 errorList += '</ul>';
 
