@@ -50,7 +50,7 @@ class ModuleManagerController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
