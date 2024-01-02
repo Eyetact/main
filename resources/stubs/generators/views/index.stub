@@ -32,6 +32,7 @@
                         <table class="table align-items-center mb-0" id="data_table" width="100%">
                             <thead>
                                 <tr>
+                                    <th width="30px"></th>
                                     {{thColumns}}
                                     <th>{{ __('Created At') }}</th>
                                     <th>{{ __('Updated At') }}</th>
