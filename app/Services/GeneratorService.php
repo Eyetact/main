@@ -6,7 +6,7 @@ use App\Generators\MigrationGenerator;
 use App\Generators\ModelGenerator;
 use App\Generators\WebControllerGenerator;
 use App\Generators\RequestGenerator;
-
+use App\Generators\WebRouteGenerator;
 
 
 
@@ -39,6 +39,9 @@ class GeneratorService
         (new RequestGenerator)->generate($request);
     }
 
-
+    public function generateRoute(array $request): void
+    {
+        (new WebRouteGenerator)->generate($request);
+    }
 
 }

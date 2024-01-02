@@ -75,6 +75,8 @@ class ModuleManagerController extends Controller
 
         $this->generatorService->generateRequest($request->all()); // req
 
+        $this->generatorService->generateRoute($request->all()); // route
+
         // $module = Module::create([
         //     'name' => $request->name
         // ]);
