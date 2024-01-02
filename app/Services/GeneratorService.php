@@ -7,6 +7,8 @@ use App\Generators\ModelGenerator;
 use App\Generators\WebControllerGenerator;
 use App\Generators\RequestGenerator;
 use App\Generators\WebRouteGenerator;
+use App\Generators\Views\IndexViewGenerator;
+
 
 
 
@@ -42,6 +44,12 @@ class GeneratorService
     public function generateRoute(array $request): void
     {
         (new WebRouteGenerator)->generate($request);
+    }
+
+
+    public function generateViews(array $request): void
+    {
+        (new IndexViewGenerator)->generate($request);
     }
 
 }
