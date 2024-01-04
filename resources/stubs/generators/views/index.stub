@@ -130,6 +130,15 @@
                 selector: 'td:first-child'
             },
             columns: [
+                 {
+                    'data': null,
+                    'defaultContent': '',
+                    'checkboxes': {
+
+
+                        'selectRow': true
+                    }
+                },
                 {{tdColumns}}
                 {
                     data: 'created_at',

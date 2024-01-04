@@ -62,8 +62,8 @@
         </div>
         <div class="page-rightheader">
             <div class="btn btn-list">
-                <a id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
-                    data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
+                <a id="add_new" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="Add new"><i
+                        class="fe fe-plus mr-1"></i> Add new </a>
             </div>
         </div>
     </div>
@@ -110,20 +110,20 @@
     </div>
 
     <div class="modal fade bd-example-modal-lg" id="role_form_modal" tabindex="-1" role="dialog"
-    aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
-                        aria-hidden="true">×</span> </button>
-            </div>
-            <div class="modal-body">
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
 
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 @section('js')
     <!-- INTERNAL Data tables -->
@@ -212,14 +212,14 @@
             },
             columns: [
                 {
-                'data':null,
-                'defaultContent':'',
-                'checkboxes':{
- 
- 
-                    'selectRow':true
-                }
-            },  
+                    'data': null,
+                    'defaultContent': '',
+                    'checkboxes': {
+
+
+                        'selectRow': true
+                    }
+                },
                 {
                     data: 'name',
                     name: 'name'
