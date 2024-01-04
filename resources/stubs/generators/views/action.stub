@@ -13,7 +13,7 @@
 
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <li class="dropdown-item">
-                    <a href="{{route('{{modelNamePluralKebabCase}}.show', $model->id)}}" id="edit_item" >View </a>
+                    <a href="{{route('{{modelNamePluralKebabCase}}.show', $model->id)}}"  >View </a>
                     </li>
 
                     <li class="dropdown-item">
