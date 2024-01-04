@@ -4,6 +4,9 @@ namespace App\Services;
 
 use App\Generators\MigrationGenerator;
 use App\Generators\ModelGenerator;
+use App\Generators\Views\ActionViewGenerator;
+use App\Generators\Views\CreateViewGenerator;
+use App\Generators\Views\FormViewGenerator;
 use App\Generators\WebControllerGenerator;
 use App\Generators\RequestGenerator;
 use App\Generators\WebRouteGenerator;
@@ -50,6 +53,9 @@ class GeneratorService
     public function generateViews(array $request): void
     {
         (new IndexViewGenerator)->generate($request);
+        (new ActionViewGenerator)->generate($request);
+        (new CreateViewGenerator)->generate($request);
+        (new FormViewGenerator)->generate($request);
     }
 
 }
