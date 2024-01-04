@@ -7,6 +7,7 @@ use App\Generators\ModelGenerator;
 use App\Generators\Views\ActionViewGenerator;
 use App\Generators\Views\CreateViewGenerator;
 use App\Generators\Views\FormViewGenerator;
+use App\Generators\Views\ShowViewGenerator;
 use App\Generators\WebControllerGenerator;
 use App\Generators\RequestGenerator;
 use App\Generators\WebRouteGenerator;
@@ -56,6 +57,7 @@ class GeneratorService
         (new ActionViewGenerator)->generate($request);
         (new CreateViewGenerator)->generate($request);
         (new FormViewGenerator)->generate($request);
+        (new ShowViewGenerator)->generate($request);
     }
 
 }
