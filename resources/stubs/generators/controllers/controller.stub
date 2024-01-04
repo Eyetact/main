@@ -100,13 +100,10 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
         try {
             ${{modelNameSingularCamelCase}}->delete();
 
-            return redirect()
-                ->route('{{modelNamePluralKebabCase}}.index')
-                ->with('success', __('The {{modelNameSingularCamelCase}} was deleted successfully.'));
+
+            return response()->json(['msg' => 'Item deleted successfully!'], 200);
         } catch (\Throwable $th) {
-            return redirect()
-                ->route('{{modelNamePluralKebabCase}}.index')
-                ->with('error', __("The {{modelNameSingularCamelCase}} can't be deleted because it's related to another table."));
+            return response()->json(['msg' => 'Not deleted'], 500);
         }
     }
 }
