@@ -13,6 +13,7 @@ use App\Generators\RequestGenerator;
 use App\Generators\WebRouteGenerator;
 use App\Generators\Views\IndexViewGenerator;
 use App\Generators\Views\EditViewGenerator;
+use App\Generators\ViewComposerGenerator;
 
 
 
@@ -60,6 +61,7 @@ class GeneratorService
         (new FormViewGenerator)->generate($request);
         (new ShowViewGenerator)->generate($request);
         (new EditViewGenerator)->generate($request);
+        (new ViewComposerGenerator)->generate($request);
     }
 
 }
