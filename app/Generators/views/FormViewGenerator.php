@@ -475,7 +475,7 @@ class FormViewGenerator
                                         config('generator.image.path') == 'storage' ? "storage/uploads" : "uploads",
                                         str()->kebab($field),
                                         "",
-                                        $default['form_code']
+                                        ""
                                     ],
                                     GeneratorUtils::getTemplate('views/forms/image')
                                 );
