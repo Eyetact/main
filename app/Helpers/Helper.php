@@ -35,7 +35,7 @@ class Helper
     }
 
     public static function getMenu($type) {
-        $data=MenuManager::with('children.children.children')->where('parent','0')->where('menu_type',$type)->where('include_in_menu',1)->where('status',1)->orderBy('id','asc')->get();
+        $data=MenuManager::with('children.children.children')->where('parent','0')->where('menu_type',$type)->where('include_in_menu',1)->orderBy('id','asc')->get();
         return $data;
     }
 }

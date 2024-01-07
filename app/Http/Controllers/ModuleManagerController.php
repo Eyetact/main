@@ -125,7 +125,7 @@ class ModuleManagerController extends Controller
 
 
         if ($module) {
-            $lastSequenceData = MenuManager::where('parent', '0')->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->where('status', 1)->orderBy('id', 'desc')->first();
+            $lastSequenceData = MenuManager::where('parent', '0')->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->orderBy('id', 'desc')->first();
             $sequence = 0;
             if ($lastSequenceData) {
                 $sequence = $lastSequenceData->sequence + 1;
