@@ -134,14 +134,9 @@ class ModuleManagerController extends Controller
             $createData = array(
                 'name' => $requestData['name'],
                 'module_id' => $module->id,
-                'status' => (isset($requestData['is_enable']) ?? 0),
                 'include_in_menu' => (isset($requestData['include_in_menu']) ?? 0),
                 'menu_type' => $requestData['menu_type'],
-                'code' => str_replace(' ', '', $requestData['code']),
                 'path' => str_replace(' ', '', $requestData['path']),
-                'meta_title' => (isset($requestData['meta_title']) ?? ''),
-                'meta_description' => (isset($requestData['meta_description']) ?? ''),
-                'assigned_attributes' => 'aaaa',
                 'sequence' => $sequence,
                 'parent' => 0,
             );

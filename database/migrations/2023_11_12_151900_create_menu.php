@@ -18,13 +18,8 @@ class CreateMenu extends Migration
             $table->integer('module_id')->default(0);
             $table->string('menu_type');//storfront or admin
             $table->string('name');
-            $table->string('code')->unique();
             $table->string('path');
-            $table->integer('status')->default(0);
             $table->integer('include_in_menu')->default(0);
-            $table->string('meta_title');
-            $table->text('meta_description');
-            $table->text('assigned_attributes');
             $table->integer('sequence');
             $table->integer('parent');
             $table->timestamps();

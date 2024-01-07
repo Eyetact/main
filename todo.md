@@ -14,4 +14,5 @@ refactor roles and permissions
 scoup logic 
 move style to sparate file
 add more file types
+change defult route to path from request 
 

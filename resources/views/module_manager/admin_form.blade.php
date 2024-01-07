@@ -15,22 +15,12 @@
                         <input type="text" name="name" id="aname" class="form-control" value="">
                         <input type="hidden" name="id" id="aid" value="">
                     </div>
-                    <div class="col-sm-12 form-group">
-                        <label class="form-label" for="code">Code <span class="text-red">*</span></label>
-                        <input type="text" name="code" id="acode" class="form-control" value="">
-                    </div>
+
                     <div class="col-sm-12 form-group">
                         <label class="form-label" for="path">Path <span class="text-red">*</span></label>
                         <input type="text" name="path" id="apath" class="form-control" value="">
                     </div>
-                    <div class="form-group col-sm-6">
-                        <label class="custom-switch form-label">
-                            <input type="checkbox" name="is_enable" id="ais_enable" class="custom-switch-input"
-                                id="is_enable">
-                            <span class="custom-switch-indicator"></span>
-                            <span class="custom-switch-description">Status</span>
-                        </label>
-                    </div>
+
                     <div class="form-group col-sm-6">
                         <label class="custom-switch form-label">
                             <input type="checkbox" name="include_in_menu" id="ainclude_in_menu"
