@@ -134,8 +134,7 @@ class ModuleManagerController extends Controller
             DB::commit();
         } catch (Exception $ex) {
             DB::rollback();
-            $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
-            return redirect()->route('module_manager.index');
+            dd($ex);
         }
 
     }
