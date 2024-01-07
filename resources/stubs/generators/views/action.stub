@@ -1,19 +1,30 @@
+
+
+
 <td>
-    <a href="{{ route('{{modelNamePluralKebabCase}}.show', $model->id) }}" class="btn btn-success btn-xs">
-        <i class="fa fa-eye"></i>
-    </a>
 
-        <a href="{{ route('{{modelNamePluralKebabCase}}.edit', $model->id) }}" class="btn btn-primary btn-xs">
-            <i class="fa fa-pencil-alt"></i>
-        </a>
 
-        <form action="{{ route('{{modelNamePluralKebabCase}}.destroy', $model->id) }}" method="post" class="d-inline"
-            onsubmit="return confirm('Are you sure to delete this record?')">
-            @csrf
-            @method('delete')
+        <div class="dropdown">
+            <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
 
-            <button class="btn btn-danger btn-xs">
-                <i class="ace-icon fa fa-trash-alt"></i>
-            </button>
-        </form>
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li class="dropdown-item">
+                    <a href="{{route('{{modelNamePluralKebabCase}}.show', $model->id)}}"  >View </a>
+                    </li>
+
+                    <li class="dropdown-item">
+                        <a href="#" id="edit_item"  data-path="{{route('{{modelNamePluralKebabCase}}.edit', $model->id)}}">Edit</a>
+                        </li>
+
+
+                <li class="dropdown-item">
+                <a  href="#" data-id="{{$model->id}}" class="model-delete">Delete</a>
+                </li>
+            </ul>
+        </div>
+
 </td>

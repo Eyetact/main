@@ -450,11 +450,7 @@ class FormViewGenerator
                                 );
                                 break;
                             case 'file':
-                                $default = GeneratorUtils::setDefaultImage(
-                                    default: $request['default_values'][$i],
-                                    field: $field,
-                                    model: $model
-                                );
+
 
                                 $template .= str_replace(
                                     [
@@ -478,8 +474,8 @@ class FormViewGenerator
                                         $request['requireds'][$i] == 'yes' ? ' required' : '',
                                         config('generator.image.path') == 'storage' ? "storage/uploads" : "uploads",
                                         str()->kebab($field),
-                                        $default['image'],
-                                        $default['form_code']
+                                        "",
+                                        ""
                                     ],
                                     GeneratorUtils::getTemplate('views/forms/image')
                                 );

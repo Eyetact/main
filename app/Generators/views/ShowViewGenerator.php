@@ -34,22 +34,14 @@ class ShowViewGenerator
                 $fieldSnakeCase = str($field)->snake();
 
                 if (isset($request['file_types'][$i]) && $request['file_types'][$i] == 'image') {
-                    $default = GeneratorUtils::setDefaultImage(
-                        default: $request['default_values'][$i],
-                        field: $request['fields'][$i],
-                        model: $model
-                    );
 
                     $uploadPath =  config('generator.image.path') == 'storage' ? "storage/uploads/" : "uploads/";
 
                     $trs .= "<tr>
                                         <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
                                         <td>
-                                            @if (". $default['form_code'] .")
-                                            <img src=\"". $default['image'] ."\" alt=\"$fieldUcWords\"  class=\"rounded\" width=\"200\" height=\"150\" style=\"object-fit: cover\">
-                                            @else
+
                                                 <img src=\"{{ asset( $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . ") }}\" alt=\"$fieldUcWords\" class=\"rounded\" width=\"200\" height=\"150\" style=\"object-fit: cover\">
-                                            @endif
                                         </td>
                                     </tr>";
                 }
