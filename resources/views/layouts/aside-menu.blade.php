@@ -55,27 +55,28 @@
                 </svg>
                 <span class="side-menu__label">Attributes</span></a>
         </li>
-        @if( auth()->user()->can('mail.settings') || auth()->user()->hasRole('super') )
-        <li class="slide">
-            <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}">
-                <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24"
-                    width="24">
-                    <path d="M0 0h24v24H0V0z" fill="none" />
-                    <path
-                        d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z" />
-                </svg>
-                <span class="side-menu__label">Mail Settings</span><i class="angle fa fa-angle-right"></i></a>
+        @if (auth()->user()->can('mail.settings') ||
+                auth()->user()->hasRole('super'))
+            <li class="slide">
+                <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}">
+                    <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24"
+                        width="24">
+                        <path d="M0 0h24v24H0V0z" fill="none" />
+                        <path
+                            d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z" />
+                    </svg>
+                    <span class="side-menu__label">Mail Settings</span><i class="angle fa fa-angle-right"></i></a>
                 <ul class="slide-menu ">
-                <li class="sub-slide">
-                    <a class="sub-side-menu__item" href="{{ route('main_mailbox.index') }}"><span
-                            class="sub-side-menu__label">Mailbox Settings</span></a>
-                </li>
-                <li class="sub-slide">
-                    <a class="sub-side-menu__item" href="{{ route('smtp.index') }}"><span
-                            class="sub-side-menu__label">SMTP Settings</span></a>
-                </li>
-            </ul>
-        </li>
+                    <li class="sub-slide">
+                        <a class="sub-side-menu__item" href="{{ route('main_mailbox.index') }}"><span
+                                class="sub-side-menu__label">Mailbox Settings</span></a>
+                    </li>
+                    <li class="sub-slide">
+                        <a class="sub-side-menu__item" href="{{ route('smtp.index') }}"><span
+                                class="sub-side-menu__label">SMTP Settings</span></a>
+                    </li>
+                </ul>
+            </li>
         @endif
         <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}">
@@ -115,10 +116,41 @@
 
         </li>
     </ul>
+    <ul class="side-menu app-sidebar3">
+        <li class="side-item side-item-category mt-4">Module Manger</li>
+        @foreach ($side_menus as $item)
+            <li class="slide">
+                <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . $item->path) }}">
+                    <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height="24"
+                        viewBox="0 0 24 24" width="24">
+                        <path d="M0 0h24v24H0V0z" fill="none" />
+                        <path
+                            d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z" />
+                    </svg>
+                    <span class="side-menu__label">{{ $item->name }}</span><i
+                        class="angle fa fa-angle-right"></i></a>
+                <ul class="slide-menu ">
+                    <li class="sub-slide">
+                        <a class="sub-side-menu__item" href="{{ url('/' . $item->path) }}"><span
+                                class="sub-side-menu__label">{{ $item->name }}</span></a>
+                    </li>
+
+                    @foreach ($item->children as $item)
+                    <li class="sub-slide">
+                        <a class="sub-side-menu__item" href="{{ url('/' . $item->path) }}"><span
+                                class="sub-side-menu__label">{{ $item->name }}</span></a>
+                    </li>
+                    @endforeach
+                </ul>
+
+
+            </li>
+        @endforeach
+    </ul>
 
     <ul class="side-menu app-sidebar3">
         <li class="side-item side-item-category mt-4">Basic</li>
-        {{--<li class="slide">
+        {{-- <li class="slide">
             <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}">
                 <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24"
                     width="24">

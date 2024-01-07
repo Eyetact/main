@@ -16,15 +16,15 @@ class WebRouteGenerator
     public function generate(array $request)
     {
         $model = GeneratorUtils::setModelName($request['name']);
-        $path = GeneratorUtils::getModelLocation($request['name']);
+        $path = $request['path'];
 
         $modelNameSingularPascalCase = GeneratorUtils::singularPascalCase($model);
         $modelNamePluralLowercase = GeneratorUtils::pluralKebabCase($model);
 
         if ($path != '') {
-            $controllerClass = "\n" . "Route::resource('" . $modelNamePluralLowercase . "', App\Http\Controllers\Admin\\" . str_replace('/', '\\', $path) . "\\" . $modelNameSingularPascalCase . "Controller::class)->middleware('auth');";
+            $controllerClass = "\n" . "Route::resource('" . $path . "', App\Http\Controllers\Admin\\" . str_replace('/', '\\', $path) . "\\" . $modelNameSingularPascalCase . "Controller::class)->middleware('auth');";
         } else {
-            $controllerClass = "\n" . "Route::resource('" . $modelNamePluralLowercase . "', App\Http\Controllers\Admin\\" . $modelNameSingularPascalCase . "Controller::class)->middleware('auth');";
+            $controllerClass = "\n" . "Route::resource('" . $path . "', App\Http\Controllers\Admin\\" . $modelNameSingularPascalCase . "Controller::class)->middleware('auth');";
         }
 
         File::append(base_path('routes/web.php'), $controllerClass);

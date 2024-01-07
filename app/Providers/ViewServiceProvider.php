@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\MenuManager;
 use App\Settings\GeneralSettings;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +27,11 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        View::composer('*', function($view){
+
+            $menus = MenuManager::where('include_in_menu',1)->where('parent',0)->get();
+            return $view->with( 'side_menus', $menus );
+        });
 
 	}
 }
