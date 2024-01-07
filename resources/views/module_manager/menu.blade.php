@@ -54,6 +54,17 @@
     <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <style>
+        ul.my-1.mx-2.p-0 {
+            line-height: 1;
+            font-size: 11px;
+            text-align: left;
+        }
+
+        ul.my-1.mx-2.p-0 li {
+            margin-bottom: 7px;
+        }
+    </style>
 @endsection
 
 @section('page-header')

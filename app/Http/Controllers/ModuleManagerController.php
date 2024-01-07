@@ -79,9 +79,9 @@ class ModuleManagerController extends Controller
 
         $this->generatorService->generateViews($request->all()); // views
 
-        // $module = Module::create([
-        //     'name' => $request->name
-        // ]);
+        $module = Module::create([
+            'name' => $request->name
+        ]);
 
         // foreach ($request->attr as $attr) {
 
@@ -124,48 +124,36 @@ class ModuleManagerController extends Controller
         // }
 
 
+        if ($module) {
+            $lastSequenceData = MenuManager::where('parent', '0')->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->where('status', 1)->orderBy('id', 'desc')->first();
+            $sequence = 0;
+            if ($lastSequenceData) {
+                $sequence = $lastSequenceData->sequence + 1;
+            }
 
+            $createData = array(
+                'name' => $requestData['name'],
+                'module_id' => $module->id,
+                'status' => (isset($requestData['is_enable']) ?? 0),
+                'include_in_menu' => (isset($requestData['include_in_menu']) ?? 0),
+                'menu_type' => $requestData['menu_type'],
+                'code' => str_replace(' ', '', $requestData['code']),
+                'path' => str_replace(' ', '', $requestData['path']),
+                'meta_title' => (isset($requestData['meta_title']) ?? ''),
+                'meta_description' => (isset($requestData['meta_description']) ?? ''),
+                'assigned_attributes' => 'aaaa',
+                'sequence' => $sequence,
+                'parent' => 0,
+            );
+            $menuManager = MenuManager::create($createData);
+        }
 
-
-
-
-
-
-
-
-
-
-        // if ($module) {
-        //     $lastSequenceData = MenuManager::where('parent', '0')->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->where('status', 1)->orderBy('id', 'desc')->first();
-        //     $sequence = 0;
-        //     if ($lastSequenceData) {
-        //         $sequence = $lastSequenceData->sequence + 1;
-        //     }
-
-        //     $createData = array(
-        //         'name' => $requestData['name'],
-        //         'module_id' => $module->id,
-        //         'status' => (isset($requestData['is_enable']) ?? 0),
-        //         'include_in_menu' => (isset($requestData['include_in_menu']) ?? 0),
-        //         'menu_type' => $requestData['menu_type'],
-        //         'code' => str_replace(' ', '', $requestData['code']),
-        //         'path' => str_replace(' ', '', $requestData['path']),
-        //         'meta_title' => (isset($requestData['meta_title']) ?? ''),
-        //         'meta_description' => (isset($requestData['meta_description']) ?? ''),
-        //         'assigned_attributes' => 'aaaa',
-        //         'sequence' => $sequence,
-        //         'parent' => 0,
-        //     );
-        //     // dd($createData);
-        //     $menuManager = MenuManager::create($createData);
-        // }
-
-        // if (!$menuManager) {
-        //     $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
-        //     return redirect()->route('module_manager.index');
-        // }
-        // $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
-        // return redirect()->route('module_manager.index');
+        if (!$menuManager) {
+            $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
+            return redirect()->route('module_manager.index');
+        }
+        $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
+        return redirect()->route('module_manager.index');
     }
 
     private function pluralize($singular)

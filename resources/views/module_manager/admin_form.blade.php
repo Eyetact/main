@@ -64,7 +64,7 @@
                                 <th width="30">#</th>
                                 <th>{{ __('Field name') }}</th>
                                 <th>{{ __('Column Type') }}</th>
-                                <th width="310">{{ __('Length') }}</th>
+                                <th width="200">{{ __('Length') }}</th>
                                 <th>{{ __('Input Type') }}</th>
                                 <th>{{ __('Required') }}</th>
                                 <th>{{ __('Options') }}</th>
@@ -102,14 +102,14 @@
                                             <div class="input-box">
                                                 <input type="number" name="min_lengths[]"
                                                     class=" google-input form-control form-min-lengths" min="1"
-                                                    placeholder="Min Length">
+                                                    placeholder="Min">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="input-box">
                                                 <input type="number" name="max_lengths[]"
                                                     class="  google-input form-control form-max-lengths"
-                                                    min="1" placeholder="Max Length">
+                                                    min="1" placeholder="Max">
                                             </div>
                                         </div>
                                     </div>

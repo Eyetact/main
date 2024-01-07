@@ -122,8 +122,8 @@
             $(`#tbl-field tbody tr:eq(${index}) td:eq(2) .form-option`).remove()
 
             $(`#tbl-field tbody tr:eq(${index}) td:eq(2)`).append(`
-            <div class="form-group form-option mt-2">
-                <input type="text" name="select_options[]" class="form-control" placeholder="Seperate with '|', e.g.: water|fire">
+            <div class="input-box form-option mt-2">
+                <input type="text" name="select_options[]" class="google-input" placeholder="Seperate with '|', e.g.: water|fire">
             </div>
             `)
 
@@ -187,8 +187,8 @@
             `)
 
             $(`#tbl-field tbody tr:eq(${index}) td:eq(2)`).append(`
-                <div class="form-group form-constrain mt-2">
-                    <input type="text" name="constrains[]" class="form-control" placeholder="Constrain or related model name" required>
+                <div class="input-box form-constrain mt-2">
+                    <input type="text" name="constrains[]" class="google-input" placeholder="Constrain or related model name" required>
                     <small class="text-secondary">
                         <ul class="my-1 mx-2 p-0">
                             <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
@@ -196,19 +196,19 @@
                         </ul>
                     </small>
                 </div>
-                <div class="form-group form-foreign-id mt-2">
-                    <input type="hidden" name="foreign_ids[]" class="form-control" placeholder="Foreign key (optional)">
+                <div class="input-box form-foreign-id mt-2">
+                    <input type="hidden" name="foreign_ids[]" class="google-input" placeholder="Foreign key (optional)">
                 </div>
-                <div class="form-group form-on-update mt-2 form-on-update-foreign">
-                    <select class="form-select" name="on_update_foreign[]" required>
+                <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                    <select class="google-input" name="on_update_foreign[]" required>
                         <option value="" disabled selected>-- Select action on update --</option>
                         <option value="0">Nothing</option>
                         <option value="1">Cascade</option>
                         <option value="2">Restrict</option>
                     </select>
                 </div>
-                <div class="form-group form-on-delete mt-2 form-on-delete-foreign">
-                    <select class="form-select" name="on_delete_foreign[]" required>
+                <div class="input-box form-on-delete mt-2 form-on-delete-foreign">
+                    <select class="google-input" name="on_delete_foreign[]" required>
                         <option value="" disabled selected>-- Select action on delete --</option>
                         <option value="0">Nothing</option>
                         <option value="1">Cascade</option>
@@ -344,14 +344,14 @@
             maxLength.val('')
 
             $(`#tbl-field tbody tr:eq(${index}) td:eq(4)`).append(`
-            <div class="form-group mt-2 form-file-types">
-                <select name="file_types[]" class="form-select" required>
+            <div class="input-box mt-2 form-file-types">
+                <select name="file_types[]" class="google-input" required>
                     <option value="" disabled selected>-- Select file type --</option>
                     <option value="image">Image</option>
                 </select>
             </div>
-            <div class="form-group form-file-sizes">
-                <input type="number" name="files_sizes[]" class="form-control" placeholder="Max size(kb), e.g.: 1024" required>
+            <div class="input-box form-file-sizes">
+                <input type="number" name="files_sizes[]" class="google-input" placeholder="Max size(kb), e.g.: 1024" required>
             </div>
             <input type="hidden" name="mimes[]" class="form-mimes">
             <input type="hidden" name="steps[]" class="form-step">
