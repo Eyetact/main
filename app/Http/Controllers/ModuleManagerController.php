@@ -15,6 +15,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Exception;
+use DB;
 
 
 class ModuleManagerController extends Controller
@@ -57,98 +59,85 @@ class ModuleManagerController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return  void
      */
     public function store(ModulePostRequest $request)
     {
-        $requestData = $request->all();
 
-        $request->validated();
+        try {
+            DB::beginTransaction();
 
-        $this->generatorService->generateModel($request->all()); // model
+            $requestData = $request->all();
+            $request->validated();
+            $this->generatorService->generateModel($request->all()); // model
+            $this->generatorService->generateMigration($request->all()); // migration
+            Artisan::call('migrate');// run php artisan mnigrate in background
+            $this->generatorService->generateController($request->all()); // migration
+            $this->generatorService->generateRequest($request->all()); // req
+            $this->generatorService->generateRoute($request->all()); // route
+            $this->generatorService->generateViews($request->all()); // views
+            $module = Module::create([
+                'name' => $request->name
+            ]);
+            foreach ($request->fields as $i => $attr)
+            {
+                $createArr = [
 
-        $this->generatorService->generateMigration($request->all()); // migration
-
-        Artisan::call('migrate');// run php artisan mnigrate in background
-
-        $this->generatorService->generateController($request->all()); // migration
-
-        $this->generatorService->generateRequest($request->all()); // req
-
-        $this->generatorService->generateRoute($request->all()); // route
-
-        $this->generatorService->generateViews($request->all()); // views
-
-        $module = Module::create([
-            'name' => $request->name
-        ]);
-
-        // foreach ($request->attr as $attr) {
-
-
-        //     $fields_info = array();
-        //     if ($attr['field_type'] == 'select' && $attr['field_type'] == 'multiselect' && $attr['field_type'] == 'radio' && $attr['field_type'] == 'checkbox') {
-        //         $order = 1;
-        //         $fields_info = array_map(function ($key, $arr) use (&$order) {
-        //             if (is_array($arr)) {
-        //                 return array_merge($arr, ['order' => $order++]);
-        //             }
-        //         }, array_keys($fields_info), $fields_info);
-        //     } elseif ($attr['field_type'] == 'text' || $attr['field_type'] == 'file') {
-        //         $fields_info = array_filter($fields_info, function ($element, $key) {
-        //             return $key === 'file_ext' || !is_array($element);
-        //         }, ARRAY_FILTER_USE_BOTH);
-        //     } else {
-        //         $fields_info = [];
-        //     }
+                    'module' => $module->id,
+                    'name' => $attr,
+                    'type' => $request['column_types'][$i],
+                    'min_length' => $request['min_lengths'][$i],
+                    'max_length' => $request['max_lengths'][$i],
+                    'input' => $request['input_types'][$i],
+                    'required' => $request['requireds'][$i],
+                    'default_value' => $request['default_values'][$i],
+                    'select_option' => $request['select_options'][$i],
+                    'constrain' => $request['constrains'][$i],
+                    'on_update_foreign' => $request['on_update_foreign'][$i],
+                    'on_delete_foreign' => $request['on_delete_foreign'][$i],
+                    'is_enable' => isset($request['is_enable'][$i]) ? 1 : 0,
+                    'is_system' => isset($request['is_system'][$i]) ? 1 : 0,
 
 
-        //     $createArr = [
-        //         'module' => $module->id,
-        //         'name' => $attr['name'],
-        //         'field_type' => $attr['field_type'],
-        //         'input_id' => $attr['input_id'],
-        //         'scope' => 'aaa',
-        //         'depend' => 'aaaa',
-        //         'attribute' => 'aaaa',
-        //         'validation' => 'aaa',
-        //         'is_required' => isset($attr['is_required']) ? 1 : 0,
-        //         'is_enable' => isset($attr['is_enable']) ? 1 : 0,
-        //         'is_system' => isset($attr['is_system']) ? 1 : 0,
-        //         'fields_info' => json_encode($fields_info),
-        //         'description' => 'aaaaaa'
-        //     ];
+                ];
 
-        //     // dd($createArr);
-        //     $attribute = Attribute::create($createArr);
-        // }
-
-
-        if ($module) {
-            $lastSequenceData = MenuManager::where('parent', '0')->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->orderBy('id', 'desc')->first();
-            $sequence = 0;
-            if ($lastSequenceData) {
-                $sequence = $lastSequenceData->sequence + 1;
+                // dd($createArr);
+                $attribute = Attribute::create($createArr);
             }
 
-            $createData = array(
-                'name' => $requestData['name'],
-                'module_id' => $module->id,
-                'include_in_menu' => (isset($requestData['include_in_menu']) ?? 0),
-                'menu_type' => $requestData['menu_type'],
-                'path' => str_replace(' ', '', $requestData['path']),
-                'sequence' => $sequence,
-                'parent' => 0,
-            );
-            $menuManager = MenuManager::create($createData);
-        }
+            if ($module) {
+                $lastSequenceData = MenuManager::where('parent', '0')->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->orderBy('id', 'desc')->first();
+                $sequence = 0;
+                if ($lastSequenceData) {
+                    $sequence = $lastSequenceData->sequence + 1;
+                }
 
-        if (!$menuManager) {
+                $createData = array(
+                    'name' => $requestData['name'],
+                    'module_id' => $module->id,
+                    'include_in_menu' => (isset($requestData['include_in_menu']) ?? 0),
+                    'menu_type' => $requestData['menu_type'],
+                    'path' => str_replace(' ', '', $requestData['path']),
+                    'sequence' => $sequence,
+                    'parent' => 0,
+                );
+                $menuManager = MenuManager::create($createData);
+            }
+
+            if (!$menuManager) {
+                $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
+                return redirect()->route('module_manager.index');
+            }
+            $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
+            return redirect()->route('module_manager.index');
+
+            DB::commit();
+        } catch (Exception $ex) {
+            DB::rollback();
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
             return redirect()->route('module_manager.index');
         }
-        $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
-        return redirect()->route('module_manager.index');
+
     }
 
     private function pluralize($singular)
