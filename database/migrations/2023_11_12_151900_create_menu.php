@@ -24,7 +24,6 @@ class CreateMenu extends Migration
             $table->integer('include_in_menu')->default(0);
             $table->string('meta_title');
             $table->text('meta_description');
-            $table->date('created_date');
             $table->text('assigned_attributes');
             $table->integer('sequence');
             $table->integer('parent');
