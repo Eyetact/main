@@ -3,8 +3,7 @@ sunday 7-1
 redesign attrs page -- done
 save module and menu to database done
 rendering menu in sidebar dene
-
-change defult route to path from request 
+change defult route to path from request  --done
 
 
 
