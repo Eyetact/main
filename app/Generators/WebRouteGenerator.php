@@ -22,7 +22,8 @@ class WebRouteGenerator
         $modelNamePluralLowercase = GeneratorUtils::pluralKebabCase($model);
 
 
-        $controllerClass = "\n" . "Route::resource('" . $path . "', App\Http\Controllers\Admin\\" . $modelNameSingularPascalCase . "Controller::class)->middleware('auth');";
+        $controllerClass = "\n" . "Route::get('" . $path . "', [ App\Http\Controllers\Admin\\" . $modelNameSingularPascalCase . "Controller::class, 'index' ])->middleware('auth');\n";
+        $controllerClass .= "\n" . "Route::resource('" . $modelNamePluralLowercase . "', App\Http\Controllers\Admin\\" . $modelNameSingularPascalCase . "Controller::class)->middleware('auth');";
 
 
         File::append(base_path('routes/web.php'), $controllerClass);
