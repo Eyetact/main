@@ -240,7 +240,7 @@
                         console.log('AJAX request succeeded:', response);
                         $('#addMenuModal').modal(
                             'hide'); // Hide the modal after successful submission
-                        // location.reload();
+                        location.reload();
                     },
                     error: function(xhr, status, error) {
                         // Handle the error response
