@@ -27,14 +27,27 @@ class AttributeController extends Controller
             $attribute = Attribute::all();
 
             return datatables()->of($attribute)
-                ->addColumn('action', 'company-action')
-                ->addColumn('action', function ($row) {
-                    $btn = '';
-                    $btn .= '<button title="Change status" class="toggle-btn btn btn-' . ($row->is_enable ? 'danger' : 'success') . ' btn-xs" data-id="' . $row->id . '" data-state="' . ($row->is_enable ? 'disabled' : 'enabled') . '">' . ($row->is_enable ? 'Disable' : 'Enable') . '</button>';
-                    $btn =  $btn . '&nbsp;&nbsp; <a class="btn btn-icon  btn-warning" href="' . route('attribute.edit', ['attribute' => $row->id]) . '"><i class="fa fa-edit" data-toggle="tooltip" title="" data-original-title="Edit"></i></a>';                                                        ;
-                    $btn = $btn . '&nbsp;&nbsp;<a class="btn btn-icon  btn-danger delete-attribute delete-attribute" data-id="'.$row->id.'" data-toggle="tooltip" title="" data-original-title="Delete"> <i class="fa fa-trash-o"></i> </a>';
-                    return $btn;
-                })
+            ->addColumn('action', function ($row) {
+                $btn = '<div class="dropdown">
+                <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+
+                </a>
+
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+
+                    <li class="dropdown-item">
+                    <a  href="#" data-id="' . $row->id . '" class="attribute-delete">Delete</a>
+                    </li>
+                </ul>
+            </div>';
+
+                return $btn;
+            })
+            ->rawColumns(['action'])
+
                 ->addIndexColumn()
                 ->make(true);
         }
