@@ -19,6 +19,7 @@ class CreateAttr extends Migration
             $table->enum('type', ['string', 'integer', 'text', 'bigInteger', 'boolean', 'char', 'date', 'time', 'year', 'dateTime', 'decimal', 'double', 'enum', 'float', 'foreignId', 'tinyInteger', 'mediumInteger', 'tinyText', 'mediumText', 'longText']);
             $table->integer('min_length')->nullable();
             $table->integer('max_length')->nullable();
+            $table->integer('steps')->nullable();
             $table->string('input');
             $table->string('required')->default('yes');
             $table->string('default_value')->nullable();

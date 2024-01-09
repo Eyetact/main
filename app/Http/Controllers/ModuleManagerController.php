@@ -88,6 +88,7 @@ class ModuleManagerController extends Controller
                         'type' => $request['column_types'][$i],
                         'min_length' => $request['min_lengths'][$i],
                         'max_length' => $request['max_lengths'][$i],
+                        'steps' => $request['steps'][$i],
                         'input' => $request['input_types'][$i],
                         'required' => $request['requireds'][$i],
                         'default_value' => $request['default_values'][$i],

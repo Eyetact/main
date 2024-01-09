@@ -31,8 +31,8 @@ class AttributeController extends Controller
             $attribute = Attribute::all();
 
             return datatables()->of($attribute)
-            ->addColumn('action', function ($row) {
-                $btn = '<div class="dropdown">
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="dropdown">
                 <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
@@ -48,9 +48,9 @@ class AttributeController extends Controller
                 </ul>
             </div>';
 
-                return $btn;
-            })
-            ->rawColumns(['action'])
+                    return $btn;
+                })
+                ->rawColumns(['action'])
 
                 ->addIndexColumn()
                 ->make(true);
@@ -65,8 +65,8 @@ class AttributeController extends Controller
      */
     public function create()
     {
-        $moduleData=Module::get();
-        return view('attribute.create', ['attribute' => new Attribute(),'moduleData'=>$moduleData]);
+        $moduleData = Module::get();
+        return view('attribute.create', ['attribute' => new Attribute(), 'moduleData' => $moduleData]);
     }
 
     /**
@@ -78,15 +78,32 @@ class AttributeController extends Controller
     public function store(AttributePostRequest $request)
     {
         $request->validated();
-        $requestData=$request->all();
+        $requestData = $request->all();
 
-        $attr = Attribute::where('name',$request['name'] )->where('module',$request['module'])->first();
+        $attr = Attribute::where('name', $request['name'])->where('module', $request['module'])->first();
 
-        if($attr){
+        if ($attr) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
             return redirect()->route('attribute.index');
         }
-        
+        $enumValues = '';
+        if (isset($request['fields_info'])) {
+            $count = count($request['fields_info']);
+            foreach ($request['fields_info'] as $key => $value) {
+                if ($key == $count) {
+
+                    $enumValues .= $value['value'];
+                } else {
+
+                    $enumValues .= $value['value'] . '|';
+                }
+
+            }
+
+            $request['select_options'] = $enumValues;
+
+        }
+
         $createArr = [
 
             'module' => $request['module'],
@@ -94,6 +111,7 @@ class AttributeController extends Controller
             'type' => $request['column_types'],
             'min_length' => $request['min_lengths'],
             'max_length' => $request['max_lengths'],
+            'steps' => $request['steps'],
             'input' => $request['input_types'],
             'required' => $request['requireds'],
             'default_value' => $request['default_values'],
@@ -103,14 +121,12 @@ class AttributeController extends Controller
             'on_delete_foreign' => $request['on_delete_foreign'],
             'is_enable' => isset($request['is_enable']) ? 1 : 0,
             'is_system' => isset($request['is_system']) ? 1 : 0,
-
-
         ];
 
         // dd($createArr);
         $attribute = Attribute::create($createArr);
 
-        $this->generatorService->reGenerateModel($request['module']);       
+        $this->generatorService->reGenerateModel($request['module']);
 
         if (!$attribute) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
@@ -129,8 +145,8 @@ class AttributeController extends Controller
      */
     public function edit(Attribute $attribute)
     {
-        $moduleData=Module::active()->get();
-        return view('attribute.create', ['attribute' => $attribute,'moduleData' => $moduleData]);
+        $moduleData = Module::active()->get();
+        return view('attribute.create', ['attribute' => $attribute, 'moduleData' => $moduleData]);
     }
 
     /**
@@ -144,27 +160,27 @@ class AttributeController extends Controller
     {
         $request->validated();
 
-        $requestData=$request->all();
+        $requestData = $request->all();
 
         // dump($requestData);
 
-        $fields_info=$requestData['fields_info'];
-        if($requestData['field_type']=='select' && $requestData['field_type']=='multiselect' && $requestData['field_type']=='radio' && $requestData['field_type']=='checkbox'){
+        $fields_info = $requestData['fields_info'];
+        if ($requestData['field_type'] == 'select' && $requestData['field_type'] == 'multiselect' && $requestData['field_type'] == 'radio' && $requestData['field_type'] == 'checkbox') {
             $order = 1;
             $fields_info = array_map(function ($key, $arr) use (&$order) {
                 if (is_array($arr)) {
                     return array_merge($arr, ['order' => $order++]);
                 }
             }, array_keys($fields_info), $fields_info);
-        } elseif ($requestData['field_type']=='text' || $requestData['field_type']=='file') {
-            $fields_info = array_filter($fields_info, function ($element,$key) {
+        } elseif ($requestData['field_type'] == 'text' || $requestData['field_type'] == 'file') {
+            $fields_info = array_filter($fields_info, function ($element, $key) {
                 return $key === 'file_ext' || !is_array($element);
             }, ARRAY_FILTER_USE_BOTH);
         } else {
             $fields_info = [];
         }
         // dump($fields_info);
-        $updateArr=[
+        $updateArr = [
             'module' => $requestData['module'],
             'name' => $requestData['name'],
             'field_type' => $requestData['field_type'],
