@@ -79,6 +79,13 @@ class AttributeController extends Controller
     {
         $request->validated();
         $requestData=$request->all();
+
+        $attr = Attribute::where('name',$request['name'] )->where('module',$request['module'])->first();
+
+        if($attr){
+            $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
+            return redirect()->route('attribute.index');
+        }
         
         $createArr = [
 
