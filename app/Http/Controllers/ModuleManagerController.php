@@ -64,8 +64,8 @@ class ModuleManagerController extends Controller
     public function store(ModulePostRequest $request)
     {
 
-        try {
-            DB::beginTransaction();
+        // try {
+        //     DB::beginTransaction();
 
             $requestData = $request->all();
             $request->validated();
@@ -132,11 +132,11 @@ class ModuleManagerController extends Controller
             $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
             return redirect()->route('module_manager.index');
 
-            DB::commit();
-        } catch (Exception $ex) {
-            DB::rollback();
-            dd($ex);
-        }
+        //     DB::commit();
+        // } catch (Exception $ex) {
+        //     DB::rollback();
+        //     dd($ex);
+        // }
 
     }
 

@@ -53,7 +53,7 @@ class ModelGenerator
                         $fields .= "'" . str()->snake($field) . "', ";
                         break;
                     default:
-                        $fields .= "'" . str()->snake($field) . "']";
+                        $fields .= "'" . str()->snake($field) ;
                         break;
                 }
 
@@ -153,6 +153,9 @@ class ModelGenerator
                 }
             }
         }
+
+        $fields .= "'" . str()->snake($field) . "']";
+
 
         if ($protectedHidden != "") {
             $protectedHidden = substr($protectedHidden, 0, -2);
