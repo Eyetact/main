@@ -63,21 +63,21 @@
     </div><!-- end app-content-->
     </div>
 
-	<div class="modal fade bd-example-modal-lg" id="role_form_modal" tabindex="-1" role="dialog"
-    aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
-                        aria-hidden="true">×</span> </button>
-            </div>
-            <div class="modal-body">
+    <div class="modal fade bd-example-modal-lg" id="role_form_modal" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
 
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 @section('js')
     <!-- INTERNAL Data tables -->
@@ -117,7 +117,6 @@
                     $(".modal-body").html(response);
                     $(".modal-title").html("Add Attribute");
                     $("#role_form_modal").modal('show');
-                    $('.dropify').dropify();
                 }
             });
         });
@@ -232,6 +231,401 @@
                     });
                 }
             });
+        });
+    </script>
+
+    @include('attribute.js.functions')
+
+    <script>
+        $(document).on('change', '.form-column-types', function() {
+            var index = 0;
+            let switchRequired = $(`.switch-requireds`)
+
+            switchRequired.prop('checked', true)
+            switchRequired.prop('disabled', false)
+
+            $(`.form-default-value`).remove()
+            $(`.custom-values`).append(`
+            <div class="form-group form-default-value ">
+                <input type="hidden" name="default_values[]">
+            </div>
+        `)
+
+            if ($(this).val() == 'enum') {
+                removeAllInputHidden(index)
+                checkMinAndMaxLength(index)
+                addColumTypeHidden(index)
+
+                $(`.form-option`).remove()
+
+                $(`.options`).append(`
+            <div class="option_fields mt-5">
+                        <div class="table-responsive">
+                            <table class="table card-table table-vcenter text-nowrap table-light draggable-table"
+                                id="type_options">
+                                <thead class="bg-gray-700 text-white">
+                                    <tr>
+                                        <th></th>
+                                        <th class="text-white">Is Default</th>
+                                        <th class="text-white">Label</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="4"><button id="addRow" type="button"
+                                                class="btn btn-info">Add Option</button></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+            `)
+
+                $(`.form-input-types`).html(`
+                <option value="" disabled selected>-- Select input type --</option>
+                <option value="select">Select</option>
+                <option value="radio">Radio</option>
+                <option value="datalist">Datalist</option>
+            `)
+
+            } else if ($(this).val() == 'date') {
+                removeAllInputHidden(index)
+                checkMinAndMaxLength(index)
+                addColumTypeHidden(index)
+
+                $(`.form-input-types`).html(`
+                <option value="" disabled selected>-- Select input type --</option>
+                <option value="date">Date</option>
+                <option value="month">Month</option>
+            `)
+
+            } else if ($(this).val() == 'time') {
+                checkMinAndMaxLength(index)
+                removeAllInputHidden(index)
+                addColumTypeHidden(index)
+
+                $(`.form-input-types`).html(`
+                <option value="" disabled selected>-- Select input type --</option>
+                <option value="time">Time</option>
+            `)
+
+                $(`.form-min-lengths`).prop('readonly', true)
+                $(`.form-max-lengths`).prop('readonly', true)
+                $(`.form-min-lengths`).val('')
+                $(`.form-max-lengths`).val('')
+
+            } else if ($(this).val() == 'year') {
+                removeAllInputHidden(index)
+                checkMinAndMaxLength(index)
+                addColumTypeHidden(index)
+
+                $(`.form-input-types`).html(`
+                <option value="" disabled selected>-- Select input type --</option>
+                <option value="select">Select</option>
+                <option value="datalist">Datalist</option>
+            `)
+
+            } else if ($(this).val() == 'dateTime') {
+                removeAllInputHidden(index)
+                checkMinAndMaxLength(index)
+                addColumTypeHidden(index)
+
+                $(`.form-input-types`).html(`
+                <option value="" disabled selected>-- Select input type --</option>
+                <option value="datetime-local">Datetime local</option>
+            `)
+
+            } else if ($(this).val() == 'foreignId') {
+                removeAllInputHidden(index)
+                checkMinAndMaxLength(index)
+
+                $(`.form-option`).remove()
+
+                $(`.options`).append(`
+                <input type="hidden" name="select_options[]" class="form-option">
+            `)
+
+                $(`.options`).append(`
+                <div class="input-box form-constrain mt-2">
+                    <input type="text" name="constrains[]" class="google-input" placeholder="Constrain or related model name" required>
+                    <small class="text-secondary">
+                        <ul class="my-1 mx-2 p-0">
+                            <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
+                            <li>Field name must be related model + "_id", e.g.: user_id</li>
+                        </ul>
+                    </small>
+                </div>
+                <div class="input-box form-foreign-id mt-2">
+                    <input type="hidden" name="foreign_ids[]" class="google-input" placeholder="Foreign key (optional)">
+                </div>
+                <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                    <select class="google-input" name="on_update_foreign[]" required>
+                        <option value="" disabled selected>-- Select action on update --</option>
+                        <option value="0">Nothing</option>
+                        <option value="1">Cascade</option>
+                        <option value="2">Restrict</option>
+                    </select>
+                </div>
+                <div class="input-box form-on-delete mt-2 form-on-delete-foreign">
+                    <select class="google-input" name="on_delete_foreign[]" required>
+                        <option value="" disabled selected>-- Select action on delete --</option>
+                        <option value="0">Nothing</option>
+                        <option value="1">Cascade</option>
+                        <option value="2">Restrict</option>
+                        <option value="3">Null</option>
+                    </select>
+                </div>
+            `)
+
+                $(`.form-input-types`).html(`
+                <option value="" disabled selected>-- Select input type --</option>
+                <option value="select">Select</option>
+                <option value="datalist">Datalist</option>
+            `)
+
+            } else if (
+                $(this).val() == 'text' ||
+                $(this).val() == 'longText' ||
+                $(this).val() == 'mediumText' ||
+                $(this).val() == 'tinyText' ||
+                $(this).val() == 'string'
+            ) {
+                removeAllInputHidden(index)
+                checkMinAndMaxLength(index)
+                addColumTypeHidden(index)
+
+                $(`.form-input-types`).html(`
+                <option value="" disabled selected>-- Select input type --</option>
+                <option value="text">Text</option>
+                <option value="textarea">Textarea</option>
+                <option value="email">Email</option>
+                <option value="tel">Telepon</option>
+                <option value="password">Password</option>
+                <option value="url">Url</option>
+                <option value="search">Search</option>
+                <option value="file">File</option>
+                <option value="hidden">Hidden</option>
+                <option value="no-input">No Input</option>
+            `)
+
+            } else if (
+                $(this).val() == 'integer' ||
+                $(this).val() == 'mediumInteger' ||
+                $(this).val() == 'bigInteger' ||
+                $(this).val() == 'decimal' ||
+                $(this).val() == 'double' ||
+                $(this).val() == 'float' ||
+                $(this).val() == 'tinyInteger'
+            ) {
+                removeAllInputHidden(index)
+                checkMinAndMaxLength(index)
+                addColumTypeHidden(index)
+
+                $(`.form-input-types`).html(`
+                <option value="" disabled selected>-- Select input type --</option>
+                <option value="number">Number</option>
+                <option value="range">Range</option>
+                <option value="hidden">Hidden</option>
+                <option value="no-input">No Input</option>
+            `)
+
+            } else if ($(this).val() == 'boolean') {
+                removeAllInputHidden(index)
+                checkMinAndMaxLength(index)
+                addColumTypeHidden(index)
+
+                $(`.form-input-types`).html(`
+                <option value="" disabled selected>-- Select input type --</option>
+                <option value="select">Select</option>
+                <option value="radio">Radio</option>
+                <option value="datalist">Datalist</option>
+            `)
+
+            } else {
+                removeAllInputHidden(index)
+                checkMinAndMaxLength(index)
+                addColumTypeHidden(index)
+
+                $(`.form-input-types`).html(`
+                <option value="" disabled selected>-- Select input type --</option>
+                <option value="text">Text</option>
+                <option value="email">Email</option>
+                <option value="tel">Telepon</option>
+                <option value="url">Url</option>
+                <option value="week">Week</option>
+                <option value="color">Color</option>
+                <option value="search">Search</option>
+                <option value="file">File</option>
+                <option value="hidden">Hidden</option>
+                <option value="no-input">No Input</option>
+            `)
+            }
+        });
+
+        $(document).on('change', '.switch-requireds', function() {
+            let index = 0;
+            $(`.form-default-value`).remove()
+
+            let inputTypeDefaultValue = setInputTypeDefaultValue(index)
+
+            if ($(this).is(':checked')) {
+                $(`.custom-values`).append(`
+                <div class="input-boc form-default-value ">
+                    <input type="hidden" name="default_values[]">
+                </div>
+            `)
+            } else {
+                $(`.custom-values`).append(`
+                <div class="input-box form-default-value ">
+                    <input type="${inputTypeDefaultValue}" name="default_values[]" class="google-input" placeholder="Default Value (optional)">
+                </div>
+            `)
+            }
+        })
+
+        $(document).on('change', '.form-input-types', function() {
+            let index = 0
+            let minLength = $(`.form-min-lengths`)
+            let maxLength = $(`.form-max-lengths`)
+            let switchRequired = $(`.switch-requireds`)
+
+            removeInputTypeHidden(index)
+            switchRequired.prop('checked', true)
+            switchRequired.prop('disabled', false)
+
+            $(`.form-default-value`).remove()
+            $(`.custom-value`).append(`
+            <div class="form-group form-default-value ">
+                <input type="hidden" name="default_values[]">
+            </div>
+        `)
+
+            if ($(this).val() == 'file') {
+                minLength.prop('readonly', true)
+                maxLength.prop('readonly', true)
+                minLength.val('')
+                maxLength.val('')
+
+                $(`.input-options`).append(`
+            <div class="input-box mt-2 form-file-types">
+                <select name="file_types[]" class="google-input" required>
+                    <option value="" disabled selected>-- Select file type --</option>
+                    <option value="image">Image</option>
+                </select>
+            </div>
+            <div class="input-box form-file-sizes">
+                <input type="number" name="files_sizes[]" class="google-input" placeholder="Max size(kb), e.g.: 1024" required>
+            </div>
+            <input type="hidden" name="mimes[]" class="form-mimes">
+            <input type="hidden" name="steps[]" class="form-step">
+            `)
+
+            } else if (
+                $(this).val() == 'email' ||
+                $(this).val() == 'select' ||
+                $(this).val() == 'datalist' ||
+                $(this).val() == 'radio' ||
+                $(this).val() == 'date' ||
+                $(this).val() == 'month' ||
+                $(this).val() == 'password' ||
+                $(this).val() == 'number'
+            ) {
+                minLength.prop('readonly', true)
+                maxLength.prop('readonly', true)
+                minLength.val('')
+                maxLength.val('')
+
+                addInputTypeHidden(index)
+
+            } else if ($(this).val() == 'text' || $(this).val() == 'tel') {
+                minLength.prop('readonly', false)
+                maxLength.prop('readonly', false)
+
+                addInputTypeHidden(index)
+
+            } else if ($(this).val() == 'range') {
+                $(`.input-options`).append(`
+                <div class="input-box form-step mt-4">
+                    <input type="number" name="steps[]" class="google-input" placeholder="Step (optional)">
+                </div>
+                <input type="hidden" name="file_types[]" class="form-file-types">
+                <input type="hidden" name="files_sizes[]" class="form-file-sizes">
+                <input type="hidden" name="mimes[]" class="form-mimes">
+            `)
+
+                minLength.prop('readonly', false)
+                maxLength.prop('readonly', false)
+                minLength.prop('required', true)
+                maxLength.prop('required', true)
+
+                // addInputTypeHidden(index)
+
+            } else if ($(this).val() == 'hidden' || $(this).val() == 'no-input') {
+                minLength.prop('readonly', true)
+                maxLength.prop('readonly', true)
+                minLength.val('')
+                maxLength.val('')
+
+                let inputTypeDefaultValue = setInputTypeDefaultValue(index)
+
+                $(`.form-default-value`).remove()
+
+                $(`.input-options`).append(`
+                <div class="input-box form-default-value ">
+                    <input type="${inputTypeDefaultValue}" name="default_values[]" class="google-input" placeholder="Default Value (optional)">
+                </div>
+            `)
+
+                switchRequired.prop('checked', false)
+                switchRequired.prop('disabled', true)
+                addInputTypeHidden(index)
+
+            } else if (
+                $(this).val() == 'time' ||
+                $(this).val() == 'week' ||
+                $(this).val() == 'color' ||
+                $(this).val() == 'datetime-local'
+            ) {
+                minLength.prop('readonly', true)
+                maxLength.prop('readonly', true)
+                minLength.val('')
+                maxLength.val('')
+                addInputTypeHidden(index)
+
+            } else {
+                addInputTypeHidden(index)
+                minLength.prop('readonly', false)
+                maxLength.prop('readonly', false)
+            }
+        });
+
+        var index = 1;
+        $(document).on("click", "#addRow", function() {
+            var html = '';
+            html +=
+                '<tr><td scope="row"></td><td><input type="radio" name="fields_info_radio" onchange="addValue(' +
+                index + ')" class="m-input mr-2"><input type="hidden" value="0" id="fields_info[' + index +
+                '][default]" name="fields_info[' + index +
+                '][default]"></td><td><input type="text" name="fields_info[' + index +
+                '][value]" class="form-control m-input mr-2"  autocomplete="off"></td><td><button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button></td></tr>';
+            $('.option_fields tbody').append(html);
+            index++;
+        });
+
+        function addValue(index) {
+            console.log(index);
+            $('[id^="fields_info"]').each(function() {
+                $(this).val(0);
+            });
+            $("#fields_info\\[" + index + "\\]\\[default\\]").val(1);
+
+        }
+        $(document).on('click', '.removeSection', function () {
+            $(this).closest('tr').remove();
+            index--;
         });
     </script>
 @endsection

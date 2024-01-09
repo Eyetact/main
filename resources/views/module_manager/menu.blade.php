@@ -64,6 +64,16 @@
         ul.my-1.mx-2.p-0 li {
             margin-bottom: 7px;
         }
+        span.fast-btn {
+    width: 100%;
+    height: 216px;
+    background: #f9f9f9;
+    text-align: center;
+    line-height: 216px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    font-weight: bold;
+}
     </style>
 @endsection
 
@@ -151,6 +161,13 @@
     <script src="//code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script>
         $(document).ready(function() {
+
+            $('.fast').hide();
+
+            $(".fast-btn").click(function() {
+                $(this).hide();
+                $(".fast").toggle();
+            });
             // console.log($(".storfront_nested_form").find('li:first').find('.dd-handle:first'));
             // $(".storfront_nested_form").find('li:first').find('.dd-handle:first').trigger('mousedown');
 
