@@ -53,7 +53,7 @@ class ModelGenerator
                         $fields .= "'" . str()->snake($field) . "', ";
                         break;
                     default:
-                        $fields .= "'" . str()->snake($field) ;
+                        $fields .= "'" . str()->snake($field) . "'";
                         break;
                 }
 
@@ -154,7 +154,7 @@ class ModelGenerator
             }
         }
 
-        $fields .= "'" . str()->snake($field) . "']";
+        $fields .=  "]";
 
 
         if ($protectedHidden != "") {
