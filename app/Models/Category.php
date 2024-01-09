@@ -14,14 +14,14 @@ class Category extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['category', 'date'];
+    protected $fillable = ['aaa'];
 
     /**
      * The attributes that should be cast.
      *
      * @var string[]
      */
-    protected $casts = ['category' => 'integer', 'date' => 'date:d/m/Y', 'created_at' => 'datetime:d/m/Y H:i', 'updated_at' => 'datetime:d/m/Y H:i'];
+    protected $casts = ['aaa' => 'string', 'created_at' => 'datetime:d/m/Y H:i', 'updated_at' => 'datetime:d/m/Y H:i'];
     
     
     

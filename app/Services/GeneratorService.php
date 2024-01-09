@@ -42,6 +42,11 @@ class GeneratorService
         (new MigrationGenerator)->generate($request,$id);
     }
 
+    public function reGenerateMigration($id): void
+    {
+        (new MigrationGenerator)->reGenerate($id);
+    }
+
     public function generateController(array $request): void
     {
         (new WebControllerGenerator)->generate($request);

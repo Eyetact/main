@@ -127,6 +127,7 @@ class AttributeController extends Controller
         $attribute = Attribute::create($createArr);
 
         $this->generatorService->reGenerateModel($request['module']);
+        $this->generatorService->reGenerateMigration($request['module']);
 
         if (!$attribute) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
