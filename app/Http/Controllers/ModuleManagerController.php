@@ -70,39 +70,40 @@ class ModuleManagerController extends Controller
             $requestData = $request->all();
             $request->validated();
             $this->generatorService->generateModel($request->all()); // model
-            $this->generatorService->generateMigration($request->all()); // migration
-            Artisan::call('migrate');// run php artisan mnigrate in background
-            $this->generatorService->generateController($request->all()); // migration
-            $this->generatorService->generateRequest($request->all()); // req
-            $this->generatorService->generateRoute($request->all()); // route
-            $this->generatorService->generateViews($request->all()); // views
+            // $this->generatorService->generateMigration($request->all()); // migration
+            // Artisan::call('migrate'); // run php artisan mnigrate in background
+            // $this->generatorService->generateController($request->all()); // migration
+            // $this->generatorService->generateRequest($request->all()); // req
+            // $this->generatorService->generateRoute($request->all()); // route
+            // $this->generatorService->generateViews($request->all()); // views
             $module = Module::create([
                 'name' => $request->name
             ]);
-            foreach ($request->fields as $i => $attr)
-            {
-                $createArr = [
+            if (!empty($request->fields[0])) {
+                foreach ($request->fields as $i => $attr) {
+                    $createArr = [
 
-                    'module' => $module->id,
-                    'name' => $attr,
-                    'type' => $request['column_types'][$i],
-                    'min_length' => $request['min_lengths'][$i],
-                    'max_length' => $request['max_lengths'][$i],
-                    'input' => $request['input_types'][$i],
-                    'required' => $request['requireds'][$i],
-                    'default_value' => $request['default_values'][$i],
-                    'select_option' => $request['select_options'][$i],
-                    'constrain' => $request['constrains'][$i],
-                    'on_update_foreign' => $request['on_update_foreign'][$i],
-                    'on_delete_foreign' => $request['on_delete_foreign'][$i],
-                    'is_enable' => isset($request['is_enable'][$i]) ? 1 : 0,
-                    'is_system' => isset($request['is_system'][$i]) ? 1 : 0,
+                        'module' => $module->id,
+                        'name' => $attr,
+                        'type' => $request['column_types'][$i],
+                        'min_length' => $request['min_lengths'][$i],
+                        'max_length' => $request['max_lengths'][$i],
+                        'input' => $request['input_types'][$i],
+                        'required' => $request['requireds'][$i],
+                        'default_value' => $request['default_values'][$i],
+                        'select_option' => $request['select_options'][$i],
+                        'constrain' => $request['constrains'][$i],
+                        'on_update_foreign' => $request['on_update_foreign'][$i],
+                        'on_delete_foreign' => $request['on_delete_foreign'][$i],
+                        'is_enable' => isset($request['is_enable'][$i]) ? 1 : 0,
+                        'is_system' => isset($request['is_system'][$i]) ? 1 : 0,
 
 
-                ];
+                    ];
 
-                // dd($createArr);
-                $attribute = Attribute::create($createArr);
+                    // dd($createArr);
+                    $attribute = Attribute::create($createArr);
+                }
             }
 
             if ($module) {
