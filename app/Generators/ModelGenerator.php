@@ -251,7 +251,7 @@ class ModelGenerator
                 }
 
                 if ($field->input == 'password') {
-                    $protectedHidden .= "'" . str()->snake($field) . "', ";
+                    $protectedHidden .= "'" . str()->snake($field->name) . "', ";
 
                     if ($i > 0) {
                         $methods .= "\t";
