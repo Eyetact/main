@@ -3,7 +3,7 @@
     // dump($data);
 @endphp
 <form
-    action="{{ $attribute->id == null ? route('attribute.store') : route('attribute.update', ['attribute' => $attribute->id]) }}"
+    action="{{ route('attribute.store') }}"
     id="attributeCreate" method="POST" autocomplete="off" enctype="multipart/form-data">
     @csrf
     <div class="row">

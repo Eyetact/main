@@ -24,10 +24,6 @@ class AttributePostRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'field_type' => 'required',
-            'input_name' => 'required',
-            'input_class' => 'required',
-            'input_id' => 'required'
         ];
     }
 }

@@ -45,23 +45,23 @@
 
     function addInputTypeHidden(index) {
         $(`#tbl-field tbody tr:eq(${index}) td:eq(4)`).append(
-            `<input type="hidden" name="file_types[]" class="form-file-types">
-            <input type="hidden" name="files_sizes[]" class="form-file-sizes">
-            <input type="hidden" name="mimes[]" class="form-mimes">
-            <input type="hidden" name="steps[]" class="form-step">`
+            `<input type="hidden" name="file_types" class="form-file-types">
+            <input type="hidden" name="files_sizes" class="form-file-sizes">
+            <input type="hidden" name="mimes" class="form-mimes">
+            <input type="hidden" name="steps" class="form-step">`
         )
     }
 
     function addColumTypeHidden(index) {
         $(`.options`).append(`
-            <input type="hidden" name="select_options[]" class="form-option">
-            <input type="hidden" name="constrains[]" class="form-constrain">
-            <input type="hidden" name="foreign_ids[]" class="form-foreign-id">
-            <input type="hidden" name="on_update_foreign[]" class="form-on-update-foreign">
-            <input type="hidden" name="on_delete_foreign[]" class="form-on-delete-foreign">
+            <input type="hidden" name="select_options" class="form-option">
+            <input type="hidden" name="constrains" class="form-constrain">
+            <input type="hidden" name="foreign_ids" class="form-foreign-id">
+            <input type="hidden" name="on_update_foreign" class="form-on-update-foreign">
+            <input type="hidden" name="on_delete_foreign" class="form-on-delete-foreign">
         `)
 
-        // $(`#tbl-field tbody tr:eq(${index}) td:eq(5)`).append(`<input type="hidden" name="default_values[]" class="form-default-value">`)
+        // $(`#tbl-field tbody tr:eq(${index}) td:eq(5)`).append(`<input type="hidden" name="default_values" class="form-default-value">`)
     }
 
     function getColumnTypes() {
