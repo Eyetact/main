@@ -37,9 +37,9 @@ class GeneratorService
     }
 
 
-    public function generateMigration(array $request): void
+    public function generateMigration(array $request,$id): void
     {
-        (new MigrationGenerator)->generate($request);
+        (new MigrationGenerator)->generate($request,$id);
     }
 
     public function generateController(array $request): void

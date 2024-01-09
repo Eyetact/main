@@ -3,6 +3,7 @@
 namespace App\Generators;
 use App\Enums\ActionForeign;
 use App\Models\Crud;
+use App\Models\Module;
 
 
 class MigrationGenerator
@@ -14,7 +15,7 @@ class MigrationGenerator
      * @param int $id
      * @return void
      */
-    public function generate(array $request)
+    public function generate(array $request,$id)
     {
         $model = GeneratorUtils::setModelName($request['name']);
         $tableNamePluralLowercase = GeneratorUtils::pluralSnakeCase($model);
@@ -160,7 +161,9 @@ class MigrationGenerator
         );
 
         $migrationName = date('Y') . '_' . date('m') . '_' . date('d')  . '_' . date('h') .  date('i') . date('s') . '_create_' . $tableNamePluralLowercase . '_table.php';
-
+        $module = Module::find($id);
+        $module->migration = $migrationName;
+        $module->save();
         file_put_contents(database_path("/migrations/$migrationName"), $template);
     }
 }
