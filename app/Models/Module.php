@@ -15,4 +15,7 @@ class Module extends Model
         'is_enable'
     ];
 
+    public function fileds(){
+        return $this->hasMany(Attribute::class, 'module');
+    }
 }

@@ -247,7 +247,7 @@
             $(`.form-default-value`).remove()
             $(`.custom-values`).append(`
             <div class="form-group form-default-value ">
-                <input type="hidden" name="default_values[]">
+                <input type="hidden" name="default_values">
             </div>
         `)
 
@@ -345,12 +345,12 @@
                 $(`.form-option`).remove()
 
                 $(`.options`).append(`
-                <input type="hidden" name="select_options[]" class="form-option">
+                <input type="hidden" name="select_options" class="form-option">
             `)
 
                 $(`.options`).append(`
                 <div class="input-box form-constrain mt-2">
-                    <input type="text" name="constrains[]" class="google-input" placeholder="Constrain or related model name" required>
+                    <input type="text" name="constrains" class="google-input" placeholder="Constrain or related model name" required>
                     <small class="text-secondary">
                         <ul class="my-1 mx-2 p-0">
                             <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
@@ -359,10 +359,10 @@
                     </small>
                 </div>
                 <div class="input-box form-foreign-id mt-2">
-                    <input type="hidden" name="foreign_ids[]" class="google-input" placeholder="Foreign key (optional)">
+                    <input type="hidden" name="foreign_ids" class="google-input" placeholder="Foreign key (optional)">
                 </div>
                 <div class="input-box form-on-update mt-2 form-on-update-foreign">
-                    <select class="google-input" name="on_update_foreign[]" required>
+                    <select class="google-input" name="on_update_foreign" required>
                         <option value="" disabled selected>-- Select action on update --</option>
                         <option value="0">Nothing</option>
                         <option value="1">Cascade</option>
@@ -370,7 +370,7 @@
                     </select>
                 </div>
                 <div class="input-box form-on-delete mt-2 form-on-delete-foreign">
-                    <select class="google-input" name="on_delete_foreign[]" required>
+                    <select class="google-input" name="on_delete_foreign" required>
                         <option value="" disabled selected>-- Select action on delete --</option>
                         <option value="0">Nothing</option>
                         <option value="1">Cascade</option>
@@ -474,13 +474,13 @@
             if ($(this).is(':checked')) {
                 $(`.custom-values`).append(`
                 <div class="input-boc form-default-value ">
-                    <input type="hidden" name="default_values[]">
+                    <input type="hidden" name="default_values">
                 </div>
             `)
             } else {
                 $(`.custom-values`).append(`
                 <div class="input-box form-default-value ">
-                    <input type="${inputTypeDefaultValue}" name="default_values[]" class="google-input" placeholder="Default Value (optional)">
+                    <input type="${inputTypeDefaultValue}" name="default_values" class="google-input" placeholder="Default Value (optional)">
                 </div>
             `)
             }
@@ -499,7 +499,7 @@
             $(`.form-default-value`).remove()
             $(`.custom-value`).append(`
             <div class="form-group form-default-value ">
-                <input type="hidden" name="default_values[]">
+                <input type="hidden" name="default_values">
             </div>
         `)
 
@@ -511,16 +511,16 @@
 
                 $(`.input-options`).append(`
             <div class="input-box mt-2 form-file-types">
-                <select name="file_types[]" class="google-input" required>
+                <select name="file_types" class="google-input" required>
                     <option value="" disabled selected>-- Select file type --</option>
                     <option value="image">Image</option>
                 </select>
             </div>
             <div class="input-box form-file-sizes">
-                <input type="number" name="files_sizes[]" class="google-input" placeholder="Max size(kb), e.g.: 1024" required>
+                <input type="number" name="files_sizes" class="google-input" placeholder="Max size(kb), e.g.: 1024" required>
             </div>
-            <input type="hidden" name="mimes[]" class="form-mimes">
-            <input type="hidden" name="steps[]" class="form-step">
+            <input type="hidden" name="mimes" class="form-mimes">
+            <input type="hidden" name="steps" class="form-step">
             `)
 
             } else if (
@@ -549,11 +549,11 @@
             } else if ($(this).val() == 'range') {
                 $(`.input-options`).append(`
                 <div class="input-box form-step mt-4">
-                    <input type="number" name="steps[]" class="google-input" placeholder="Step (optional)">
+                    <input type="number" name="steps" class="google-input" placeholder="Step (optional)">
                 </div>
-                <input type="hidden" name="file_types[]" class="form-file-types">
-                <input type="hidden" name="files_sizes[]" class="form-file-sizes">
-                <input type="hidden" name="mimes[]" class="form-mimes">
+                <input type="hidden" name="file_types" class="form-file-types">
+                <input type="hidden" name="files_sizes" class="form-file-sizes">
+                <input type="hidden" name="mimes" class="form-mimes">
             `)
 
                 minLength.prop('readonly', false)
@@ -575,7 +575,7 @@
 
                 $(`.input-options`).append(`
                 <div class="input-box form-default-value ">
-                    <input type="${inputTypeDefaultValue}" name="default_values[]" class="google-input" placeholder="Default Value (optional)">
+                    <input type="${inputTypeDefaultValue}" name="default_values" class="google-input" placeholder="Default Value (optional)">
                 </div>
             `)
 

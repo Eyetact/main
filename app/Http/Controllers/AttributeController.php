@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\GeneratorService;
 use Illuminate\Http\Request;
 use App\Models\Attribute;
 use App\Models\Module;
@@ -11,10 +12,13 @@ use App\Repositories\FlashRepository;
 class AttributeController extends Controller
 {
     private $flashRepository;
+    private $generatorService;
 
     public function __construct()
     {
         $this->flashRepository = new FlashRepository;
+        $this->generatorService = new GeneratorService();
+
     }
     /**
      * Display a listing of the resource.
@@ -75,43 +79,31 @@ class AttributeController extends Controller
     {
         $request->validated();
         $requestData=$request->all();
-        // dd($requestData);
-        $fields_info=$requestData['fields_info'];
-        if($requestData['field_type']=='select' && $requestData['field_type']=='multiselect' && $requestData['field_type']=='radio' && $requestData['field_type']=='checkbox'){
-            $order = 1;
-            $fields_info = array_map(function ($key, $arr) use (&$order) {
-                if (is_array($arr)) {
-                    return array_merge($arr, ['order' => $order++]);
-                }
-            }, array_keys($fields_info), $fields_info);
-        } elseif ($requestData['field_type']=='text' || $requestData['field_type']=='file') {
-            $fields_info = array_filter($fields_info, function ($element,$key) {
-                return $key === 'file_ext' || !is_array($element);
-            }, ARRAY_FILTER_USE_BOTH);
-        } else {
-            $fields_info = [];
-        }
-        // dd($fields_info);
-        $createArr=[
-            'module' => $requestData['module'],
-            'name' => $requestData['name'],
-            'field_type' => $requestData['field_type'],
-            'input_name' => $requestData['input_name'],
-            'input_class' => $requestData['input_class'],
-            'input_id' => $requestData['input_id'],
-            'scope' => $requestData['scope'],
-            'depend' => $requestData['depend'],
-            'attribute' => $requestData['attribute'],
-            'validation' => $requestData['validation'],
-            'is_required' => isset($requestData['is_required']) ? 1 : 0,
-            'is_enable' => isset($requestData['is_enable']) ? 1 : 0,
-            'is_system' => isset($requestData['is_system']) ? 1 : 0,
-            'fields_info' => json_encode($fields_info),
-            'description' => $requestData['description']
+        
+        $createArr = [
+
+            'module' => $request['module'],
+            'name' => $request['name'],
+            'type' => $request['column_types'],
+            'min_length' => $request['min_lengths'],
+            'max_length' => $request['max_lengths'],
+            'input' => $request['input_types'],
+            'required' => $request['requireds'],
+            'default_value' => $request['default_values'],
+            'select_option' => $request['select_options'],
+            'constrain' => $request['constrains'],
+            'on_update_foreign' => $request['on_update_foreign'],
+            'on_delete_foreign' => $request['on_delete_foreign'],
+            'is_enable' => isset($request['is_enable']) ? 1 : 0,
+            'is_system' => isset($request['is_system']) ? 1 : 0,
+
+
         ];
 
         // dd($createArr);
         $attribute = Attribute::create($createArr);
+
+        $this->generatorService->reGenerateModel($request['module']);       
 
         if (!$attribute) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');

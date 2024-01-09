@@ -31,6 +31,11 @@ class GeneratorService
         (new ModelGenerator)->generate($request);
     }
 
+    public function reGenerateModel($id): void
+    {
+        (new ModelGenerator)->reGenerate($id);
+    }
+
 
     public function generateMigration(array $request): void
     {

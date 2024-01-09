@@ -47,7 +47,7 @@
                         <div class="input-box col-sm-12">
                             <label class="form-label">Select Colmun type<span class="text-red">*</span></label>
 
-                            <select name="column_types[]" class="form-select  google-input form-column-types" required>
+                            <select name="column_types" class="form-select  google-input form-column-types" required>
                                 <option value="" disabled selected>--{{ __('Select column type') }}--
                                 </option>
                                 @foreach (['string', 'integer', 'text', 'bigInteger', 'boolean', 'char', 'date', 'time', 'year', 'dateTime', 'decimal', 'double', 'enum', 'float', 'foreignId', 'tinyInteger', 'mediumInteger', 'tinyText', 'mediumText', 'longText'] as $type)
@@ -56,11 +56,15 @@
                             </select>
 
 
-                            <div class="options"></div>
+                            <div class="options">
+                                <input type="hidden" name="select_options" class="form-option">
+                                            <input type="hidden" name="constrains" class="form-constrain">
+                                            <input type="hidden" name="foreign_ids" class="form-foreign-id">
+                            </div>
                         </div>
                         <div class="input-box col-sm-12">
                             <label class="form-label">Select Attribute type<span class="text-red">*</span></label>
-                            <select name="input_types[]" class="form-select form-input-types  google-input" required>
+                            <select name="input_types" class="form-select form-input-types  google-input" required>
                                 <option value="" disabled selected>-- {{ __('Select input type') }}
                                     --</option>
                                 <option value="" disabled>{{ __('Select the column type first') }}
@@ -112,8 +116,8 @@
                             <div class="row align-items-center justify-content-center">
                                 <div class="form-group col-md-4">
                                     <label class="custom-switch form-label">
-                                        <input type="checkbox" name="requireds[]"
-                                            class="custom-switch-input switch-requireds" id="requireds[]" checked>
+                                        <input type="checkbox" name="requireds"
+                                            class="custom-switch-input switch-requireds" id="requireds" checked>
                                         <span class="custom-switch-indicator"></span>
                                         <span class="custom-switch-description">Required</span>
                                     </label>
@@ -122,19 +126,19 @@
 
                             </div>
                         </div>
-                        <input type="hidden" name="default_values[]" class="form-default-value"
+                        <input type="hidden" name="default_values" class="form-default-value"
                             placeholder="{{ __('Default Value (optional)') }}">
 
                         <div class="col-md-6">
                             <div class="input-box">
-                                <input type="number" name="min_lengths[]"
+                                <input type="number" name="min_lengths"
                                     class=" google-input form-control form-min-lengths" min="1"
                                     placeholder="Min">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="input-box">
-                                <input type="number" name="max_lengths[]"
+                                <input type="number" name="max_lengths"
                                     class="  google-input form-control form-max-lengths" min="1"
                                     placeholder="Max">
                             </div>
