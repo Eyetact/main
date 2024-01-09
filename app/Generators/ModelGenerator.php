@@ -22,9 +22,9 @@ class ModelGenerator
         $totalFields = count($request['fields']);
         $dateTimeFormat = config('generator.format.datetime') ? config('generator.format.datetime') : 'd/m/Y H:i';
         $protectedHidden = "";
-
-        if (in_array('password', $request['input_types'])) {
-            $protectedHidden .= <<<PHP
+        if (!empty($request['fields'][0])) {
+            if (in_array('password', $request['input_types'])) {
+                $protectedHidden .= <<<PHP
             /**
                  * The attributes that should be hidden for serialization.
                  *
@@ -32,6 +32,7 @@ class ModelGenerator
                 */
                 protected \$hidden = [
             PHP;
+            }
         }
 
         switch ($path) {
