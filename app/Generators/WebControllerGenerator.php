@@ -37,64 +37,62 @@ class WebControllerGenerator
 
         $relations = "";
         $addColumns = "";
+        if (!empty($request['fields'][0])) {
+            if (
+                in_array('text', $request['column_types']) ||
+                in_array('longText', $request['column_types'])
+            ) {
+                $limitText = config('generator.format.limit_text') ? config('generator.format.limit_text') : 200;
 
-        if (
-            in_array('text', $request['column_types']) ||
-            in_array('longText', $request['column_types'])
-        ) {
-            $limitText = config('generator.format.limit_text') ? config('generator.format.limit_text') : 200;
-
-            foreach ($request['column_types'] as $i => $type) {
-                if ($type == 'text' || $type == 'longText') {
-                    $addColumns .= "->addColumn('" . str($request['fields'][$i])->snake() . "', function(\$row){
+                foreach ($request['column_types'] as $i => $type) {
+                    if ($type == 'text' || $type == 'longText') {
+                        $addColumns .= "->addColumn('" . str($request['fields'][$i])->snake() . "', function(\$row){
                     return str(\$row->" . str($request['fields'][$i])->snake() . ")->limit($limitText);
                 })\n\t\t\t\t";
+                    }
                 }
             }
-        }
 
-        // load the relations for create, show, and edit
-        if (in_array('foreignId', $request['column_types'])) {
+            // load the relations for create, show, and edit
+            if (in_array('foreignId', $request['column_types'])) {
 
-            $relations .= "$" . $modelNameSingularCamelCase . "->load(";
+                $relations .= "$" . $modelNameSingularCamelCase . "->load(";
 
-            $countForeidnId = count(array_keys($request['column_types'], 'foreignId'));
+                $countForeidnId = count(array_keys($request['column_types'], 'foreignId'));
 
-            $query = "$modelNameSingularPascalCase::with(";
+                $query = "$modelNameSingularPascalCase::with(";
 
-            foreach ($request['constrains'] as $i => $constrain) {
-                if ($constrain != null) {
-                    $constrainName = GeneratorUtils::setModelName($request['constrains'][$i]);
+                foreach ($request['constrains'] as $i => $constrain) {
+                    if ($constrain != null) {
+                        $constrainName = GeneratorUtils::setModelName($request['constrains'][$i]);
 
-                    $constrainSnakeCase = GeneratorUtils::singularSnakeCase($constrainName);
-                    $selectedColumns = GeneratorUtils::selectColumnAfterIdAndIdItself($constrainName);
-                    $columnAfterId = GeneratorUtils::getColumnAfterId($constrainName);
+                        $constrainSnakeCase = GeneratorUtils::singularSnakeCase($constrainName);
+                        $selectedColumns = GeneratorUtils::selectColumnAfterIdAndIdItself($constrainName);
+                        $columnAfterId = GeneratorUtils::getColumnAfterId($constrainName);
 
-                    if ($countForeidnId + 1 < $i) {
-                        $relations .= "'$constrainSnakeCase:$selectedColumns', ";
-                        $query .= "'$constrainSnakeCase:$selectedColumns', ";
-                    } else {
-                        $relations .= "'$constrainSnakeCase:$selectedColumns'";
-                        $query .= "'$constrainSnakeCase:$selectedColumns'";
-                    }
+                        if ($countForeidnId + 1 < $i) {
+                            $relations .= "'$constrainSnakeCase:$selectedColumns', ";
+                            $query .= "'$constrainSnakeCase:$selectedColumns', ";
+                        } else {
+                            $relations .= "'$constrainSnakeCase:$selectedColumns'";
+                            $query .= "'$constrainSnakeCase:$selectedColumns'";
+                        }
 
-                    $addColumns .= "->addColumn('$constrainSnakeCase', function (\$row) {
+                        $addColumns .= "->addColumn('$constrainSnakeCase', function (\$row) {
                     return \$row->" . $constrainSnakeCase . " ? \$row->" . $constrainSnakeCase . "->$columnAfterId : '';
                 })";
+                    }
                 }
+
+                $query .= ")";
+                $relations .= ");\n\n\t\t";
+
+                $query = str_replace("''", "', '", $query);
+                $relations = str_replace("''", "', '", $relations);
             }
-
-            $query .= ")";
-            $relations .= ");\n\n\t\t";
-
-            $query = str_replace("''", "', '", $query);
-            $relations = str_replace("''", "', '", $relations);
         }
-
         $insertDataAction = $modelNameSingularPascalCase . "::create(\$request->validated());";
         $updateDataAction = "\$" . $modelNameSingularCamelCase . "->update(\$request->validated());";
-
-
 
         /**
          * default controller
@@ -149,6 +147,5 @@ class WebControllerGenerator
                 break;
         }
     }
-
 
 }
