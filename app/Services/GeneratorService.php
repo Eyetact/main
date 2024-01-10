@@ -62,6 +62,11 @@ class GeneratorService
         (new RequestGenerator)->generate($request);
     }
 
+    public function reGenerateRequest($id): void
+    {
+        (new RequestGenerator)->reGenerate($id);
+    }
+
     public function generateRoute(array $request): void
     {
         (new WebRouteGenerator)->generate($request);

@@ -76,7 +76,7 @@ class ModuleManagerController extends Controller
         $this->generatorService->generateMigration($request->all(),$module->id); // migration
         Artisan::call('migrate'); // run php artisan mnigrate in background
         $this->generatorService->generateController($request->all()); // migration
-        // $this->generatorService->generateRequest($request->all()); // req
+        $this->generatorService->generateRequest($request->all()); // req
         // $this->generatorService->generateRoute($request->all()); // route
         // $this->generatorService->generateViews($request->all()); // views
 
@@ -99,6 +99,8 @@ class ModuleManagerController extends Controller
                     'on_delete_foreign' => $request['on_delete_foreign'][$i],
                     'is_enable' => isset($request['is_enable'][$i]) ? 1 : 0,
                     'is_system' => isset($request['is_system'][$i]) ? 1 : 0,
+                    'max_size' => $request['files_sizes'][$i],
+                    'file_type' => $request['file_types'][$i],
 
 
                 ];

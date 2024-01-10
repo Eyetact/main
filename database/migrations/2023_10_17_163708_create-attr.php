@@ -28,6 +28,8 @@ class CreateAttr extends Migration
             $table->string('on_update_foreign')->nullable(); // for relation;
             $table->string('on_delete_foreign')->nullable(); // for relation;
             $table->boolean('is_enable')->default(1)->comment('0: disable, 1: enable');
+            $table->integer('max_size')->nullable();
+            $table->string('file_type')->nullable();
 
 
             $table->timestamps();

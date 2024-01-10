@@ -2,6 +2,7 @@
 
 namespace App\Generators;
 use App\Models\Crud;
+use App\Models\Module;
 use File;
 
 class RequestGenerator
@@ -261,6 +262,296 @@ class RequestGenerator
                     $updateValidations = str_replace(
                         "'" . $request['fields'][$key] . "' => 'required",
                         "'" . $request['fields'][$key] . "' => 'nullable",
+                        $updateValidations
+                    );
+                }
+            }
+        }
+
+        $updateRequestTemplate = str_replace(
+            [
+                '{{modelNamePascalCase}}',
+                '{{fields}}',
+                '{{namespace}}',
+            ],
+            [
+                "Update$model",
+                $updateValidations,
+                $namespace
+            ],
+            GeneratorUtils::getTemplate('request')
+        );
+
+        /**
+         * Create a request class file.
+         */
+        switch ($path) {
+            case '':
+                GeneratorUtils::checkFolder(app_path('/Http/Requests'));
+                file_put_contents(app_path("/Http/Requests/Store{$model}Request.php"), $storeRequestTemplate);
+                file_put_contents(app_path("/Http/Requests/Update{$model}Request.php"), $updateRequestTemplate);
+                break;
+            default:
+                $fullPath = app_path("/Http/Requests/$path");
+                GeneratorUtils::checkFolder($fullPath);
+                file_put_contents("$fullPath/Store{$model}Request.php", $storeRequestTemplate);
+                file_put_contents("$fullPath/Update{$model}Request.php", $updateRequestTemplate);
+                break;
+        }
+    }
+
+
+    public function reGenerate(array $request): void
+    {
+        $module = Module::find($id);
+        $model = GeneratorUtils::setModelName($module->name);
+        $path = GeneratorUtils::getModelLocation($module->name);
+
+        $validations = '';
+        $totalFields = count($module->fields);
+
+        switch ($path) {
+            case '':
+                $namespace = "namespace App\Http\Requests;";
+                break;
+            default:
+                $namespace = "namespace App\Http\Requests\\$path;";
+                break;
+        }
+
+        foreach ($module->fields as $i => $field) {
+            /**
+             * will generate like:
+             * 'name' =>
+             */
+            $validations .= "'" . str($field->name)->snake() . "' => ";
+
+            /**
+             * will generate like:
+             * 'name' => 'required
+             */
+            match ($field->required) {
+                'yes' => $validations .= "'required",
+                'on' => $validations .= "'required",
+                default => $validations .= "'nullable"
+            };
+
+            switch ($field->type) {
+                case 'url':
+                    /**
+                     * will generate like:
+                     * 'name' => 'required|url',
+                     */
+                    $validations .= "|url";
+                    break;
+                case 'email':
+                    $uniqueValidation = 'unique:' . GeneratorUtils::pluralSnakeCase($model) . ',' . GeneratorUtils::singularSnakeCase($field);
+
+                    /**
+                     * will generate like:
+                     * 'name' => 'required|email',
+                     */
+                    $validations .= "|email|" . $uniqueValidation;
+                    break;
+                case 'date':
+                    /**
+                     * will generate like:
+                     * 'name' => 'required|date',
+                     */
+                    $validations .= "|date";
+                    break;
+                case 'password':
+                    /**
+                     * will generate like:
+                     * 'name' => 'required|confirmed',
+                     */
+                    $validations .= "|confirmed";
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+
+            if ($field->type == 'file' && $field->file_type == 'image') {
+
+                $maxSize = 1024;
+                if(config('generator.image.size_max')){
+                    $maxSize = config('generator.image.size_max');
+                }
+
+                if($field->max_size){
+                    $maxSize = $field->max_size;
+                }
+
+                /**
+                 * will generate like:
+                 * 'cover' => 'required|image|size:1024',
+                 */
+                $validations .= "|image|max:" . $maxSize;
+            } elseif ($field->type == 'file' && $field->file_type == 'mimes') {
+                /**
+                 * will generate like:
+                 * 'name' => 'required|mimes|size:1024',
+                 */
+                $validations .= "|mimes:" . $field->file_type . "|size:" . $field->max_size;
+            }
+
+            if ($field->type == 'enum') {
+                /**
+                 * will generate like:
+                 * 'name' => 'required|in:water,fire',
+                 */
+                $in = "|in:";
+
+                $options = explode('|', $field->select_option);
+
+                $totalOptions = count($options);
+
+                foreach ($options as $key => $option) {
+                    if ($key + 1 != $totalOptions) {
+                        $in .= $option . ",";
+                    } else {
+                        // for latest validation
+                        $in .= $option;
+                    }
+                }
+
+                $validations .= $in;
+            }
+
+            if ($field->input == 'text' || $field->input == 'textarea') {
+                /**
+                 * will generate like:
+                 * 'name' => 'required|string',
+                 */
+                $validations .= "|string";
+            }
+
+            if ($field->input == 'number' || $field->type == 'year' || $field->input == 'range') {
+                /**
+                 * will generate like:
+                 * 'name' => 'required|numeric',
+                 */
+                $validations .= "|numeric";
+            }
+
+            if ($field->input == 'range' && $field->max_length >= 0) {
+                /**
+                 * will generate like:
+                 * 'name' => 'numeric|between:1,10',
+                 */
+                $validations .= "|between:" . $field->min_length . "," . $field->max_length;
+            }
+
+            if ($field->min_length && $field->input !== 'range') {
+                /**
+                 * will generate like:
+                 * 'name' => 'required|min:5',
+                 */
+                $validations .= "|min:" . $field->min_length;
+            }
+
+            if ($field->max_length && $field->max_length >= 0 && $field->input !== 'range') {
+                /**
+                 * will generate like:
+                 * 'name' => 'required|max:30',
+                 */
+                $validations .= "|max:" . $field->input;
+            }
+
+            switch ($field->type) {
+                case 'boolean':
+                    /**
+                     * will generate like:
+                     * 'name' => 'required|boolean',
+                     */
+                    $validations .= "|boolean',";
+                    break;
+                case 'foreignId':
+                    // remove '/' or sub folders
+                    $constrainModel = GeneratorUtils::setModelName($field->constrain);
+                    $constrainpath = GeneratorUtils::getModelLocation($field->constrain);
+
+                    switch ($constrainpath != '') {
+                        case true:
+                            /**
+                             * will generate like:
+                             * 'name' => 'required|max:30|exists:App\Models\Master\Product,id',
+                             */
+                            $validations .= "|exists:App\Models\\" . str_replace('/', '\\', $constrainpath) . "\\" . GeneratorUtils::singularPascalCase($constrainModel) . ",id',";
+                            break;
+                        default:
+                            /**
+                             * will generate like:
+                             * 'name' => 'required|max:30|exists:App\Models\Product,id',
+                             */
+                            $validations .= "|exists:App\Models\\" . GeneratorUtils::singularPascalCase($constrainModel) . ",id',";
+                            break;
+                    }
+                    break;
+                default:
+                    /**
+                     * will generate like:
+                     * 'name' => 'required|max:30|exists:App\Models\Product,id',
+                     */
+                    $validations .= "',";
+                    break;
+            }
+
+            if ($i + 1 != $totalFields) {
+                $validations .= "\n\t\t\t";
+            }
+        }
+        // end of foreach
+
+        $storeRequestTemplate = str_replace(
+            [
+                '{{modelNamePascalCase}}',
+                '{{fields}}',
+                '{{namespace}}',
+            ],
+            [
+                "Store$model",
+                $validations,
+                $namespace
+            ],
+            GeneratorUtils::getTemplate('request')
+        );
+
+        /**
+         * on update request if any image validation, then set 'required' to nullbale
+         */
+        switch (str_contains($storeRequestTemplate, "required|image")) {
+            case true:
+                $updateValidations = str_replace("required|image", "nullable|image", $validations);
+                break;
+            default:
+                $updateValidations = $validations;
+                break;
+        }
+
+        if (isset($uniqueValidation)) {
+            /**
+             * Will generate something like:
+             *
+             * unique:users,email,' . $this->user->id
+             */
+            $updateValidations = str_replace($uniqueValidation, $uniqueValidation . ",' . \$this->" . GeneratorUtils::singularCamelCase($model) . "->id", $validations);
+
+            // change ->id', to ->id,
+            $updateValidations = str_replace("->id'", "->id", $updateValidations);
+        }
+
+        if (count($module->fields()->where('input','password')->get()) > 0) {
+            foreach ($module->fields as $key => $field) {
+                if ($field->input == 'password' && ($field->required == 'yes' || $field->required == 'on')) {
+                    /**
+                     * change:
+                     * 'password' => 'required' to 'password' => 'nullable' in update request validation
+                     */
+                    $updateValidations = str_replace(
+                        "'" . $field->name . "' => 'required",
+                        "'" . $field->name . "' => 'nullable",
                         $updateValidations
                     );
                 }

@@ -124,6 +124,8 @@ class AttributeController extends Controller
             'on_delete_foreign' => $request['on_delete_foreign'],
             'is_enable' => isset($request['is_enable']) ? 1 : 0,
             'is_system' => isset($request['is_system']) ? 1 : 0,
+            'max_size' => $request['files_sizes'],
+            'file_type' => $request['file_types'],
         ];
 
         // dd($createArr);
@@ -132,7 +134,7 @@ class AttributeController extends Controller
         $this->generatorService->reGenerateModel($request['module']);
         $this->generatorService->reGenerateMigration($request['module']);
         $this->generatorService->reGenerateController($request['module']);
-
+        $this->generatorService->reGenerateRequest($request['module']);
 
         if (!$attribute) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
