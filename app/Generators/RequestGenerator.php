@@ -305,7 +305,7 @@ class RequestGenerator
     }
 
 
-    public function reGenerate(array $request): void
+    public function reGenerate($id): void
     {
         $module = Module::find($id);
         $model = GeneratorUtils::setModelName($module->name);
@@ -376,7 +376,7 @@ class RequestGenerator
                     break;
             }
 
-            if ($field->type == 'file' && $field->file_type == 'image') {
+            if ($field->input == 'file' && $field->file_type == 'image') {
 
                 $maxSize = 1024;
                 if(config('generator.image.size_max')){
@@ -392,7 +392,7 @@ class RequestGenerator
                  * 'cover' => 'required|image|size:1024',
                  */
                 $validations .= "|image|max:" . $maxSize;
-            } elseif ($field->type == 'file' && $field->file_type == 'mimes') {
+            } elseif ($field->input == 'file' && $field->file_type == 'mimes') {
                 /**
                  * will generate like:
                  * 'name' => 'required|mimes|size:1024',
