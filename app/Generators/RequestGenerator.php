@@ -253,6 +253,7 @@ class RequestGenerator
             // change ->id', to ->id,
             $updateValidations = str_replace("->id'", "->id", $updateValidations);
         }
+        if (!empty($request['fields'][0])){
 
         if (in_array('password', $request['input_types'])) {
             foreach ($request['input_types'] as $key => $input) {
@@ -269,6 +270,7 @@ class RequestGenerator
                 }
             }
         }
+    }
 
         $updateRequestTemplate = str_replace(
             [
