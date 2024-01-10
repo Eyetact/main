@@ -87,11 +87,8 @@ class GeneratorService
     public function reGenerateViews($id): void
     {
         (new IndexViewGenerator)->reGenerate($id);
-        // (new ActionViewGenerator)->generate($id);
-        // (new CreateViewGenerator)->generate($id);
-        // (new FormViewGenerator)->generate($id);
+        (new FormViewGenerator)->reGenerate($id);
         // (new ShowViewGenerator)->generate($id);
-        // (new EditViewGenerator)->generate($id);
         // (new ViewComposerGenerator)->generate($id);
     }
 
