@@ -30,6 +30,7 @@ class RequestGenerator
                 break;
         }
 
+        if (!empty($request['fields'][0])){
         foreach ($request['fields'] as $i => $field) {
             /**
              * will generate like:
@@ -213,6 +214,7 @@ class RequestGenerator
             }
         }
         // end of foreach
+    }
 
         $storeRequestTemplate = str_replace(
             [
