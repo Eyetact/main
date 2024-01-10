@@ -21,6 +21,8 @@ class ViewComposerGenerator
         $model = GeneratorUtils::setModelName($request['name']);
         $viewPath = GeneratorUtils::getModelLocation($request['name']);
 
+
+        if (!empty($request['fields'][0])) {
         foreach ($request['column_types'] as $i => $dataType) {
             if ($dataType == 'foreignId') {
                 // remove '/' or sub folders
@@ -73,6 +75,7 @@ class ViewComposerGenerator
                 file_put_contents($path, $viewProviderTemplate);
             }
         }
+    }
 
     }
 
