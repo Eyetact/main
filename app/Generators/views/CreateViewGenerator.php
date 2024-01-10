@@ -33,7 +33,8 @@ class CreateViewGenerator
                 $modelNamePluralUcWords,
                 $modelNameSingularLowerCase,
                 $modelNamePluralKebabCase,
-                in_array('file', $request['input_types']) ? ' enctype="multipart/form-data"' : '',
+
+                !empty($request['fields']) ? (in_array('file', $request['input_types']) ? ' enctype="multipart/form-data"' : '') : '',
                 $path != '' ? str_replace('\\', '.', $path) . "." : ''
             ],
             GeneratorUtils::getTemplate('views/create')
