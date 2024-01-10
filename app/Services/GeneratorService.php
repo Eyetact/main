@@ -52,6 +52,11 @@ class GeneratorService
         (new WebControllerGenerator)->generate($request);
     }
 
+    public function reGenerateController($id): void
+    {
+        (new WebControllerGenerator)->reGenerate($id);
+    }
+
     public function generateRequest(array $request): void
     {
         (new RequestGenerator)->generate($request);

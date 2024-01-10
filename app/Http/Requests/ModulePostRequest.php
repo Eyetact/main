@@ -32,7 +32,7 @@ class ModulePostRequest extends FormRequest
             //     'required',
             //     Rule::unique('modules', 'name')->ignore($menuId),
             // ],
-            'name' => 'required | unique:menus,name,' . $menuId,
+            'name' => 'required |unique |unique:menus,name,' . $menuId,
             'path' => 'required | unique:menus,path,' . $menuId ,
             // 'created_date' => 'required',
         ];
