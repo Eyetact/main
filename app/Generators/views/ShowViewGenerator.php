@@ -24,6 +24,7 @@ class ShowViewGenerator
         $totalFields = count($request['fields']);
         $dateTimeFormat = config('generator.format.datetime') ? config('generator.format.datetime') : 'd/m/Y H:i';
 
+        if (!empty($request['fields'][0])) {
         foreach ($request['fields'] as $i => $field) {
             if ($request['input_types'][$i] != 'password') {
                 if ($i >= 1) {
@@ -103,6 +104,7 @@ class ShowViewGenerator
                 }
             }
         }
+    }
 
         $template = str_replace(
             [

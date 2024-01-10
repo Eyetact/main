@@ -22,6 +22,7 @@ class FormViewGenerator
 
         $template = "<div class=\"row mb-2\">\n";
 
+        if (!empty($request['fields'][0])) {
         foreach ($request['fields'] as $i => $field) {
 
             if ($request['input_types'][$i] !== 'no-input') {
@@ -539,6 +540,7 @@ class FormViewGenerator
                 }
             }
         }
+    }
 
         $template .= "</div>";
 
