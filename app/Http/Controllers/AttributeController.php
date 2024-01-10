@@ -90,6 +90,9 @@ class AttributeController extends Controller
         if (isset($request['fields_info'])) {
             $count = count($request['fields_info']);
             foreach ($request['fields_info'] as $key => $value) {
+                if( $value['default'] == 1 ){
+                    $request['default_values'] =  $value['value'];
+                }
                 if ($key == $count) {
 
                     $enumValues .= $value['value'];

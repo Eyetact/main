@@ -13,10 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('{{tableNamePluralLowecase}}');
-        Schema::create('{{tableNamePluralLowecase}}', function (Blueprint $table) {
+        Schema::dropIfExists('categories');
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            {{fields}}
+            $table->string('name');
+			$table->text('file');
+			$table->foreignId('user_id')->constrained('users');
+			$table->foreignId('role_id')->constrained('roles')->cascadeOnUpdate()->cascadeOnDelete();
+			$table->enum('enum', ['aya', 'alaa']);
+			$table->enum('enum2', ['alaa', 'aya'])->default('aya');
             $table->timestamps();
         });
     }
@@ -28,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('{{tableNamePluralLowecase}}');
+        Schema::dropIfExists('categories');
     }
 };
