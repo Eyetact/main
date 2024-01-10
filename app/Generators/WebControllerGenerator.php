@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Generators;
+use App\Models\Module;
 
 class WebControllerGenerator
 {
