@@ -5,3 +5,5 @@ View::composer(['admin.{{viewPath}}{{modelNamePluralKebabCase}}.create', 'admin.
             );
         });
 
+
+
