@@ -21,9 +21,11 @@ add more file types
 
 model edit and delete attributes => regenerate model 
 
+email,pw validation in req file
 
+def value validation in migration file
 
-
+redesign for forms
 
 
 
