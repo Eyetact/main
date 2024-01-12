@@ -340,7 +340,7 @@ class RequestGenerator
                 default => $validations .= "'nullable"
             };
 
-            switch ($field->type) {
+            switch ($field->input) {
                 case 'url':
                     /**
                      * will generate like:
@@ -349,7 +349,7 @@ class RequestGenerator
                     $validations .= "|url";
                     break;
                 case 'email':
-                    $uniqueValidation = 'unique:' . GeneratorUtils::pluralSnakeCase($model) . ',' . GeneratorUtils::singularSnakeCase($field);
+                    $uniqueValidation = 'unique:' . GeneratorUtils::pluralSnakeCase($model) . ',' . GeneratorUtils::singularSnakeCase($field->name);
 
                     /**
                      * will generate like:
@@ -545,7 +545,6 @@ class RequestGenerator
             // change ->id', to ->id,
             $updateValidations = str_replace("->id'", "->id", $updateValidations);
         }
-
         if (count($module->fields()->where('input','password')->get()) > 0) {
             foreach ($module->fields as $key => $field) {
                 if ($field->input == 'password' && ($field->required == 'yes' || $field->required == 'on')) {

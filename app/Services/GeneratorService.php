@@ -91,7 +91,7 @@ class GeneratorService
         (new FormViewGenerator)->reGenerate($id);
         (new EditViewGenerator)->reGenerate($id);
 
-        // (new ShowViewGenerator)->generate($id);
+        (new ShowViewGenerator)->reGenerate($id);
         (new ViewComposerGenerator)->reGenerate($id);
     }
 
