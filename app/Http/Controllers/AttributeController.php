@@ -43,7 +43,7 @@ class AttributeController extends Controller
 
 
                     <li class="dropdown-item">
-                    <a  href="#" data-id="' . $row->id . '" class="attribute-delete">Delete</a>
+                    <a class="delete-attribute" href="#" data-id="' . $row->id . '" class="attribute-delete">Delete</a>
                     </li>
                 </ul>
             </div>';
@@ -116,7 +116,7 @@ class AttributeController extends Controller
             'max_length' => $request['max_lengths'],
             'steps' => $request['steps'],
             'input' => $request['input_types'],
-            'required' => $request['requireds'],
+            'required' => isset($request['requireds']) ? 'yes' :'no',
             'default_value' => $request['default_values'],
             'select_option' => $request['select_options'],
             'constrain' => $request['constrains'],
@@ -144,6 +144,11 @@ class AttributeController extends Controller
 
         $this->flashRepository->setFlashSession('alert-success', 'Attribute created successfully.');
         return redirect()->route('attribute.index');
+    }
+
+    public function test($id){
+        $this->generatorService->reGenerateViews($id);
+
     }
 
     /**
@@ -227,9 +232,17 @@ class AttributeController extends Controller
      */
     public function destroy(Attribute $attribute)
     {
-        $attribute = Attribute::find($attribute->id)->delete();
+        $attribute = Attribute::find($attribute->id);
+        $id = $attribute->module;
+        $attribute->delete();
         if ($attribute) {
+            $this->generatorService->reGenerateModel($id);
+            $this->generatorService->reGenerateMigration($id);
+            $this->generatorService->reGenerateController($id);
+            $this->generatorService->reGenerateRequest($id);
+            $this->generatorService->reGenerateViews($id);
             return response()->json(['msg' => 'Attribute deleted successfully!'], 200);
+            
         } else {
             return response()->json(['msg' => 'Something went wrong, please try again.'], 200);
         }

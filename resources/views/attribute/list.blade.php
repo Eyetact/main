@@ -441,7 +441,6 @@
                 <option value="" disabled selected>-- Select input type --</option>
                 <option value="select">Select</option>
                 <option value="radio">Radio</option>
-                <option value="datalist">Datalist</option>
             `)
 
             } else {

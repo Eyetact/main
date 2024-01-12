@@ -16,10 +16,10 @@
                     <div class="row">
                         <div class="col-sm-12 input-box">
                             <label class="form-label" for="module">Module<span class="text-red">*</span></label>
-                            <select name="module" class="google-input module" id="module">
+                            <select name="module" class="google-input module" id="module" required>
                                 <option value="" selected>Select Module</option>
                                 @foreach ($moduleData as $module)
-                                    <option value="{{ $module->id }}"
+                                    <option value="{{ $module->id }}" @if(in_array($module->id,[1,2,3])) disabled @endif
                                         {{ $module->id == $attribute->module ? 'selected' : '' }}>{{ $module->name }}
                                     </option>
                                 @endforeach
