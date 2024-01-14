@@ -24,7 +24,8 @@ class MenuManager extends Model
         'sequence',
         'parent',
         'is_deleted',
-        'deleted_at'
+        'deleted_at',
+        'sidebar_name'
     ];
 
     public function children()

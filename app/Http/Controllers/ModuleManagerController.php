@@ -67,8 +67,11 @@ class ModuleManagerController extends Controller
         // try {
         //     DB::beginTransaction();
         $module = Module::create([
-            'name' => $request->name
+            'name' => $request->name,
+            'is_system' => isset($request->is_system) ? 1 : 0,
         ]);
+
+
 
         $requestData = $request->all();
         $request->validated();
@@ -125,6 +128,7 @@ class ModuleManagerController extends Controller
                 'path' => str_replace(' ', '', $requestData['path']),
                 'sequence' => $sequence,
                 'parent' => 0,
+                'sidebar_name' => $requestData['sidebar_name'],
             );
             $menuManager = MenuManager::create($createData);
         }

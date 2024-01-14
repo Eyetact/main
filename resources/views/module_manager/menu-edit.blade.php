@@ -24,12 +24,26 @@
                                 <input type="text" name="path" id="apath" class="form-control" value="{{ $module->menu->path }}">
                             </div>
 
+                            <div class="col-sm-12 form-group">
+                                <label class="form-label" for="path">Sidebar Name <span class="text-red">*</span></label>
+                                <input type="text" name="sidebar_name" id="sidebar_name" class="form-control" value="{{ $module->menu->sidebar_name }}">
+                            </div>
+
                             <div class="form-group col-sm-6">
                                 <label class="custom-switch form-label">
                                     <input type="checkbox" @checked($module->menu->include_in_menu) name="include_in_menu" id="ainclude_in_menu"
                                         class="custom-switch-input" id="is_enable">
                                     <span class="custom-switch-indicator"></span>
                                     <span class="custom-switch-description">Include in menu</span>
+                                </label>
+                            </div>
+
+                            <div class="form-group col-sm-6">
+                                <label class="custom-switch form-label">
+                                    <input type="checkbox" @checked($module->is_system) name="is_system" id="is_system"
+                                        class="custom-switch-input" id="is_system">
+                                    <span class="custom-switch-indicator"></span>
+                                    <span class="custom-switch-description">System(Master)</span>
                                 </label>
                             </div>
                             {{-- <div class="col-sm-12 form-group">
