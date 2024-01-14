@@ -74,6 +74,9 @@
     border: 1px solid #ddd;
     font-weight: bold;
 }
+.row.align-items-end.justify-content-end.tt {
+    margin-top: -65px;
+}
     </style>
 @endsection
 
@@ -116,31 +119,11 @@
             </div>
         </div>
         <div class="col-lg-12 col-xl-6 col-md-12 col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Menu Item</h4>
-                    <div class="card-options">
-                        <button type="button" data-target="#addMenuModal" data-toggle="modal"
-                            class="btn btn-primary">Action</button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="content-inner">
-                        <div id="storfront_edit_div" class="">
-                            <form action="{{ route('module_manager.store') }}" id="storfront_form_edit" method="POST"
-                                autocomplete="off" novalidate="novalidate">
-                                {{-- @include('module_manager.storfront_form') --}}
-                            </form>
-                        </div>
-                        <div id="admin_edit_div" class="">
-                            <form action="{{ route('module_manager.store') }}" id="admin_form_edit" method="POST"
-                                autocomplete="off" novalidate="novalidate">
-                                {{-- @include('module_manager.admin_form') --}}
-                            </form>
-                        </div>
-                    </div>
-                </div>
+            <div class="row align-items-end justify-content-end tt">
+                <div class="col-2"><button type="button" data-target="#addMenuModal" data-toggle="modal"
+                    class="btn btn-primary">Add</button></div>
             </div>
+            <div class="editc"></div>
         </div>
     </div>
 @endsection
@@ -324,6 +307,7 @@
                 console.log(singleData);
 
                 console.log("PMD isDeleted", singleData.is_deleted)
+                alert("aaa")
                 if (singleData.is_deleted == 1) {
                     $(this).addClass('deleted-item');
                 } else {
@@ -356,7 +340,29 @@
 
                 var singleData = $(this).parent().data("json");
                 console.log("PMD", singleData)
+                // alert(singleData.module_id)
+
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                $.ajax({
+                    url: '/module_manager/'+singleData.module_id+'/edit',
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    success: function(response) {
+                        $('.editc').html(response);
+
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+
+
+                
                 console.log("PMD isDeleted", singleData.is_deleted)
+                
                 enabledDisabledAdminFormField(type, singleData)
 
                 $("#admin_form_edit #aid").val(singleData.id);
@@ -458,11 +464,6 @@
             $("#storfront_li").click(function() {
                 $("#admin_div").hide();
                 $("#storfront_div").show();
-            });
-
-            $("#admin_li").click(function() {
-                $("#storfront_div").hide();
-                $("#admin_div").show();
             });
 
             // Storefront remove event

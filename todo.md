@@ -1,3 +1,17 @@
+hide master from dropdown
+add master checkbok
+
+change parent name 
+attr belongs to model ----
+hide not disable
+system readonly 
+edit 
+
+
+1 dropdown 
+
+
+
 sunday 7-1
 --------------
 redesign attrs page -- done

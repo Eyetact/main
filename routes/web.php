@@ -117,7 +117,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('module_manager/create', 'create')->name('module_manager.create');
         Route::post('module_manager/store', 'store')->name('module_manager.store');
         Route::post('module_manager/menu_update', 'menu_update')->name('module_manager.menu_update');
-        Route::get('module_manager/{menu}/edit', 'edit')->name('module_manager.edit');
+        Route::get('module_manager/{module}/edit', 'edit')->name('module_manager.edit');
         // Route::post('module_manager/{menu}', 'update')->name('module_manager.update');
         Route::post('module_manager/update/{menu?}', 'update')->name('module_manager.update');
         Route::delete('module_manager/{menu}', 'destroy')->name('module_manager.destroy');
@@ -261,3 +261,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
 });
+
+Route::get('Category', [ App\Http\Controllers\Admin\CategoryController::class, 'index' ])->middleware('auth');
+
+Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class)->middleware('auth');
+Route::get('Category', [ App\Http\Controllers\Admin\CategoryController::class, 'index' ])->middleware('auth');
+
+Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class)->middleware('auth');
+Route::get('Test', [ App\Http\Controllers\Admin\TestController::class, 'index' ])->middleware('auth');
+
+Route::resource('tests', App\Http\Controllers\Admin\TestController::class)->middleware('auth');
+Route::get('another', [ App\Http\Controllers\Admin\TestddController::class, 'index' ])->middleware('auth');
+
+Route::resource('testdds', App\Http\Controllers\Admin\TestddController::class)->middleware('auth');

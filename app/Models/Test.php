@@ -14,7 +14,7 @@ class Test extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['test', 'test2'];
+    protected $fillable = [];
 
     /**
      * The attributes that should be cast.

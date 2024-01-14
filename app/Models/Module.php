@@ -18,4 +18,8 @@ class Module extends Model
     public function fields(){
         return $this->hasMany(Attribute::class, 'module');
     }
+
+    public function menu(){
+        return $this->hasOne(MenuManager::class, 'module_id');
+    }
 }

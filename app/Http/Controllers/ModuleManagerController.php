@@ -390,4 +390,9 @@ class ModuleManagerController extends Controller
             return response()->json(['message' => 'Menu not found.'], 200);
         }
     }
+
+    public function edit( Module $module ){
+
+        return view('module_manager.menu-edit', compact('module'));
+    }
 }
