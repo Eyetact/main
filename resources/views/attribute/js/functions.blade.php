@@ -30,6 +30,7 @@
         $(`.form-foreign-id`).remove()
         $(`.form-on-update-foreign`).remove()
         $(`.form-on-delete-foreign`).remove()
+        $(`.option_fields`).remove()
 
         // $(`#tbl-field tbody tr:eq(${index}) td:eq(5) .form-default-value`).remove()
 

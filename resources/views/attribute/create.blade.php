@@ -44,16 +44,47 @@
                     </div>
 
                     <div class="row">
+                        
                         <div class="input-box col-sm-12">
-                            <label class="form-label">Select Colmun type<span class="text-red">*</span></label>
+                            <label class="form-label">Select Attribute type<span class="text-red">*</span></label>
+                            <select name="input_types" class="form-select form-input-types  google-input" required>
+                                <option value="" disabled selected>-- {{ __('Select input type') }}--</option>
+                                    <option value="text">Text</option>
+                                    <option value="textarea">Textarea</option>
+                                    <option value="email">Email</option>
+                                    <option value="tel">Telepon</option>
+                                    <option value="password">Password</option>
+                                    <option value="url">Url</option>
+                                    <option value="search">Search</option>
+                                    <option value="file">File</option>
+                                    <option value="number">Number</option>
+                                    <option value="range">Range</option>
+                                    <option value="radio">Radio ( True, False )</option>
+                                    <option value="date">Date</option>
+                                    <option value="month">Month</option>
+                                    <option value="time">Time</option>
+                                    <option value="datalist">Datalist ( Year List )</option>
+                                    <option value="datetime-local">Datetime local</option>
+                                    <option value="select">Select</option>
+                            </select>
+                            <label id="field_type-error" class="error text-red hide" for="field_type"></label>
+                            @error('field_type')
+                                <span class="error field_type-error">{{ $message }}</span>
+                            @enderror
+                            <div class="input-options"></div>
+                        </div>
+                        <div class="input-box col-sm-12">
+                            {{-- <label class="form-label">Select Colmun type<span class="text-red">*</span></label> --}}
 
-                            <select name="column_types" class="form-select  google-input form-column-types" required>
+                            {{-- <select name="column_types" class="form-select  google-input form-column-types" required>
                                 <option value="" disabled selected>--{{ __('Select column type') }}--
                                 </option>
                                 @foreach (['string', 'integer', 'text', 'bigInteger', 'boolean', 'char', 'date', 'time', 'year', 'dateTime', 'decimal', 'double', 'enum', 'float', 'foreignId', 'tinyInteger', 'mediumInteger', 'tinyText', 'mediumText', 'longText'] as $type)
                                     <option value="{{ $type }}">{{ ucwords($type) }}</option>
                                 @endforeach
-                            </select>
+                            </select> --}}
+
+                            <input type="hidden" name="column_types" id="type" class="form-column-types" />
 
 
                             <div class="options">
@@ -61,20 +92,6 @@
                                             <input type="hidden" name="constrains" class="form-constrain">
                                             <input type="hidden" name="foreign_ids" class="form-foreign-id">
                             </div>
-                        </div>
-                        <div class="input-box col-sm-12">
-                            <label class="form-label">Select Attribute type<span class="text-red">*</span></label>
-                            <select name="input_types" class="form-select form-input-types  google-input" required>
-                                <option value="" disabled selected>-- {{ __('Select input type') }}
-                                    --</option>
-                                <option value="" disabled>{{ __('Select the column type first') }}
-                                </option>
-                            </select>
-                            <label id="field_type-error" class="error text-red hide" for="field_type"></label>
-                            @error('field_type')
-                                <span class="error field_type-error">{{ $message }}</span>
-                            @enderror
-                            <div class="input-options"></div>
                         </div>
                     </div>
                     <div class="text_fields row">

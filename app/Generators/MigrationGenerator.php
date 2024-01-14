@@ -183,7 +183,7 @@ class MigrationGenerator
         $totalFields = count($module->fields);
 
 
-        foreach ($module->fields as $i => $field) {
+        foreach ($module->fields()->orderBy('created_at','desc')->take(1)->get() as $i => $field) {
 
             $setFields .= "\$table->" . $field->type . "('" . str()->snake($field->name);
 
@@ -318,16 +318,16 @@ class MigrationGenerator
                 $tableNamePluralLowercase,
                 $setFields
             ],
-            GeneratorUtils::getTemplate('migration')
+            GeneratorUtils::getTemplate('migration-edit')
         );
 
-        // $migrationName = date('Y') . '_' . date('m') . '_' . date('d')  . '_' . date('h') .  date('i') . date('s') . '_create_' . $tableNamePluralLowercase . '_table.php';
-        $module = Module::find($id);
-        $migrationName = $module->migration ;
+         $migrationName = date('Y') . '_' . date('m') . '_' . date('d')  . '_' . date('h') .  date('i') . date('s') . '_edit_' . $tableNamePluralLowercase . '_table.php';
+        // $module = Module::find($id);
+        // $migrationName = $module->migration ;
 
         file_put_contents(database_path("/migrations/$migrationName"), $template);
 
-        Artisan::call("migrate:refresh --path=/database/migrations/".$migrationName);
+        Artisan::call("migrate");
 
     }
 }

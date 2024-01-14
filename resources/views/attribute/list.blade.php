@@ -238,6 +238,7 @@
 
     <script>
         $(document).on('change', '.form-column-types', function() {
+            // alert($(this).val())
             var index = 0;
             let switchRequired = $(`.switch-requireds`)
 
@@ -284,33 +285,33 @@
                     </div>
             `)
 
-                $(`.form-input-types`).html(`
-                <option value="" disabled selected>-- Select input type --</option>
-                <option value="select">Select</option>
-                <option value="radio">Radio</option>
-                <option value="datalist">Datalist</option>
-            `)
+            //     $(`.form-input-types`).html(`
+            //     <option value="" disabled selected>-- Select input type --</option>
+            //     <option value="select">Select</option>
+            //     <option value="radio">Radio</option>
+            //     <option value="datalist">Datalist</option>
+            // `)
 
             } else if ($(this).val() == 'date') {
                 removeAllInputHidden(index)
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-                $(`.form-input-types`).html(`
-                <option value="" disabled selected>-- Select input type --</option>
-                <option value="date">Date</option>
-                <option value="month">Month</option>
-            `)
+            //     $(`.form-input-types`).html(`
+            //     <option value="" disabled selected>-- Select input type --</option>
+            //     <option value="date">Date</option>
+            //     <option value="month">Month</option>
+            // `)
 
             } else if ($(this).val() == 'time') {
                 checkMinAndMaxLength(index)
                 removeAllInputHidden(index)
                 addColumTypeHidden(index)
 
-                $(`.form-input-types`).html(`
-                <option value="" disabled selected>-- Select input type --</option>
-                <option value="time">Time</option>
-            `)
+            //     $(`.form-input-types`).html(`
+            //     <option value="" disabled selected>-- Select input type --</option>
+            //     <option value="time">Time</option>
+            // `)
 
                 $(`.form-min-lengths`).prop('readonly', true).hide()
                 $(`.form-max-lengths`).prop('readonly', true).hide()
@@ -322,21 +323,21 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-                $(`.form-input-types`).html(`
-                <option value="" disabled selected>-- Select input type --</option>
-                <option value="select">Select</option>
-                <option value="datalist">Datalist</option>
-            `)
+            //     $(`.form-input-types`).html(`
+            //     <option value="" disabled selected>-- Select input type --</option>
+            //     <option value="select">Select</option>
+            //     <option value="datalist">Datalist</option>
+            // `)
 
             } else if ($(this).val() == 'dateTime') {
                 removeAllInputHidden(index)
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-                $(`.form-input-types`).html(`
-                <option value="" disabled selected>-- Select input type --</option>
-                <option value="datetime-local">Datetime local</option>
-            `)
+            //     $(`.form-input-types`).html(`
+            //     <option value="" disabled selected>-- Select input type --</option>
+            //     <option value="datetime-local">Datetime local</option>
+            // `)
 
             } else if ($(this).val() == 'foreignId') {
                 removeAllInputHidden(index)
@@ -380,11 +381,11 @@
                 </div>
             `)
 
-                $(`.form-input-types`).html(`
-                <option value="" disabled selected>-- Select input type --</option>
-                <option value="select">Select</option>
-                <option value="datalist">Datalist</option>
-            `)
+            //     $(`.form-input-types`).html(`
+            //     <option value="" disabled selected>-- Select input type --</option>
+            //     <option value="select">Select</option>
+            //     <option value="datalist">Datalist</option>
+            // `)
 
             } else if (
                 $(this).val() == 'text' ||
@@ -397,19 +398,19 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-                $(`.form-input-types`).html(`
-                <option value="" disabled selected>-- Select input type --</option>
-                <option value="text">Text</option>
-                <option value="textarea">Textarea</option>
-                <option value="email">Email</option>
-                <option value="tel">Telepon</option>
-                <option value="password">Password</option>
-                <option value="url">Url</option>
-                <option value="search">Search</option>
-                <option value="file">File</option>
-                <option value="hidden">Hidden</option>
-                <option value="no-input">No Input</option>
-            `)
+            //     $(`.form-input-types`).html(`
+            //     <option value="" disabled selected>-- Select input type --</option>
+            //     <option value="text">Text</option>
+            //     <option value="textarea">Textarea</option>
+            //     <option value="email">Email</option>
+            //     <option value="tel">Telepon</option>
+            //     <option value="password">Password</option>
+            //     <option value="url">Url</option>
+            //     <option value="search">Search</option>
+            //     <option value="file">File</option>
+            //     <option value="hidden">Hidden</option>
+            //     <option value="no-input">No Input</option>
+            // `)
 
             } else if (
                 $(this).val() == 'integer' ||
@@ -424,43 +425,43 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-                $(`.form-input-types`).html(`
-                <option value="" disabled selected>-- Select input type --</option>
-                <option value="number">Number</option>
-                <option value="range">Range</option>
-                <option value="hidden">Hidden</option>
-                <option value="no-input">No Input</option>
-            `)
+            //     $(`.form-input-types`).html(`
+            //     <option value="" disabled selected>-- Select input type --</option>
+            //     <option value="number">Number</option>
+            //     <option value="range">Range</option>
+            //     <option value="hidden">Hidden</option>
+            //     <option value="no-input">No Input</option>
+            // `)
 
             } else if ($(this).val() == 'boolean') {
                 removeAllInputHidden(index)
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-                $(`.form-input-types`).html(`
-                <option value="" disabled selected>-- Select input type --</option>
-                <option value="select">Select</option>
-                <option value="radio">Radio</option>
-            `)
+            //     $(`.form-input-types`).html(`
+            //     <option value="" disabled selected>-- Select input type --</option>
+            //     <option value="select">Select</option>
+            //     <option value="radio">Radio</option>
+            // `)
 
             } else {
                 removeAllInputHidden(index)
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-                $(`.form-input-types`).html(`
-                <option value="" disabled selected>-- Select input type --</option>
-                <option value="text">Text</option>
-                <option value="email">Email</option>
-                <option value="tel">Telepon</option>
-                <option value="url">Url</option>
-                <option value="week">Week</option>
-                <option value="color">Color</option>
-                <option value="search">Search</option>
-                <option value="file">File</option>
-                <option value="hidden">Hidden</option>
-                <option value="no-input">No Input</option>
-            `)
+            //     $(`.form-input-types`).html(`
+            //     <option value="" disabled selected>-- Select input type --</option>
+            //     <option value="text">Text</option>
+            //     <option value="email">Email</option>
+            //     <option value="tel">Telepon</option>
+            //     <option value="url">Url</option>
+            //     <option value="week">Week</option>
+            //     <option value="color">Color</option>
+            //     <option value="search">Search</option>
+            //     <option value="file">File</option>
+            //     <option value="hidden">Hidden</option>
+            //     <option value="no-input">No Input</option>
+            // `)
             }
         });
 
@@ -501,6 +502,46 @@
                 <input type="hidden" name="default_values">
             </div>
         `)
+
+        switch ($(this).val()) {
+            case 'text':
+            case 'textarea':
+            case 'file':
+            case 'email':
+            case 'tel':
+            case 'password':
+            case 'url':
+            case 'search':
+                $('#type').val('text').trigger('change')
+                break;
+            case 'number':
+            case 'range':
+                $('#type').val('double').trigger('change')
+                break;
+            case 'radio':
+                $('#type').val('boolean').trigger('change')
+                break;
+            case 'data':
+            case 'month':
+                $('#type').val('date').trigger('change')
+                break;
+            case 'time':
+                $('#type').val('time').trigger('change')
+                break;
+            case 'datalist':
+                $('#type').val('year').trigger('change')
+                break;
+            case 'datetime-local':
+                $('#type').val('dateTime').trigger('change')
+                break;
+            case 'select':
+                $('#type').val('enum').trigger('change')
+                break;
+
+        
+            default:
+                break;
+        }
 
             if ($(this).val() == 'file') {
                 minLength.prop('readonly', true).hide()
