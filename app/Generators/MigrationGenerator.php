@@ -185,7 +185,11 @@ class MigrationGenerator
 
         foreach ($module->fields()->orderBy('created_at','desc')->take(1)->get() as $i => $field) {
 
-            $setFields .= "\$table->" . $field->type . "('" . str()->snake($field->name);
+            if($field->type == 'date' && $field->input == 'month'){
+                $setFields .= "\$table->text('" . str()->snake($field->name);
+            }else{
+                $setFields .= "\$table->" . $field->type . "('" . str()->snake($field->name);
+            }
 
 
             if ($field->type == 'enum') {

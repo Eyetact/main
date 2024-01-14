@@ -521,7 +521,7 @@
             case 'radio':
                 $('#type').val('boolean').trigger('change')
                 break;
-            case 'data':
+            case 'date':
             case 'month':
                 $('#type').val('date').trigger('change')
                 break;

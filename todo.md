@@ -1,3 +1,6 @@
+ssh eyt_laravel@164.90.218.139
+lrv@EYT23
+
 hide master from dropdown --done
 add master checkbok --done
 
