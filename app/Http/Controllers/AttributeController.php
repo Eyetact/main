@@ -65,7 +65,7 @@ class AttributeController extends Controller
      */
     public function create()
     {
-        $moduleData = Module::get();
+        $moduleData = Module::where('migration','!=',NULL)->get();
         return view('attribute.create', ['attribute' => new Attribute(), 'moduleData' => $moduleData]);
     }
 
@@ -242,7 +242,7 @@ class AttributeController extends Controller
             $this->generatorService->reGenerateRequest($id);
             $this->generatorService->reGenerateViews($id);
             return response()->json(['msg' => 'Attribute deleted successfully!'], 200);
-            
+
         } else {
             return response()->json(['msg' => 'Something went wrong, please try again.'], 200);
         }

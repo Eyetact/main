@@ -12,7 +12,7 @@ class Module extends Model
     protected $fillable = [
         'name',
         'description',
-        'is_enable'
+        'is_system'
     ];
 
     public function fields(){

@@ -339,13 +339,14 @@
                 $(this).addClass('selected-item');
 
                 var singleData = $(this).parent().data("json");
-                console.log("PMD", singleData)
+                var path = $(this).parent().data("path");
+                console.log("PMD 1", singleData)
                 // alert(singleData.module_id)
 
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 $.ajax({
-                    url: '/module_manager/'+singleData.module_id+'/edit',
+                    url: path,
                     type: 'GET',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken
@@ -360,9 +361,9 @@
                 });
 
 
-                
+
                 console.log("PMD isDeleted", singleData.is_deleted)
-                
+
                 enabledDisabledAdminFormField(type, singleData)
 
                 $("#admin_form_edit #aid").val(singleData.id);

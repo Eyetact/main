@@ -1,9 +1,9 @@
-hide master from dropdown
-add master checkbok
+hide master from dropdown --done
+add master checkbok --done
 
-change parent name 
+change parent name -- done
 attr belongs to model ----
-hide not disable
+hide not disable 
 system readonly 
 edit 
 

@@ -312,8 +312,8 @@
                 <option value="time">Time</option>
             `)
 
-                $(`.form-min-lengths`).prop('readonly', true)
-                $(`.form-max-lengths`).prop('readonly', true)
+                $(`.form-min-lengths`).prop('readonly', true).hide()
+                $(`.form-max-lengths`).prop('readonly', true).hide()
                 $(`.form-min-lengths`).val('')
                 $(`.form-max-lengths`).val('')
 
@@ -503,8 +503,8 @@
         `)
 
             if ($(this).val() == 'file') {
-                minLength.prop('readonly', true)
-                maxLength.prop('readonly', true)
+                minLength.prop('readonly', true).hide()
+                maxLength.prop('readonly', true).hide()
                 minLength.val('')
                 maxLength.val('')
 
@@ -532,16 +532,16 @@
                 $(this).val() == 'password' ||
                 $(this).val() == 'number'
             ) {
-                minLength.prop('readonly', true)
-                maxLength.prop('readonly', true)
+                minLength.prop('readonly', true).hide()
+                maxLength.prop('readonly', true).hide()
                 minLength.val('')
                 maxLength.val('')
 
                 addInputTypeHidden(index)
 
             } else if ($(this).val() == 'text' || $(this).val() == 'tel') {
-                minLength.prop('readonly', false)
-                maxLength.prop('readonly', false)
+                minLength.prop('readonly', false).show()
+                maxLength.prop('readonly', false).show()
 
                 addInputTypeHidden(index)
 
@@ -555,16 +555,16 @@
                 <input type="hidden" name="mimes" class="form-mimes">
             `)
 
-                minLength.prop('readonly', false)
-                maxLength.prop('readonly', false)
+                minLength.prop('readonly', false).show()
+                maxLength.prop('readonly', false).show()
                 minLength.prop('required', true)
                 maxLength.prop('required', true)
 
                 // addInputTypeHidden(index)
 
             } else if ($(this).val() == 'hidden' || $(this).val() == 'no-input') {
-                minLength.prop('readonly', true)
-                maxLength.prop('readonly', true)
+                minLength.prop('readonly', true).hide()
+                maxLength.prop('readonly', true).hide()
                 minLength.val('')
                 maxLength.val('')
 
@@ -588,16 +588,16 @@
                 $(this).val() == 'color' ||
                 $(this).val() == 'datetime-local'
             ) {
-                minLength.prop('readonly', true)
-                maxLength.prop('readonly', true)
+                minLength.prop('readonly', true).hide()
+                maxLength.prop('readonly', true).hide()
                 minLength.val('')
                 maxLength.val('')
                 addInputTypeHidden(index)
 
             } else {
                 addInputTypeHidden(index)
-                minLength.prop('readonly', false)
-                maxLength.prop('readonly', false)
+                minLength.prop('readonly', false).show()
+                maxLength.prop('readonly', false).show()
             }
         });
 

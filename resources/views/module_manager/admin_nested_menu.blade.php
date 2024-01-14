@@ -8,7 +8,7 @@
     <div class="dd nestable" id="admin_nestable">
         <ol class="dd-list" id="admin_menu_list">
             @foreach ($adminMenu as $aMenu)
-                <li class="dd-item" data-id="{{ $aMenu->module_id_id }}" data-json="{{json_encode($aMenu)}}" data-id="{{$aMenu->id}}" data-name="{{$aMenu->name}}" data-module="{{$aMenu->module_id}}" data-code="{{$aMenu->code}}" data-path="{{$aMenu->path}}" data-is_enable="{{$aMenu->is_enable}}" data-include_in_menu="{{$aMenu->include_in_menu}}"  data-assigned_attributes="{{$aMenu->assigned_attributes}}" data-created_date="{{date('m-d-Y',strtotime($aMenu->created_date))}}">
+                <li class="dd-item" data-path="{{ route('module_manager.edit',$aMenu->module_id) }}"  data-id="{{ $aMenu->module_id_id }}" data-json="{{json_encode($aMenu)}}" data-id="{{$aMenu->id}}" data-name="{{$aMenu->name}}" data-module="{{$aMenu->module_id}}" data-code="{{$aMenu->code}}" data-path="{{$aMenu->path}}" data-is_enable="{{$aMenu->is_enable}}" data-include_in_menu="{{$aMenu->include_in_menu}}"  data-assigned_attributes="{{$aMenu->assigned_attributes}}" data-created_date="{{date('m-d-Y',strtotime($aMenu->created_date))}}">
                     <div class="dd-handle">
                         {{$aMenu->name}} <input type="hidden" class="admin-menu" value="{{$aMenu->id}}">
                         @if ($aMenu->is_deleted)
@@ -19,7 +19,7 @@
                     @if ($aMenu->children->count())
                         <ol class="dd-list">
                             @foreach ($aMenu->children as $aaMenu)
-                                <li class="dd-item" data-json="{{json_encode($aaMenu)}}" data-id="{{$aaMenu->id}}" data-name="{{$aaMenu->name}}" data-module="{{$aaMenu->module_id}}" data-code="{{$aaMenu->code}}" data-path="{{$aaMenu->path}}" data-is_enable="{{$aaMenu->is_enable}}" data-include_in_menu="{{$aaMenu->include_in_menu}}"  data-assigned_attributes="{{$aaMenu->assigned_attributes}}" data-created_date="{{date('m-d-Y',strtotime($aaMenu->created_date))}}">
+                                <li class="dd-item" data-path="{{ route('module_manager.edit',$aaMenu->module_id) }}" data-json="{{json_encode($aaMenu)}}" data-id="{{$aaMenu->id}}" data-name="{{$aaMenu->name}}" data-module="{{$aaMenu->module_id}}" data-code="{{$aaMenu->code}}" data-path="{{$aaMenu->path}}" data-is_enable="{{$aaMenu->is_enable}}" data-include_in_menu="{{$aaMenu->include_in_menu}}"  data-assigned_attributes="{{$aaMenu->assigned_attributes}}" data-created_date="{{date('m-d-Y',strtotime($aaMenu->created_date))}}">
                                     <div class="dd-handle">
                                         {{$aaMenu->name}}<input type="hidden" class="admin-menu" value="{{$aaMenu->id}}">
                                         @if ($aaMenu->is_deleted)
