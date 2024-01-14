@@ -11,6 +11,9 @@ edit
 1 dropdown 
 
 
+edit regenerate mifration
+
+
 
 sunday 7-1
 --------------
