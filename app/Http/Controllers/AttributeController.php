@@ -135,7 +135,7 @@ class AttributeController extends Controller
         $this->generatorService->reGenerateMigration($request['module']);
         $this->generatorService->reGenerateController($request['module']);
         $this->generatorService->reGenerateRequest($request['module']);
-        // $this->generatorService->reGenerateViews($request['module']);
+        $this->generatorService->reGenerateViews($request['module']);
 
         if (!$attribute) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');

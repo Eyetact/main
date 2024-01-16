@@ -76,23 +76,23 @@ class GeneratorService
     public function generateViews(array $request): void
     {
         (new IndexViewGenerator)->generate($request);
-        (new ActionViewGenerator)->generate($request);
-        (new CreateViewGenerator)->generate($request);
-        (new FormViewGenerator)->generate($request);
-        (new ShowViewGenerator)->generate($request);
-        (new EditViewGenerator)->generate($request);
-        (new ViewComposerGenerator)->generate($request);
+        // (new ActionViewGenerator)->generate($request);
+        // (new CreateViewGenerator)->generate($request);
+        // (new FormViewGenerator)->generate($request);
+        // (new ShowViewGenerator)->generate($request);
+        // (new EditViewGenerator)->generate($request);
+        // (new ViewComposerGenerator)->generate($request);
     }
 
     public function reGenerateViews($id): void
     {
         (new IndexViewGenerator)->reGenerate($id);
-        (new CreateViewGenerator)->reGenerate($id);
-        (new FormViewGenerator)->reGenerate($id);
-        (new EditViewGenerator)->reGenerate($id);
+        // (new CreateViewGenerator)->reGenerate($id);
+        // (new FormViewGenerator)->reGenerate($id);
+        // (new EditViewGenerator)->reGenerate($id);
 
-        (new ShowViewGenerator)->reGenerate($id);
-        (new ViewComposerGenerator)->reGenerate($id);
+        // (new ShowViewGenerator)->reGenerate($id);
+        // (new ViewComposerGenerator)->reGenerate($id);
     }
 
 }

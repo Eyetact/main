@@ -82,7 +82,7 @@ class ModuleManagerController extends Controller
         $this->generatorService->generateController($request->all()); // migration
         $this->generatorService->generateRequest($request->all()); // req
         $this->generatorService->generateRoute($request->all()); // route
-        // $this->generatorService->generateViews($request->all()); // views
+        $this->generatorService->generateViews($request->all()); // views
 
         if (!empty($request->fields[0])) {
             foreach ($request->fields as $i => $attr) {
