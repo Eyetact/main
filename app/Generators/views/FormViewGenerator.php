@@ -19,7 +19,7 @@ class FormViewGenerator
         $path = GeneratorUtils::getModelLocation($request['name']);
         $code = GeneratorUtils::setModelName($request['code']);
 
-        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
+        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
 
         $template = "<div class=\"row mb-2\">\n";
@@ -571,7 +571,7 @@ class FormViewGenerator
         $path = GeneratorUtils::getModelLocation($module->name);
         $code = GeneratorUtils::setModelName($module->code);
 
-        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
+        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
 
         $template = "<div class=\"row mb-2\">\n";
