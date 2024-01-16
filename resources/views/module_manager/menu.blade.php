@@ -164,7 +164,7 @@
             //     // Send an AJAX request
             //     $.ajax({
             //         type: 'POST',
-            //         url: '{{ route('module_manager.update') }}' + '/' +
+            //         url: '' + '/' +
             //             edit_sid, // Replace with your actual route
             //         data: formData,
             //         success: function(response) {
