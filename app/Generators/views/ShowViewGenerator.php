@@ -21,7 +21,7 @@ class ShowViewGenerator
         $code = GeneratorUtils::setModelName($request['code'], 'default');
 
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
-        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
+        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
 
         $trs = "";
         $totalFields = count($request['fields']);
@@ -151,7 +151,7 @@ class ShowViewGenerator
         $code = GeneratorUtils::setModelName($module->code, 'default');
 
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
-        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
+        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
 
         $trs = "";
         $totalFields = count($module->fields);
