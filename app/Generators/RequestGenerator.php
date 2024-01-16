@@ -216,7 +216,6 @@ class RequestGenerator
             }
             // end of foreach
         }
-        dd('hello form generate');
         $storeRequestTemplate = str_replace(
             [
                 '{{modelNamePascalCase}}',
