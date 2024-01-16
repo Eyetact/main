@@ -78,7 +78,7 @@ class GeneratorService
         (new IndexViewGenerator)->generate($request);
         (new ActionViewGenerator)->generate($request);
         (new CreateViewGenerator)->generate($request);
-        // (new FormViewGenerator)->generate($request);
+        (new FormViewGenerator)->generate($request);
         // (new ShowViewGenerator)->generate($request);
         // (new EditViewGenerator)->generate($request);
         // (new ViewComposerGenerator)->generate($request);
@@ -88,7 +88,7 @@ class GeneratorService
     {
         (new IndexViewGenerator)->reGenerate($id);
         (new CreateViewGenerator)->reGenerate($id);
-        // (new FormViewGenerator)->reGenerate($id);
+        (new FormViewGenerator)->reGenerate($id);
         // (new EditViewGenerator)->reGenerate($id);
 
         // (new ShowViewGenerator)->reGenerate($id);

@@ -17,9 +17,10 @@ class FormViewGenerator
     {
         $model = GeneratorUtils::setModelName($request['name']);
         $path = GeneratorUtils::getModelLocation($request['name']);
+        $code = GeneratorUtils::setModelName($request['code']);
 
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
 
         $template = "<div class=\"row mb-2\">\n";
 
@@ -568,9 +569,10 @@ class FormViewGenerator
         $module = Module::find($id);
         $model = GeneratorUtils::setModelName($module->name);
         $path = GeneratorUtils::getModelLocation($module->name);
+        $code = GeneratorUtils::setModelName($module->code);
 
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
 
         $template = "<div class=\"row mb-2\">\n";
 
@@ -603,7 +605,7 @@ class FormViewGenerator
                                     BLADE;
                                         }
 
-                                        
+
 
                                         if ($arrOptionIndex + 1 != $totalOptions) {
                                             $options .= "\n\t\t";
@@ -677,7 +679,7 @@ class FormViewGenerator
                                     if(isset($field->default_value)){
                                         $d = $field->default_value;
                                     }
-                                    
+
                                     $options .= "\t<div class=\"col-md-12\">\n\t<p>$fieldUcWords</p>\n";
 
                                     foreach ($arrOption as $value) {
@@ -852,7 +854,7 @@ class FormViewGenerator
                                         $options = "<option value=\"0\" {{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '0' ? 'selected' : (old('$fieldSnakeCase') == '0' ? 'selected' : '') }}>{{ __('False') }}</option>\n\t\t\t\t
                                                     <option value=\"1\" {{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '1' ? 'selected' : (old('$fieldSnakeCase') == '1' ? 'selected' : '') }}>{{ __('True') }}</option>";
                                     }
-                         
+
                                     $template .= str_replace(
                                         [
                                             '{{fieldUcWords}}',
@@ -897,7 +899,7 @@ class FormViewGenerator
                                             <label class=\"custom-control custom-radio\" for=\"$fieldSnakeCase-1\">
                                             <input class=\"custom-control-input\" type=\"radio\" name=\"$fieldSnakeCase\" id=\"$fieldSnakeCase-1\" value=\"1\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '1' ? 'checked' : ($field->default_value == 1 ? 'checked' : '') }}>
                                             <span class=\"custom-control-label\">True</span></label>
-                                        
+
                                         <label class=\"custom-control custom-radio\" for=\"$fieldSnakeCase-0\">
                                             <input class=\"custom-control-input\" type=\"radio\" name=\"$fieldSnakeCase\" id=\"$fieldSnakeCase-0\" value=\"0\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '0' ? 'checked' : ($field->default_value == 0 ? 'checked' : '') }}>
                                             <span class=\"custom-control-label\">False</span></label>
@@ -908,14 +910,14 @@ class FormViewGenerator
                                             <label class=\"custom-control custom-radio\" for=\"$fieldSnakeCase-1\">
                                             <input class=\"custom-control-input\" type=\"radio\" name=\"$fieldSnakeCase\" id=\"$fieldSnakeCase-1\" value=\"1\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '1' ? 'checked' : '' }}>
                                             <span class=\"custom-control-label\">True</span></label>
-                                        
+
                                         <label class=\"custom-control custom-radio\" for=\"$fieldSnakeCase-0\">
                                             <input class=\"custom-control-input\" type=\"radio\" name=\"$fieldSnakeCase\" id=\"$fieldSnakeCase-0\" value=\"0\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '0' ? 'checked' : '' }}>
                                             <span class=\"custom-control-label\">False</span></label>
                                         </div>\n";
 
                                      }
-                                   
+
 
                                     $options .= "\t</div>\n";
 
@@ -1186,7 +1188,7 @@ class FormViewGenerator
                     $request['requireds'] == 'yes' ? ' required' : '',
                 ],
                 GeneratorUtils::getTemplate('views/forms/input-date')
-            ); 
+            );
         }
         return str_replace(
             [
