@@ -77,7 +77,7 @@ class ModuleManagerController extends Controller
         $requestData = $request->all();
         $request->validated();
         $this->generatorService->generateModel($request->all()); // model
-        // $this->generatorService->generateMigration($request->all(),$module->id); // migration
+        $this->generatorService->generateMigration($request->all(),$module->id); // migration
         // Artisan::call('migrate'); // run php artisan mnigrate in background
         // $this->generatorService->generateController($request->all()); // migration
         // $this->generatorService->generateRequest($request->all()); // req

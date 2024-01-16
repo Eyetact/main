@@ -132,7 +132,7 @@ class AttributeController extends Controller
         $attribute = Attribute::create($createArr);
 
         $this->generatorService->reGenerateModel($request['module']);
-        // $this->generatorService->reGenerateMigration($request['module']);
+        $this->generatorService->reGenerateMigration($request['module']);
         // $this->generatorService->reGenerateController($request['module']);
         // $this->generatorService->reGenerateRequest($request['module']);
         // $this->generatorService->reGenerateViews($request['module']);
