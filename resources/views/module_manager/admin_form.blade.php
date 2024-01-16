@@ -17,6 +17,12 @@
                     </div>
 
                     <div class="col-sm-12 form-group">
+                        <label class="form-label" for="code">Code <span class="text-red">*</span></label>
+                        <input type="text" name="code" id="code" class="form-control" value="">
+
+                    </div>
+
+                    <div class="col-sm-12 form-group">
                         <label class="form-label" for="path">Path <span class="text-red">*</span></label>
                         <input type="text" name="path" id="apath" class="form-control" value="">
                     </div>
