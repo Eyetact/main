@@ -62,7 +62,7 @@ class EditViewGenerator
         $module = Module::find($id);
         $model = GeneratorUtils::setModelName($module->name, 'default');
         $path = GeneratorUtils::getModelLocation($module->name);
-        $code = GeneratorUtils::setModelName($request['code'], 'default');
+        $code = GeneratorUtils::setModelName($module->code, 'default');
 
         $modelNamePluralUcWords = GeneratorUtils::cleanPluralUcWords($model);
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
