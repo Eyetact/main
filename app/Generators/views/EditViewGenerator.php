@@ -22,7 +22,7 @@ class EditViewGenerator
         $modelNamePluralUcWords = GeneratorUtils::cleanPluralUcWords($model);
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNameSingularLowerCase = GeneratorUtils::cleanSingularLowerCase($model);
-        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
+        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
 
         $template = str_replace(
             [
@@ -67,7 +67,7 @@ class EditViewGenerator
         $modelNamePluralUcWords = GeneratorUtils::cleanPluralUcWords($model);
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNameSingularLowerCase = GeneratorUtils::cleanSingularLowerCase($model);
-        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
+        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
 
         $template = str_replace(
             [
