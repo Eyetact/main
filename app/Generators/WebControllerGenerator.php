@@ -18,7 +18,9 @@ class WebControllerGenerator
 
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
         $modelNamePluralCamelCase = GeneratorUtils::pluralCamelCase($model);
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $code = GeneratorUtils::setModelName($request['code'], 'default');
+
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNameSpaceLowercase = GeneratorUtils::cleanSingularLowerCase($model);
         $modelNameSingularPascalCase = GeneratorUtils::singularPascalCase($model);
 
@@ -158,7 +160,9 @@ class WebControllerGenerator
 
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
         $modelNamePluralCamelCase = GeneratorUtils::pluralCamelCase($model);
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $code = GeneratorUtils::setModelName($module->code, 'default');
+
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNameSpaceLowercase = GeneratorUtils::cleanSingularLowerCase($model);
         $modelNameSingularPascalCase = GeneratorUtils::singularPascalCase($model);
 
