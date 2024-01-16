@@ -26,7 +26,7 @@ class IndexViewGenerator
 
 
         $modelNamePluralUcWords = GeneratorUtils::cleanPluralUcWords($model);
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNamePluralLowerCase = GeneratorUtils::cleanPluralLowerCase($model);
         $modelNameSingularLowercase = GeneratorUtils::cleanSingularLowerCase($model);
 
@@ -155,7 +155,7 @@ class IndexViewGenerator
         $modelName = GeneratorUtils::pluralKebabCase($code);
 
         $modelNamePluralUcWords = GeneratorUtils::cleanPluralUcWords($model);
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNamePluralLowerCase = GeneratorUtils::cleanPluralLowerCase($model);
         $modelNameSingularLowercase = GeneratorUtils::cleanSingularLowerCase($model);
 
