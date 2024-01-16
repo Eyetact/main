@@ -19,8 +19,11 @@ class IndexViewGenerator
     public function generate(array $request)
     {
         $model = GeneratorUtils::setModelName($request['name'], 'default');
-        $modelName = GeneratorUtils::setModelName($request['code'], 'default');
         $path = GeneratorUtils::getModelLocation($request['name']);
+
+        $code = GeneratorUtils::setModelName($request['code'], 'default');
+        $modelName = GeneratorUtils::pluralKebabCase($code);
+
 
         $modelNamePluralUcWords = GeneratorUtils::cleanPluralUcWords($model);
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
