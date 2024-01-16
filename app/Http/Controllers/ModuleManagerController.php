@@ -69,6 +69,7 @@ class ModuleManagerController extends Controller
         $module = Module::create([
             'name' => $request->name,
             'is_system' => isset($request->is_system) ? 1 : 0,
+            'code' => $request->code,
         ]);
 
 
@@ -76,12 +77,12 @@ class ModuleManagerController extends Controller
         $requestData = $request->all();
         $request->validated();
         $this->generatorService->generateModel($request->all()); // model
-        $this->generatorService->generateMigration($request->all(),$module->id); // migration
-        Artisan::call('migrate'); // run php artisan mnigrate in background
-        $this->generatorService->generateController($request->all()); // migration
-        $this->generatorService->generateRequest($request->all()); // req
-        $this->generatorService->generateRoute($request->all()); // route
-        $this->generatorService->generateViews($request->all()); // views
+        // $this->generatorService->generateMigration($request->all(),$module->id); // migration
+        // Artisan::call('migrate'); // run php artisan mnigrate in background
+        // $this->generatorService->generateController($request->all()); // migration
+        // $this->generatorService->generateRequest($request->all()); // req
+        // $this->generatorService->generateRoute($request->all()); // route
+        // $this->generatorService->generateViews($request->all()); // views
 
         if (!empty($request->fields[0])) {
             foreach ($request->fields as $i => $attr) {

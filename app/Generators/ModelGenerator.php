@@ -15,6 +15,7 @@ class ModelGenerator
     {
         $path = GeneratorUtils::getModelLocation($request['name']);
         $model = GeneratorUtils::setModelName($request['name']);
+        $modelName = GeneratorUtils::setModelName($request['code']);
 
         $fields = "[";
         $casts = "[";
@@ -178,7 +179,7 @@ class ModelGenerator
                 '{{methods}}'
             ],
             [
-                $model,
+                $modelName,
                 $fields,
                 $casts,
                 $relations,
@@ -207,6 +208,7 @@ class ModelGenerator
         $module = Module::find($id);
         $path = GeneratorUtils::getModelLocation($module->name);
         $model = GeneratorUtils::setModelName($module->name);
+        $modelName = GeneratorUtils::setModelName($module->code);
 
         $fields = "[";
         $casts = "[";
@@ -227,7 +229,7 @@ class ModelGenerator
                 protected \$hidden = [
             PHP;
             }
-        
+
 
         switch ($path) {
             case '':
@@ -345,7 +347,7 @@ class ModelGenerator
                     }
                 }
             }
-        
+
 
         $fields .=  "]";
 
@@ -370,7 +372,7 @@ class ModelGenerator
                 '{{methods}}'
             ],
             [
-                $model,
+                $modelName,
                 $fields,
                 $casts,
                 $relations,
