@@ -15,7 +15,7 @@ class WebRouteGenerator
      */
     public function generate(array $request)
     {
-        $model = GeneratorUtils::setModelName($request['name']);
+        $model = GeneratorUtils::setModelName($request['code']);
         $path = $request['path'];
 
         $modelNameSingularPascalCase = GeneratorUtils::singularPascalCase($model);
