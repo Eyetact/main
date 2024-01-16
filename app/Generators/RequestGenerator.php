@@ -15,8 +15,8 @@ class RequestGenerator
      */
     public function generate(array $request): void
     {
-        $model = GeneratorUtils::setModelName($request['name']);
-        $path = GeneratorUtils::getModelLocation($request['name']);
+        $model = GeneratorUtils::setModelName($request['code']);
+        $path = GeneratorUtils::getModelLocation($request['code']);
 
         $validations = '';
         $totalFields = count($request['fields']);
@@ -308,8 +308,8 @@ class RequestGenerator
     public function reGenerate($id): void
     {
         $module = Module::find($id);
-        $model = GeneratorUtils::setModelName($module->name);
-        $path = GeneratorUtils::getModelLocation($module->name);
+        $model = GeneratorUtils::setModelName($module->code);
+        $path = GeneratorUtils::getModelLocation($module->code);
 
         $validations = '';
         $totalFields = count($module->fields);

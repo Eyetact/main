@@ -80,7 +80,7 @@ class ModuleManagerController extends Controller
         $this->generatorService->generateMigration($request->all(),$module->id); // migration
         Artisan::call('migrate'); // run php artisan mnigrate in background
         $this->generatorService->generateController($request->all()); // migration
-        // $this->generatorService->generateRequest($request->all()); // req
+        $this->generatorService->generateRequest($request->all()); // req
         // $this->generatorService->generateRoute($request->all()); // route
         // $this->generatorService->generateViews($request->all()); // views
 
