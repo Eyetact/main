@@ -151,6 +151,9 @@ class IndexViewGenerator
         $model = GeneratorUtils::setModelName($module->name, 'default');
         $path = GeneratorUtils::getModelLocation($module->name);
 
+        $code = GeneratorUtils::setModelName($module->code, 'default');
+        $modelName = GeneratorUtils::pluralKebabCase($code);
+
         $modelNamePluralUcWords = GeneratorUtils::cleanPluralUcWords($model);
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
         $modelNamePluralLowerCase = GeneratorUtils::cleanPluralLowerCase($model);
@@ -258,11 +261,11 @@ class IndexViewGenerator
 
         switch ($path) {
             case '':
-                GeneratorUtils::checkFolder(resource_path("/views/admin/$modelNamePluralKebabCase"));
-                file_put_contents(resource_path("/views/admin/$modelNamePluralKebabCase/index.blade.php"), $template);
+                GeneratorUtils::checkFolder(resource_path("/views/admin/$modelName"));
+                file_put_contents(resource_path("/views/admin/$modelName/index.blade.php"), $template);
                 break;
             default:
-                $fullPath = resource_path("/views/admin/" . strtolower($path) . "/$modelNamePluralKebabCase");
+                $fullPath = resource_path("/views/admin/" . strtolower($path) . "/$modelName");
                 GeneratorUtils::checkFolder($fullPath);
                 file_put_contents($fullPath . "/index.blade.php", $template);
                 break;
