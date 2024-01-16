@@ -265,11 +265,19 @@ class ModuleManagerController extends Controller
                     'name' => $request->name,
                 ]
             );
+
+            $menu = MenuManager::where('module_id', $module->id)->first();
+            $menu->update(
+                [
+                    'name' => $request->name,
+                    'sidebar_name' => $request->sidebar_name,
+                ]
+            );
         endif;
 
         if (!$module) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
-            return redirect()->route('module.index');
+            return redirect()->route('module_manager.index');
         }
 
         $this->generatorService->reGenerateModel($request['module']);
@@ -279,7 +287,7 @@ class ModuleManagerController extends Controller
         $this->generatorService->reGenerateViews($request['module']);
 
         $this->flashRepository->setFlashSession('alert-success', 'Module updated successfully.');
-        return redirect()->route('module.index');
+        return redirect()->route('module_manager.index');
     }
 
     private function generateMigrationContentforDelete($table)
