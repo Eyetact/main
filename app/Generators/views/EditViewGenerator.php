@@ -17,9 +17,10 @@ class EditViewGenerator
     {
         $model = GeneratorUtils::setModelName($request['name'], 'default');
         $path = GeneratorUtils::getModelLocation($request['name']);
+        $code = GeneratorUtils::setModelName($request['code'], 'default');
 
         $modelNamePluralUcWords = GeneratorUtils::cleanPluralUcWords($model);
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNameSingularLowerCase = GeneratorUtils::cleanSingularLowerCase($model);
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
 
@@ -61,9 +62,10 @@ class EditViewGenerator
         $module = Module::find($id);
         $model = GeneratorUtils::setModelName($module->name, 'default');
         $path = GeneratorUtils::getModelLocation($module->name);
+        $code = GeneratorUtils::setModelName($request['code'], 'default');
 
         $modelNamePluralUcWords = GeneratorUtils::cleanPluralUcWords($model);
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNameSingularLowerCase = GeneratorUtils::cleanSingularLowerCase($model);
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
 

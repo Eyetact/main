@@ -80,7 +80,7 @@ class GeneratorService
         (new CreateViewGenerator)->generate($request);
         (new FormViewGenerator)->generate($request);
         (new ShowViewGenerator)->generate($request);
-        // (new EditViewGenerator)->generate($request);
+        (new EditViewGenerator)->generate($request);
         // (new ViewComposerGenerator)->generate($request);
     }
 
@@ -91,7 +91,7 @@ class GeneratorService
         (new FormViewGenerator)->reGenerate($id);
 
         (new ShowViewGenerator)->reGenerate($id);
-        // (new EditViewGenerator)->reGenerate($id);
+        (new EditViewGenerator)->reGenerate($id);
 
         // (new ViewComposerGenerator)->reGenerate($id);
     }
