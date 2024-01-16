@@ -192,12 +192,12 @@ class ModelGenerator
 
         switch ($path) {
             case '':
-                file_put_contents(app_path("/Models/$model.php"), $template);
+                file_put_contents(app_path("/Models/$modelName.php"), $template);
                 break;
             default:
                 $fullPath = app_path("/Models/$path");
                 GeneratorUtils::checkFolder($fullPath);
-                file_put_contents($fullPath . "/$model.php", $template);
+                file_put_contents($fullPath . "/$modelName.php", $template);
                 break;
         }
     }
@@ -385,12 +385,12 @@ class ModelGenerator
 
         switch ($path) {
             case '':
-                file_put_contents(app_path("/Models/$model.php"), $template);
+                file_put_contents(app_path("/Models/$modelName.php"), $template);
                 break;
             default:
                 $fullPath = app_path("/Models/$path");
                 GeneratorUtils::checkFolder($fullPath);
-                file_put_contents($fullPath . "/$model.php", $template);
+                file_put_contents($fullPath . "/$modelName.php", $template);
                 break;
         }
     }
