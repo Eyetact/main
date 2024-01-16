@@ -18,7 +18,9 @@ class ShowViewGenerator
         $model = GeneratorUtils::setModelName($request['name'], 'default');
         $path = GeneratorUtils::getModelLocation($request['name']);
 
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $code = GeneratorUtils::setModelName($request['code'], 'default');
+
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
 
         $trs = "";
@@ -146,7 +148,9 @@ class ShowViewGenerator
         $model = GeneratorUtils::setModelName($module->name, 'default');
         $path = GeneratorUtils::getModelLocation($module->name);
 
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $code = GeneratorUtils::setModelName($module->code, 'default');
+
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
 
         $trs = "";
