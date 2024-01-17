@@ -396,7 +396,7 @@ class RequestGenerator
                  * will generate like:
                  * 'name' => 'required|mimes|size:1024',
                  */
-                $validations .= "|mimes:" . $field->file_type . "|size:" . $field->max_size;
+                $validations .= "|size:" . $field->max_size;
             }
 
             if ($field->type == 'enum') {
