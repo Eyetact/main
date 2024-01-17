@@ -1052,6 +1052,7 @@ class FormViewGenerator
                                     );
                                     break;
                                 case 'file':
+                                case 'image':
 
                                     $template .= str_replace(
                                         [

@@ -45,7 +45,7 @@ class IndexViewGenerator
                     $thColums .= "<th>{{ __('" .  GeneratorUtils::cleanUcWords($field) . "') }}</th>";
                 }
 
-                if ($request['input_types'][$i] == 'file') {
+                if ($request['input_types'][$i] == 'image') {
                     /**
                      * will generate something like:
                      * {
@@ -69,6 +69,33 @@ class IndexViewGenerator
                     render: function(data, type, full, meta) {
                         return `<div class=\"avatar\">
                             <img src=\"" . '$' . "{data}\" alt=\"" . GeneratorUtils::cleanSingularUcWords($field) . "\">
+                        </div>`;
+                        }
+                    },";
+                }else if ($request['input_types'][$i] == 'file') {
+                    /**
+                     * will generate something like:
+                     * {
+                     *    data: 'photo',
+                     *    name: 'photo',
+                     *    orderable: false,
+                     *    searchable: false,
+                     *    render: function(data, type, full, meta) {
+                     *        return `<div class="avatar">
+                     *            <img src="${data}" alt="Photo">
+                     *        </div>`;
+                     *    }
+                     * },
+                     */
+
+                    $tdColumns .=  "{
+                    data: '" . str()->snake($field) . "',
+                    name: '" . str()->snake($field) . "',
+                    orderable: false,
+                    searchable: false,
+                    render: function(data, type, full, meta) {
+                        return `<div class=\"avatar\">
+                            {data}
                         </div>`;
                         }
                     },";
@@ -173,7 +200,7 @@ class IndexViewGenerator
                     $thColums .= "<th>{{ __('" .  GeneratorUtils::cleanUcWords($field->name) . "') }}</th>";
                 }
 
-                if ($field->input == 'file') {
+                if ($field->input == 'image') {
                     /**
                      * will generate something like:
                      * {

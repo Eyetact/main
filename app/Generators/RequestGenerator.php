@@ -375,7 +375,7 @@ class RequestGenerator
                     break;
             }
 
-            if ($field->input == 'file' && $field->file_type == 'image') {
+            if ($field->input == 'image' && $field->file_type == 'image') {
 
                 $maxSize = 1024;
                 if (config('generator.image.size_max')) {
@@ -391,12 +391,12 @@ class RequestGenerator
                  * 'cover' => 'required|image|size:1024',
                  */
                 $validations .= "|image|max:" . $maxSize;
-            } elseif ($field->input == 'file' && $field->file_type == 'mimes') {
+            } elseif ($field->input == 'file' && $field->file_type == 'file') {
                 /**
                  * will generate like:
                  * 'name' => 'required|mimes|size:1024',
                  */
-                $validations .= "|size:" . $field->max_size;
+                // $validations .= "|size:" . $field->max_size;
             }
 
             if ($field->type == 'enum') {

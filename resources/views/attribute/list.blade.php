@@ -631,10 +631,10 @@
 
             </div>
             <div class="input-box form-file-sizes">
-                <input type="number" name="files_sizes" class="google-input" placeholder="Max size(kb), e.g.: 1024" required>
+                <input type="hidden" name="files_sizes" class="google-input" placeholder="Max size(kb), e.g.: 1024" required>
             </div>
-            <input type="text" class="google-input" name="mimes" class="form-mimes" placeholder="docs,pdf">
-            <div class="input-box"></div>
+            <input type="hidden" name="mimes" class="form-mimes">
+
             <input type="hidden" name="steps" class="form-step" >
             `)
             return;
