@@ -100,7 +100,7 @@ class RequestGenerator
                      * 'cover' => 'required|image|size:1024',
                      */
                     $validations .= "|image|max:" . $maxSize;
-                } elseif ($request['input_types'][$i] == 'file' && $request['file_types'][$i] == 'mimes') {
+                } elseif ($request['input_types'][$i] == 'file' && $request['file_types'][$i] == 'file') {
                     /**
                      * will generate like:
                      * 'name' => 'required|mimes|size:1024',

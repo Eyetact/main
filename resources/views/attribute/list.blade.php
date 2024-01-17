@@ -8,6 +8,14 @@
     <link href="{{ URL::asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
+    <style>
+        .multi-item {
+            background: #e9e9e9;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px dashed:#ddd;
+        }
+    </style>
 @endsection
 @section('page-header')
     <!--Page header-->
@@ -237,6 +245,49 @@
     @include('attribute.js.functions')
 
     <script>
+        $(document).on('click', '.add_values', function(event) {
+            event.preventDefault();
+                $(this).parent().parent().find('ul').append(`<li class="mb-3"><input type="text" name="name" value="" class="google-input" /></li>`);
+            return false;
+
+        });
+        $(document).on('click', '.add_extra', function(event) {
+            event.preventDefault();
+                $(this).parent().parent().find('ul').append(`<li class="mb-3"><input type="text" name="name" value="" class="google-input" /></li>`);
+            return false;
+
+        });
+        $(document).on('click', '#add_new_parent', function(event) {
+            event.preventDefault();
+            $('.multi-items').append(`<div class="multi-item">
+                                    <input type="text" name="name" value="" class="google-input" />
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="attr_header row flex justify-content-end my-5 align-items-end pr-5">
+                                                <input title="Reset form" class="btn btn-success add_values" id="add_new_values" type="button"
+                                                    value="+ Add Value">
+                                            </div>
+                                            <ul>
+                                                
+                                               
+                                            </ul>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="attr_header row flex justify-content-end my-5 align-items-end pr-5">
+                                                <input title="Reset form" class="btn btn-success add_extra" id="add_new_extra" type="button"
+                                                    value="+ Add Extra">
+                                            </div>
+                                            <ul>
+                                              
+                                                
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>`);
+
+                return false;
+        });
+
         $(document).on('change', '.form-column-types', function() {
             // alert($(this).val())
             var index = 0;
@@ -284,20 +335,40 @@
                         </div>
                     </div>
             `)
+            } else if ($(this).val() == 'multi') {
+                removeAllInputHidden(index)
+                checkMinAndMaxLength(index)
+                addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                $(`.form-option`).remove()
+
+                $(`.options`).append(`
+                            <div class="multi">
+                                <div class="attr_header row flex justify-content-end my-5 align-items-end pr-5">
+                                    <input title="Reset form" class="btn btn-success" id="add_new_parent" type="button"
+                                        value="+ Add Another">
+                                </div>
+                               
+                                <div class="multi-items">
+                                </div>
+                            
+                            </div>
+                `)
+
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="select">Select</option>
             //     <option value="radio">Radio</option>
             //     <option value="datalist">Datalist</option>
             // `)
 
+
             } else if ($(this).val() == 'date') {
                 removeAllInputHidden(index)
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="date">Date</option>
             //     <option value="month">Month</option>
@@ -308,7 +379,7 @@
                 removeAllInputHidden(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="time">Time</option>
             // `)
@@ -323,7 +394,7 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="select">Select</option>
             //     <option value="datalist">Datalist</option>
@@ -334,7 +405,7 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="datetime-local">Datetime local</option>
             // `)
@@ -381,7 +452,7 @@
                 </div>
             `)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="select">Select</option>
             //     <option value="datalist">Datalist</option>
@@ -398,7 +469,7 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="text">Text</option>
             //     <option value="textarea">Textarea</option>
@@ -425,7 +496,7 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="number">Number</option>
             //     <option value="range">Range</option>
@@ -438,7 +509,7 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="select">Select</option>
             //     <option value="radio">Radio</option>
@@ -449,7 +520,7 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="text">Text</option>
             //     <option value="email">Email</option>
@@ -503,45 +574,49 @@
             </div>
         `)
 
-        switch ($(this).val()) {
-            case 'text':
-            case 'textarea':
-            case 'file':
-            case 'email':
-            case 'tel':
-            case 'password':
-            case 'url':
-            case 'search':
-                $('#type').val('text').trigger('change')
-                break;
-            case 'number':
-            case 'range':
-                $('#type').val('double').trigger('change')
-                break;
-            case 'radio':
-                $('#type').val('boolean').trigger('change')
-                break;
-            case 'date':
-            case 'month':
-                $('#type').val('date').trigger('change')
-                break;
-            case 'time':
-                $('#type').val('time').trigger('change')
-                break;
-            case 'datalist':
-                $('#type').val('year').trigger('change')
-                break;
-            case 'datetime-local':
-                $('#type').val('dateTime').trigger('change')
-                break;
-            case 'select':
-                $('#type').val('enum').trigger('change')
-                break;
+            switch ($(this).val()) {
+                case 'text':
+                case 'textarea':
+                case 'file':
+                case 'image':
+                case 'email':
+                case 'tel':
+                case 'password':
+                case 'url':
+                case 'search':
+                    $('#type').val('text').trigger('change')
+                    break;
+                case 'number':
+                case 'range':
+                    $('#type').val('double').trigger('change')
+                    break;
+                case 'radio':
+                    $('#type').val('boolean').trigger('change')
+                    break;
+                case 'date':
+                case 'month':
+                    $('#type').val('date').trigger('change')
+                    break;
+                case 'time':
+                    $('#type').val('time').trigger('change')
+                    break;
+                case 'datalist':
+                    $('#type').val('year').trigger('change')
+                    break;
+                case 'datetime-local':
+                    $('#type').val('dateTime').trigger('change')
+                    break;
+                case 'select':
+                    $('#type').val('enum').trigger('change')
+                    break;
+                case 'multi':
+                    $('#type').val('multi').trigger('change')
+                    break;
 
-        
-            default:
-                break;
-        }
+
+                default:
+                    break;
+            }
 
             if ($(this).val() == 'file') {
                 minLength.prop('readonly', true).hide()
@@ -551,10 +626,30 @@
 
                 $(`.input-options`).append(`
             <div class="input-box mt-2 form-file-types">
-                <select name="file_types" class="google-input" required>
-                    <option value="" disabled selected>-- Select file type --</option>
-                    <option value="image">Image</option>
-                </select>
+
+            <input type="hidden" name="file_types" value="file" >
+
+            </div>
+            <div class="input-box form-file-sizes">
+                <input type="number" name="files_sizes" class="google-input" placeholder="Max size(kb), e.g.: 1024" required>
+            </div>
+            <input type="text" class="google-input" name="mimes" class="form-mimes" placeholder="docs,pdf">
+            <div class="input-box"></div>
+            <input type="hidden" name="steps" class="form-step" >
+            `)
+            return;
+
+            }
+            if ($(this).val() == 'image') {
+                minLength.prop('readonly', true).hide()
+                maxLength.prop('readonly', true).hide()
+                minLength.val('')
+                maxLength.val('')
+
+                $(`.input-options`).append(`
+            <div class="input-box mt-2 form-file-types">
+                <input type="hidden" name="file_types" value="image" >
+
             </div>
             <div class="input-box form-file-sizes">
                 <input type="number" name="files_sizes" class="google-input" placeholder="Max size(kb), e.g.: 1024" required>
@@ -663,7 +758,7 @@
             $("#fields_info\\[" + index + "\\]\\[default\\]").val(1);
 
         }
-        $(document).on('click', '.removeSection', function () {
+        $(document).on('click', '.removeSection', function() {
             $(this).closest('tr').remove();
             index--;
         });

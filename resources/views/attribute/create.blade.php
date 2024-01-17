@@ -2,9 +2,8 @@
     $data = json_decode($attribute->fields_info, true);
     // dump($data);
 @endphp
-<form
-    action="{{ route('attribute.store') }}"
-    id="attributeCreate" method="POST" autocomplete="off" enctype="multipart/form-data">
+<form action="{{ route('attribute.store') }}" id="attributeCreate" method="POST" autocomplete="off"
+    enctype="multipart/form-data">
     @csrf
     <div class="row">
         <div class="col-lg-12 col-md-12">
@@ -19,7 +18,8 @@
                             <select name="module" class="google-input module" id="module" required>
                                 <option value="" selected>Select Module</option>
                                 @foreach ($moduleData as $module)
-                                    <option value="{{ $module->id }}" @if(in_array($module->id,[1,2,3])) disabled @endif
+                                    <option value="{{ $module->id }}"
+                                        @if (in_array($module->id, [1, 2, 3])) disabled @endif
                                         {{ $module->id == $attribute->module ? 'selected' : '' }}>{{ $module->name }}
                                     </option>
                                 @endforeach
@@ -39,44 +39,88 @@
                                 <span class="error name-error">{{ $message }}</span>
                             @enderror
                         </div>
-
-
                     </div>
 
                     <div class="row">
-                        
+
                         <div class="input-box col-sm-12">
                             <label class="form-label">Select Attribute type<span class="text-red">*</span></label>
                             <select name="input_types" class="form-select form-input-types  google-input" required>
                                 <option value="" disabled selected>-- {{ __('Select input type') }}--</option>
-                                    <option value="text">Text</option>
-                                    <option value="textarea">Textarea</option>
-                                    <option value="email">Email</option>
-                                    <option value="tel">Telepon</option>
-                                    <option value="password">Password</option>
-                                    <option value="url">Url</option>
-                                    <option value="search">Search</option>
-                                    <option value="file">File</option>
-                                    <option value="number">Number</option>
-                                    <option value="range">Range</option>
-                                    <option value="radio">Radio ( True, False )</option>
-                                    <option value="date">Date</option>
-                                    <option value="month">Month</option>
-                                    <option value="time">Time</option>
-                                    <option value="datalist">Datalist ( Year List )</option>
-                                    <option value="datetime-local">Datetime local</option>
-                                    <option value="select">Select</option>
+                                <option value="multi">Multi Attribute</option>
+                                <option value="text">Text</option>
+                                <option value="textarea">Textarea</option>
+                                <option value="email">Email</option>
+                                <option value="tel">Telepon</option>
+                                <option value="password">Password</option>
+                                <option value="url">Url</option>
+                                <option value="search">Search</option>
+                                <option value="image">Image</option>
+                                <option value="file">File</option>
+                                <option value="number">Number</option>
+                                <option value="range">Range</option>
+                                <option value="radio">Radio ( True, False )</option>
+                                <option value="date">Date</option>
+                                <option value="month">Month</option>
+                                <option value="time">Time</option>
+                                <option value="datalist">Datalist ( Year List )</option>
+                                <option value="datetime-local">Datetime local</option>
+                                <option value="select">Select</option>
                             </select>
                             <label id="field_type-error" class="error text-red hide" for="field_type"></label>
                             @error('field_type')
                                 <span class="error field_type-error">{{ $message }}</span>
                             @enderror
                             <div class="input-options"></div>
-                        </div>
-                        <div class="input-box col-sm-12">
-                            {{-- <label class="form-label">Select Colmun type<span class="text-red">*</span></label> --}}
 
-                            {{-- <select name="column_types" class="form-select  google-input form-column-types" required>
+                            {{-- <div class="multi">
+                                <div class="attr_header row flex justify-content-end my-5 align-items-end pr-5">
+                                    <input title="Reset form" class="btn btn-success" id="add_new" type="button"
+                                        value="+ Add Another">
+                                </div>
+                               
+                                <div class="multi-item">
+                                    <input type="text" name="name" value="Size" class="google-input" />
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="attr_header row flex justify-content-end my-5 align-items-end pr-5">
+                                                <input title="Reset form" class="btn btn-success" id="add_new" type="button"
+                                                    value="+ Add Value">
+                                            </div>
+                                            <ul>
+                                                <li><input type="text" name="name" value="S" class="google-input" />
+                                                </li>
+                                                <li><input type="text" name="name" value="M" class="google-input" />
+                                                </li>
+                                                <li><input type="text" name="name" value="L" class="google-input" />
+                                                </li>
+                                                <li><input type="text" name="name" value="XL" class="google-input" />
+                                                </li>
+                                                <li><input type="text" name="name" value="XXL" class="google-input" />
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="attr_header row flex justify-content-end my-5 align-items-end pr-5">
+                                                <input title="Reset form" class="btn btn-success" id="add_new" type="button"
+                                                    value="+ Add Extra">
+                                            </div>
+                                            <ul>
+                                                <li><input type="text" name="name" value="QTY" class="google-input" /></li>
+                                                <li><input type="text" name="name" value="Price" class="google-input" /></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                            </div> --}}
+                            
+                        </div>
+                    </div>
+                    <div class="input-box col-sm-12">
+                        {{-- <label class="form-label">Select Colmun type<span class="text-red">*</span></label> --}}
+
+                        {{-- <select name="column_types" class="form-select  google-input form-column-types" required>
                                 <option value="" disabled selected>--{{ __('Select column type') }}--
                                 </option>
                                 @foreach (['string', 'integer', 'text', 'bigInteger', 'boolean', 'char', 'date', 'time', 'year', 'dateTime', 'decimal', 'double', 'enum', 'float', 'foreignId', 'tinyInteger', 'mediumInteger', 'tinyText', 'mediumText', 'longText'] as $type)
@@ -84,87 +128,83 @@
                                 @endforeach
                             </select> --}}
 
-                            <input type="hidden" name="column_types" id="type" class="form-column-types" />
+                        <input type="hidden" name="column_types" id="type" class="form-column-types" />
 
 
-                            <div class="options">
-                                <input type="hidden" name="select_options" class="form-option">
-                                            <input type="hidden" name="constrains" class="form-constrain">
-                                            <input type="hidden" name="foreign_ids" class="form-foreign-id">
-                            </div>
+                        <div class="options">
+                            <input type="hidden" name="select_options" class="form-option">
+                            <input type="hidden" name="constrains" class="form-constrain">
+                            <input type="hidden" name="foreign_ids" class="form-foreign-id">
                         </div>
                     </div>
-                    <div class="text_fields row">
+                </div>
+                <div class="text_fields row">
 
+                </div>
+                <div class="file_fields row">
+
+                </div>
+
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Admin</h3>
+            </div>
+            <div class="card-body pb-2">
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <label class="custom-switch form-label">
+                            <input type="checkbox" name="is_enable" class="custom-switch-input" id="is_enable"
+                                {{ $attribute->is_enable == 1 ? 'checked' : '' }}>
+                            <span class="custom-switch-indicator"></span>
+                            <span class="custom-switch-description">Status</span>
+                        </label>
                     </div>
-                    <div class="file_fields row">
-
+                    <div class="form-group col-sm-8">
+                        <label class="custom-switch form-label">
+                            <input type="checkbox" name="is_system" class="custom-switch-input" id="is_system"
+                                {{ $attribute->is_system == 1 ? 'checked' : '' }}>
+                            <span class="custom-switch-indicator"></span>
+                            <span class="custom-switch-description">System (This attribute is only available for
+                                admin)</span>
+                        </label>
                     </div>
-                    
+                    <div class="col-md-12">
+                        <div class="row align-items-center justify-content-center">
+                            <div class="form-group col-md-4">
+                                <label class="custom-switch form-label">
+                                    <input type="checkbox" name="requireds"
+                                        class="custom-switch-input switch-requireds" id="requireds" checked>
+                                    <span class="custom-switch-indicator"></span>
+                                    <span class="custom-switch-description">Required</span>
+                                </label>
+                            </div>
+                            <div class="custom-values col-md-8"></div>
 
+                        </div>
+                    </div>
+                    <input type="hidden" name="default_values" class="form-default-value"
+                        placeholder="{{ __('Default Value (optional)') }}">
 
-
+                    <div class="col-md-6">
+                        <div class="input-box">
+                            <input type="number" name="min_lengths"
+                                class=" google-input form-control form-min-lengths" min="1" placeholder="Min">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-box">
+                            <input type="number" name="max_lengths"
+                                class="  google-input form-control form-max-lengths" min="1"
+                                placeholder="Max">
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Admin</h3>
-                </div>
-                <div class="card-body pb-2">
-                    <div class="row">
-                        <div class="form-group col-sm-4">
-                            <label class="custom-switch form-label">
-                                <input type="checkbox" name="is_enable" class="custom-switch-input" id="is_enable"
-                                    {{ $attribute->is_enable == 1 ? 'checked' : '' }}>
-                                <span class="custom-switch-indicator"></span>
-                                <span class="custom-switch-description">Status</span>
-                            </label>
-                        </div>
-                        <div class="form-group col-sm-8">
-                            <label class="custom-switch form-label">
-                                <input type="checkbox" name="is_system" class="custom-switch-input" id="is_system"
-                                    {{ $attribute->is_system == 1 ? 'checked' : '' }}>
-                                <span class="custom-switch-indicator"></span>
-                                <span class="custom-switch-description">System (This attribute is only available for
-                                    admin)</span>
-                            </label>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="row align-items-center justify-content-center">
-                                <div class="form-group col-md-4">
-                                    <label class="custom-switch form-label">
-                                        <input type="checkbox" name="requireds"
-                                            class="custom-switch-input switch-requireds" id="requireds" checked>
-                                        <span class="custom-switch-indicator"></span>
-                                        <span class="custom-switch-description">Required</span>
-                                    </label>
-                                </div>
-                                <div class="custom-values col-md-8"></div>
-
-                            </div>
-                        </div>
-                        <input type="hidden" name="default_values" class="form-default-value"
-                            placeholder="{{ __('Default Value (optional)') }}">
-
-                        <div class="col-md-6">
-                            <div class="input-box">
-                                <input type="number" name="min_lengths"
-                                    class=" google-input form-control form-min-lengths" min="1"
-                                    placeholder="Min">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-box">
-                                <input type="number" name="max_lengths"
-                                    class="  google-input form-control form-max-lengths" min="1"
-                                    placeholder="Max">
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
 
-                {{-- <div class="row">
+            {{-- <div class="row">
                     <div class="form-group col-sm-4">
                         <label class="form-label">Values Required</label>
                         <select name="is_required" class="form-control is_required" id="is_required">
@@ -216,9 +256,9 @@
                         <textarea class="form-control" name="description" autocomplete="off" id="description" rows="1">{{ old('description', $attribute->description) }}</textarea>
                     </div>
                 </div> --}}
-            </div>
         </div>
-        {{-- <div class="card">
+    </div>
+    {{-- <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Storefront</h3>
             </div>
