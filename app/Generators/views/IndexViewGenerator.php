@@ -215,13 +215,23 @@ class IndexViewGenerator
                             case 'date':
                             case 'time':
                                 $trhtml .= ' <td>
-                                    <div class="input-box">
-                                        <input type="' . $value->type . '" name="' . $field->name . '[' . $value->name . ']"
-                                            class="form-control google-input"
-                                            placeholder="' . $value->name . '" required>
-                                    </div>
-                                </td>
-                                ';
+                                        <div class="input-box">
+                                            <input type="' . $value->type . '" name="' . $field->name . '[' . $value->name . ']"
+                                                class="form-control google-input"
+                                                placeholder="' . $value->name . '" required>
+                                        </div>
+                                    </td>
+                                    ';
+                                break;
+                            case 'image':
+                                $trhtml .= ' <td>
+                                            <div class="input-box">
+                                                <input type="file" name="' . $field->name . '[' . $value->name . ']"
+                                                    class="form-control google-input"
+                                                    placeholder="' . $value->name . '" required>
+                                            </div>
+                                        </td>
+                                        ';
                                 break;
 
                             case 'textarea':
@@ -240,18 +250,28 @@ class IndexViewGenerator
                                                     <div class="row">
                                                         <div class="col-md-11">
                                                             <div class="input-box">
-                                                                <input onmousemove="' . $field->name . '1.value=value" type="range" name="' . $field->name . '[' . $value->name . ']" class="range " min="1" max="1000" >
+                                                                <input onmousemove="' . $value->name . '1.value=value" type="range" name="' . $field->name . '[' . $value->name . ']" class="range " min="1" max="1000" >
                                                                 
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-1">  <output id="' . $field->name . '1"></output></div>
+                                                        <div class="col-md-1">  <output id="' . $value->name . '1"></output></div>
                                                     </div>
                                                 </td>
                                                     ';
                                 break;
                             case 'radio':
                                 $trhtml .= '<td>
-                                
+                                <div class="custom-controls-stacked">
+                                <label class="custom-control custom-radio" for="' . $value->name . '-1">
+                                    <input class="custom-control-input" type="radio" name="' . $field->name . '[' . $value->name . ']" id="' . $value->name . '-1" value="1">
+                                    <span class="custom-control-label">True</span>
+                                </label>
+                    
+                                <label class="custom-control custom-radio" for="' . $value->name . '-0">
+                                    <input class="custom-control-input" type="radio" name="' . $field->name . '[' . $value->name . ']" id="' . $value->name . '-0" value="0">
+                                    <span class="custom-control-label">False</span>
+                                </label>
+                            </div>
                                             </td>
                                                         ';
                                 break;

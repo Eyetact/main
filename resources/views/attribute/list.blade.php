@@ -336,7 +336,6 @@
                                                         <option value="textarea">Textarea</option>
                                                         <option value="email">Email</option>
                                                         <option value="tel">Telepon</option>
-                                                        <option value="password">Password</option>
                                                         <option value="url">Url</option>
                                                         <option value="search">Search</option>
                                                         <option value="image">Image</option>
@@ -345,7 +344,6 @@
                                                         <option value="range">Range</option>
                                                         <option value="radio">Radio ( True, False )</option>
                                                         <option value="date">Date</option>
-                                                        <option value="month">Month</option>
                                                         <option value="time">Time</option>
                                                         <option value="datalist">Datalist ( Year List )</option>
                                                         <option value="datetime-local">Datetime local</option>
@@ -474,7 +472,6 @@
                                                         <option value="textarea">Textarea</option>
                                                         <option value="email">Email</option>
                                                         <option value="tel">Telepon</option>
-                                                        <option value="password">Password</option>
                                                         <option value="url">Url</option>
                                                         <option value="search">Search</option>
                                                         <option value="image">Image</option>
@@ -483,7 +480,6 @@
                                                         <option value="range">Range</option>
                                                         <option value="radio">Radio ( True, False )</option>
                                                         <option value="date">Date</option>
-                                                        <option value="month">Month</option>
                                                         <option value="time">Time</option>
                                                         <option value="datalist">Datalist ( Year List )</option>
                                                         <option value="datetime-local">Datetime local</option>
