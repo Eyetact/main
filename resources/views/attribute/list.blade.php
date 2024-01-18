@@ -15,6 +15,41 @@
             margin: 15px 0;
             border: 1px dashed:#ddd;
         }
+
+        .modal-xl {
+            max-width: 1140px !important;
+        }
+
+        .attr_header {
+            width: 100% !important;
+        }
+
+        #attr_tbl {
+            cursor: move;
+        }
+
+        #tbl-field>tbody>tr>td {
+            min-height: 97px;
+            max-height: 97px;
+            text-align: center !important;
+            line-height: 51px;
+        }
+
+        #tbl-field>tbody>tr>td label {
+            line-height: 1;
+        }
+
+        #tbl-field .form-check.form-switch {
+            padding: 0;
+            display: flex;
+            align-items: center;
+            /* justify-content: center; */
+            min-height: 50px;
+        }
+
+        #tbl-field .form-check.form-switch div {
+            margin: 0;
+        }
     </style>
 @endsection
 @section('page-header')
@@ -72,7 +107,7 @@
     </div><!-- end app-content-->
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="role_form_modal" tabindex="-1" role="dialog"
+    <div class="modal fade bd-example-modal-xl" id="role_form_modal" tabindex="-1" role="dialog"
         aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -250,48 +285,97 @@
     @include('attribute.js.functions')
 
     <script>
-        $(document).on('click', '.add_values', function(event) {
-            event.preventDefault();
-                $(this).parent().parent().find('ul').append(`<li class="mb-3"><input type="text" name="name" value="" class="google-input" /></li>`);
-            return false;
+        function generateNo() {
+            let no = 1
 
-        });
-        $(document).on('click', '.add_extra', function(event) {
-            event.preventDefault();
-                $(this).parent().parent().find('ul').append(`<li class="mb-3"><input type="text" name="name" value="" class="google-input" /></li>`);
-            return false;
+            $('#tbl-field tbody tr').each(function(i) {
+                $(this).find('td:nth-child(1)').html(no)
+                if (i < 1) {
+                    $(`.btn-delete:eq(${i})`).prop('disabled', true)
+                } else {
+                    $(`.btn-delete:eq(${i})`).prop('disabled', false)
+                }
+                no++
+            })
+        }
 
-        });
-        $(document).on('click', '#add_new_parent', function(event) {
-            event.preventDefault();
-            $('.multi-items').append(`<div class="multi-item">
-                                    <input type="text" name="name" value="" class="google-input" />
-                                    <div class="row">
-                                        <div class="col-8">
-                                            <div class="attr_header row flex justify-content-end my-5 align-items-end pr-5">
-                                                <input title="Reset form" class="btn btn-success add_values" id="add_new_values" type="button"
-                                                    value="+ Add Value">
-                                            </div>
-                                            <ul>
+        $(document).on('click', '.btn-delete', function() {
+            let table = $('#tbl-field tbody tr')
+
+            $(this).parent().parent().parent().remove()
+            generateNo()
+        })
+        $(document).on('click', '#add_new_tr', function() {
+            let table = $('#tbl-field tbody')
+
+            let no = table.find('tr').length + 1
+
+            let tr = `
+            <tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">
+                                            <td class="text-center">
+                                                <div class="input-box">
                                                 
-                                               
-                                            </ul>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="attr_header row flex justify-content-end my-5 align-items-end pr-5">
-                                                <input title="Reset form" class="btn btn-success add_extra" id="add_new_extra" type="button"
-                                                    value="+ Add Extra">
-                                            </div>
-                                            <ul>
-                                              
-                                                
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>`);
+                                                    ${no}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-box">
+                                                    <input type="text" name="multi[${no}][name]"
+                                                        class="form-control google-input"
+                                                        placeholder="{{ __('Field Name') }}" required>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-box">
+                                                    <select name="multi[${no}][type]"
+                                                        class="form-select  google-input " required>
+                                                        <option value="" disabled selected>
+                                                            --{{ __('Select column type') }}--
+                                                        </option>
+                                                        <option value="text">Text</option>
+                                                        <option value="textarea">Textarea</option>
+                                                        <option value="email">Email</option>
+                                                        <option value="tel">Telepon</option>
+                                                        <option value="password">Password</option>
+                                                        <option value="url">Url</option>
+                                                        <option value="search">Search</option>
+                                                        <option value="image">Image</option>
+                                                        <option value="file">File</option>
+                                                        <option value="number">Number</option>
+                                                        <option value="range">Range</option>
+                                                        <option value="radio">Radio ( True, False )</option>
+                                                        <option value="date">Date</option>
+                                                        <option value="month">Month</option>
+                                                        <option value="time">Time</option>
+                                                        <option value="datalist">Datalist ( Year List )</option>
+                                                        <option value="datetime-local">Datetime local</option>
+                                                        <option value="select">Select</option>
 
-                return false;
-        });
+                                                    </select>
+
+                                                </div>
+                                            </td>
+
+
+
+
+
+                                            <td>
+                                                <div class="input-box">
+
+                                                    <button type="button"
+                                                        class="btn btn-outline-danger btn-xs btn-delete">
+                                                        x
+                                                    </button>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+            `
+
+            table.append(tr)
+        })
+
 
         $(document).on('change', '.form-column-types', function() {
             // alert($(this).val())
@@ -348,15 +432,88 @@
                 $(`.form-option`).remove()
 
                 $(`.options`).append(`
-                            <div class="multi">
-                                <div class="attr_header row flex justify-content-end my-5 align-items-end pr-5">
-                                    <input title="Reset form" class="btn btn-success" id="add_new_parent" type="button"
-                                        value="+ Add Another">
+                <div class="multi-options">
+                                <div class="attr_header row flex justify-content-end my-5 align-items-end">
+                                    <input title="Reset form" class="btn btn-success" id="add_new_tr" type="button"
+                                        value="+ Add">
                                 </div>
-                               
-                                <div class="multi-items">
-                                </div>
-                            
+
+                                <table class="table table-bordered align-items-center mb-0" id="tbl-field">
+                                    <thead>
+                                        <tr>
+                                            <th width="30">#</th>
+                                            <th>{{ __('Field name') }}</th>
+                                            <th>{{ __('Column Type') }}</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr draggable="true" containment="tbody" ondragstart="dragStart()"
+                                            ondragover="dragOver()" style="cursor: move;">
+                                            <td class="text-center">
+                                                <div class="input-box">
+                                                
+                                                1
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-box">
+                                                    <input type="text" name="multi[0][name]"
+                                                        class="form-control google-input"
+                                                        placeholder="{{ __('Field Name') }}" required>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-box">
+                                                    <select name="multi[0][type]"
+                                                        class="form-select  google-input" required>
+                                                        <option value="" disabled selected>
+                                                            --{{ __('Select column type') }}--
+                                                        </option>
+                                                        <option value="text">Text</option>
+                                                        <option value="textarea">Textarea</option>
+                                                        <option value="email">Email</option>
+                                                        <option value="tel">Telepon</option>
+                                                        <option value="password">Password</option>
+                                                        <option value="url">Url</option>
+                                                        <option value="search">Search</option>
+                                                        <option value="image">Image</option>
+                                                        <option value="file">File</option>
+                                                        <option value="number">Number</option>
+                                                        <option value="range">Range</option>
+                                                        <option value="radio">Radio ( True, False )</option>
+                                                        <option value="date">Date</option>
+                                                        <option value="month">Month</option>
+                                                        <option value="time">Time</option>
+                                                        <option value="datalist">Datalist ( Year List )</option>
+                                                        <option value="datetime-local">Datetime local</option>
+                                                        <option value="select">Select</option>
+
+                                                    </select>
+                                                </div>
+                                            </td>
+
+
+
+
+
+                                            <td>
+                                                <div class="input-box">
+
+                                                    <button type="button"
+                                                        class="btn btn-outline-danger btn-xs btn-delete">
+                                                        x
+                                                    </button>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+
+
+
+
+                                    </tbody>
+                                </table>
                             </div>
                 `)
 
@@ -642,7 +799,7 @@
 
             <input type="hidden" name="steps" class="form-step" >
             `)
-            return;
+                return;
 
             }
             if ($(this).val() == 'image') {

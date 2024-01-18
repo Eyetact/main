@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Multi;
 use App\Services\GeneratorService;
 use Illuminate\Http\Request;
 use App\Models\Attribute;
@@ -31,11 +32,11 @@ class AttributeController extends Controller
             $attribute = Attribute::all();
 
             return datatables()->of($attribute)
-            ->addColumn('module', function ($row) {
-                return $row->moduleObj->name;
-            })
-            ->addColumn('action', function ($row) {
-                $btn = '<div class="dropdown">
+                ->addColumn('module', function ($row) {
+                    return $row->moduleObj->name;
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="dropdown">
             <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
@@ -51,8 +52,8 @@ class AttributeController extends Controller
             </ul>
         </div>';
 
-                return $btn;
-            })
+                    return $btn;
+                })
                 ->rawColumns(['action'])
 
                 ->addIndexColumn()
@@ -68,7 +69,7 @@ class AttributeController extends Controller
      */
     public function create()
     {
-        $moduleData = Module::where('migration','!=',NULL)->get();
+        $moduleData = Module::where('migration', '!=', NULL)->get();
         return view('attribute.create', ['attribute' => new Attribute(), 'moduleData' => $moduleData]);
     }
 
@@ -83,6 +84,7 @@ class AttributeController extends Controller
         $request->validated();
         $requestData = $request->all();
 
+
         $attr = Attribute::where('name', $request['name'])->where('module', $request['module'])->first();
 
         if ($attr) {
@@ -93,8 +95,8 @@ class AttributeController extends Controller
         if (isset($request['fields_info'])) {
             $count = count($request['fields_info']);
             foreach ($request['fields_info'] as $key => $value) {
-                if( $value['default'] == 1 ){
-                    $request['default_values'] =  $value['value'];
+                if ($value['default'] == 1) {
+                    $request['default_values'] = $value['value'];
                 }
                 if ($key == $count) {
 
@@ -110,6 +112,8 @@ class AttributeController extends Controller
 
         }
 
+        // dd($request);
+
         $createArr = [
 
             'module' => $request['module'],
@@ -119,7 +123,7 @@ class AttributeController extends Controller
             'max_length' => $request['max_lengths'],
             'steps' => $request['steps'],
             'input' => $request['input_types'],
-            'required' => isset($request['requireds']) ? 'yes' :'no',
+            'required' => isset($request['requireds']) ? 'yes' : 'no',
             'default_value' => $request['default_values'],
             'select_option' => $request['select_options'],
             'constrain' => $request['constrains'],
@@ -134,11 +138,23 @@ class AttributeController extends Controller
         // dd($createArr);
         $attribute = Attribute::create($createArr);
 
-        $this->generatorService->reGenerateModel($request['module']);
-        $this->generatorService->reGenerateMigration($request['module']);
-        $this->generatorService->reGenerateController($request['module']);
-        $this->generatorService->reGenerateRequest($request['module']);
+
+        // $this->generatorService->reGenerateModel($request['module']);
+        // $this->generatorService->reGenerateMigration($request['module']);
+        // $this->generatorService->reGenerateController($request['module']);
+        // $this->generatorService->reGenerateRequest($request['module']);
         $this->generatorService->reGenerateViews($request['module']);
+        if (isset($requestData['multi'])) {
+
+            foreach ($requestData['multi'] as $key => $value) {
+                $m = new Multi();
+                $m->name = $value['name'];
+                $m->type = $value['type'];
+                $m->attribute_id = $attribute->id;
+                $m->save();
+            }
+        }
+        // dd($requestData['multi']);
 
         if (!$attribute) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
@@ -149,7 +165,8 @@ class AttributeController extends Controller
         return redirect()->route('attribute.index');
     }
 
-    public function test($id){
+    public function test($id)
+    {
         $this->generatorService->reGenerateViews($id);
 
     }

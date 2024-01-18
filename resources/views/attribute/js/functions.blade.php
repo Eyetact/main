@@ -31,7 +31,7 @@
         $(`.form-on-update-foreign`).remove()
         $(`.form-on-delete-foreign`).remove()
         $(`.option_fields`).remove()
-        $(`.multi`).remove()
+        $(`.multi-options`).remove()
 
         // $(`#tbl-field tbody tr:eq(${index}) td:eq(5) .form-default-value`).remove()
 

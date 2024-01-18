@@ -16,6 +16,8 @@
                         <input type="text" name="fields[]" class="google-input" placeholder="Field Name" required>
                     </div>
                 </td>
+
+                
                 <td>
                     <div class="input-box">
                         <select name="column_types[]" class="form-select google-input form-column-types" required>

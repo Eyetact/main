@@ -14,4 +14,8 @@ class Attribute extends Model
     public function moduleObj(){
         return $this->belongsTo(Module::class, 'module');
     }
+
+    public function multis(){
+        return $this->hasMany(Multi::class);
+    }
 }

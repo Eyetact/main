@@ -35,33 +35,33 @@ class IndexViewGenerator
         $totalFields = count($request['fields']);
 
         if (!empty($request['fields'][0])) {
-        foreach ($request['fields'] as $i => $field) {
-            if ($request['input_types'][$i] != 'password') {
-                /**
-                 * will generate something like:
-                 * <th>{{ __('Price') }}</th>
-                 */
-                if ($request['column_types'][$i] != 'foreignId') {
-                    $thColums .= "<th>{{ __('" .  GeneratorUtils::cleanUcWords($field) . "') }}</th>";
-                }
-
-                if ($request['input_types'][$i] == 'image') {
+            foreach ($request['fields'] as $i => $field) {
+                if ($request['input_types'][$i] != 'password') {
                     /**
                      * will generate something like:
-                     * {
-                     *    data: 'photo',
-                     *    name: 'photo',
-                     *    orderable: false,
-                     *    searchable: false,
-                     *    render: function(data, type, full, meta) {
-                     *        return `<div class="avatar">
-                     *            <img src="${data}" alt="Photo">
-                     *        </div>`;
-                     *    }
-                     * },
+                     * <th>{{ __('Price') }}</th>
                      */
+                    if ($request['column_types'][$i] != 'foreignId') {
+                        $thColums .= "<th>{{ __('" . GeneratorUtils::cleanUcWords($field) . "') }}</th>";
+                    }
 
-                    $tdColumns .=  "{
+                    if ($request['input_types'][$i] == 'image') {
+                        /**
+                         * will generate something like:
+                         * {
+                         *    data: 'photo',
+                         *    name: 'photo',
+                         *    orderable: false,
+                         *    searchable: false,
+                         *    render: function(data, type, full, meta) {
+                         *        return `<div class="avatar">
+                         *            <img src="${data}" alt="Photo">
+                         *        </div>`;
+                         *    }
+                         * },
+                         */
+
+                        $tdColumns .= "{
                     data: '" . str()->snake($field) . "',
                     name: '" . str()->snake($field) . "',
                     orderable: false,
@@ -72,23 +72,23 @@ class IndexViewGenerator
                         </div>`;
                         }
                     },";
-                }else if ($request['input_types'][$i] == 'file') {
-                    /**
-                     * will generate something like:
-                     * {
-                     *    data: 'photo',
-                     *    name: 'photo',
-                     *    orderable: false,
-                     *    searchable: false,
-                     *    render: function(data, type, full, meta) {
-                     *        return `<div class="avatar">
-                     *            <img src="${data}" alt="Photo">
-                     *        </div>`;
-                     *    }
-                     * },
-                     */
+                    } else if ($request['input_types'][$i] == 'file') {
+                        /**
+                         * will generate something like:
+                         * {
+                         *    data: 'photo',
+                         *    name: 'photo',
+                         *    orderable: false,
+                         *    searchable: false,
+                         *    render: function(data, type, full, meta) {
+                         *        return `<div class="avatar">
+                         *            <img src="${data}" alt="Photo">
+                         *        </div>`;
+                         *    }
+                         * },
+                         */
 
-                    $tdColumns .=  "{
+                        $tdColumns .= "{
                     data: '" . str()->snake($field) . "',
                     name: '" . str()->snake($field) . "',
                     orderable: false,
@@ -99,45 +99,45 @@ class IndexViewGenerator
                         </div>`;
                         }
                     },";
-                } elseif ($request['column_types'][$i] == 'foreignId') {
-                    // remove '/' or sub folders
-                    $constrainModel = GeneratorUtils::setModelName($request['constrains'][$i], 'default');
+                    } elseif ($request['column_types'][$i] == 'foreignId') {
+                        // remove '/' or sub folders
+                        $constrainModel = GeneratorUtils::setModelName($request['constrains'][$i], 'default');
 
-                    $thColums .= "<th>{{ __('" .  GeneratorUtils::cleanSingularUcWords($constrainModel) . "') }}</th>";
+                        $thColums .= "<th>{{ __('" . GeneratorUtils::cleanSingularUcWords($constrainModel) . "') }}</th>";
 
-                    /**
-                     * will generate something like:
-                     * {
-                     *    data: 'user',
-                     *    name: 'user.name'
-                     * }
-                     */
-                    $tdColumns .=  "{
+                        /**
+                         * will generate something like:
+                         * {
+                         *    data: 'user',
+                         *    name: 'user.name'
+                         * }
+                         */
+                        $tdColumns .= "{
                     data: '" . GeneratorUtils::singularSnakeCase($constrainModel) . "',
                     name: '" . GeneratorUtils::singularSnakeCase($constrainModel) . "." . GeneratorUtils::getColumnAfterId($constrainModel) . "'
                 },";
-                } else {
-                    /**
-                     * will generate something like:
-                     * {
-                     *    data: 'price',
-                     *    name: 'price'
-                     * }
-                     */
-                    $tdColumns .=  "{
+                    } else {
+                        /**
+                         * will generate something like:
+                         * {
+                         *    data: 'price',
+                         *    name: 'price'
+                         * }
+                         */
+                        $tdColumns .= "{
                     data: '" . str()->snake($field) . "',
                     name: '" . str()->snake($field) . "',
                 },";
-                }
+                    }
 
-                if ($i + 1 != $totalFields) {
-                    // add new line and tab
-                    $thColums .= "\n\t\t\t\t\t\t\t\t\t\t\t";
-                    $tdColumns .= "\n\t\t\t\t";
+                    if ($i + 1 != $totalFields) {
+                        // add new line and tab
+                        $thColums .= "\n\t\t\t\t\t\t\t\t\t\t\t";
+                        $tdColumns .= "\n\t\t\t\t";
+                    }
                 }
             }
         }
-    }
 
         $template = str_replace(
             [
@@ -188,6 +188,8 @@ class IndexViewGenerator
 
         $thColums = '';
         $tdColumns = '';
+        $trhtml = '<tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">
+        ';
         $totalFields = count($module->fields);
 
         foreach ($module->fields as $i => $field) {
@@ -197,7 +199,69 @@ class IndexViewGenerator
                  * <th>{{ __('Price') }}</th>
                  */
                 if ($field->type != 'foreignId') {
-                    $thColums .= "<th>{{ __('" .  GeneratorUtils::cleanUcWords($field->name) . "') }}</th>";
+                    $thColums .= "<th>{{ __('" . GeneratorUtils::cleanUcWords($field->name) . "') }}</th>";
+                }
+
+                if ($field->type == 'multi') {
+                    foreach ($field->multis as $key => $value) {
+                        switch ($value->type) {
+                            case 'text':
+                            case 'email':
+                            case 'tel':
+                            case 'url':
+                            case 'search':
+                            case 'file':
+                            case 'number':
+                            case 'date':
+                            case 'time':
+                                $trhtml .= ' <td>
+                                    <div class="input-box">
+                                        <input type="' . $value->type . '" name="' . $field->name . '[' . $value->name . ']"
+                                            class="form-control google-input"
+                                            placeholder="' . $value->name . '" required>
+                                    </div>
+                                </td>
+                                ';
+                                break;
+
+                            case 'textarea':
+                                $trhtml .= ' <td>
+                                            <div class="input-box">
+                                              
+                                            <textarea name="' . $field->name . '[' . $value->name . ']"  class="google-input"  placeholder="' . $value->name . '"></textarea>
+                                            
+                                            </div>
+                                        </td>
+                                        ';
+                                break;
+
+                            case 'range':
+                                $trhtml .= '<td>
+                                                    <div class="row">
+                                                        <div class="col-md-11">
+                                                            <div class="input-box">
+                                                                <input onmousemove="' . $field->name . '1.value=value" type="range" name="' . $field->name . '[' . $value->name . ']" class="range " min="1" max="1000" >
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">  <output id="' . $field->name . '1"></output></div>
+                                                    </div>
+                                                </td>
+                                                    ';
+                                break;
+                            case 'radio':
+                                $trhtml .= '<td>
+                                
+                                            </td>
+                                                        ';
+                                break;
+
+                            default:
+                                # code...
+                                break;
+                        }
+
+                    }
                 }
 
                 if ($field->input == 'image') {
@@ -216,7 +280,7 @@ class IndexViewGenerator
                      * },
                      */
 
-                    $tdColumns .=  "{
+                    $tdColumns .= "{
                     data: '" . str()->snake($field->name) . "',
                     name: '" . str()->snake($field->name) . "',
                     orderable: false,
@@ -229,9 +293,9 @@ class IndexViewGenerator
                     },";
                 } elseif ($field->type == 'foreignId') {
                     // remove '/' or sub folders
-                    $constrainModel = GeneratorUtils::setModelName($field->constrain , 'default');
+                    $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
 
-                    $thColums .= "<th>{{ __('" .  GeneratorUtils::cleanSingularUcWords($constrainModel) . "') }}</th>";
+                    $thColums .= "<th>{{ __('" . GeneratorUtils::cleanSingularUcWords($constrainModel) . "') }}</th>";
 
                     /**
                      * will generate something like:
@@ -240,7 +304,7 @@ class IndexViewGenerator
                      *    name: 'user.name'
                      * }
                      */
-                    $tdColumns .=  "{
+                    $tdColumns .= "{
                     data: '" . GeneratorUtils::singularSnakeCase($constrainModel) . "',
                     name: '" . GeneratorUtils::singularSnakeCase($constrainModel) . "." . GeneratorUtils::getColumnAfterId($constrainModel) . "'
                 },";
@@ -252,7 +316,7 @@ class IndexViewGenerator
                      *    name: 'price'
                      * }
                      */
-                    $tdColumns .=  "{
+                    $tdColumns .= "{
                     data: '" . str()->snake($field->name) . "',
                     name: '" . str()->snake($field->name) . "',
                 },";
@@ -265,7 +329,8 @@ class IndexViewGenerator
                 }
             }
         }
-
+        $trhtml .= '</tr>';
+        dd($trhtml);
         $template = str_replace(
             [
                 '{{modelNamePluralUcWords}}',
@@ -306,7 +371,8 @@ class IndexViewGenerator
      *
      * @return void
      */
-    public function remove($id){
+    public function remove($id)
+    {
         $crud = Crud::find($id);
         $model = GeneratorUtils::setModelName($crud->name, 'default');
         $path = GeneratorUtils::getModelLocation($crud->name);
@@ -332,12 +398,15 @@ class IndexViewGenerator
      *
      * @return void
      */
-    protected function removeDir(string $dir): void {
+    protected function removeDir(string $dir): void
+    {
         $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
-        $files = new RecursiveIteratorIterator($it,
-                     RecursiveIteratorIterator::CHILD_FIRST);
-        foreach($files as $file) {
-            if ($file->isDir()){
+        $files = new RecursiveIteratorIterator(
+            $it,
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
+        foreach ($files as $file) {
+            if ($file->isDir()) {
                 rmdir($file->getPathname());
             } else {
                 unlink($file->getPathname());
