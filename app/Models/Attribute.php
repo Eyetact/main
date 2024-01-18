@@ -10,4 +10,8 @@ class Attribute extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function moduleObj(){
+        return $this->belongsTo(Module::class, 'module');
+    }
 }

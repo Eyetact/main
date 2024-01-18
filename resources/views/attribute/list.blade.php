@@ -49,8 +49,9 @@
                         <table class="table table-bordered text-nowrap" id="attribute_table">
                             <thead>
                                 <tr>
-                                    <th width="100px">No.</th>
+                                    <th width="50px">No.</th>
                                     <th>Name</th>
+                                    <th>Module</th>
                                     <th>Column Type</th>
                                     <th>Input Type</th>
                                     <th>Required</th>
@@ -141,6 +142,10 @@
                 {
                     data: 'name',
                     name: 'name'
+                },
+                {
+                    data: 'module',
+                    name: 'module'
                 },
                 {
                     data: 'type',

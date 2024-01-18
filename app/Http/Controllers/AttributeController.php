@@ -23,7 +23,7 @@ class AttributeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return 
      */
     public function index()
     {
@@ -31,25 +31,28 @@ class AttributeController extends Controller
             $attribute = Attribute::all();
 
             return datatables()->of($attribute)
-                ->addColumn('action', function ($row) {
-                    $btn = '<div class="dropdown">
-                <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+            ->addColumn('module', function ($row) {
+                return $row->moduleObj->name;
+            })
+            ->addColumn('action', function ($row) {
+                $btn = '<div class="dropdown">
+            <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
 
-                </a>
+            </a>
 
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
 
-                    <li class="dropdown-item">
-                    <a class="delete-attribute" href="#" data-id="' . $row->id . '" class="attribute-delete">Delete</a>
-                    </li>
-                </ul>
-            </div>';
+                <li class="dropdown-item">
+                <a class="delete-attribute" href="#" data-id="' . $row->id . '" class="attribute-delete">Delete</a>
+                </li>
+            </ul>
+        </div>';
 
-                    return $btn;
-                })
+                return $btn;
+            })
                 ->rawColumns(['action'])
 
                 ->addIndexColumn()

@@ -6,15 +6,21 @@ add master checkbok --done
 
 change parent name -- done
 attr belongs to model ----
-hide not disable 
+hide not disable done
 system readonly 
 edit 
+add more file types done
+email,pw validation in req file done
+
+def value validation in migration file done
+
+redesign for forms deone
 
 
-1 dropdown 
+1 dropdown done
 
 
-edit regenerate mifration
+edit regenerate mifration done
 
 
 
@@ -36,16 +42,11 @@ TODO
 refactor roles and permissions
 scoup logic 
 move style to sparate file
-add more file types
 
 
 model edit and delete attributes => regenerate model 
 
-email,pw validation in req file
 
-def value validation in migration file
-
-redesign for forms
 
 
 
