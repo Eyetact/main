@@ -261,19 +261,34 @@ class IndexViewGenerator
                                 break;
                             case 'radio':
                                 $trhtml .= '<td>
-                                <div class="custom-controls-stacked">
-                                <label class="custom-control custom-radio" for="' . $value->name . '-1">
-                                    <input class="custom-control-input" type="radio" name="' . $field->name . '[' . $value->name . ']" id="' . $value->name . '-1" value="1">
-                                    <span class="custom-control-label">True</span>
-                                </label>
-                    
-                                <label class="custom-control custom-radio" for="' . $value->name . '-0">
-                                    <input class="custom-control-input" type="radio" name="' . $field->name . '[' . $value->name . ']" id="' . $value->name . '-0" value="0">
-                                    <span class="custom-control-label">False</span>
-                                </label>
-                            </div>
-                                            </td>
-                                                        ';
+                                    <div class="custom-controls-stacked">
+                                    <label class="custom-control custom-radio" for="' . $value->name . '-1">
+                                        <input class="custom-control-input" type="radio" name="' . $field->name . '[' . $value->name . ']" id="' . $value->name . '-1" value="1">
+                                        <span class="custom-control-label">True</span>
+                                    </label>
+                        
+                                    <label class="custom-control custom-radio" for="' . $value->name . '-0">
+                                        <input class="custom-control-input" type="radio" name="' . $field->name . '[' . $value->name . ']" id="' . $value->name . '-0" value="0">
+                                        <span class="custom-control-label">False</span>
+                                    </label>
+                                </div>
+                                                </td>
+                                                            ';
+                                break;
+                            case 'select':
+
+                                $arrOption = explode('|', $value->select_options);
+
+                                $totalOptions = count($arrOption);
+                                $trhtml .= '<td><div class="input-box">';
+                                $trhtml .= ' <select name="' . $field->name . '[' . $value->name . ']" class="form-select  google-input multi-type" required="">';
+
+                                foreach ($arrOption as $arrOptionIndex => $value) {
+                                    $trhtml .= '<option value="'.$value.'" >'.$value.'</option>';
+                                
+                                }
+                                $trhtml .= '</select>';
+                                $trhtml .= '</div></td>';
                                 break;
 
                             default:
@@ -350,7 +365,7 @@ class IndexViewGenerator
             }
         }
         $trhtml .= '</tr>';
-        dd($trhtml);
+        // dd($trhtml);
         $template = str_replace(
             [
                 '{{modelNamePluralUcWords}}',
@@ -358,7 +373,8 @@ class IndexViewGenerator
                 '{{modelNameSingularLowerCase}}',
                 '{{modelNamePluralLowerCase}}',
                 '{{thColumns}}',
-                '{{tdColumns}}'
+                '{{tdColumns}}',
+                '{{trHtml}}'
             ],
             [
                 $modelNamePluralUcWords,
@@ -366,7 +382,8 @@ class IndexViewGenerator
                 $modelNameSingularLowercase,
                 $modelNamePluralLowerCase,
                 $thColums,
-                $tdColumns
+                $tdColumns,
+                $trhtml
             ],
             GeneratorUtils::getTemplate('views/index')
         );

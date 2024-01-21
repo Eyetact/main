@@ -328,7 +328,7 @@
                                             <td>
                                                 <div class="input-box">
                                                     <select name="multi[${no}][type]"
-                                                        class="form-select  google-input " required>
+                                                        class="form-select  google-input multi-type" required>
                                                         <option value="" disabled selected>
                                                             --{{ __('Select column type') }}--
                                                         </option>
@@ -352,6 +352,7 @@
                                                     </select>
 
                                                 </div>
+                                                <div class="select_options"></div>
                                             </td>
 
 
@@ -374,6 +375,18 @@
             table.append(tr)
         })
 
+        $(document).on('change', '.multi-type', function() {
+        let index = $(this).parent().parent().parent().index()
+            // alert(index);
+            if ($(this).val() == 'select') {
+                $(this).parent().parent().find('.select_options').append(`<div class="input-box s-option mt-2">
+                <input type="text" name="multi[${index}][select_options]" class="google-input" placeholder="Seperate with '|', e.g.: water|fire">
+            </div>`);
+            }else{
+                $(this).parent().parent().find('.s-option').remove();
+
+            }
+        })
 
         $(document).on('change', '.form-column-types', function() {
             // alert($(this).val())
@@ -464,7 +477,7 @@
                                             <td>
                                                 <div class="input-box">
                                                     <select name="multi[0][type]"
-                                                        class="form-select  google-input" required>
+                                                        class="form-select  google-input multi-type" required>
                                                         <option value="" disabled selected>
                                                             --{{ __('Select column type') }}--
                                                         </option>
@@ -481,12 +494,11 @@
                                                         <option value="radio">Radio ( True, False )</option>
                                                         <option value="date">Date</option>
                                                         <option value="time">Time</option>
-                                                        <option value="datalist">Datalist ( Year List )</option>
-                                                        <option value="datetime-local">Datetime local</option>
                                                         <option value="select">Select</option>
 
                                                     </select>
                                                 </div>
+                                                <div class="select_options"></div>
                                             </td>
 
 
