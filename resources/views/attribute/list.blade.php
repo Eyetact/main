@@ -376,7 +376,7 @@
         })
 
         $(document).on('change', '.multi-type', function() {
-        let index = $(this).parent().parent().parent().index()
+        let index = $(this).parent().parent().parent().find('.text-center').find('.input-box').html();
             // alert(index);
             if ($(this).val() == 'select') {
                 $(this).parent().parent().find('.select_options').append(`<div class="input-box s-option mt-2">
@@ -469,14 +469,14 @@
                                             </td>
                                             <td>
                                                 <div class="input-box">
-                                                    <input type="text" name="multi[0][name]"
+                                                    <input type="text" name="multi[1][name]"
                                                         class="form-control google-input"
                                                         placeholder="{{ __('Field Name') }}" required>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-box">
-                                                    <select name="multi[0][type]"
+                                                    <select name="multi[1][type]"
                                                         class="form-select  google-input multi-type" required>
                                                         <option value="" disabled selected>
                                                             --{{ __('Select column type') }}--
