@@ -264,6 +264,18 @@ class ModelGenerator
                     $methods .= "\n\tpublic function set" . $fieldNameSingularPascalCase . "Attribute(\$value)\n\t{\n\t\t\$this->attributes['" . $field->name . "'] = bcrypt(\$value);\n\t}";
                 }
 
+                if ($field->input == 'multi') {
+                    $protectedHidden .= "'" . str()->snake($field->name) . "', ";
+
+                    if ($i > 0) {
+                        $methods .= "\t";
+                    }
+
+                    $fieldNameSingularPascalCase = GeneratorUtils::singularPascalCase($field->name);
+
+                    $methods .= "\n\tpublic function set" . $fieldNameSingularPascalCase . "Attribute(\$value)\n\t{\n\t\t\$this->attributes['" . $field->name . "'] = json_encode(\$value,true);\n\t}";
+                }
+
                 if ($field->input == 'file'  || $field->input == 'image') {
 
                     if ($i > 0) {
