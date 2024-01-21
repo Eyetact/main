@@ -341,7 +341,6 @@
                                                         <option value="image">Image</option>
                                                         <option value="file">File</option>
                                                         <option value="number">Number</option>
-                                                        <option value="range">Range</option>
                                                         <option value="radio">Radio ( True, False )</option>
                                                         <option value="date">Date</option>
                                                         <option value="time">Time</option>
@@ -490,7 +489,6 @@
                                                         <option value="image">Image</option>
                                                         <option value="file">File</option>
                                                         <option value="number">Number</option>
-                                                        <option value="range">Range</option>
                                                         <option value="radio">Radio ( True, False )</option>
                                                         <option value="date">Date</option>
                                                         <option value="time">Time</option>

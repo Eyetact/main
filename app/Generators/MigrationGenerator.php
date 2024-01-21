@@ -3,8 +3,9 @@
 namespace App\Generators;
 
 use App\Enums\ActionForeign;
+use App\Models\Attribute;
 use App\Models\Module;
-use Artisan;
+use Illuminate\Support\Facades\Artisan;
 
 class MigrationGenerator
 {
@@ -180,9 +181,9 @@ class MigrationGenerator
 
         foreach ($module->fields()->orderBy('created_at', 'desc')->take(1)->get() as $i => $field) {
 
-            if ($field->type == 'date' && $field->input == 'month' ) {
+            if ($field->type == 'date' && $field->input == 'month') {
                 $setFields .= "\$table->text('" . str()->snake($field->name);
-            }elseif($field->type == 'multi' && $field->input == 'multi'){
+            } elseif ($field->type == 'multi' && $field->input == 'multi') {
                 $setFields .= "\$table->text('" . str()->snake($field->name);
             } else {
                 $setFields .= "\$table->" . $field->type . "('" . str()->snake($field->name);
@@ -320,6 +321,45 @@ class MigrationGenerator
         );
 
         $migrationName = date('Y') . '_' . date('m') . '_' . date('d') . '_' . date('h') . date('i') . date('s') . '_edit_' . $tableNamePluralLowercase . '_table.php';
+        // $module = Module::find($id);
+        // $migrationName = $module->migration ;
+
+        file_put_contents(database_path("/migrations/$migrationName"), $template);
+
+        Artisan::call("migrate");
+
+    }
+
+    public function remove($id, $attr_id)
+    {
+        $module = Module::find($id);
+
+        $field = Attribute::find($attr_id);
+
+        $model = GeneratorUtils::setModelName($module->code);
+        $tableNamePluralLowercase = GeneratorUtils::pluralSnakeCase($model);
+
+        $setFields = '';
+
+
+
+        $setFields .= "\$table->dropColumn('" . str()->snake($field->name) . "');";
+
+
+
+        $template = str_replace(
+            [
+                '{{tableNamePluralLowecase}}',
+                '{{fields}}',
+            ],
+            [
+                $tableNamePluralLowercase,
+                $setFields,
+            ],
+            GeneratorUtils::getTemplate('migration-edit')
+        );
+
+        $migrationName = date('Y') . '_' . date('m') . '_' . date('d') . '_' . date('h') . date('i') . date('s') . '_remove_' . $tableNamePluralLowercase . '_table.php';
         // $module = Module::find($id);
         // $migrationName = $module->migration ;
 

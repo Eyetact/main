@@ -260,13 +260,14 @@ class AttributeController extends Controller
     {
         $attribute = Attribute::find($attribute->id);
         $id = $attribute->module;
-        $attribute->delete();
         if ($attribute) {
+        $this->generatorService->removeMigration($id, $attribute->id);
+            $attribute->delete();
             $this->generatorService->reGenerateModel($id);
-            $this->generatorService->reGenerateMigration($id);
             $this->generatorService->reGenerateController($id);
             $this->generatorService->reGenerateRequest($id);
             $this->generatorService->reGenerateViews($id);
+
             return response()->json(['msg' => 'Attribute deleted successfully!'], 200);
 
         } else {
