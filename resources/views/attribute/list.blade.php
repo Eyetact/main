@@ -376,7 +376,7 @@
         })
 
         $(document).on('change', '.multi-type', function() {
-        let index = $(this).parent().parent().parent().find('.text-center').find('.input-box').html();
+        let index = parseInt($(this).parent().parent().parent().find('.text-center').find('.input-box').html());
             // alert(index);
             if ($(this).val() == 'select') {
                 $(this).parent().parent().find('.select_options').append(`<div class="input-box s-option mt-2">
