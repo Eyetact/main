@@ -930,7 +930,7 @@ class FormViewGenerator
 
                         
 
-                        $template .= '<div class="multi-options">
+                        $template .= '<div class="multi-options col-12">
                         <div class="attr_header row flex justify-content-end my-5 align-items-end">
                             <input title="Reset form" class="btn btn-success" id="add_new_tr_'.$field->id.'" type="button" value="+ Add">
                         </div>';
