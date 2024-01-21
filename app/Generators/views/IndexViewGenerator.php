@@ -202,7 +202,7 @@ class IndexViewGenerator
                 }
 
                 if ($field->type == 'multi') {
-                    $trhtml .= "        $(document).on('click', '#add_new_tr".$field->id."', function() {
+                    $trhtml .= "        $(document).on('click', '#add_new_tr_".$field->id."', function() {
                         let table = $('#tbl-field-".$field->id." tbody')
             
                         let no = table.find('tr').length + 1
@@ -308,7 +308,7 @@ class IndexViewGenerator
                     $trhtml .= "`
             
                             table.append(tr)
-                        })";
+                        });\n";
                         }
 
                 if ($field->input == 'image') {
