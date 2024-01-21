@@ -928,12 +928,14 @@ class FormViewGenerator
 
                     case 'multi':
 
+                        
+
                         $template .= '<div class="multi-options">
                         <div class="attr_header row flex justify-content-end my-5 align-items-end">
-                            <input title="Reset form" class="btn btn-success" id="add_new_tr" type="button" value="+ Add">
+                            <input title="Reset form" class="btn btn-success" id="add_new_tr_'.$field->id.'" type="button" value="+ Add">
                         </div>';
 
-                        $template .= '<table class="table table-bordered align-items-center mb-0" id="tbl-field">
+                        $template .= '<table class="table table-bordered align-items-center mb-0" id="tbl-field-'.$field->id.'">
                         <thead>';
 
                         foreach ($field->multis as $key => $value) {

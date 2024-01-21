@@ -188,8 +188,7 @@ class IndexViewGenerator
 
         $thColums = '';
         $tdColumns = '';
-        $trhtml = '<tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">
-        ';
+        $trhtml='';
         $totalFields = count($module->fields);
 
         foreach ($module->fields as $i => $field) {
@@ -203,6 +202,14 @@ class IndexViewGenerator
                 }
 
                 if ($field->type == 'multi') {
+                    $trhtml .= "        $(document).on('click', '#add_new_tr".$field->id."', function() {
+                        let table = $('#tbl-field-".$field->id." tbody')
+            
+                        let no = table.find('tr').length + 1
+            
+                        let tr = `";
+
+                    $trhtml .= '<tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">';
                     foreach ($field->multis as $key => $value) {
                         switch ($value->type) {
                             case 'text':
@@ -297,7 +304,12 @@ class IndexViewGenerator
                         }
 
                     }
-                }
+                    $trhtml .= '</tr>';
+                    $trhtml .= "`
+            
+                            table.append(tr)
+                        })";
+                        }
 
                 if ($field->input == 'image') {
                     /**
@@ -364,7 +376,7 @@ class IndexViewGenerator
                 }
             }
         }
-        $trhtml .= '</tr>';
+        
         // dd($trhtml);
         $template = str_replace(
             [

@@ -357,15 +357,9 @@ output {
         });
 
 
-        $(document).on('click', '#add_new_tr', function() {
-            let table = $('#tbl-field tbody')
 
-            let no = table.find('tr').length + 1
 
-            let tr = `{{trHtml}}`
-
-            table.append(tr)
-        })
+        {{trHtml}}
 
     </script>
 @endsection
