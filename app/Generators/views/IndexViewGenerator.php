@@ -410,7 +410,7 @@ class IndexViewGenerator
      */
     public function remove($id)
     {
-        $crud = Crud::find($id);
+        $crud = Module::find($id);
         $model = GeneratorUtils::setModelName($crud->name, 'default');
         $path = GeneratorUtils::getModelLocation($crud->name);
 

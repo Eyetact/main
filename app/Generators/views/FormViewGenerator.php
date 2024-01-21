@@ -316,14 +316,14 @@ class FormViewGenerator
                                      * </div>
                                      */
                                     $options .= "
-                                <div class=\"form-check mb-2\">
-                                    <input class=\"form-check-input\" type=\"radio\" name=\"$fieldSnakeCase\" id=\"$fieldSnakeCase-1\" value=\"1\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '1' ? 'checked' : (old('$fieldSnakeCase') == '1' ? 'checked' : '') }}>
-                                    <label class=\"form-check-label\" for=\"$fieldSnakeCase-1\">True</label>
-                                </div>
-                                <div class=\"form-check mb-2\">
-                                    <input class=\"form-check-input\" type=\"radio\" name=\"$fieldSnakeCase\" id=\"$fieldSnakeCase-0\" value=\"0\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '0' ? 'checked' : (old('$fieldSnakeCase') == '0' ? 'checked' : '') }}>
-                                    <label class=\"form-check-label\" for=\"$fieldSnakeCase-0\">False</label>
-                                </div>\n";
+                                    <div class=\"form-check mb-2\">
+                                        <input class=\"form-check-input\" type=\"radio\" name=\"$fieldSnakeCase\" id=\"$fieldSnakeCase-1\" value=\"1\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '1' ? 'checked' : (old('$fieldSnakeCase') == '1' ? 'checked' : '') }}>
+                                        <label class=\"form-check-label\" for=\"$fieldSnakeCase-1\">True</label>
+                                    </div>
+                                    <div class=\"form-check mb-2\">
+                                        <input class=\"form-check-input\" type=\"radio\" name=\"$fieldSnakeCase\" id=\"$fieldSnakeCase-0\" value=\"0\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '0' ? 'checked' : (old('$fieldSnakeCase') == '0' ? 'checked' : '') }}>
+                                        <label class=\"form-check-label\" for=\"$fieldSnakeCase-0\">False</label>
+                                    </div>\n";
 
                                     $options .= "\t</div>\n";
 
@@ -357,7 +357,7 @@ class FormViewGenerator
                                         model: $model,
                                         field: $field,
                                         formatValue: $formatValue,
-                                        date:1
+                                        date: 1
                                     );
                                     break;
                                 case 'date':
@@ -376,7 +376,7 @@ class FormViewGenerator
                                         model: $model,
                                         field: $field,
                                         formatValue: $formatValue,
-                                        date:1
+                                        date: 1
                                     );
                                     break;
                                 case 'time':
@@ -395,7 +395,7 @@ class FormViewGenerator
                                         model: $model,
                                         field: $field,
                                         formatValue: $formatValue,
-                                        date:1
+                                        date: 1
                                     );
                                     break;
                                 case 'week':
@@ -414,7 +414,7 @@ class FormViewGenerator
                                         model: $model,
                                         field: $field,
                                         formatValue: $formatValue,
-                                        date:1
+                                        date: 1
                                     );
                                     break;
                                 case 'month':
@@ -433,7 +433,7 @@ class FormViewGenerator
                                         model: $model,
                                         field: $field,
                                         formatValue: $formatValue,
-                                        date:1
+                                        date: 1
                                     );
                                     break;
                                 case 'textarea':
@@ -577,324 +577,324 @@ class FormViewGenerator
         $template = "<div class=\"row mb-2\">\n";
 
 
-            foreach ($module->fields as $i => $field) {
+        foreach ($module->fields as $i => $field) {
 
-                if ($field->input !== 'no-input') {
-                    $fieldSnakeCase = str($field->name)->snake();
-                    $fieldUcWords = GeneratorUtils::cleanUcWords($field->name);
+            if ($field->input !== 'no-input') {
+                $fieldSnakeCase = str($field->name)->snake();
+                $fieldUcWords = GeneratorUtils::cleanUcWords($field->name);
 
-                    switch ($field->type) {
-                        case 'enum':
-                            $options = "";
+                switch ($field->type) {
+                    case 'enum':
+                        $options = "";
 
-                            $arrOption = explode('|', $field->select_option);
+                        $arrOption = explode('|', $field->select_option);
 
-                            $totalOptions = count($arrOption);
+                        $totalOptions = count($arrOption);
 
-                            switch ($field->input) {
-                                case 'select':
-                                    // select
-                                    foreach ($arrOption as $arrOptionIndex => $value) {
-                                        if($field->default_value){
-                                            $options .= <<<BLADE
+                        switch ($field->input) {
+                            case 'select':
+                                // select
+                                foreach ($arrOption as $arrOptionIndex => $value) {
+                                    if ($field->default_value) {
+                                        $options .= <<<BLADE
                                     <option value="$value" {{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase->$fieldSnakeCase == '$value' ? 'selected' : ('$field->default_value' == '$value' ? 'selected' : '') }}>$value</option>
                                     BLADE;
-                                        }else{
-                                            $options .= <<<BLADE
+                                    } else {
+                                        $options .= <<<BLADE
                                     <option value="$value" {{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase->$fieldSnakeCase == '$value' ? 'selected' : ('$field->default_value' == '$value' ? 'selected' : '') }}>$value</option>
                                     BLADE;
-                                        }
-
-
-
-                                        if ($arrOptionIndex + 1 != $totalOptions) {
-                                            $options .= "\n\t\t";
-                                        } else {
-                                            $options .= "\t\t\t";
-                                        }
                                     }
 
-                                    $template .= str_replace(
+
+
+                                    if ($arrOptionIndex + 1 != $totalOptions) {
+                                        $options .= "\n\t\t";
+                                    } else {
+                                        $options .= "\t\t\t";
+                                    }
+                                }
+
+                                $template .= str_replace(
+                                    [
+                                        '{{fieldUcWords}}',
+                                        '{{fieldKebabCase}}',
+                                        '{{fieldSnakeCase}}',
+                                        '{{fieldSpaceLowercase}}',
+                                        '{{options}}',
+                                        '{{nullable}}',
+                                    ],
+                                    [
+                                        $fieldUcWords,
+                                        GeneratorUtils::kebabCase($field->name),
+                                        $fieldSnakeCase,
+                                        GeneratorUtils::cleanLowerCase($field->name),
+                                        $options,
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/select')
+                                );
+                                break;
+                            case 'datalist':
+                                foreach ($arrOption as $arrOptionIndex => $value) {
+                                    $options .= "<option value=\"" . $value . "\">$value</option>";
+
+                                    if ($arrOptionIndex + 1 != $totalOptions) {
+                                        $options .= "\n\t\t";
+                                    } else {
+                                        $options .= "\t\t\t";
+                                    }
+                                }
+
+                                $d = '';
+                                if (isset($field->default_value)) {
+                                    $d = $field->default_value;
+                                }
+
+                                $template .= str_replace(
+                                    [
+                                        '{{fieldKebabCase}}',
+                                        '{{fieldCamelCase}}',
+                                        '{{fieldUcWords}}',
+                                        '{{fieldSnakeCase}}',
+                                        '{{options}}',
+                                        '{{nullable}}',
+                                        '{{value}}',
+                                    ],
+                                    [
+                                        GeneratorUtils::kebabCase($field->name),
+                                        GeneratorUtils::singularCamelCase($field->name),
+                                        $fieldUcWords,
+                                        $fieldSnakeCase,
+                                        $options,
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                        "{{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " : $d }}",
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/datalist')
+                                );
+                                break;
+                            default:
+                                // radio
+
+                                $d = '';
+                                if (isset($field->default_value)) {
+                                    $d = $field->default_value;
+                                }
+
+                                $options .= "\t<div class=\"col-md-12\">\n\t<p>$fieldUcWords</p>\n";
+
+                                foreach ($arrOption as $value) {
+                                    $options .= str_replace(
                                         [
-                                            '{{fieldUcWords}}',
-                                            '{{fieldKebabCase}}',
                                             '{{fieldSnakeCase}}',
-                                            '{{fieldSpaceLowercase}}',
-                                            '{{options}}',
-                                            '{{nullable}}',
-                                        ],
-                                        [
-                                            $fieldUcWords,
-                                            GeneratorUtils::kebabCase($field->name),
-                                            $fieldSnakeCase,
-                                            GeneratorUtils::cleanLowerCase($field->name),
-                                            $options,
-                                            $field->required == 'yes' ||  $field->required == 'on' ? ' required' : '',
-                                        ],
-                                        GeneratorUtils::getTemplate('views/forms/select')
-                                    );
-                                    break;
-                                case 'datalist':
-                                    foreach ($arrOption as $arrOptionIndex => $value) {
-                                        $options .= "<option value=\"" . $value . "\">$value</option>";
-
-                                        if ($arrOptionIndex + 1 != $totalOptions) {
-                                            $options .= "\n\t\t";
-                                        } else {
-                                            $options .= "\t\t\t";
-                                        }
-                                    }
-
-                                    $d = '';
-                                    if(isset($field->default_value)){
-                                        $d = $field->default_value;
-                                    }
-
-                                    $template .= str_replace(
-                                        [
-                                            '{{fieldKebabCase}}',
-                                            '{{fieldCamelCase}}',
-                                            '{{fieldUcWords}}',
-                                            '{{fieldSnakeCase}}',
-                                            '{{options}}',
-                                            '{{nullable}}',
+                                            '{{optionKebabCase}}',
                                             '{{value}}',
+                                            '{{optionLowerCase}}',
+                                            '{{checked}}',
+                                            '{{nullable}}',
                                         ],
                                         [
-                                            GeneratorUtils::kebabCase($field->name),
-                                            GeneratorUtils::singularCamelCase($field->name),
-                                            $fieldUcWords,
                                             $fieldSnakeCase,
-                                            $options,
-                                            $field->required == 'yes' || $field->required == 'on'  ? ' required' : '',
-                                            "{{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " : $d }}",
+                                            GeneratorUtils::singularKebabCase($value),
+                                            $value,
+                                            GeneratorUtils::cleanSingularLowerCase($value),
+                                            "{{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->$field->name == '$value' ? 'checked' : ('$d' == '$value' ? 'checked' : '') }}",
+                                            $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
                                         ],
-                                        GeneratorUtils::getTemplate('views/forms/datalist')
+                                        GeneratorUtils::getTemplate('views/forms/radio')
                                     );
-                                    break;
-                                default:
-                                    // radio
+                                }
 
-                                    $d = '';
-                                    if(isset($field->default_value)){
-                                        $d = $field->default_value;
-                                    }
+                                $options .= "\t</div>\n";
 
-                                    $options .= "\t<div class=\"col-md-12\">\n\t<p>$fieldUcWords</p>\n";
+                                $template .= $options;
+                                break;
+                        }
+                        break;
+                    case 'foreignId':
+                        // remove '/' or sub folders
+                        $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
 
-                                    foreach ($arrOption as $value) {
-                                        $options .= str_replace(
-                                            [
-                                                '{{fieldSnakeCase}}',
-                                                '{{optionKebabCase}}',
-                                                '{{value}}',
-                                                '{{optionLowerCase}}',
-                                                '{{checked}}',
-                                                '{{nullable}}',
-                                            ],
-                                            [
-                                                $fieldSnakeCase,
-                                                GeneratorUtils::singularKebabCase($value),
-                                                $value,
-                                                GeneratorUtils::cleanSingularLowerCase($value),
-                                                "{{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->$field->name == '$value' ? 'checked' : ('$d' == '$value' ? 'checked' : '') }}",
-                                              $field->required == 'yes' ||   $field->required == 'on' ? ' required' : '',
-                                            ],
-                                            GeneratorUtils::getTemplate('views/forms/radio')
-                                        );
-                                    }
+                        $constrainSingularCamelCase = GeneratorUtils::singularCamelCase($constrainModel);
 
-                                    $options .= "\t</div>\n";
+                        $columnAfterId = GeneratorUtils::getColumnAfterId($constrainModel);
 
-                                    $template .= $options;
-                                    break;
-                            }
-                            break;
-                        case 'foreignId':
-                            // remove '/' or sub folders
-                            $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
-
-                            $constrainSingularCamelCase = GeneratorUtils::singularCamelCase($constrainModel);
-
-                            $columnAfterId = GeneratorUtils::getColumnAfterId($constrainModel);
-
-                            $options = "
+                        $options = "
                         @foreach ($" . GeneratorUtils::pluralCamelCase($constrainModel) . " as $$constrainSingularCamelCase)
                             <option value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == $" . $constrainSingularCamelCase . "->id ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
                                 {{ $" . $constrainSingularCamelCase . "->$columnAfterId }}
                             </option>
                         @endforeach";
 
-                            switch ($field->input) {
-                                case 'datalist':
-                                    $template .= str_replace(
-                                        [
-                                            '{{fieldKebabCase}}',
-                                            '{{fieldSnakeCase}}',
-                                            '{{fieldUcWords}}',
-                                            '{{fieldCamelCase}}',
-                                            '{{options}}',
-                                            '{{nullable}}',
-                                            '{{value}}',
-                                        ],
-                                        [
-                                            GeneratorUtils::KebabCase($field->name),
-                                            $fieldSnakeCase,
-                                            GeneratorUtils::cleanSingularUcWords($constrainModel),
-                                            GeneratorUtils::singularCamelCase($field->name),
-                                            $options,
-                                            $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
-                                            "{{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " : old('" . $fieldSnakeCase . "') }}",
-                                        ],
-                                        GeneratorUtils::getTemplate('views/forms/datalist')
-                                    );
-                                    break;
-                                default:
-                                    // select
-                                    $template .= str_replace(
-                                        [
-                                            '{{fieldKebabCase}}',
-                                            '{{fieldUcWords}}',
-                                            '{{fieldSpaceLowercase}}',
-                                            '{{options}}',
-                                            '{{nullable}}',
-                                            '{{fieldSnakeCase}}',
-                                        ],
-                                        [
-                                            GeneratorUtils::singularKebabCase($field->name),
-                                            GeneratorUtils::cleanSingularUcWords($constrainModel),
-                                            GeneratorUtils::cleanSingularLowerCase($constrainModel),
-                                            $options,
-                                            $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
-                                            $fieldSnakeCase,
-                                        ],
-                                        GeneratorUtils::getTemplate('views/forms/select')
-                                    );
-                                    break;
-                            }
-                            break;
-                        case 'year':
-                            $firstYear = is_int(config('generator.format.first_year')) ? config('generator.format.first_year') : 1900;
+                        switch ($field->input) {
+                            case 'datalist':
+                                $template .= str_replace(
+                                    [
+                                        '{{fieldKebabCase}}',
+                                        '{{fieldSnakeCase}}',
+                                        '{{fieldUcWords}}',
+                                        '{{fieldCamelCase}}',
+                                        '{{options}}',
+                                        '{{nullable}}',
+                                        '{{value}}',
+                                    ],
+                                    [
+                                        GeneratorUtils::KebabCase($field->name),
+                                        $fieldSnakeCase,
+                                        GeneratorUtils::cleanSingularUcWords($constrainModel),
+                                        GeneratorUtils::singularCamelCase($field->name),
+                                        $options,
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                        "{{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " : old('" . $fieldSnakeCase . "') }}",
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/datalist')
+                                );
+                                break;
+                            default:
+                                // select
+                                $template .= str_replace(
+                                    [
+                                        '{{fieldKebabCase}}',
+                                        '{{fieldUcWords}}',
+                                        '{{fieldSpaceLowercase}}',
+                                        '{{options}}',
+                                        '{{nullable}}',
+                                        '{{fieldSnakeCase}}',
+                                    ],
+                                    [
+                                        GeneratorUtils::singularKebabCase($field->name),
+                                        GeneratorUtils::cleanSingularUcWords($constrainModel),
+                                        GeneratorUtils::cleanSingularLowerCase($constrainModel),
+                                        $options,
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                        $fieldSnakeCase,
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/select')
+                                );
+                                break;
+                        }
+                        break;
+                    case 'year':
+                        $firstYear = is_int(config('generator.format.first_year')) ? config('generator.format.first_year') : 1900;
 
-                            /**
-                             * Will generate something like:
-                             *
-                             * <select class="form-select" name="year" id="year" class="form-control" required>
-                             * <option value="" selected disabled>-- {{ __('Select year') }} --</option>
-                             *  @foreach (range(1900, strftime('%Y', time())) as $year)
-                             *     <option value="{{ $year }}"
-                             *        {{ isset($book) && $book->year == $year ? 'selected' : (old('year') == $year ? 'selected' : '') }}>
-                             *      {{ $year }}
-                             * </option>
-                             *  @endforeach
-                             * </select>
-                             */
-                            $options = "
+                        /**
+                         * Will generate something like:
+                         *
+                         * <select class="form-select" name="year" id="year" class="form-control" required>
+                         * <option value="" selected disabled>-- {{ __('Select year') }} --</option>
+                         *  @foreach (range(1900, strftime('%Y', time())) as $year)
+                         *     <option value="{{ $year }}"
+                         *        {{ isset($book) && $book->year == $year ? 'selected' : (old('year') == $year ? 'selected' : '') }}>
+                         *      {{ $year }}
+                         * </option>
+                         *  @endforeach
+                         * </select>
+                         */
+                        $options = "
                         @foreach (range($firstYear, strftime(\"%Y\", time())) as \$year)
                             <option value=\"{{ \$year }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == \$year ? 'selected' : (old('$fieldSnakeCase') == \$year ? 'selected' : '') }}>
                                 {{ \$year }}
                             </option>
                         @endforeach";
 
-                            switch ( $field->input) {
-                                case 'datalist':
-                                    $template .= str_replace(
-                                        [
-                                            '{{fieldKebabCase}}',
-                                            '{{fieldCamelCase}}',
-                                            '{{fieldUcWords}}',
-                                            '{{fieldSnakeCase}}',
-                                            '{{options}}',
-                                            '{{nullable}}',
-                                            '{{value}}',
-                                        ],
-                                        [
-                                            GeneratorUtils::singularKebabCase($field->name),
-                                            GeneratorUtils::singularCamelCase($field->name),
-                                            $fieldUcWords,
-                                            $fieldSnakeCase,
-                                            $options,
-                                            $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
-                                            "{{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " : old('" . $fieldSnakeCase . "') }}",
-                                        ],
-                                        GeneratorUtils::getTemplate('views/forms/datalist')
-                                    );
-                                    break;
-                                default:
-                                    $template .= str_replace(
-                                        [
-                                            '{{fieldUcWords}}',
-                                            '{{fieldKebabCase}}',
-                                            '{{fieldSnakeCase}}',
-                                            '{{fieldSpaceLowercase}}',
-                                            '{{options}}',
-                                            '{{nullable}}',
-                                        ],
-                                        [
-                                            GeneratorUtils::cleanUcWords($field->name),
-                                            GeneratorUtils::kebabCase($field->name),
-                                            $fieldSnakeCase,
-                                            GeneratorUtils::cleanLowerCase($field->name),
-                                            $options,
-                                            $field->required == 'yes' ||  $field->required == 'on' ? ' required' : '',
-                                        ],
-                                        GeneratorUtils::getTemplate('views/forms/select')
-                                    );
-                                    break;
-                            }
-                            break;
-                        case 'boolean':
-                            switch ($field->input) {
-                                case 'select':
-                                    // select
-                                    if(isset($field->default_value)){
-                                        $options = "<option value=\"0\" {{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '0' ? 'selected' : ($field->default_value == 0 ? 'selected' : '') }}>{{ __('False') }}</option>\n\t\t\t\t
+                        switch ($field->input) {
+                            case 'datalist':
+                                $template .= str_replace(
+                                    [
+                                        '{{fieldKebabCase}}',
+                                        '{{fieldCamelCase}}',
+                                        '{{fieldUcWords}}',
+                                        '{{fieldSnakeCase}}',
+                                        '{{options}}',
+                                        '{{nullable}}',
+                                        '{{value}}',
+                                    ],
+                                    [
+                                        GeneratorUtils::singularKebabCase($field->name),
+                                        GeneratorUtils::singularCamelCase($field->name),
+                                        $fieldUcWords,
+                                        $fieldSnakeCase,
+                                        $options,
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                        "{{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " : old('" . $fieldSnakeCase . "') }}",
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/datalist')
+                                );
+                                break;
+                            default:
+                                $template .= str_replace(
+                                    [
+                                        '{{fieldUcWords}}',
+                                        '{{fieldKebabCase}}',
+                                        '{{fieldSnakeCase}}',
+                                        '{{fieldSpaceLowercase}}',
+                                        '{{options}}',
+                                        '{{nullable}}',
+                                    ],
+                                    [
+                                        GeneratorUtils::cleanUcWords($field->name),
+                                        GeneratorUtils::kebabCase($field->name),
+                                        $fieldSnakeCase,
+                                        GeneratorUtils::cleanLowerCase($field->name),
+                                        $options,
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/select')
+                                );
+                                break;
+                        }
+                        break;
+                    case 'boolean':
+                        switch ($field->input) {
+                            case 'select':
+                                // select
+                                if (isset($field->default_value)) {
+                                    $options = "<option value=\"0\" {{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '0' ? 'selected' : ($field->default_value == 0 ? 'selected' : '') }}>{{ __('False') }}</option>\n\t\t\t\t
                                                     <option value=\"1\" {{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '1' ? 'selected' : ($field->default_value == 1 ? 'selected' : '') }}>{{ __('True') }}</option>";
-                                    }else{
-                                        $options = "<option value=\"0\" {{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '0' ? 'selected' : (old('$fieldSnakeCase') == '0' ? 'selected' : '') }}>{{ __('False') }}</option>\n\t\t\t\t
+                                } else {
+                                    $options = "<option value=\"0\" {{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '0' ? 'selected' : (old('$fieldSnakeCase') == '0' ? 'selected' : '') }}>{{ __('False') }}</option>\n\t\t\t\t
                                                     <option value=\"1\" {{ isset($" . $modelNameSingularCamelCase . ") && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '1' ? 'selected' : (old('$fieldSnakeCase') == '1' ? 'selected' : '') }}>{{ __('True') }}</option>";
-                                    }
+                                }
 
-                                    $template .= str_replace(
-                                        [
-                                            '{{fieldUcWords}}',
-                                            '{{fieldSnakeCase}}',
-                                            '{{fieldKebabCase}}',
-                                            '{{fieldSpaceLowercase}}',
-                                            '{{options}}',
-                                            '{{nullable}}',
-                                        ],
-                                        [
-                                            GeneratorUtils::cleanUcWords($field->name),
-                                            $fieldSnakeCase,
-                                            GeneratorUtils::kebabCase($field->name),
-                                            GeneratorUtils::cleanLowerCase($field->name),
-                                            $options,
-                                            $field->required == 'yes' ||  $field->required == 'on' ? ' required' : '',
-                                        ],
-                                        GeneratorUtils::getTemplate('views/forms/select')
-                                    );
-                                    break;
+                                $template .= str_replace(
+                                    [
+                                        '{{fieldUcWords}}',
+                                        '{{fieldSnakeCase}}',
+                                        '{{fieldKebabCase}}',
+                                        '{{fieldSpaceLowercase}}',
+                                        '{{options}}',
+                                        '{{nullable}}',
+                                    ],
+                                    [
+                                        GeneratorUtils::cleanUcWords($field->name),
+                                        $fieldSnakeCase,
+                                        GeneratorUtils::kebabCase($field->name),
+                                        GeneratorUtils::cleanLowerCase($field->name),
+                                        $options,
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/select')
+                                );
+                                break;
 
-                                default:
-                                    // radio
-                                    $options = "\t<div class=\"col-md-6\">\n\t<p>$fieldUcWords</p>";
+                            default:
+                                // radio
+                                $options = "\t<div class=\"col-md-6\">\n\t<p>$fieldUcWords</p>";
 
-                                    /**
-                                     * will generate something like:
-                                     *
-                                     * <div class="form-check mb-2">
-                                     *  <input class="form-check-input" type="radio" name="is_active" id="is_active-1" value="1" {{ isset($product) && $product->is_active == '1' ? 'checked' : (old('is_active') == '1' ? 'checked' : '') }}>
-                                     *     <label class="form-check-label" for="is_active-1">True</label>
-                                     * </div>
-                                     *  <div class="form-check mb-2">
-                                     *    <input class="form-check-input" type="radio" name="is_active" id="is_active-0" value="0" {{ isset($product) && $product->is_active == '0' ? 'checked' : (old('is_active') == '0' ? 'checked' : '') }}>
-                                     *      <label class="form-check-label" for="is_active-0">False</label>
-                                     * </div>
-                                     */
+                                /**
+                                 * will generate something like:
+                                 *
+                                 * <div class="form-check mb-2">
+                                 *  <input class="form-check-input" type="radio" name="is_active" id="is_active-1" value="1" {{ isset($product) && $product->is_active == '1' ? 'checked' : (old('is_active') == '1' ? 'checked' : '') }}>
+                                 *     <label class="form-check-label" for="is_active-1">True</label>
+                                 * </div>
+                                 *  <div class="form-check mb-2">
+                                 *    <input class="form-check-input" type="radio" name="is_active" id="is_active-0" value="0" {{ isset($product) && $product->is_active == '0' ? 'checked' : (old('is_active') == '0' ? 'checked' : '') }}>
+                                 *      <label class="form-check-label" for="is_active-0">False</label>
+                                 * </div>
+                                 */
 
-                                    if(isset($field->default_value)){
-                                        $options .= "
+                                if (isset($field->default_value)) {
+                                    $options .= "
                                         <div class=\"custom-controls-stacked\">
                                             <label class=\"custom-control custom-radio\" for=\"$fieldSnakeCase-1\">
                                             <input class=\"custom-control-input\" type=\"radio\" name=\"$fieldSnakeCase\" id=\"$fieldSnakeCase-1\" value=\"1\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '1' ? 'checked' : ($field->default_value == 1 ? 'checked' : '') }}>
@@ -904,8 +904,8 @@ class FormViewGenerator
                                             <input class=\"custom-control-input\" type=\"radio\" name=\"$fieldSnakeCase\" id=\"$fieldSnakeCase-0\" value=\"0\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '0' ? 'checked' : ($field->default_value == 0 ? 'checked' : '') }}>
                                             <span class=\"custom-control-label\">False</span></label>
                                         </div>\n";
-                                    }else{
-                                        $options .= "
+                                } else {
+                                    $options .= "
                                         <div class=\"custom-controls-stacked\">
                                             <label class=\"custom-control custom-radio\" for=\"$fieldSnakeCase-1\">
                                             <input class=\"custom-control-input\" type=\"radio\" name=\"$fieldSnakeCase\" id=\"$fieldSnakeCase-1\" value=\"1\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == '1' ? 'checked' : '' }}>
@@ -916,231 +916,255 @@ class FormViewGenerator
                                             <span class=\"custom-control-label\">False</span></label>
                                         </div>\n";
 
-                                     }
+                                }
 
 
-                                    $options .= "\t</div>\n";
+                                $options .= "\t</div>\n";
 
-                                    $template .= $options;
-                                    break;
-                            }
-                            break;
+                                $template .= $options;
+                                break;
+                        }
+                        break;
 
-                        default:
-                            // input form
-                            if ($field->default_value) {
-                                $formatValue = "{{ (isset($$modelNameSingularCamelCase) ? $$modelNameSingularCamelCase->$fieldSnakeCase : old('$fieldSnakeCase')) ? old('$fieldSnakeCase') : '" . $field->default_value . "' }}";
-                            } else {
-                                $formatValue = "{{ isset($$modelNameSingularCamelCase) ? $$modelNameSingularCamelCase->$fieldSnakeCase : old('$fieldSnakeCase') }}";
-                            }
+                    case 'multi':
 
-                            switch ($field->input) {
-                                case 'datetime-local':
-                                    /**
-                                     * Will generate something like:
-                                     *
-                                     * {{ isset($book) && $book->datetime ? $book->datetime->format('Y-m-d\TH:i') : old('datetime') }}
-                                     */
-                                    $formatValue = "{{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('Y-m-d\TH:i') : old('$fieldSnakeCase') }}";
+                        $template .= '<div class="multi-options">
+                        <div class="attr_header row flex justify-content-end my-5 align-items-end">
+                            <input title="Reset form" class="btn btn-success" id="add_new_tr" type="button" value="+ Add">
+                        </div>';
 
-                                    $template .= $this->setInputTypeTemplate(
-                                        request: [
-                                            'input_types' => $field->input,
-                                            'requireds' => $field->required,
-                                        ],
-                                        model: $model,
-                                        field: $field->name,
-                                        formatValue: $formatValue,
-                                        date:1
-                                    );
-                                    break;
-                                case 'date':
-                                    /**
-                                     * Will generate something like:
-                                     *
-                                     * {{ isset($book) && $book->date ? $book->date->format('Y-m-d') : old('date') }}
-                                     */
-                                    $formatValue = "{{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('Y-m-d') : old('$fieldSnakeCase') }}";
+                        $template .= '<table class="table table-bordered align-items-center mb-0" id="tbl-field">
+                        <thead>';
 
-                                    $template .= $this->setInputTypeTemplate(
-                                        request: [
-                                            'input_types' => $field->input,
-                                            'requireds' => $field->required,
-                                        ],
-                                        model: $model,
-                                        field: $field->name,
-                                        formatValue: $formatValue,
-                                        date:1
-                                    );
-                                    break;
-                                case 'time':
-                                    /**
-                                     * Will generate something like:
-                                     *
-                                     * {{ isset($book) ? $book->time->format('H:i') : old('time') }}
-                                     */
-                                    $formatValue = "{{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('H:i') : old('$fieldSnakeCase') }}";
+                        foreach ($field->multis as $key => $value) {
+                            $template .= '<th>' . $value->name . '</th>';
+                        }
 
-                                    $template .= $this->setInputTypeTemplate(
-                                        request: [
-                                            'input_types' => $field->input,
-                                            'requireds' => $field->required,
-                                        ],
-                                        model: $model,
-                                        field: $field->name,
-                                        formatValue: $formatValue,
-                                        date:1
-                                    );
-                                    break;
-                                case 'week':
-                                    /**
-                                     * Will generate something like:
-                                     *
-                                     * {{ isset($book) ? $book->week->format('Y-\WW') : old('week') }}
-                                     */
-                                    $formatValue = "{{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('Y-\WW') : old('$fieldSnakeCase') }}";
+                        $template .= ' </thead>
+                        <tbody>
+                        </tbody>
+                        </table>
+                        </div>
+                        ';
 
-                                    $template .= $this->setInputTypeTemplate(
-                                        request: [
-                                            'input_types' => $field->input,
-                                            'requireds' => $field->required,
-                                        ],
-                                        model: $model,
-                                        field: $field->name,
-                                        formatValue: $formatValue,
-                                        date:1
-                                    );
-                                    break;
-                                case 'month':
-                                    /**
-                                     * Will generate something like:
-                                     *
-                                     * {{ isset($book) ? $book->month->format('Y-\WW') : old('month') }}
-                                     */
-                                    $formatValue = "{{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('Y-m') : old('$fieldSnakeCase') }}";
 
-                                    $template .= $this->setInputTypeTemplate(
-                                        request: [
-                                            'input_types' => $field->input,
-                                            'requireds' => $field->required,
-                                        ],
-                                        model: $model,
-                                        field: $field->name,
-                                        formatValue: $formatValue,
-                                        date:1
-                                    );
-                                    break;
-                                case 'textarea':
-                                    // textarea
-                                    $template .= str_replace(
-                                        [
-                                            '{{fieldKebabCase}}',
-                                            '{{fieldUppercase}}',
-                                            '{{modelName}}',
-                                            '{{nullable}}',
-                                            '{{fieldSnakeCase}}',
+                        break;
 
-                                        ],
-                                        [
-                                            GeneratorUtils::kebabCase($field->name),
-                                            $fieldUcWords,
-                                            $modelNameSingularCamelCase,
-                                            $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
-                                            $fieldSnakeCase,
-                                        ],
-                                        GeneratorUtils::getTemplate('views/forms/textarea')
-                                    );
-                                    break;
-                                case 'file':
-                                case 'image':
+                    default:
+                        // input form
+                        if ($field->default_value) {
+                            $formatValue = "{{ (isset($$modelNameSingularCamelCase) ? $$modelNameSingularCamelCase->$fieldSnakeCase : old('$fieldSnakeCase')) ? old('$fieldSnakeCase') : '" . $field->default_value . "' }}";
+                        } else {
+                            $formatValue = "{{ isset($$modelNameSingularCamelCase) ? $$modelNameSingularCamelCase->$fieldSnakeCase : old('$fieldSnakeCase') }}";
+                        }
 
-                                    $template .= str_replace(
-                                        [
-                                            '{{modelCamelCase}}',
-                                            '{{fieldPluralSnakeCase}}',
-                                            '{{fieldSnakeCase}}',
-                                            '{{fieldLowercase}}',
-                                            '{{fieldUcWords}}',
-                                            '{{nullable}}',
-                                            '{{uploadPathPublic}}',
-                                            '{{fieldKebabCase}}',
-                                            '{{defaultImage}}',
-                                            '{{defaultImageCodeForm}}',
-                                        ],
-                                        [
-                                            $modelNameSingularCamelCase,
-                                            GeneratorUtils::pluralSnakeCase($field->name),
-                                            str()->snake($field->name),
-                                            GeneratorUtils::cleanSingularLowerCase($field->name),
-                                            $fieldUcWords,
-                                            $field->required == 'yes' ||  $field->required == 'on' ? ' required' : '',
-                                            config('generator.image.path') == 'storage' ? "storage/uploads" : "uploads",
-                                            str()->kebab($field->name),
-                                            "",
-                                            "",
-                                        ],
-                                        GeneratorUtils::getTemplate('views/forms/image')
-                                    );
-                                    break;
-                                case 'range':
-                                    $template .= str_replace(
-                                        [
-                                            '{{fieldSnakeCase}}',
-                                            '{{fieldUcWords}}',
-                                            '{{fieldKebabCase}}',
-                                            '{{nullable}}',
-                                            '{{min}}',
-                                            '{{max}}',
-                                            '{{step}}',
-                                        ],
-                                        [
-                                            GeneratorUtils::singularSnakeCase($field->name),
-                                            $fieldUcWords,
-                                            GeneratorUtils::singularKebabCase($field->name),
-                                            $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
-                                            $field->min_length,
-                                            $field->max_length,
-                                            $field->steps ? 'step="' . $field->steps . '"' : '',
-                                        ],
-                                        GeneratorUtils::getTemplate('views/forms/range')
-                                    );
-                                    break;
-                                case 'hidden':
-                                    $template .= '<input type="hidden" name="' . $fieldSnakeCase . '" value="' . $field->default_value . '">';
-                                    break;
-                                case 'password':
-                                    $template .= str_replace(
-                                        [
-                                            '{{fieldUcWords}}',
-                                            '{{fieldSnakeCase}}',
-                                            '{{fieldKebabCase}}',
-                                            '{{model}}',
-                                        ],
-                                        [
-                                            $fieldUcWords,
-                                            $fieldSnakeCase,
-                                            GeneratorUtils::singularKebabCase($field->name),
-                                            $modelNameSingularCamelCase,
-                                        ],
-                                        GeneratorUtils::getTemplate('views/forms/input-password')
-                                    );
-                                    break;
-                                default:
-                                    $template .= $this->setInputTypeTemplate(
-                                        request: [
-                                            'input_types' => $field->input,
-                                            'requireds' => $field->required,
-                                        ],
-                                        model: $model,
-                                        field: $field->name,
-                                        formatValue: $formatValue
-                                    );
-                                    break;
-                            }
-                            break;
-                    }
+                        switch ($field->input) {
+                            case 'datetime-local':
+                                /**
+                                 * Will generate something like:
+                                 *
+                                 * {{ isset($book) && $book->datetime ? $book->datetime->format('Y-m-d\TH:i') : old('datetime') }}
+                                 */
+                                $formatValue = "{{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('Y-m-d\TH:i') : old('$fieldSnakeCase') }}";
+
+                                $template .= $this->setInputTypeTemplate(
+                                    request: [
+                                        'input_types' => $field->input,
+                                        'requireds' => $field->required,
+                                    ],
+                                    model: $model,
+                                    field: $field->name,
+                                    formatValue: $formatValue,
+                                    date: 1
+                                );
+                                break;
+                            case 'date':
+                                /**
+                                 * Will generate something like:
+                                 *
+                                 * {{ isset($book) && $book->date ? $book->date->format('Y-m-d') : old('date') }}
+                                 */
+                                $formatValue = "{{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('Y-m-d') : old('$fieldSnakeCase') }}";
+
+                                $template .= $this->setInputTypeTemplate(
+                                    request: [
+                                        'input_types' => $field->input,
+                                        'requireds' => $field->required,
+                                    ],
+                                    model: $model,
+                                    field: $field->name,
+                                    formatValue: $formatValue,
+                                    date: 1
+                                );
+                                break;
+                            case 'time':
+                                /**
+                                 * Will generate something like:
+                                 *
+                                 * {{ isset($book) ? $book->time->format('H:i') : old('time') }}
+                                 */
+                                $formatValue = "{{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('H:i') : old('$fieldSnakeCase') }}";
+
+                                $template .= $this->setInputTypeTemplate(
+                                    request: [
+                                        'input_types' => $field->input,
+                                        'requireds' => $field->required,
+                                    ],
+                                    model: $model,
+                                    field: $field->name,
+                                    formatValue: $formatValue,
+                                    date: 1
+                                );
+                                break;
+                            case 'week':
+                                /**
+                                 * Will generate something like:
+                                 *
+                                 * {{ isset($book) ? $book->week->format('Y-\WW') : old('week') }}
+                                 */
+                                $formatValue = "{{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('Y-\WW') : old('$fieldSnakeCase') }}";
+
+                                $template .= $this->setInputTypeTemplate(
+                                    request: [
+                                        'input_types' => $field->input,
+                                        'requireds' => $field->required,
+                                    ],
+                                    model: $model,
+                                    field: $field->name,
+                                    formatValue: $formatValue,
+                                    date: 1
+                                );
+                                break;
+                            case 'month':
+                                /**
+                                 * Will generate something like:
+                                 *
+                                 * {{ isset($book) ? $book->month->format('Y-\WW') : old('month') }}
+                                 */
+                                $formatValue = "{{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('Y-m') : old('$fieldSnakeCase') }}";
+
+                                $template .= $this->setInputTypeTemplate(
+                                    request: [
+                                        'input_types' => $field->input,
+                                        'requireds' => $field->required,
+                                    ],
+                                    model: $model,
+                                    field: $field->name,
+                                    formatValue: $formatValue,
+                                    date: 1
+                                );
+                                break;
+                            case 'textarea':
+                                // textarea
+                                $template .= str_replace(
+                                    [
+                                        '{{fieldKebabCase}}',
+                                        '{{fieldUppercase}}',
+                                        '{{modelName}}',
+                                        '{{nullable}}',
+                                        '{{fieldSnakeCase}}',
+
+                                    ],
+                                    [
+                                        GeneratorUtils::kebabCase($field->name),
+                                        $fieldUcWords,
+                                        $modelNameSingularCamelCase,
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                        $fieldSnakeCase,
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/textarea')
+                                );
+                                break;
+                            case 'file':
+                            case 'image':
+
+                                $template .= str_replace(
+                                    [
+                                        '{{modelCamelCase}}',
+                                        '{{fieldPluralSnakeCase}}',
+                                        '{{fieldSnakeCase}}',
+                                        '{{fieldLowercase}}',
+                                        '{{fieldUcWords}}',
+                                        '{{nullable}}',
+                                        '{{uploadPathPublic}}',
+                                        '{{fieldKebabCase}}',
+                                        '{{defaultImage}}',
+                                        '{{defaultImageCodeForm}}',
+                                    ],
+                                    [
+                                        $modelNameSingularCamelCase,
+                                        GeneratorUtils::pluralSnakeCase($field->name),
+                                        str()->snake($field->name),
+                                        GeneratorUtils::cleanSingularLowerCase($field->name),
+                                        $fieldUcWords,
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                        config('generator.image.path') == 'storage' ? "storage/uploads" : "uploads",
+                                        str()->kebab($field->name),
+                                        "",
+                                        "",
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/image')
+                                );
+                                break;
+                            case 'range':
+                                $template .= str_replace(
+                                    [
+                                        '{{fieldSnakeCase}}',
+                                        '{{fieldUcWords}}',
+                                        '{{fieldKebabCase}}',
+                                        '{{nullable}}',
+                                        '{{min}}',
+                                        '{{max}}',
+                                        '{{step}}',
+                                    ],
+                                    [
+                                        GeneratorUtils::singularSnakeCase($field->name),
+                                        $fieldUcWords,
+                                        GeneratorUtils::singularKebabCase($field->name),
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                        $field->min_length,
+                                        $field->max_length,
+                                        $field->steps ? 'step="' . $field->steps . '"' : '',
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/range')
+                                );
+                                break;
+                            case 'hidden':
+                                $template .= '<input type="hidden" name="' . $fieldSnakeCase . '" value="' . $field->default_value . '">';
+                                break;
+                            case 'password':
+                                $template .= str_replace(
+                                    [
+                                        '{{fieldUcWords}}',
+                                        '{{fieldSnakeCase}}',
+                                        '{{fieldKebabCase}}',
+                                        '{{model}}',
+                                    ],
+                                    [
+                                        $fieldUcWords,
+                                        $fieldSnakeCase,
+                                        GeneratorUtils::singularKebabCase($field->name),
+                                        $modelNameSingularCamelCase,
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/input-password')
+                                );
+                                break;
+                            default:
+                                $template .= $this->setInputTypeTemplate(
+                                    request: [
+                                        'input_types' => $field->input,
+                                        'requireds' => $field->required,
+                                    ],
+                                    model: $model,
+                                    field: $field->name,
+                                    formatValue: $formatValue
+                                );
+                                break;
+                        }
+                        break;
                 }
             }
+        }
 
 
         $template .= "</div>";
@@ -1170,7 +1194,7 @@ class FormViewGenerator
      */
     public function setInputTypeTemplate(string $field, array $request, string $model, string $formatValue, $date = 0): string
     {
-        if($date == 1){
+        if ($date == 1) {
             return str_replace(
                 [
                     '{{fieldKebabCase}}',
