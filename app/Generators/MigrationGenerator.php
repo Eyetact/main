@@ -180,7 +180,9 @@ class MigrationGenerator
 
         foreach ($module->fields()->orderBy('created_at', 'desc')->take(1)->get() as $i => $field) {
 
-            if ($field->type == 'date' && $field->input == 'month') {
+            if ($field->type == 'date' && $field->input == 'month' ) {
+                $setFields .= "\$table->text('" . str()->snake($field->name);
+            }elseif($field->type == 'multi' && $field->input == 'multi'){
                 $setFields .= "\$table->text('" . str()->snake($field->name);
             } else {
                 $setFields .= "\$table->" . $field->type . "('" . str()->snake($field->name);
