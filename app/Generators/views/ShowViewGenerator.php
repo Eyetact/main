@@ -217,9 +217,49 @@ class ShowViewGenerator
                         $timeFormat = config('generator.format.time') ? config('generator.format.time') : 'H:i';
 
                         $trs .= "<tr>
-                                            <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
-                                            <td>{{ isset($" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . ") ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('$timeFormat') : ''  }}</td>
-                                        </tr>";
+                                                <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
+                                                <td>{{ isset($" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . ") ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('$timeFormat') : ''  }}</td>
+                                            </tr>";
+                        break;
+
+                    case 'multi':
+
+                        $trs .= "<tr>
+                                                    <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
+                                                    <td>
+
+                                                    @php
+
+                                                    \$ar = json_decode($". $modelNameSingularCamelCase . "->" . $fieldSnakeCase  .")
+
+                                                    @endphp
+
+                                                    <table>
+                                                        <thead>
+                                                        ";
+
+                                                        foreach ($field->multis as $key => $value) {
+                                                            $trs .= "<th>". $value->name ."</th>";
+                                                        }
+
+
+                                                        $trs .= "</thead>
+
+                                                        <tbody>
+                                                        @foreach( \$ar as \$item )
+                                                        <tr>";
+                                                        foreach ($field->multis as $key => $value) {
+                                                            $trs .= "<td>{{ \$item->".$value->name." }}</td>";
+                                                        }
+
+                                                        $trs .= "</tr>
+                                                         @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                    
+                                                    
+                                                    </td>
+                                                </tr>";
                         break;
                     default:
                         if ($field->file_type != 'image') {

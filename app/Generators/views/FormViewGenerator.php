@@ -928,22 +928,153 @@ class FormViewGenerator
 
                     case 'multi':
 
-                        
+
 
                         $template .= '<div class="multi-options col-12">
                         <div class="attr_header row flex justify-content-end my-5 align-items-end">
-                            <input title="Reset form" class="btn btn-success" id="add_new_tr_'.$field->id.'" type="button" value="+ Add">
+                            <input title="Reset form" class="btn btn-success" id="add_new_tr_' . $field->id . '" type="button" value="+ Add">
                         </div>';
 
-                        $template .= '<table class="table table-bordered align-items-center mb-0" id="tbl-field-'.$field->id.'">
+                        $template .= '
+                        @if(isset($'.$modelNameSingularCamelCase.')  && $' . $modelNameSingularCamelCase . '->' . $fieldSnakeCase . '!= null )
+                        @php
+
+                        $ar = json_decode($'. $modelNameSingularCamelCase . '->' . $fieldSnakeCase  .');
+                        $index = 0;
+                        @endphp
+                        @endif
+
+                        <input type="hidden"  name="' . $field->name . '" />
+                        
+                        <table class="table table-bordered align-items-center mb-0" id="tbl-field-' . $field->id . '">
                         <thead>';
 
                         foreach ($field->multis as $key => $value) {
                             $template .= '<th>' . $value->name . '</th>';
                         }
 
-                        $template .= ' </thead>
+                        $template .= ' 
+                        <th></th>
+                        </thead>
                         <tbody>
+                        @if(isset($'.$modelNameSingularCamelCase.')  && $' . $modelNameSingularCamelCase . '->' . $fieldSnakeCase . '!= null )
+                        
+                        @foreach( $ar as $item )
+                        @php
+                            $index++;
+                        @endphp
+                        ';
+                        // foreach ($field->multi as $key => $value) {
+                            $template .= '<tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">';
+                            foreach ($field->multis as $key => $value) {
+                                switch ($value->type) {
+                                    case 'text':
+                                    case 'email':
+                                    case 'tel':
+                                    case 'url':
+                                    case 'search':
+                                    case 'file':
+                                    case 'number':
+                                    case 'date':
+                                    case 'time':
+                                        $template .= ' <td>
+                                        <div class="input-box">
+                                            <input type="' . $value->type . '" name="' . $field->name . '[{{ $index }}][' . $value->name . ']"
+                                                class="form-control google-input"
+                                                placeholder="' . $value->name . '" value="{{ $item->'.$value->name.' }}" required>
+                                        </div>
+                                    </td>
+                                    ';
+                                        break;
+                                    case 'image':
+                                        $template .= ' <td>
+                                            <div class="input-box">
+                                                <input type="file" name="' . $field->name . '[{{ $index }}][' . $value->name . ']"
+                                                    class="form-control google-input"
+                                                    placeholder="' . $value->name . '" required>
+                                            </div>
+                                        </td>
+                                        ';
+                                        break;
+
+                                    case 'textarea':
+                                        $template .= ' <td>
+                                            <div class="input-box">
+                                              
+                                            <textarea name="' . $field->name . '[{{ $index }}][' . $value->name . ']"  class="google-input"  placeholder="' . $value->name . '">{{ $item->'.$value->name.' }}</textarea>
+                                            
+                                            </div>
+                                        </td>
+                                        ';
+                                        break;
+
+                                    case 'range':
+                                        $template .= '<td>
+                                                    <div class="row">
+                                                        <div class="col-md-11">
+                                                            <div class="input-box">
+                                                                <input onmousemove="' . $value->name . '1.value=value" type="range" name="' . $field->name . '[' . $value->name . ']" class="range " min="1" max="1000" >
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">  <output id="' . $value->name . '1"></output></div>
+                                                    </div>
+                                                </td>
+                                                    ';
+                                        break;
+                                    case 'radio':
+                                        $template .= '<td>
+                                    <div class="custom-controls-stacked">
+                                    <label class="custom-control custom-radio" for="' . $value->name . '-1">
+                                        <input @checked( $item->'.$value->name.' == "1" ) class="custom-control-input" type="radio" name="' . $field->name . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-1" value="1">
+                                        <span class="custom-control-label">True</span>
+                                    </label>
+                        
+                                    <label class="custom-control custom-radio" for="' . $value->name . '-0">
+                                        <input @checked( $item->'.$value->name.' == "0" )  class="custom-control-input" type="radio" name="' . $field->name . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-0" value="0">
+                                        <span class="custom-control-label">False</span>
+                                    </label>
+                                </div>
+                                                </td>
+                                                            ';
+                                        break;
+                                    case 'select':
+
+                                        $arrOption = explode('|', $value->select_options);
+
+                                        $totalOptions = count($arrOption);
+                                        $template .= '<td><div class="input-box">';
+                                        $template .= ' <select name="' . $field->name . '[{{ $index }}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
+
+                                        foreach ($arrOption as $arrOptionIndex => $value2) {
+                                            $template .= '<option @selected( $item->'.$value->name.' == "'.$value2.'" ) value="' . $value2 . '" >' . $value2 . '</option>';
+
+                                        }
+                                        $template .= '</select>';
+                                        $template .= '</div></td>';
+                                        break;
+
+                                    default:
+                                        # code...
+                                        break;
+                                }
+
+                            }
+                            $template .= '
+                            <td>
+                                <div class="input-box">
+
+                                    <button type="button"
+                                        class="btn btn-outline-danger btn-xs btn-delete">
+                                        x
+                                    </button>
+                                </div>
+                            </td>
+                            </tr>';
+                        // }
+                        $template .= '
+                        @endforeach
+                        @endif
                         </tbody>
                         </table>
                         </div>

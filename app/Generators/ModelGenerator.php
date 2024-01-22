@@ -265,7 +265,6 @@ class ModelGenerator
                 }
 
                 if ($field->input == 'multi') {
-                    $protectedHidden .= "'" . str()->snake($field->name) . "', ";
 
                     if ($i > 0) {
                         $methods .= "\t";
@@ -273,7 +272,7 @@ class ModelGenerator
 
                     $fieldNameSingularPascalCase = GeneratorUtils::singularPascalCase($field->name);
 
-                    $methods .= "\n\tpublic function set" . $fieldNameSingularPascalCase . "Attribute(\$value)\n\t{\n\t\t\$this->attributes['" . $field->name . "'] = json_encode(\$value,true);\n\t}";
+                    $methods .= "\n\tpublic function set" . $fieldNameSingularPascalCase . "Attribute(\$value)\n\t{\n\t\tif(\$value){\$this->attributes['" . $field->name . "'] = json_encode(\$value,true);}else{ \$this->attributes['" . $field->name . "'] = null; }\n\t}";
                 }
 
                 if ($field->input == 'file'  || $field->input == 'image') {

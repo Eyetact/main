@@ -64,7 +64,7 @@
                             value="">
                     </div> --}}
 
-                    <span class="fast-btn">
+                    {{-- <span class="fast-btn">
                         Add Attributes
                     </span>
 
@@ -200,7 +200,7 @@
 
                             </tbody>
                         </table>
-                    </div>
+                    </div> --}}
 
 
 

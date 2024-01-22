@@ -304,7 +304,17 @@ class IndexViewGenerator
                         }
 
                     }
-                    $trhtml .= '</tr>';
+                    $trhtml .= '
+                    <td>
+                        <div class="input-box">
+
+                            <button type="button"
+                                class="btn btn-outline-danger btn-xs btn-delete">
+                                x
+                            </button>
+                        </div>
+                    </td>
+                    </tr>';
                     $trhtml .= "`
             
                             table.append(tr)

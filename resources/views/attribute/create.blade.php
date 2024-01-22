@@ -66,6 +66,7 @@
                                 <option value="datalist">Datalist ( Year List )</option>
                                 <option value="datetime-local">Datetime local</option>
                                 <option value="select">Select</option>
+                                <option value="foreignId">Lookup</option>
                             </select>
                             <label id="field_type-error" class="error text-red hide" for="field_type"></label>
                             @error('field_type')

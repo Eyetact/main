@@ -333,11 +333,17 @@ class RequestGenerator
              * will generate like:
              * 'name' => 'required
              */
-            match ($field->required) {
-                'yes' => $validations .= "'required",
-                'on' => $validations .= "'required",
-                default => $validations .= "'nullable"
-            };
+            if ($field->type != 'multi') {
+                match ($field->required) {
+                    'yes' => $validations .= "'required",
+                    'on' => $validations .= "'required",
+                    default => $validations .= "'nullable"
+                };
+
+            }else{
+                $validations .= "'nullable";
+            }
+            
 
             switch ($field->input) {
                 case 'url':

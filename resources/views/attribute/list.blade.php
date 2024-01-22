@@ -300,8 +300,6 @@
         }
 
         $(document).on('click', '.btn-delete', function() {
-            let table = $('#tbl-field tbody tr')
-
             $(this).parent().parent().parent().remove()
             generateNo()
         })
@@ -338,8 +336,6 @@
                                                         <option value="tel">Telepon</option>
                                                         <option value="url">Url</option>
                                                         <option value="search">Search</option>
-                                                        <option value="image">Image</option>
-                                                        <option value="file">File</option>
                                                         <option value="number">Number</option>
                                                         <option value="radio">Radio ( True, False )</option>
                                                         <option value="date">Date</option>
@@ -375,13 +371,13 @@
         })
 
         $(document).on('change', '.multi-type', function() {
-        let index = parseInt($(this).parent().parent().parent().find('.text-center').find('.input-box').html());
+            let index = parseInt($(this).parent().parent().parent().find('.text-center').find('.input-box').html());
             // alert(index);
             if ($(this).val() == 'select') {
                 $(this).parent().parent().find('.select_options').append(`<div class="input-box s-option mt-2">
                 <input type="text" name="multi[${index}][select_options]" class="google-input" placeholder="Seperate with '|', e.g.: water|fire">
             </div>`);
-            }else{
+            } else {
                 $(this).parent().parent().find('.s-option').remove();
 
             }
@@ -486,8 +482,6 @@
                                                         <option value="tel">Telepon</option>
                                                         <option value="url">Url</option>
                                                         <option value="search">Search</option>
-                                                        <option value="image">Image</option>
-                                                        <option value="file">File</option>
                                                         <option value="number">Number</option>
                                                         <option value="radio">Radio ( True, False )</option>
                                                         <option value="date">Date</option>
@@ -588,9 +582,17 @@
                 <input type="hidden" name="select_options" class="form-option">
             `)
 
+            // var list = `<option>aaaa</option>`;
+            var list = `{!! $all !!}`;
+            // alert( list )
+
                 $(`.options`).append(`
                 <div class="input-box form-constrain mt-2">
-                    <input type="text" name="constrains" class="google-input" placeholder="Constrain or related model name" required>
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input" name="constrains" required>
+                           ${list}
+                        </select>
+                    </div>
                     <small class="text-secondary">
                         <ul class="my-1 mx-2 p-0">
                             <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
@@ -601,23 +603,12 @@
                 <div class="input-box form-foreign-id mt-2">
                     <input type="hidden" name="foreign_ids" class="google-input" placeholder="Foreign key (optional)">
                 </div>
-                <div class="input-box form-on-update mt-2 form-on-update-foreign">
-                    <select class="google-input" name="on_update_foreign" required>
-                        <option value="" disabled selected>-- Select action on update --</option>
-                        <option value="0">Nothing</option>
-                        <option value="1">Cascade</option>
-                        <option value="2">Restrict</option>
-                    </select>
-                </div>
-                <div class="input-box form-on-delete mt-2 form-on-delete-foreign">
-                    <select class="google-input" name="on_delete_foreign" required>
-                        <option value="" disabled selected>-- Select action on delete --</option>
-                        <option value="0">Nothing</option>
-                        <option value="1">Cascade</option>
-                        <option value="2">Restrict</option>
-                        <option value="3">Null</option>
-                    </select>
-                </div>
+
+                <input type="hidden" name="on_update_foreign" class="google-input" value="1">
+
+                <input type="hidden" name="on_delete_foreign" class="google-input" value="1">
+
+                
             `)
 
                 //     $(`.form-input-types`).html(`
@@ -779,6 +770,9 @@
                     break;
                 case 'multi':
                     $('#type').val('multi').trigger('change')
+                    break;
+                case 'foreignId':
+                    $('#type').val('foreignId').trigger('change')
                     break;
 
 

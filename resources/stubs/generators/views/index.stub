@@ -361,6 +361,11 @@ output {
 
         {{trHtml}}
 
+        $(document).on('click', '.btn-delete', function() {
+            $(this).parent().parent().parent().remove()
+            generateNo()
+        })
+
     </script>
 @endsection
 

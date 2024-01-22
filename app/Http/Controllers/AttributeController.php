@@ -59,18 +59,25 @@ class AttributeController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
-        return view('attribute.list', ['attribute' => new Attribute()]);
+        $all = Module::all();
+        $options = '';
+        foreach ($all as $key => $value) {
+            $options .= '<option value="'.$value->name.'" >'.$value->name.'</option>';
+        }
+
+        return view('attribute.list', ['attribute' => new Attribute(), 'all' =>$options]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return 
      */
     public function create()
     {
         $moduleData = Module::where('migration', '!=', NULL)->get();
-        return view('attribute.create', ['attribute' => new Attribute(), 'moduleData' => $moduleData]);
+        $all = Module::all();
+        return view('attribute.create', ['attribute' => new Attribute(), 'moduleData' => $moduleData, 'all' => $all]);
     }
 
     /**
