@@ -22,7 +22,7 @@ class MigrationGenerator
         $tableNamePluralLowercase = GeneratorUtils::pluralSnakeCase($model);
 
         $setFields = '';
-        $totalFields = count($request['fields']);
+        $totalFields = !empty($request['fields']) ?count($request['fields']) : 0;
 
         if (!empty($request['fields'][0])) {
 

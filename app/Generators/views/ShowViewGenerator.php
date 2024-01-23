@@ -24,7 +24,7 @@ class ShowViewGenerator
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
 
         $trs = "";
-        $totalFields = count($request['fields']);
+        $totalFields = !empty($request['fields']) ?count($request['fields']) : 0;
         $dateTimeFormat = config('generator.format.datetime') ? config('generator.format.datetime') : 'd/m/Y H:i';
 
         if (!empty($request['fields'][0])) {

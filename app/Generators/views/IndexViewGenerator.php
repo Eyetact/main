@@ -32,7 +32,7 @@ class IndexViewGenerator
 
         $thColums = '';
         $tdColumns = '';
-        $totalFields = count($request['fields']);
+        $totalFields = !empty($request['fields']) ?count($request['fields']) : 0;
 
         if (!empty($request['fields'][0])) {
             foreach ($request['fields'] as $i => $field) {

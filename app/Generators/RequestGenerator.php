@@ -20,7 +20,7 @@ class RequestGenerator
         $path = GeneratorUtils::getModelLocation($request['code']);
 
         $validations = '';
-        $totalFields = count($request['fields']);
+        $totalFields = !empty($request['fields']) ?count($request['fields']) : 0;
 
         switch ($path) {
             case '':
