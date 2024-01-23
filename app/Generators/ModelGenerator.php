@@ -21,7 +21,7 @@ class ModelGenerator
         $casts = "[";
         $relations = "";
         $methods = "";
-        $totalFields = count($request['fields']);
+        $totalFields = !empty($request['fields']) ?count($request['fields']) : 0;
         $dateTimeFormat = config('generator.format.datetime') ? config('generator.format.datetime') : 'd/m/Y H:i';
         $protectedHidden = "";
         if (!empty($request['fields'][0])) {
