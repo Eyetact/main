@@ -17,9 +17,11 @@ class CreateViewGenerator
     {
         $model = GeneratorUtils::setModelName($request['name'], 'default');
         $path = GeneratorUtils::getModelLocation($request['name']);
+        $code = GeneratorUtils::setModelName($request['code'], 'default');
+
 
         $modelNamePluralUcWords = GeneratorUtils::cleanPluralUcWords($model);
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNameSingularLowerCase = GeneratorUtils::cleanSingularLowerCase($model);
 
         $template = str_replace(
@@ -61,9 +63,10 @@ class CreateViewGenerator
         $module = Module::find($id);
         $model = GeneratorUtils::setModelName($module->name, 'default');
         $path = GeneratorUtils::getModelLocation($module->name);
+        $code = GeneratorUtils::setModelName($module->code, 'default');
 
         $modelNamePluralUcWords = GeneratorUtils::cleanPluralUcWords($model);
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNameSingularLowerCase = GeneratorUtils::cleanSingularLowerCase($model);
 
         $template = str_replace(

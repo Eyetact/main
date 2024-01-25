@@ -46,6 +46,10 @@ class GeneratorService
     {
         (new MigrationGenerator)->reGenerate($id);
     }
+    public function removeMigration($id, $attr_id): void
+    {
+        (new MigrationGenerator)->remove($id, $attr_id);
+    }
 
     public function generateController(array $request): void
     {
@@ -89,9 +93,10 @@ class GeneratorService
         (new IndexViewGenerator)->reGenerate($id);
         (new CreateViewGenerator)->reGenerate($id);
         (new FormViewGenerator)->reGenerate($id);
-        (new EditViewGenerator)->reGenerate($id);
 
         (new ShowViewGenerator)->reGenerate($id);
+        (new EditViewGenerator)->reGenerate($id);
+
         (new ViewComposerGenerator)->reGenerate($id);
     }
 

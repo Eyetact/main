@@ -12,7 +12,8 @@ class Module extends Model
     protected $fillable = [
         'name',
         'description',
-        'is_system'
+        'is_system',
+        'code'
     ];
 
     public function fields(){

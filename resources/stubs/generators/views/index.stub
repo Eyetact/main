@@ -144,12 +144,12 @@
   height: 6px;
 }
 
-.range::-ms-fill-lower { 
+.range::-ms-fill-lower {
   background-color: #d7dbdd;
   border-radius: 3px;
 }
 
-.range::-ms-fill-upper { 
+.range::-ms-fill-upper {
   background-color: #d7dbdd;
   border-radius: 3px;
 }
@@ -188,11 +188,11 @@
   outline: none;
 }
 
-.range::-ms-thumb { 
+.range::-ms-thumb {
   border-radius: 100%;
   background-color: #705ec8;
   height: 18px;
-  width: 18px; 
+  width: 18px;
   border: none;
 }
 
@@ -246,7 +246,7 @@ output {
                 success: function(response) {
                     //  console.log(response);
                     $(".modal-body").html(response);
-                    $(".modal-title").html("Add {{modelNamePluralKebabCase}}");
+                    $(".modal-title").html("Add ");
                     $("#role_form_modal").modal('show');
                     $('.dropify').dropify();
                 }
@@ -349,12 +349,22 @@ output {
                      console.log(path);
                      console.log(response);
                     $(".modal-body").html(response);
-                    $(".modal-title").html("edit {{modelNamePluralKebabCase}}");
+                    $(".modal-title").html("edit ");
                     $("#role_form_modal").modal('show');
                     $('.dropify').dropify();
                 }
             });
         });
+
+
+
+
+        {{trHtml}}
+
+        $(document).on('click', '.btn-delete', function() {
+            $(this).parent().parent().parent().remove()
+            generateNo()
+        })
 
     </script>
 @endsection

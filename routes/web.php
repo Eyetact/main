@@ -119,7 +119,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('module_manager/menu_update', 'menu_update')->name('module_manager.menu_update');
         Route::get('module_manager/{module}/edit', 'edit')->name('module_manager.edit');
         // Route::post('module_manager/{menu}', 'update')->name('module_manager.update');
-        Route::post('module_manager/update/{menu?}', 'update')->name('module_manager.update');
+        Route::post('module_manager/update/{module}', 'update')->name('module_manager.update');
         Route::delete('module_manager/{menu}', 'destroy')->name('module_manager.destroy');
 
         // update is deleted menu item
@@ -274,6 +274,7 @@ Route::resource('tests', App\Http\Controllers\Admin\TestController::class)->midd
 Route::get('another', [ App\Http\Controllers\Admin\TestddController::class, 'index' ])->middleware('auth');
 
 Route::resource('testdds', App\Http\Controllers\Admin\TestddController::class)->middleware('auth');
+<<<<<<< HEAD
 Route::get('category', [ App\Http\Controllers\Admin\CategoryController::class, 'index' ])->middleware('auth');
 
 Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class)->middleware('auth');
@@ -283,3 +284,5 @@ Route::resource('categories', App\Http\Controllers\Admin\CategoryController::cla
 Route::get('123456', [ App\Http\Controllers\Admin\Test123Controller::class, 'index' ])->middleware('auth');
 
 Route::resource('test123s', App\Http\Controllers\Admin\Test123Controller::class)->middleware('auth');
+=======
+>>>>>>> 92ed942d3d3085ed47e3a05d5f5cc9f2eaafa114

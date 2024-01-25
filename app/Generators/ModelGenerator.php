@@ -15,12 +15,13 @@ class ModelGenerator
     {
         $path = GeneratorUtils::getModelLocation($request['name']);
         $model = GeneratorUtils::setModelName($request['name']);
+        $modelName = GeneratorUtils::setModelName($request['code']);
 
         $fields = "[";
         $casts = "[";
         $relations = "";
         $methods = "";
-        $totalFields = count($request['fields']);
+        $totalFields = !empty($request['fields']) ?count($request['fields']) : 0;
         $dateTimeFormat = config('generator.format.datetime') ? config('generator.format.datetime') : 'd/m/Y H:i';
         $protectedHidden = "";
         if (!empty($request['fields'][0])) {
@@ -178,7 +179,7 @@ class ModelGenerator
                 '{{methods}}'
             ],
             [
-                $model,
+                $modelName,
                 $fields,
                 $casts,
                 $relations,
@@ -191,12 +192,12 @@ class ModelGenerator
 
         switch ($path) {
             case '':
-                file_put_contents(app_path("/Models/$model.php"), $template);
+                file_put_contents(app_path("/Models/$modelName.php"), $template);
                 break;
             default:
                 $fullPath = app_path("/Models/$path");
                 GeneratorUtils::checkFolder($fullPath);
-                file_put_contents($fullPath . "/$model.php", $template);
+                file_put_contents($fullPath . "/$modelName.php", $template);
                 break;
         }
     }
@@ -207,6 +208,7 @@ class ModelGenerator
         $module = Module::find($id);
         $path = GeneratorUtils::getModelLocation($module->name);
         $model = GeneratorUtils::setModelName($module->name);
+        $modelName = GeneratorUtils::setModelName($module->code);
 
         $fields = "[";
         $casts = "[";
@@ -227,7 +229,7 @@ class ModelGenerator
                 protected \$hidden = [
             PHP;
             }
-        
+
 
         switch ($path) {
             case '':
@@ -241,6 +243,7 @@ class ModelGenerator
 
 
             foreach ($module->fields as $i => $field) {
+                $field->name = GeneratorUtils::singularSnakeCase($field->name);
                 switch ($i + 1 != $totalFields) {
                     case true:
                         $fields .= "'" . str()->snake($field->name) . "', ";
@@ -257,12 +260,23 @@ class ModelGenerator
                         $methods .= "\t";
                     }
 
-                    $fieldNameSingularPascalCase = GeneratorUtils::singularPascalCase($field->name);
+                    $fieldNameSingularPascalCase = GeneratorUtils::pluralPascalCase($field->name);
 
                     $methods .= "\n\tpublic function set" . $fieldNameSingularPascalCase . "Attribute(\$value)\n\t{\n\t\t\$this->attributes['" . $field->name . "'] = bcrypt(\$value);\n\t}";
                 }
 
-                if ($field->input == 'file') {
+                if ($field->input == 'multi') {
+
+                    if ($i > 0) {
+                        $methods .= "\t";
+                    }
+
+                    $fieldNameSingularPascalCase = GeneratorUtils::singularPascalCase($field->name);
+
+                    $methods .= "\n\tpublic function set" . $fieldNameSingularPascalCase . "Attribute(\$value)\n\t{\n\t\tif(\$value){\$this->attributes['" . $field->name . "'] = json_encode(\$value,true);}else{ \$this->attributes['" . $field->name . "'] = null; }\n\t}";
+                }
+
+                if ($field->input == 'file'  || $field->input == 'image') {
 
                     if ($i > 0) {
                         $methods .= "\t";
@@ -345,7 +359,7 @@ class ModelGenerator
                     }
                 }
             }
-        
+
 
         $fields .=  "]";
 
@@ -370,7 +384,7 @@ class ModelGenerator
                 '{{methods}}'
             ],
             [
-                $model,
+                $modelName,
                 $fields,
                 $casts,
                 $relations,
@@ -383,12 +397,12 @@ class ModelGenerator
 
         switch ($path) {
             case '':
-                file_put_contents(app_path("/Models/$model.php"), $template);
+                file_put_contents(app_path("/Models/$modelName.php"), $template);
                 break;
             default:
                 $fullPath = app_path("/Models/$path");
                 GeneratorUtils::checkFolder($fullPath);
-                file_put_contents($fullPath . "/$model.php", $template);
+                file_put_contents($fullPath . "/$modelName.php", $template);
                 break;
         }
     }

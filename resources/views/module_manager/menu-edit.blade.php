@@ -1,6 +1,7 @@
 
 <div class="card mt-5">
     <div class="card-body">
+        <form action="{{ route('module_manager.update', $module->id) }}" method="POST" id="mailboxForm" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="menu_type" value="admin">
         <div class="row">
@@ -20,8 +21,14 @@
                             </div>
 
                             <div class="col-sm-12 form-group">
+                                <label class="form-label" for="name">Code <span class="text-red">*</span></label>
+                                <input type="text" readonly  id="aname" class="form-control" value="{{ $module->code }}">
+
+                            </div>
+
+                            <div class="col-sm-12 form-group">
                                 <label class="form-label" for="path">Path <span class="text-red">*</span></label>
-                                <input type="text" name="path" id="apath" class="form-control" value="{{ $module->menu->path }}">
+                                <input type="text" readonly id="apath" class="form-control" value="{{ $module->menu->path }}">
                             </div>
 
                             <div class="col-sm-12 form-group">
@@ -80,5 +87,6 @@
                 </div>
             </div>
         </div>
+    </form>
     </div>
 </div>

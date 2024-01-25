@@ -16,8 +16,9 @@ class ActionViewGenerator
     {
         $model = GeneratorUtils::setModelName($request['name'], 'default');
         $path = GeneratorUtils::getModelLocation($request['name']);
+        $code = GeneratorUtils::setModelName($request['code'], 'default');
 
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNameSingularLowercase = GeneratorUtils::cleanSingularLowerCase($model);
 
         $template = str_replace(

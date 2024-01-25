@@ -8,6 +8,49 @@
     <link href="{{ URL::asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
+    <style>
+        .multi-item {
+            background: #e9e9e9;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px dashed:#ddd;
+        }
+
+        .modal-xl {
+            max-width: 1140px !important;
+        }
+
+        .attr_header {
+            width: 100% !important;
+        }
+
+        #attr_tbl {
+            cursor: move;
+        }
+
+        #tbl-field>tbody>tr>td {
+            min-height: 97px;
+            max-height: 97px;
+            text-align: center !important;
+            line-height: 51px;
+        }
+
+        #tbl-field>tbody>tr>td label {
+            line-height: 1;
+        }
+
+        #tbl-field .form-check.form-switch {
+            padding: 0;
+            display: flex;
+            align-items: center;
+            /* justify-content: center; */
+            min-height: 50px;
+        }
+
+        #tbl-field .form-check.form-switch div {
+            margin: 0;
+        }
+    </style>
 @endsection
 @section('page-header')
     <!--Page header-->
@@ -41,8 +84,9 @@
                         <table class="table table-bordered text-nowrap" id="attribute_table">
                             <thead>
                                 <tr>
-                                    <th width="100px">No.</th>
+                                    <th width="50px">No.</th>
                                     <th>Name</th>
+                                    <th>Module</th>
                                     <th>Column Type</th>
                                     <th>Input Type</th>
                                     <th>Required</th>
@@ -63,7 +107,7 @@
     </div><!-- end app-content-->
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="role_form_modal" tabindex="-1" role="dialog"
+    <div class="modal fade bd-example-modal-xl" id="role_form_modal" tabindex="-1" role="dialog"
         aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -133,6 +177,10 @@
                 {
                     data: 'name',
                     name: 'name'
+                },
+                {
+                    data: 'module',
+                    name: 'module'
                 },
                 {
                     data: 'type',
@@ -237,6 +285,104 @@
     @include('attribute.js.functions')
 
     <script>
+        function generateNo() {
+            let no = 1
+
+            $('#tbl-field tbody tr').each(function(i) {
+                $(this).find('td:nth-child(1)').html(no)
+                if (i < 1) {
+                    $(`.btn-delete:eq(${i})`).prop('disabled', true)
+                } else {
+                    $(`.btn-delete:eq(${i})`).prop('disabled', false)
+                }
+                no++
+            })
+        }
+
+        $(document).on('click', '.btn-delete', function() {
+            $(this).parent().parent().parent().remove()
+            generateNo()
+        })
+        $(document).on('click', '#add_new_tr', function() {
+            let table = $('#tbl-field tbody')
+
+            let no = table.find('tr').length + 1
+
+            let tr = `
+            <tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">
+                                            <td class="text-center">
+                                                <div class="input-box">
+                                                
+                                                    ${no}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-box">
+                                                    <input type="text" name="multi[${no}][name]"
+                                                        class="form-control google-input"
+                                                        placeholder="{{ __('Field Name') }}" required>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-box">
+                                                    <select name="multi[${no}][type]"
+                                                        class="form-select  google-input multi-type" required>
+                                                        <option value="" disabled selected>
+                                                            --{{ __('Select column type') }}--
+                                                        </option>
+                                                        <option value="text">Text</option>
+                                                        <option value="textarea">Textarea</option>
+                                                        <option value="email">Email</option>
+                                                        <option value="tel">Telepon</option>
+                                                        <option value="url">Url</option>
+                                                        <option value="search">Search</option>
+                                                        <option value="number">Number</option>
+                                                        <option value="radio">Radio ( True, False )</option>
+                                                        <option value="date">Date</option>
+                                                        <option value="time">Time</option>
+                                                        <option value="datalist">Datalist ( Year List )</option>
+                                                        <option value="datetime-local">Datetime local</option>
+                                                        <option value="select">Select</option>
+
+                                                    </select>
+
+                                                </div>
+                                                <div class="select_options"></div>
+                                            </td>
+
+
+
+
+
+                                            <td>
+                                                <div class="input-box">
+
+                                                    <button type="button"
+                                                        class="btn btn-outline-danger btn-xs btn-delete">
+                                                        x
+                                                    </button>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+            `
+
+            table.append(tr)
+        })
+
+        $(document).on('change', '.multi-type', function() {
+            let index = parseInt($(this).parent().parent().parent().find('.text-center').find('.input-box').html());
+            // alert(index);
+            if ($(this).val() == 'select') {
+                $(this).parent().parent().find('.select_options').append(`<div class="input-box s-option mt-2">
+                <input type="text" name="multi[${index}][select_options]" class="google-input" placeholder="Seperate with '|', e.g.: water|fire">
+            </div>`);
+            } else {
+                $(this).parent().parent().find('.s-option').remove();
+
+            }
+        })
+
         $(document).on('change', '.form-column-types', function() {
             // alert($(this).val())
             var index = 0;
@@ -284,20 +430,107 @@
                         </div>
                     </div>
             `)
+            } else if ($(this).val() == 'multi') {
+                removeAllInputHidden(index)
+                checkMinAndMaxLength(index)
+                addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                $(`.form-option`).remove()
+
+                $(`.options`).append(`
+                <div class="multi-options">
+                                <div class="attr_header row flex justify-content-end my-5 align-items-end">
+                                    <input title="Reset form" class="btn btn-success" id="add_new_tr" type="button"
+                                        value="+ Add">
+                                </div>
+
+                                <table class="table table-bordered align-items-center mb-0" id="tbl-field">
+                                    <thead>
+                                        <tr>
+                                            <th width="30">#</th>
+                                            <th>{{ __('Field name') }}</th>
+                                            <th>{{ __('Column Type') }}</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr draggable="true" containment="tbody" ondragstart="dragStart()"
+                                            ondragover="dragOver()" style="cursor: move;">
+                                            <td class="text-center">
+                                                <div class="input-box">
+                                                
+                                                1
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-box">
+                                                    <input type="text" name="multi[1][name]"
+                                                        class="form-control google-input"
+                                                        placeholder="{{ __('Field Name') }}" required>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-box">
+                                                    <select name="multi[1][type]"
+                                                        class="form-select  google-input multi-type" required>
+                                                        <option value="" disabled selected>
+                                                            --{{ __('Select column type') }}--
+                                                        </option>
+                                                        <option value="text">Text</option>
+                                                        <option value="textarea">Textarea</option>
+                                                        <option value="email">Email</option>
+                                                        <option value="tel">Telepon</option>
+                                                        <option value="url">Url</option>
+                                                        <option value="search">Search</option>
+                                                        <option value="number">Number</option>
+                                                        <option value="radio">Radio ( True, False )</option>
+                                                        <option value="date">Date</option>
+                                                        <option value="time">Time</option>
+                                                        <option value="select">Select</option>
+
+                                                    </select>
+                                                </div>
+                                                <div class="select_options"></div>
+                                            </td>
+
+
+
+
+
+                                            <td>
+                                                <div class="input-box">
+
+                                                    <button type="button"
+                                                        class="btn btn-outline-danger btn-xs btn-delete">
+                                                        x
+                                                    </button>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                `)
+
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="select">Select</option>
             //     <option value="radio">Radio</option>
             //     <option value="datalist">Datalist</option>
             // `)
 
+
             } else if ($(this).val() == 'date') {
                 removeAllInputHidden(index)
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="date">Date</option>
             //     <option value="month">Month</option>
@@ -308,7 +541,7 @@
                 removeAllInputHidden(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="time">Time</option>
             // `)
@@ -323,7 +556,7 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="select">Select</option>
             //     <option value="datalist">Datalist</option>
@@ -334,7 +567,7 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="datetime-local">Datetime local</option>
             // `)
@@ -349,9 +582,17 @@
                 <input type="hidden" name="select_options" class="form-option">
             `)
 
+            // var list = `<option>aaaa</option>`;
+            var list = `{!! $all !!}`;
+            // alert( list )
+
                 $(`.options`).append(`
                 <div class="input-box form-constrain mt-2">
-                    <input type="text" name="constrains" class="google-input" placeholder="Constrain or related model name" required>
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input" name="constrains" required>
+                           ${list}
+                        </select>
+                    </div>
                     <small class="text-secondary">
                         <ul class="my-1 mx-2 p-0">
                             <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
@@ -362,26 +603,15 @@
                 <div class="input-box form-foreign-id mt-2">
                     <input type="hidden" name="foreign_ids" class="google-input" placeholder="Foreign key (optional)">
                 </div>
-                <div class="input-box form-on-update mt-2 form-on-update-foreign">
-                    <select class="google-input" name="on_update_foreign" required>
-                        <option value="" disabled selected>-- Select action on update --</option>
-                        <option value="0">Nothing</option>
-                        <option value="1">Cascade</option>
-                        <option value="2">Restrict</option>
-                    </select>
-                </div>
-                <div class="input-box form-on-delete mt-2 form-on-delete-foreign">
-                    <select class="google-input" name="on_delete_foreign" required>
-                        <option value="" disabled selected>-- Select action on delete --</option>
-                        <option value="0">Nothing</option>
-                        <option value="1">Cascade</option>
-                        <option value="2">Restrict</option>
-                        <option value="3">Null</option>
-                    </select>
-                </div>
+
+                <input type="hidden" name="on_update_foreign" class="google-input" value="1">
+
+                <input type="hidden" name="on_delete_foreign" class="google-input" value="1">
+
+                
             `)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="select">Select</option>
             //     <option value="datalist">Datalist</option>
@@ -398,7 +628,7 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="text">Text</option>
             //     <option value="textarea">Textarea</option>
@@ -425,7 +655,7 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="number">Number</option>
             //     <option value="range">Range</option>
@@ -438,7 +668,7 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="select">Select</option>
             //     <option value="radio">Radio</option>
@@ -449,7 +679,7 @@
                 checkMinAndMaxLength(index)
                 addColumTypeHidden(index)
 
-            //     $(`.form-input-types`).html(`
+                //     $(`.form-input-types`).html(`
             //     <option value="" disabled selected>-- Select input type --</option>
             //     <option value="text">Text</option>
             //     <option value="email">Email</option>
@@ -503,45 +733,52 @@
             </div>
         `)
 
-        switch ($(this).val()) {
-            case 'text':
-            case 'textarea':
-            case 'file':
-            case 'email':
-            case 'tel':
-            case 'password':
-            case 'url':
-            case 'search':
-                $('#type').val('text').trigger('change')
-                break;
-            case 'number':
-            case 'range':
-                $('#type').val('double').trigger('change')
-                break;
-            case 'radio':
-                $('#type').val('boolean').trigger('change')
-                break;
-            case 'date':
-            case 'month':
-                $('#type').val('date').trigger('change')
-                break;
-            case 'time':
-                $('#type').val('time').trigger('change')
-                break;
-            case 'datalist':
-                $('#type').val('year').trigger('change')
-                break;
-            case 'datetime-local':
-                $('#type').val('dateTime').trigger('change')
-                break;
-            case 'select':
-                $('#type').val('enum').trigger('change')
-                break;
+            switch ($(this).val()) {
+                case 'text':
+                case 'textarea':
+                case 'file':
+                case 'image':
+                case 'email':
+                case 'tel':
+                case 'password':
+                case 'url':
+                case 'search':
+                    $('#type').val('text').trigger('change')
+                    break;
+                case 'number':
+                case 'range':
+                    $('#type').val('double').trigger('change')
+                    break;
+                case 'radio':
+                    $('#type').val('boolean').trigger('change')
+                    break;
+                case 'date':
+                case 'month':
+                    $('#type').val('date').trigger('change')
+                    break;
+                case 'time':
+                    $('#type').val('time').trigger('change')
+                    break;
+                case 'datalist':
+                    $('#type').val('year').trigger('change')
+                    break;
+                case 'datetime-local':
+                    $('#type').val('dateTime').trigger('change')
+                    break;
+                case 'select':
+                    $('#type').val('enum').trigger('change')
+                    break;
+                case 'multi':
+                    $('#type').val('multi').trigger('change')
+                    break;
+                case 'foreignId':
+                    $('#type').val('foreignId').trigger('change')
+                    break;
 
-        
-            default:
-                break;
-        }
+
+                default:
+                    break;
+            }
 
             if ($(this).val() == 'file') {
                 minLength.prop('readonly', true).hide()
@@ -551,10 +788,30 @@
 
                 $(`.input-options`).append(`
             <div class="input-box mt-2 form-file-types">
-                <select name="file_types" class="google-input" required>
-                    <option value="" disabled selected>-- Select file type --</option>
-                    <option value="image">Image</option>
-                </select>
+
+            <input type="hidden" name="file_types" value="file" >
+
+            </div>
+            <div class="input-box form-file-sizes">
+                <input type="hidden" name="files_sizes" class="google-input" placeholder="Max size(kb), e.g.: 1024" required>
+            </div>
+            <input type="hidden" name="mimes" class="form-mimes">
+
+            <input type="hidden" name="steps" class="form-step" >
+            `)
+                return;
+
+            }
+            if ($(this).val() == 'image') {
+                minLength.prop('readonly', true).hide()
+                maxLength.prop('readonly', true).hide()
+                minLength.val('')
+                maxLength.val('')
+
+                $(`.input-options`).append(`
+            <div class="input-box mt-2 form-file-types">
+                <input type="hidden" name="file_types" value="image" >
+
             </div>
             <div class="input-box form-file-sizes">
                 <input type="number" name="files_sizes" class="google-input" placeholder="Max size(kb), e.g.: 1024" required>
@@ -663,7 +920,7 @@
             $("#fields_info\\[" + index + "\\]\\[default\\]").val(1);
 
         }
-        $(document).on('click', '.removeSection', function () {
+        $(document).on('click', '.removeSection', function() {
             $(this).closest('tr').remove();
             index--;
         });

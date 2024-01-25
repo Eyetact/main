@@ -90,6 +90,7 @@ class ViewComposerGenerator
 
 
         foreach ($module->fields as $i => $field) {
+            $field->name = GeneratorUtils::singularSnakeCase($field->name);
             if ($field->type == 'foreignId') {
                 // remove '/' or sub folders
                 $constrainModel = GeneratorUtils::setModelName($field->constrain);

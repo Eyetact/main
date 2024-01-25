@@ -13,12 +13,14 @@ class WebControllerGenerator
      */
     public function generate(array $request)
     {
-        $model = GeneratorUtils::setModelName($request['name'], 'default');
-        $path = GeneratorUtils::getModelLocation($request['name']);
+        $model = GeneratorUtils::setModelName($request['code'], 'default');
+        $path = GeneratorUtils::getModelLocation($request['code']);
 
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
         $modelNamePluralCamelCase = GeneratorUtils::pluralCamelCase($model);
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $code = GeneratorUtils::setModelName($request['code'], 'default');
+
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNameSpaceLowercase = GeneratorUtils::cleanSingularLowerCase($model);
         $modelNameSingularPascalCase = GeneratorUtils::singularPascalCase($model);
 
@@ -153,12 +155,14 @@ class WebControllerGenerator
     public function reGenerate($id)
     {
         $module = Module::find($id);
-        $model = GeneratorUtils::setModelName($module->name, 'default');
-        $path = GeneratorUtils::getModelLocation($module->name);
+        $model = GeneratorUtils::setModelName($module->code, 'default');
+        $path = GeneratorUtils::getModelLocation($module->code);
 
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
         $modelNamePluralCamelCase = GeneratorUtils::pluralCamelCase($model);
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
+        $code = GeneratorUtils::setModelName($module->code, 'default');
+
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNameSpaceLowercase = GeneratorUtils::cleanSingularLowerCase($model);
         $modelNameSingularPascalCase = GeneratorUtils::singularPascalCase($model);
 
@@ -204,6 +208,7 @@ class WebControllerGenerator
                 $query = "$modelNameSingularPascalCase::with(";
 
                 foreach ($module->fields as $i => $field) {
+                    $field->name = GeneratorUtils::singularSnakeCase($field->name);
                     if ($field->constrain != null) {
                         $constrainName = GeneratorUtils::setModelName($field->constrain);
 

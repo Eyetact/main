@@ -10,4 +10,12 @@ class Attribute extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function moduleObj(){
+        return $this->belongsTo(Module::class, 'module');
+    }
+
+    public function multis(){
+        return $this->hasMany(Multi::class);
+    }
 }

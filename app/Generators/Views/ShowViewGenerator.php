@@ -18,11 +18,13 @@ class ShowViewGenerator
         $model = GeneratorUtils::setModelName($request['name'], 'default');
         $path = GeneratorUtils::getModelLocation($request['name']);
 
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
-        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
+        $code = GeneratorUtils::setModelName($request['code'], 'default');
+
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
+        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
 
         $trs = "";
-        $totalFields = count($request['fields']);
+        $totalFields = !empty($request['fields']) ?count($request['fields']) : 0;
         $dateTimeFormat = config('generator.format.datetime') ? config('generator.format.datetime') : 'd/m/Y H:i';
 
         if (!empty($request['fields'][0])) {
@@ -146,14 +148,17 @@ class ShowViewGenerator
         $model = GeneratorUtils::setModelName($module->name, 'default');
         $path = GeneratorUtils::getModelLocation($module->name);
 
-        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($model);
-        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
+        $code = GeneratorUtils::setModelName($module->code, 'default');
+
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
+        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
 
         $trs = "";
         $totalFields = count($module->fields);
         $dateTimeFormat = config('generator.format.datetime') ? config('generator.format.datetime') : 'd/m/Y H:i';
 
         foreach ($module->fields as $i => $field) {
+            $field->name = GeneratorUtils::singularSnakeCase($field->name);
             if ($field->input != 'password') {
                 if ($i >= 1) {
                     $trs .= "\t\t\t\t\t\t\t\t\t";
@@ -213,9 +218,49 @@ class ShowViewGenerator
                         $timeFormat = config('generator.format.time') ? config('generator.format.time') : 'H:i';
 
                         $trs .= "<tr>
-                                            <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
-                                            <td>{{ isset($" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . ") ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('$timeFormat') : ''  }}</td>
-                                        </tr>";
+                                                <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
+                                                <td>{{ isset($" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . ") ? $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('$timeFormat') : ''  }}</td>
+                                            </tr>";
+                        break;
+
+                    case 'multi':
+
+                        $trs .= "<tr>
+                                                    <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
+                                                    <td>
+
+                                                    @php
+
+                                                    \$ar = json_decode($". $modelNameSingularCamelCase . "->" . $fieldSnakeCase  .")
+
+                                                    @endphp
+
+                                                    <table>
+                                                        <thead>
+                                                        ";
+
+                                                        foreach ($field->multis as $key => $value) {
+                                                            $trs .= "<th>". $value->name ."</th>";
+                                                        }
+
+
+                                                        $trs .= "</thead>
+
+                                                        <tbody>
+                                                        @foreach( \$ar as \$item )
+                                                        <tr>";
+                                                        foreach ($field->multis as $key => $value) {
+                                                            $trs .= "<td>{{ \$item->".$value->name." }}</td>";
+                                                        }
+
+                                                        $trs .= "</tr>
+                                                         @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                    
+                                                    
+                                                    </td>
+                                                </tr>";
                         break;
                     default:
                         if ($field->file_type != 'image') {

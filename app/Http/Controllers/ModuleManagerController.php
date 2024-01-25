@@ -2,29 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ModulePostRequest;
 use App\Models\Attribute;
-use App\Services\GeneratorService;
-use Illuminate\Http\Request;
 use App\Models\MenuManager;
 use App\Models\Module;
-use App\Http\Requests\ModulePostRequest;
 use App\Repositories\FlashRepository;
-
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
+use App\Services\GeneratorService;
 use Carbon\Carbon;
-use Exception;
-use DB;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class ModuleManagerController extends Controller
 {
     private $flashRepository;
     protected $generatorService;
-
-
 
     public function __construct()
     {
@@ -69,14 +62,13 @@ class ModuleManagerController extends Controller
         $module = Module::create([
             'name' => $request->name,
             'is_system' => isset($request->is_system) ? 1 : 0,
+            'code' => $request->code,
         ]);
-
-
 
         $requestData = $request->all();
         $request->validated();
         $this->generatorService->generateModel($request->all()); // model
-        $this->generatorService->generateMigration($request->all(),$module->id); // migration
+        $this->generatorService->generateMigration($request->all(), $module->id); // migration
         Artisan::call('migrate'); // run php artisan mnigrate in background
         $this->generatorService->generateController($request->all()); // migration
         $this->generatorService->generateRequest($request->all()); // req
@@ -104,7 +96,6 @@ class ModuleManagerController extends Controller
                     'is_system' => isset($request['is_system'][$i]) ? 1 : 0,
                     'max_size' => $request['files_sizes'][$i],
                     'file_type' => $request['file_types'][$i],
-
 
                 ];
 
@@ -168,7 +159,7 @@ class ModuleManagerController extends Controller
             '/(octop)us$/i' => '$1i',
             '/(ax|test)is$/i' => '$1es',
             '/s$/i' => 's',
-            '/$/' => 's'
+            '/$/' => 's',
         );
 
         foreach ($plural as $pattern => $replacement) {
@@ -263,62 +254,40 @@ class ModuleManagerController extends Controller
         }
     }
 
-    public function update(ModulePostRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        // dump($request->all());
-        $request->validated();
 
-        $requestData = $request->all();
+        $module = Module::find($id);
 
-        $menuData = MenuManager::find($id);
-        // dump($menuData->toArray());
+        if (!empty($request->name)):
+            $module->update(
+                [
+                    'name' => $request->name,
+                ]
+            );
 
-        $module = Module::find($menuData->module_id);
-        $oldName = $menuData->name;
-        if ($oldName !== $request->name) {
-            $pluralWord = str_replace(' ', '', $this->pluralize($request->name));
-            $moduleName = str_replace(' ', '', $this->pluralize($module->name));
+            $menu = MenuManager::where('module_id', $module->id)->first();
+            $menu->update(
+                [
+                    'name' => $request->name,
+                    'sidebar_name' => $request->sidebar_name,
+                ]
+            );
+        endif;
 
-            $migrationName = "rename_" . strtolower($moduleName) . "_table";
-            $modelClassName = Str::studly($pluralWord);
-
-            $migrationFilePath = database_path("migrations") . "/" . date('Y_m_d_His') . "_$migrationName.php";
-
-            File::put($migrationFilePath, $this->generateMigrationContentforRename(strtolower($pluralWord), strtolower($moduleName)));
-
-            // Create the model
-            Artisan::call('make:model', [
-                'name' => str_replace(' ', '', $request->name),
-            ]);
-            Artisan::call('migrate');
-        }
-
-        $module->update(
-            [
-                'name' => $request->name
-            ]
-        );
         if (!$module) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
-            return redirect()->route('module.index');
+            return redirect()->route('module_manager.index');
         }
 
-        $updateData = array(
-            'name' => $requestData['name'],
-            'status' => (isset($requestData['is_enable']) ?? 0),
-            'include_in_menu' => (isset($requestData['include_in_menu']) ?? 0),
-            'menu_type' => $requestData['menu_type'],
-            'code' => str_replace(' ', '', $requestData['code']),
-            'path' => str_replace(' ', '', $requestData['path']),
-            'meta_title' => (isset($requestData['meta_title']) ?? ''),
-            'meta_description' => (isset($requestData['meta_description']) ?? ''),
-            'assigned_attributes' => $requestData['assigned_attributes'],
-            'created_date' => date('Y-m-d', strtotime($requestData['created_date']))
-        );
-        dd($updateData);
+        $this->generatorService->reGenerateModel($request['module']);
+        $this->generatorService->reGenerateMigration($request['module']);
+        $this->generatorService->reGenerateController($request['module']);
+        $this->generatorService->reGenerateRequest($request['module']);
+        $this->generatorService->reGenerateViews($request['module']);
 
         $this->flashRepository->setFlashSession('alert-success', 'Module updated successfully.');
-        return redirect()->route('module.index');
+        return redirect()->route('module_manager.index');
     }
 
     private function generateMigrationContentforDelete($table)
@@ -354,7 +323,7 @@ class ModuleManagerController extends Controller
         $modelClassName = Str::studly($module->name);
         // Create the migration
         Artisan::call('make:migration', [
-            'name' => $migrationName
+            'name' => $migrationName,
         ]);
 
         $migrationFilePath = database_path("migrations") . "/" . date('Y_m_d_His') . "_$migrationName.php";
@@ -395,7 +364,8 @@ class ModuleManagerController extends Controller
         }
     }
 
-    public function edit( Module $module ){
+    public function edit(Module $module)
+    {
 
         return view('module_manager.menu-edit', compact('module'));
     }
