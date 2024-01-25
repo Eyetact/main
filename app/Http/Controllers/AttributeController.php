@@ -62,10 +62,10 @@ class AttributeController extends Controller
         $all = Module::all();
         $options = '';
         foreach ($all as $key => $value) {
-            $options .= '<option value="'.$value->name.'" >'.$value->name.'</option>';
+            $options .= '<option value="' . $value->name . '" >' . $value->name . '</option>';
         }
 
-        return view('attribute.list', ['attribute' => new Attribute(), 'all' =>$options]);
+        return view('attribute.list', ['attribute' => new Attribute(), 'all' => $options]);
     }
 
     /**
@@ -154,7 +154,7 @@ class AttributeController extends Controller
             foreach ($requestData['multi'] as $key => $value) {
                 $m = new Multi();
                 $m->name = $value['name'];
-                $m->type = $value['type'];
+                $m->name = str()->snake($value['name']);
                 $m->select_options = isset($value['select_options']) ? $value['select_options'] : '';
                 $m->attribute_id = $attribute->id;
                 $m->save();
@@ -268,7 +268,7 @@ class AttributeController extends Controller
         $attribute = Attribute::find($attribute->id);
         $id = $attribute->module;
         if ($attribute) {
-        $this->generatorService->removeMigration($id, $attribute->id);
+            $this->generatorService->removeMigration($id, $attribute->id);
             $attribute->delete();
             $this->generatorService->reGenerateModel($id);
             $this->generatorService->reGenerateController($id);
