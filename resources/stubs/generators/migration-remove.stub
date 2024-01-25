@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
+        if (Schema::hasColumn('{{tableNamePluralLowecase}}', '{{fieldName}}')){
             Schema::table('{{tableNamePluralLowecase}}', function (Blueprint $table) {
                 {{fields}}
             });
-        
+        }
     }
 
     /**

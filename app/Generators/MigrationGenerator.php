@@ -359,7 +359,7 @@ class MigrationGenerator
                 $setFields,
                 str()->snake($field->name)
             ],
-            GeneratorUtils::getTemplate('migration-edit')
+            GeneratorUtils::getTemplate('migration-remove')
         );
 
         $migrationName = date('Y') . '_' . date('m') . '_' . date('d') . '_' . date('h') . date('i') . date('s') . '_remove_' . $tableNamePluralLowercase . '_table.php';
