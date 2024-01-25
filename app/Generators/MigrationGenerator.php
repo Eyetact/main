@@ -336,6 +336,8 @@ class MigrationGenerator
         $module = Module::find($id);
 
         $field = Attribute::find($attr_id);
+        
+        
 
         $model = GeneratorUtils::setModelName($module->code);
         $tableNamePluralLowercase = GeneratorUtils::pluralSnakeCase($model);
@@ -344,7 +346,7 @@ class MigrationGenerator
 
 
 
-        $setFields .= "\$table->dropColumn('" . str()->snake($field->name) . "');";
+        $setFields .= "\$table->dropColumn('" . GeneratorUtils::singularSnakeCase(str()->snake($field->name)) . "');";
 
 
 
@@ -357,7 +359,7 @@ class MigrationGenerator
             [
                 $tableNamePluralLowercase,
                 $setFields,
-                str()->snake($field->name)
+                GeneratorUtils::singularSnakeCase(str()->snake($field->name))
             ],
             GeneratorUtils::getTemplate('migration-remove')
         );
