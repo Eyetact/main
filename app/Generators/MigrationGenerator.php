@@ -352,10 +352,12 @@ class MigrationGenerator
             [
                 '{{tableNamePluralLowecase}}',
                 '{{fields}}',
+                '{{fieldName}}'
             ],
             [
                 $tableNamePluralLowercase,
                 $setFields,
+                str()->snake($field->name)
             ],
             GeneratorUtils::getTemplate('migration-edit')
         );
