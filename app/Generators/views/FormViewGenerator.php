@@ -578,7 +578,7 @@ class FormViewGenerator
 
 
         foreach ($module->fields as $i => $field) {
-
+            $field->name = GeneratorUtils::singularSnakeCase($field->name);
             if ($field->input !== 'no-input') {
                 $fieldSnakeCase = str($field->name)->snake();
                 $fieldUcWords = GeneratorUtils::cleanUcWords($field->name);

@@ -323,6 +323,7 @@ class RequestGenerator
         }
 
         foreach ($module->fields as $i => $field) {
+            $field->name = GeneratorUtils::singularSnakeCase($field->name);
             /**
              * will generate like:
              * 'name' =>

@@ -158,6 +158,7 @@ class ShowViewGenerator
         $dateTimeFormat = config('generator.format.datetime') ? config('generator.format.datetime') : 'd/m/Y H:i';
 
         foreach ($module->fields as $i => $field) {
+            $field->name = GeneratorUtils::singularSnakeCase($field->name);
             if ($field->input != 'password') {
                 if ($i >= 1) {
                     $trs .= "\t\t\t\t\t\t\t\t\t";

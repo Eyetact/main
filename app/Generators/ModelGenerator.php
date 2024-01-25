@@ -243,6 +243,7 @@ class ModelGenerator
 
 
             foreach ($module->fields as $i => $field) {
+                $field->name = GeneratorUtils::singularSnakeCase($field->name);
                 switch ($i + 1 != $totalFields) {
                     case true:
                         $fields .= "'" . str()->snake($field->name) . "', ";

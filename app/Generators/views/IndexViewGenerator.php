@@ -192,6 +192,7 @@ class IndexViewGenerator
         $totalFields = count($module->fields);
 
         foreach ($module->fields as $i => $field) {
+            $field->name = GeneratorUtils::singularSnakeCase($field->name);
             if ($field->input != 'password') {
                 /**
                  * will generate something like:
