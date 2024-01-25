@@ -274,3 +274,12 @@ Route::resource('tests', App\Http\Controllers\Admin\TestController::class)->midd
 Route::get('another', [ App\Http\Controllers\Admin\TestddController::class, 'index' ])->middleware('auth');
 
 Route::resource('testdds', App\Http\Controllers\Admin\TestddController::class)->middleware('auth');
+Route::get('category', [ App\Http\Controllers\Admin\CategoryController::class, 'index' ])->middleware('auth');
+
+Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class)->middleware('auth');
+Route::get('category', [ App\Http\Controllers\Admin\CategoryController::class, 'index' ])->middleware('auth');
+
+Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class)->middleware('auth');
+Route::get('123456', [ App\Http\Controllers\Admin\Test123Controller::class, 'index' ])->middleware('auth');
+
+Route::resource('test123s', App\Http\Controllers\Admin\Test123Controller::class)->middleware('auth');

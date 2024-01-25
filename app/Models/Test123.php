@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Test123 extends Model
 {
     use HasFactory;
 
@@ -14,14 +14,14 @@ class Category extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['name', 'slider'];
+    protected $fillable = [];
 
     /**
      * The attributes that should be cast.
      *
      * @var string[]
      */
-    protected $casts = ['name' => 'string', 'slider' => 'double', 'created_at' => 'datetime:d/m/Y H:i', 'updated_at' => 'datetime:d/m/Y H:i'];
+    protected $casts = ['created_at' => 'datetime:d/m/Y H:i', 'updated_at' => 'datetime:d/m/Y H:i'];
     
     
     

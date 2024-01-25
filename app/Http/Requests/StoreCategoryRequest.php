@@ -24,7 +24,8 @@ class StoreCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'aaa' => 'required|string',
+            'name' => 'required|string',
+			'slider' => 'required|numeric|between:1,100',
         ];
     }
 }

@@ -20,7 +20,10 @@ class CategoryController extends Controller
             $categories = Category::query();
 
             return DataTables::of($categories)
-                ->addColumn('action', 'admin.categories.include.action')
+                ->addColumn('name', function($row){
+                    return str($row->name)->limit(200);
+                })
+				->addColumn('action', 'admin.categories.include.action')
                 ->toJson();
         }
 
