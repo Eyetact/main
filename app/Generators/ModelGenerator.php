@@ -259,7 +259,7 @@ class ModelGenerator
                         $methods .= "\t";
                     }
 
-                    $fieldNameSingularPascalCase = GeneratorUtils::singularPascalCase($field->name);
+                    $fieldNameSingularPascalCase = GeneratorUtils::pluralPascalCase($field->name);
 
                     $methods .= "\n\tpublic function set" . $fieldNameSingularPascalCase . "Attribute(\$value)\n\t{\n\t\t\$this->attributes['" . $field->name . "'] = bcrypt(\$value);\n\t}";
                 }
