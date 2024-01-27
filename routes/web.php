@@ -261,3 +261,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
 });
+
+Route::get('Test', [ App\Http\Controllers\Admin\TestController::class, 'index' ])->middleware('auth');
+
+Route::resource('tests', App\Http\Controllers\Admin\TestController::class)->middleware('auth');
