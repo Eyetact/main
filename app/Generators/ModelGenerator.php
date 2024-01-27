@@ -243,26 +243,26 @@ class ModelGenerator
 
 
             foreach ($module->fields as $i => $field) {
-                $field->name = GeneratorUtils::singularSnakeCase($field->name);
+                $field->code = GeneratorUtils::singularSnakeCase($field->code);
                 switch ($i + 1 != $totalFields) {
                     case true:
-                        $fields .= "'" . str()->snake($field->name) . "', ";
+                        $fields .= "'" . str()->snake($field->code) . "', ";
                         break;
                     default:
-                        $fields .= "'" . str()->snake($field->name) . "'";
+                        $fields .= "'" . str()->snake($field->code) . "'";
                         break;
                 }
 
                 if ($field->input == 'password') {
-                    $protectedHidden .= "'" . str()->snake($field->name) . "', ";
+                    $protectedHidden .= "'" . str()->snake($field->code) . "', ";
 
                     if ($i > 0) {
                         $methods .= "\t";
                     }
 
-                    $fieldNameSingularPascalCase = GeneratorUtils::pluralPascalCase($field->name);
+                    $fieldNameSingularPascalCase = GeneratorUtils::pluralPascalCase($field->code);
 
-                    $methods .= "\n\tpublic function set" . $fieldNameSingularPascalCase . "Attribute(\$value)\n\t{\n\t\t\$this->attributes['" . $field->name . "'] = bcrypt(\$value);\n\t}";
+                    $methods .= "\n\tpublic function set" . $fieldNameSingularPascalCase . "Attribute(\$value)\n\t{\n\t\t\$this->attributes['" . $field->code . "'] = bcrypt(\$value);\n\t}";
                 }
 
                 if ($field->input == 'multi') {
@@ -271,9 +271,9 @@ class ModelGenerator
                         $methods .= "\t";
                     }
 
-                    $fieldNameSingularPascalCase = GeneratorUtils::singularPascalCase($field->name);
+                    $fieldNameSingularPascalCase = GeneratorUtils::singularPascalCase($field->code);
 
-                    $methods .= "\n\tpublic function set" . $fieldNameSingularPascalCase . "Attribute(\$value)\n\t{\n\t\tif(\$value){\$this->attributes['" . $field->name . "'] = json_encode(\$value,true);}else{ \$this->attributes['" . $field->name . "'] = null; }\n\t}";
+                    $methods .= "\n\tpublic function set" . $fieldNameSingularPascalCase . "Attribute(\$value)\n\t{\n\t\tif(\$value){\$this->attributes['" . $field->code . "'] = json_encode(\$value,true);}else{ \$this->attributes['" . $field->name . "'] = null; }\n\t}";
                 }
 
                 if ($field->input == 'file'  || $field->input == 'image') {
@@ -282,37 +282,37 @@ class ModelGenerator
                         $methods .= "\t";
                     }
 
-                    $fieldNameSingularPascalCase = GeneratorUtils::singularPascalCase($field->name);
+                    $fieldNameSingularPascalCase = GeneratorUtils::singularPascalCase($field->code);
 
 
-                    $methods .= "\n\tpublic function set" . $fieldNameSingularPascalCase . "Attribute(\$value)\n\t{\n\t\tif (\$value){\n\t\t\t\$file = \$value;\n\t\t\t\$extension = \$file->getClientOriginalExtension(); // getting image extension\n\t\t\t\$filename =time().mt_rand(1000,9999).'.'.\$extension;\n\t\t\t\$file->move(public_path('files/'), \$filename);\n\t\t\t\$this->attributes['" . $field->name . "'] =  'files/'.\$filename;\n\t\t}\n\t}";
+                    $methods .= "\n\tpublic function set" . $fieldNameSingularPascalCase . "Attribute(\$value)\n\t{\n\t\tif (\$value){\n\t\t\t\$file = \$value;\n\t\t\t\$extension = \$file->getClientOriginalExtension(); // getting image extension\n\t\t\t\$filename =time().mt_rand(1000,9999).'.'.\$extension;\n\t\t\t\$file->move(public_path('files/'), \$filename);\n\t\t\t\$this->attributes['" . $field->code . "'] =  'files/'.\$filename;\n\t\t}\n\t}";
                 }
 
                 switch ($field->type) {
                     case 'date':
                         if ($field->input != 'month') {
                             $dateFormat = config('generator.format.date') ? config('generator.format.date') : 'd/m/Y';
-                            $casts .= "'" . str()->snake($field->name) . "' => 'date:$dateFormat', ";
+                            $casts .= "'" . str()->snake($field->code) . "' => 'date:$dateFormat', ";
                         }
                         break;
                     case 'time':
                         $timeFormat = config('generator.format.time') ? config('generator.format.time') : 'H:i';
-                        $casts .= "'" . str()->snake($field->name) . "' => 'datetime:$timeFormat', ";
+                        $casts .= "'" . str()->snake($field->code) . "' => 'datetime:$timeFormat', ";
                         break;
                     case 'year':
-                        $casts .= "'" . str()->snake($field->name) . "' => 'integer', ";
+                        $casts .= "'" . str()->snake($field->code) . "' => 'integer', ";
                         break;
                     case 'dateTime':
-                        $casts .= "'" . str()->snake($field->name) . "' => 'datetime:$dateTimeFormat', ";
+                        $casts .= "'" . str()->snake($field->code) . "' => 'datetime:$dateTimeFormat', ";
                         break;
                     case 'float':
-                        $casts .= "'" . str()->snake($field->name) . "' => 'float', ";
+                        $casts .= "'" . str()->snake($field->code) . "' => 'float', ";
                         break;
                     case 'boolean':
-                        $casts .= "'" . str()->snake($field->name) . "' => 'boolean', ";
+                        $casts .= "'" . str()->snake($field->code) . "' => 'boolean', ";
                         break;
                     case 'double':
-                        $casts .= "'" . str()->snake($field->name) . "' => 'double', ";
+                        $casts .= "'" . str()->snake($field->code) . "' => 'double', ";
                         break;
                     case 'foreignId':
                         $constrainPath = GeneratorUtils::getModelLocation($field->constrain);
@@ -338,15 +338,15 @@ class ModelGenerator
                 switch ($field->input) {
                     case 'month':
                         $castFormat = config('generator.format.month') ? config('generator.format.month') : 'm/Y';
-                        $casts .= "'" . str()->snake($field->name) . "' => 'date:$castFormat', ";
+                        $casts .= "'" . str()->snake($field->code) . "' => 'date:$castFormat', ";
                         break;
                     case 'week':
-                        $casts .= "'" . str()->snake($field->name) . "' => 'date:Y-\WW', ";
+                        $casts .= "'" . str()->snake($field->code) . "' => 'date:Y-\WW', ";
                         break;
                 }
 
                 if (str_contains($field->type, 'integer')) {
-                    $casts .= "'" . str()->snake($field->name) . "' => 'integer', ";
+                    $casts .= "'" . str()->snake($field->code) . "' => 'integer', ";
                 }
 
                 if (
@@ -355,7 +355,7 @@ class ModelGenerator
                     str_contains($field->type, 'char')
                 ) {
                     if ($field->input != 'week') {
-                        $casts .= "'" . str()->snake($field->name) . "' => 'string', ";
+                        $casts .= "'" . str()->snake($field->code) . "' => 'string', ";
                     }
                 }
             }

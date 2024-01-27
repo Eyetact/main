@@ -34,9 +34,23 @@
                             <input type="text" name="name"
                                 class="google-input @error('name') is-invalid @enderror"
                                 value="{{ old('name', $attribute->name) }}">
-                            <label id="name-error" class="error text-red hide" for="name"></label>
                             @error('name')
                                 <span class="error name-error">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="col-sm-12 input-box">
+                            <label class="form-label" for="code">Code<span class="text-red">*</span></label>
+                            <input type="text" name="code"
+                                class="google-input @error('code') is-invalid @enderror"
+                                value="{{ old('code', $attribute->code) }}">
+                                <small class="text-secondary">
+                                    <ul class="my-1 mx-2 p-0">
+                                        <li>is not allowed to use numbers or ( ID word ) or symbols</li>
+                                    </ul>
+                                </small>
+                            @error('code')
+                                <span class="error code-error">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>

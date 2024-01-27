@@ -139,10 +139,13 @@ class AttributeController extends Controller
             'is_system' => isset($request['is_system']) ? 1 : 0,
             'max_size' => $request['files_sizes'],
             'file_type' => $request['file_types'],
+            'code' => $request['code'],
         ];
 
         // dd($createArr);
         $attribute = Attribute::create($createArr);
+
+        // dd($attribute);
 
         if (isset($requestData['multi'])) {
 
@@ -167,7 +170,7 @@ class AttributeController extends Controller
         } catch (\Throwable $th) {
 
             $this->generatorService->removeMigration($request['module'], $attribute->id);
-            $attribute->delete();
+            // $attribute->delete();
             $this->generatorService->reGenerateModel($request['module']);
             $this->generatorService->reGenerateController($request['module']);
             $this->generatorService->reGenerateRequest($request['module']);
