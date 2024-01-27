@@ -180,14 +180,14 @@ class MigrationGenerator
         $totalFields = count($module->fields);
 
         foreach ($module->fields()->orderBy('created_at', 'desc')->take(1)->get() as $i => $field) {
-            $field->name = GeneratorUtils::singularSnakeCase($field->name);
+            $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
 
             if ($field->type == 'date' && $field->input == 'month') {
-                $setFields .= "\$table->text('" . str()->snake($field->name);
+                $setFields .= "\$table->text('" . str()->snake($field->code);
             } elseif ($field->type == 'multi' && $field->input == 'multi') {
-                $setFields .= "\$table->text('" . str()->snake($field->name);
+                $setFields .= "\$table->text('" . str()->snake($field->code);
             } else {
-                $setFields .= "\$table->" . $field->type . "('" . str()->snake($field->name);
+                $setFields .= "\$table->" . $field->type . "('" . str()->snake($field->code);
             }
 
             if ($field->type == 'enum') {
@@ -345,7 +345,7 @@ class MigrationGenerator
 
 
 
-        $setFields .= "\$table->dropColumn('" . GeneratorUtils::singularSnakeCase(str()->snake($field->name)) . "');";
+        $setFields .= "\$table->dropColumn('" . GeneratorUtils::singularSnakeCase(str()->snake($field->code)) . "');";
 
 
 
@@ -358,7 +358,7 @@ class MigrationGenerator
             [
                 $tableNamePluralLowercase,
                 $setFields,
-                GeneratorUtils::singularSnakeCase(str()->snake($field->name))
+                GeneratorUtils::singularSnakeCase(str()->snake($field->code))
             ],
             GeneratorUtils::getTemplate('migration-remove')
         );

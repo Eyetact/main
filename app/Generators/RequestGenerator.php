@@ -323,12 +323,12 @@ class RequestGenerator
         }
 
         foreach ($module->fields as $i => $field) {
-            $field->name = GeneratorUtils::singularSnakeCase($field->name);
+            $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
             /**
              * will generate like:
              * 'name' =>
              */
-            $validations .= "'" . str($field->name)->snake() . "' => ";
+            $validations .= "'" . str($field->code)->snake() . "' => ";
 
             /**
              * will generate like:
@@ -355,7 +355,7 @@ class RequestGenerator
                     $validations .= "|url";
                     break;
                 case 'email':
-                    $uniqueValidation = 'unique:' . GeneratorUtils::pluralSnakeCase($model) . ',' . GeneratorUtils::singularSnakeCase($field->name);
+                    $uniqueValidation = 'unique:' . GeneratorUtils::pluralSnakeCase($model) . ',' . GeneratorUtils::singularSnakeCase($field->code);
 
                     /**
                      * will generate like:
@@ -559,8 +559,8 @@ class RequestGenerator
                      * 'password' => 'required' to 'password' => 'nullable' in update request validation
                      */
                     $updateValidations = str_replace(
-                        "'" . $field->name . "' => 'required",
-                        "'" . $field->name . "' => 'nullable",
+                        "'" . $field->code . "' => 'required",
+                        "'" . $field->code . "' => 'nullable",
                         $updateValidations
                     );
                 }

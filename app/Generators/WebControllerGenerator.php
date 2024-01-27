@@ -191,8 +191,8 @@ class WebControllerGenerator
 
                 foreach ($module->fields as $i => $field) {
                     if ($field->type == 'text' || $field->type == 'longText') {
-                        $addColumns .= "->addColumn('" . str($field->name)->snake() . "', function(\$row){
-                    return str(\$row->" . str($field->name)->snake() . ")->limit($limitText);
+                        $addColumns .= "->addColumn('" . str($field->code)->snake() . "', function(\$row){
+                    return str(\$row->" . str($field->code)->snake() . ")->limit($limitText);
                 })\n\t\t\t\t";
                     }
                 }
@@ -208,7 +208,7 @@ class WebControllerGenerator
                 $query = "$modelNameSingularPascalCase::with(";
 
                 foreach ($module->fields as $i => $field) {
-                    $field->name = GeneratorUtils::singularSnakeCase($field->name);
+                    $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
                     if ($field->constrain != null) {
                         $constrainName = GeneratorUtils::setModelName($field->constrain);
 

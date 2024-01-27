@@ -165,7 +165,7 @@ class ShowViewGenerator
                 }
 
                 $fieldUcWords = GeneratorUtils::cleanUcWords($field->name);
-                $fieldSnakeCase = str($field->name)->snake();
+                $fieldSnakeCase = str($field->code)->snake();
 
                 if (isset($field->file_type) && $field->file_type == 'image') {
 
@@ -247,6 +247,7 @@ class ShowViewGenerator
                                                         $trs .= "</thead>
 
                                                         <tbody>
+                                                        @if(!empty(\$ar))
                                                         @foreach( \$ar as \$item )
                                                         <tr>";
                                                         foreach ($field->multis as $key => $value) {
@@ -255,6 +256,7 @@ class ShowViewGenerator
 
                                                         $trs .= "</tr>
                                                          @endforeach
+                                                         @endif
                                                         </tbody>
                                                     </table>
                                                     
