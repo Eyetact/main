@@ -9,6 +9,7 @@ use App\Models\Attribute;
 use App\Models\Module;
 use App\Http\Requests\AttributePostRequest;
 use App\Repositories\FlashRepository;
+use Illuminate\Support\Facades\Artisan;
 
 class AttributeController extends Controller
 {
@@ -91,11 +92,7 @@ class AttributeController extends Controller
         $request->validated();
         $requestData = $request->all();
 
-        // dd($requestData);
-
-
         $attr = Attribute::where('name', $request['name'])->where('module', $request['module'])->first();
-
         if ($attr) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
             return redirect()->route('attribute.index');
@@ -126,7 +123,7 @@ class AttributeController extends Controller
         $createArr = [
 
             'module' => $request['module'],
-            'name' => $request['name'],
+            'name' => str(str_replace('.', '', $request['name']))->lower(),
             'type' => $request['column_types'],
             'min_length' => $request['min_lengths'],
             'max_length' => $request['max_lengths'],
@@ -147,13 +144,11 @@ class AttributeController extends Controller
         // dd($createArr);
         $attribute = Attribute::create($createArr);
 
-
-
         if (isset($requestData['multi'])) {
 
             foreach ($requestData['multi'] as $key => $value) {
                 $m = new Multi();
-                $m->name = str()->snake($value['name']);
+                $m->name = str()->snake(str_replace('.', '', str($value['name'])->lower()));
                 $m->type = $value['type'];
                 $m->select_options = isset($value['select_options']) ? $value['select_options'] : '';
                 $m->attribute_id = $attribute->id;
@@ -161,11 +156,24 @@ class AttributeController extends Controller
             }
         }
 
-        $this->generatorService->reGenerateModel($request['module']);
-        $this->generatorService->reGenerateMigration($request['module']);
-        $this->generatorService->reGenerateController($request['module']);
-        $this->generatorService->reGenerateRequest($request['module']);
-        $this->generatorService->reGenerateViews($request['module']);
+        try {
+            $this->generatorService->reGenerateModel($request['module']);
+            $this->generatorService->reGenerateMigration($request['module']);
+            Artisan::call("migrate");
+            $this->generatorService->reGenerateController($request['module']);
+            $this->generatorService->reGenerateRequest($request['module']);
+            $this->generatorService->reGenerateViews($request['module']);
+
+        } catch (\Throwable $th) {
+
+            $this->generatorService->removeMigration($request['module'], $attribute->id);
+            $attribute->delete();
+            $this->generatorService->reGenerateModel($request['module']);
+            $this->generatorService->reGenerateController($request['module']);
+            $this->generatorService->reGenerateRequest($request['module']);
+            $this->generatorService->reGenerateViews($request['module']);
+            
+        }
 
         // dd($requestData['multi']);
 

@@ -139,93 +139,6 @@ class ModuleManagerController extends Controller
 
     }
 
-    private function pluralize($singular)
-    {
-        $plural = array(
-            '/(quiz)$/i' => '$1zes',
-            '/^(ox)$/i' => '$1en',
-            '/([m|l])ouse$/i' => '$1ice',
-            '/(matr|vert|ind)ix|ex$/i' => '$1ices',
-            '/(x|ch|ss|sh)$/i' => '$1es',
-            '/([^aeiouy]|qu)ies$/i' => '$1y',
-            '/([^aeiouy]|qu)y$/i' => '$1ies',
-            '/(hive)$/i' => '$1s',
-            '/(?:([^f])fe|([lr])f)$/i' => '$1$2ves',
-            '/sis$/i' => 'ses',
-            '/([ti])um$/i' => '$1a',
-            '/(buffal|tomat)o$/i' => '$1oes',
-            '/(bu)s$/i' => '$1ses',
-            '/(alias|status)$/i' => '$1es',
-            '/(octop)us$/i' => '$1i',
-            '/(ax|test)is$/i' => '$1es',
-            '/s$/i' => 's',
-            '/$/' => 's',
-        );
-
-        foreach ($plural as $pattern => $replacement) {
-            if (preg_match($pattern, $singular)) {
-                return preg_replace($pattern, $replacement, $singular);
-            }
-        }
-
-        return $singular;
-    }
-
-    private function generateMigrationContent($tableName)
-    {
-        // Define the migration schema here based on $tableName
-        $content = <<<EOT
-        <?php
-
-        use Illuminate\Database\Migrations\Migration;
-        use Illuminate\Database\Schema\Blueprint;
-        use Illuminate\Support\Facades\Schema;
-
-        class Create{$tableName}Table extends Migration
-        {
-            public function up()
-            {
-                Schema::create('$tableName', function (Blueprint \$table) {
-                    \$table->id();
-                    \$table->timestamps();
-                });
-            }
-
-            public function down()
-            {
-                Schema::dropIfExists('$tableName');
-            }
-        }
-        EOT;
-
-        return $content;
-    }
-
-    private function generateMigrationContentforRename($newTable, $oldTable)
-    {
-        // Define the migration schema here based on $newTable
-        $content = <<<EOT
-        <?php
-        use Illuminate\Database\Migrations\Migration;
-        use Illuminate\Support\Facades\Schema;
-
-        return new class extends Migration
-        {
-            public function up()
-            {
-                Schema::rename('$oldTable', '$newTable');
-            }
-
-            public function down()
-            {
-                Schema::rename('$newTable', '$oldTable');
-            }
-        };
-        EOT;
-
-        return $content;
-    }
-
     public function menu_update(Request $request)
     {
         // dd($request);
@@ -271,6 +184,7 @@ class ModuleManagerController extends Controller
                 [
                     'name' => $request->name,
                     'sidebar_name' => $request->sidebar_name,
+                    'include_in_menu' => isset($request->include_in_menu) ? 1 : 0,
                 ]
             );
         endif;
