@@ -91,11 +91,7 @@ class AttributeController extends Controller
         $request->validated();
         $requestData = $request->all();
 
-        // dd($requestData);
-
-
         $attr = Attribute::where('name', $request['name'])->where('module', $request['module'])->first();
-
         if ($attr) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
             return redirect()->route('attribute.index');
@@ -126,7 +122,7 @@ class AttributeController extends Controller
         $createArr = [
 
             'module' => $request['module'],
-            'name' => $request['name'],
+            'name' => str(str_replace('.','',$request['name']))->lower(),
             'type' => $request['column_types'],
             'min_length' => $request['min_lengths'],
             'max_length' => $request['max_lengths'],
@@ -147,13 +143,11 @@ class AttributeController extends Controller
         // dd($createArr);
         $attribute = Attribute::create($createArr);
 
-
-
         if (isset($requestData['multi'])) {
 
             foreach ($requestData['multi'] as $key => $value) {
                 $m = new Multi();
-                $m->name = str()->snake($value['name']);
+                $m->name = str()->snake(str_replace('.','',$value['name']))->lower();
                 $m->type = $value['type'];
                 $m->select_options = isset($value['select_options']) ? $value['select_options'] : '';
                 $m->attribute_id = $attribute->id;
