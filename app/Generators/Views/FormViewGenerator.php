@@ -1109,7 +1109,8 @@ class FormViewGenerator
                                     model: $model,
                                     field: $field->code,
                                     formatValue: $formatValue,
-                                    date: 1
+                                    date: 1,
+                                    label: $field->name
                                 );
                                 break;
                             case 'date':
@@ -1128,7 +1129,8 @@ class FormViewGenerator
                                     model: $model,
                                     field: $field->code,
                                     formatValue: $formatValue,
-                                    date: 1
+                                    date: 1,
+                                    label: $field->name
                                 );
                                 break;
                             case 'time':
@@ -1147,7 +1149,8 @@ class FormViewGenerator
                                     model: $model,
                                     field: $field->code,
                                     formatValue: $formatValue,
-                                    date: 1
+                                    date: 1,
+                                    label: $field->name
                                 );
                                 break;
                             case 'week':
@@ -1166,7 +1169,8 @@ class FormViewGenerator
                                     model: $model,
                                     field: $field->code,
                                     formatValue: $formatValue,
-                                    date: 1
+                                    date: 1,
+                                    label: $field->name
                                 );
                                 break;
                             case 'month':
@@ -1185,7 +1189,8 @@ class FormViewGenerator
                                     model: $model,
                                     field: $field->code,
                                     formatValue: $formatValue,
-                                    date: 1
+                                    date: 1,
+                                    label: $field->name
                                 );
                                 break;
                             case 'textarea':
@@ -1250,6 +1255,7 @@ class FormViewGenerator
                                         '{{min}}',
                                         '{{max}}',
                                         '{{step}}',
+                                        '{{value}}'
                                     ],
                                     [
                                         GeneratorUtils::singularSnakeCase($field->code),
@@ -1259,6 +1265,7 @@ class FormViewGenerator
                                         $field->min_length,
                                         $field->max_length,
                                         $field->steps ? 'step="' . $field->steps . '"' : '',
+                                        $formatValue
                                     ],
                                     GeneratorUtils::getTemplate('views/forms/range')
                                 );
@@ -1291,7 +1298,8 @@ class FormViewGenerator
                                     ],
                                     model: $model,
                                     field: $field->code,
-                                    formatValue: $formatValue
+                                    formatValue: $formatValue,
+                                    label: $field->name
                                 );
                                 break;
                         }
@@ -1326,7 +1334,7 @@ class FormViewGenerator
      * @param string $formatValue
      * @return string
      */
-    public function setInputTypeTemplate(string $field, array $request, string $model, string $formatValue, $date = 0): string
+    public function setInputTypeTemplate(string $field, array $request, string $model, string $formatValue, $date = 0,string $label = '', ): string
     {
         if ($date == 1) {
             return str_replace(
@@ -1339,8 +1347,8 @@ class FormViewGenerator
                     '{{nullable}}',
                 ],
                 [
-                    GeneratorUtils::singularKebabCase($field),
-                    GeneratorUtils::cleanUcWords($field),
+                    GeneratorUtils::singularKebabCase($label),
+                    GeneratorUtils::cleanUcWords($label),
                     str($field)->snake(),
                     $request['input_types'],
                     $formatValue,
@@ -1359,8 +1367,8 @@ class FormViewGenerator
                 '{{nullable}}',
             ],
             [
-                GeneratorUtils::singularKebabCase($field),
-                GeneratorUtils::cleanUcWords($field),
+                GeneratorUtils::singularKebabCase($label),
+                GeneratorUtils::cleanUcWords($label),
                 str($field)->snake(),
                 $request['input_types'],
                 $formatValue,

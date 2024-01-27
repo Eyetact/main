@@ -247,6 +247,7 @@ class ShowViewGenerator
                                                         $trs .= "</thead>
 
                                                         <tbody>
+                                                        @if(!empty(\$ar))
                                                         @foreach( \$ar as \$item )
                                                         <tr>";
                                                         foreach ($field->multis as $key => $value) {
@@ -255,6 +256,7 @@ class ShowViewGenerator
 
                                                         $trs .= "</tr>
                                                          @endforeach
+                                                         @endif
                                                         </tbody>
                                                     </table>
                                                     
