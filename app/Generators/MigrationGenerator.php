@@ -327,7 +327,6 @@ class MigrationGenerator
 
         file_put_contents(database_path("/migrations/$migrationName"), $template);
 
-        Artisan::call("migrate");
 
     }
 
