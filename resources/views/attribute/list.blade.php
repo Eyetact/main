@@ -50,6 +50,9 @@
         #tbl-field .form-check.form-switch div {
             margin: 0;
         }
+        .input-box .google-input[disabled] {
+    background: #f3f3f3;
+}
     </style>
 @endsection
 @section('page-header')
@@ -150,6 +153,23 @@
     <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
 
     <script type="text/javascript">
+    $(document).on('click', '#edit_item', function() {
+            // window.addEventListener('load', function() {
+
+            // }, false);
+            var path = $(this).data('path')
+            $.ajax({
+                url: path,
+                success: function(response) {
+                     console.log(path);
+                     console.log(response);
+                    $(".modal-body").html(response);
+                    $(".modal-title").html("edit Plan");
+                    $("#role_form_modal").modal('show');
+                    $('.dropify').dropify();
+                }
+            });
+        });
         $(document).on('click', '#add_new', function() {
             // window.addEventListener('load', function() {
 
