@@ -46,7 +46,9 @@ class AttributeController extends Controller
 
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
-
+            <li class="dropdown-item">
+            <a href="#" id="edit_item"  data-path="' . route('attribute.edit', $row->id) . '">View or Edit</a>
+            </li>
                 <li class="dropdown-item">
                 <a class="delete-attribute" href="#" data-id="' . $row->id . '" class="attribute-delete">Delete</a>
                 </li>
@@ -199,12 +201,12 @@ class AttributeController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return 
      */
     public function edit(Attribute $attribute)
     {
-        $moduleData = Module::active()->get();
-        return view('attribute.create', ['attribute' => $attribute, 'moduleData' => $moduleData]);
+        $module = Module::find($attribute->module);
+        return view('attribute.edit', ['attribute' => $attribute, 'module' => $module]);
     }
 
     /**
@@ -216,49 +218,16 @@ class AttributeController extends Controller
      */
     public function update(AttributePostRequest $request, Attribute $attribute)
     {
-        $request->validated();
 
-        $requestData = $request->all();
+        $attribute->name = str(str_replace('.', '', $request['name']))->lower();
+        $attribute->is_enable = isset($request['is_enable']) ? 1 : 0;
+        $attribute->is_system = isset($request['is_system']) ? 1 : 0;
+        
+        $attribute->save();
 
-        // dump($requestData);
+        $this->generatorService->reGenerateViews($attribute->module);
 
-        $fields_info = $requestData['fields_info'];
-        if ($requestData['field_type'] == 'select' && $requestData['field_type'] == 'multiselect' && $requestData['field_type'] == 'radio' && $requestData['field_type'] == 'checkbox') {
-            $order = 1;
-            $fields_info = array_map(function ($key, $arr) use (&$order) {
-                if (is_array($arr)) {
-                    return array_merge($arr, ['order' => $order++]);
-                }
-            }, array_keys($fields_info), $fields_info);
-        } elseif ($requestData['field_type'] == 'text' || $requestData['field_type'] == 'file') {
-            $fields_info = array_filter($fields_info, function ($element, $key) {
-                return $key === 'file_ext' || !is_array($element);
-            }, ARRAY_FILTER_USE_BOTH);
-        } else {
-            $fields_info = [];
-        }
-        // dump($fields_info);
-        $updateArr = [
-            'module' => $requestData['module'],
-            'name' => $requestData['name'],
-            'field_type' => $requestData['field_type'],
-            'input_name' => $requestData['input_name'],
-            'input_class' => $requestData['input_class'],
-            'input_id' => $requestData['input_id'],
-            'scope' => $requestData['scope'],
-            'depend' => $requestData['depend'],
-            'attribute' => $requestData['attribute'],
-            'validation' => $requestData['validation'],
-            'is_required' => isset($requestData['is_required']) ? 1 : 0,
-            'is_enable' => isset($requestData['is_enable']) ? 1 : 0,
-            'is_system' => isset($requestData['is_system']) ? 1 : 0,
-            'fields_info' => json_encode($fields_info),
-            'description' => $requestData['description']
-        ];
-        // dd($updateArr);
 
-        $attribute = Attribute::find($attribute->id);
-        $attribute->update($updateArr);
 
         if (!$attribute) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
