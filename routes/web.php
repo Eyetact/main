@@ -278,3 +278,16 @@ Route::resource('categories', App\Http\Controllers\Admin\CategoryController::cla
 Route::get('123456', [ App\Http\Controllers\Admin\Test123Controller::class, 'index' ])->middleware('auth');
 
 Route::resource('test123s', App\Http\Controllers\Admin\Test123Controller::class)->middleware('auth');
+
+Route::get('Product', [ App\Http\Controllers\Admin\ProductController::class, 'index' ])->middleware('auth');
+
+Route::resource('products', App\Http\Controllers\Admin\ProductController::class)->middleware('auth');
+Route::get('omponentes', [ App\Http\Controllers\Admin\ComponenteController::class, 'index' ])->middleware('auth');
+
+Route::resource('componentes', App\Http\Controllers\Admin\ComponenteController::class)->middleware('auth');
+Route::get('Components', [ App\Http\Controllers\Admin\ComponentController::class, 'index' ])->middleware('auth');
+
+Route::resource('components', App\Http\Controllers\Admin\ComponentController::class)->middleware('auth');
+Route::get('Machines', [ App\Http\Controllers\Admin\MachineController::class, 'index' ])->middleware('auth');
+
+Route::resource('machines', App\Http\Controllers\Admin\MachineController::class)->middleware('auth');
