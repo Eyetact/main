@@ -29,6 +29,7 @@ class FormViewGenerator
 
                 if ($request['input_types'][$i] !== 'no-input') {
                     $fieldSnakeCase = str($field)->snake();
+                    
                     $fieldUcWords = GeneratorUtils::cleanUcWords($field);
 
                     switch ($request['column_types'][$i]) {
@@ -355,7 +356,7 @@ class FormViewGenerator
                                             'requireds' => $request['requireds'][$i],
                                         ],
                                         model: $model,
-                                        field: $field,
+                                        field: $field->code,
                                         formatValue: $formatValue,
                                         date: 1
                                     );
@@ -374,7 +375,7 @@ class FormViewGenerator
                                             'requireds' => $request['requireds'][$i],
                                         ],
                                         model: $model,
-                                        field: $field,
+                                        field: $field->code,
                                         formatValue: $formatValue,
                                         date: 1
                                     );
@@ -393,7 +394,7 @@ class FormViewGenerator
                                             'requireds' => $request['requireds'][$i],
                                         ],
                                         model: $model,
-                                        field: $field,
+                                        field: $field->code,
                                         formatValue: $formatValue,
                                         date: 1
                                     );
@@ -412,7 +413,7 @@ class FormViewGenerator
                                             'requireds' => $request['requireds'][$i],
                                         ],
                                         model: $model,
-                                        field: $field,
+                                        field: $field->code,
                                         formatValue: $formatValue,
                                         date: 1
                                     );
@@ -431,7 +432,7 @@ class FormViewGenerator
                                             'requireds' => $request['requireds'][$i],
                                         ],
                                         model: $model,
-                                        field: $field,
+                                        field: $field->code,
                                         formatValue: $formatValue,
                                         date: 1
                                     );
@@ -537,7 +538,7 @@ class FormViewGenerator
                                             'requireds' => $request['requireds'][$i],
                                         ],
                                         model: $model,
-                                        field: $field,
+                                        field: $field->code,
                                         formatValue: $formatValue
                                     );
                                     break;
@@ -580,7 +581,7 @@ class FormViewGenerator
         foreach ($module->fields as $i => $field) {
             $field->name = GeneratorUtils::singularSnakeCase($field->name);
             if ($field->input !== 'no-input') {
-                $fieldSnakeCase = str($field->name)->snake();
+                $fieldSnakeCase = str($field->code)->snake();
                 $fieldUcWords = GeneratorUtils::cleanUcWords($field->name);
 
                 switch ($field->type) {
@@ -979,7 +980,7 @@ class FormViewGenerator
                                     case 'time':
                                         $template .= ' <td>
                                         <div class="input-box">
-                                            <input type="' . $value->type . '" name="' . $field->name . '[{{ $index }}][' . $value->name . ']"
+                                            <input type="' . $value->type . '" name="' . $field->code . '[{{ $index }}][' . $value->name . ']"
                                                 class="form-control google-input"
                                                 placeholder="' . $value->name . '" value="{{ $item->'.$value->name.' }}" required>
                                         </div>
@@ -989,7 +990,7 @@ class FormViewGenerator
                                     case 'image':
                                         $template .= ' <td>
                                             <div class="input-box">
-                                                <input type="file" name="' . $field->name . '[{{ $index }}][' . $value->name . ']"
+                                                <input type="file" name="' . $field->code . '[{{ $index }}][' . $value->name . ']"
                                                     class="form-control google-input"
                                                     placeholder="' . $value->name . '" required>
                                             </div>
@@ -1001,7 +1002,7 @@ class FormViewGenerator
                                         $template .= ' <td>
                                             <div class="input-box">
                                               
-                                            <textarea name="' . $field->name . '[{{ $index }}][' . $value->name . ']"  class="google-input"  placeholder="' . $value->name . '">{{ $item->'.$value->name.' }}</textarea>
+                                            <textarea name="' . $field->code . '[{{ $index }}][' . $value->name . ']"  class="google-input"  placeholder="' . $value->name . '">{{ $item->'.$value->name.' }}</textarea>
                                             
                                             </div>
                                         </td>
@@ -1013,7 +1014,7 @@ class FormViewGenerator
                                                     <div class="row">
                                                         <div class="col-md-11">
                                                             <div class="input-box">
-                                                                <input onmousemove="' . $value->name . '1.value=value" type="range" name="' . $field->name . '[' . $value->name . ']" class="range " min="1" max="1000" >
+                                                                <input onmousemove="' . $value->name . '1.value=value" type="range" name="' . $field->code . '[' . $value->name . ']" class="range " min="1" max="1000" >
                                                                 
                                                             </div>
                                                         </div>
@@ -1026,12 +1027,12 @@ class FormViewGenerator
                                         $template .= '<td>
                                     <div class="custom-controls-stacked">
                                     <label class="custom-control custom-radio" for="' . $value->name . '-1">
-                                        <input @checked( $item->'.$value->name.' == "1" ) class="custom-control-input" type="radio" name="' . $field->name . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-1" value="1">
+                                        <input @checked( $item->'.$value->name.' == "1" ) class="custom-control-input" type="radio" name="' . $field->code . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-1" value="1">
                                         <span class="custom-control-label">True</span>
                                     </label>
                         
                                     <label class="custom-control custom-radio" for="' . $value->name . '-0">
-                                        <input @checked( $item->'.$value->name.' == "0" )  class="custom-control-input" type="radio" name="' . $field->name . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-0" value="0">
+                                        <input @checked( $item->'.$value->name.' == "0" )  class="custom-control-input" type="radio" name="' . $field->code . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-0" value="0">
                                         <span class="custom-control-label">False</span>
                                     </label>
                                 </div>
@@ -1044,7 +1045,7 @@ class FormViewGenerator
 
                                         $totalOptions = count($arrOption);
                                         $template .= '<td><div class="input-box">';
-                                        $template .= ' <select name="' . $field->name . '[{{ $index }}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
+                                        $template .= ' <select name="' . $field->code . '[{{ $index }}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
 
                                         foreach ($arrOption as $arrOptionIndex => $value2) {
                                             $template .= '<option @selected( $item->'.$value->name.' == "'.$value2.'" ) value="' . $value2 . '" >' . $value2 . '</option>';
@@ -1106,7 +1107,7 @@ class FormViewGenerator
                                         'requireds' => $field->required,
                                     ],
                                     model: $model,
-                                    field: $field->name,
+                                    field: $field->code,
                                     formatValue: $formatValue,
                                     date: 1
                                 );
@@ -1125,7 +1126,7 @@ class FormViewGenerator
                                         'requireds' => $field->required,
                                     ],
                                     model: $model,
-                                    field: $field->name,
+                                    field: $field->code,
                                     formatValue: $formatValue,
                                     date: 1
                                 );
@@ -1144,7 +1145,7 @@ class FormViewGenerator
                                         'requireds' => $field->required,
                                     ],
                                     model: $model,
-                                    field: $field->name,
+                                    field: $field->code,
                                     formatValue: $formatValue,
                                     date: 1
                                 );
@@ -1163,7 +1164,7 @@ class FormViewGenerator
                                         'requireds' => $field->required,
                                     ],
                                     model: $model,
-                                    field: $field->name,
+                                    field: $field->code,
                                     formatValue: $formatValue,
                                     date: 1
                                 );
@@ -1182,7 +1183,7 @@ class FormViewGenerator
                                         'requireds' => $field->required,
                                     ],
                                     model: $model,
-                                    field: $field->name,
+                                    field: $field->code,
                                     formatValue: $formatValue,
                                     date: 1
                                 );
@@ -1227,7 +1228,7 @@ class FormViewGenerator
                                     [
                                         $modelNameSingularCamelCase,
                                         GeneratorUtils::pluralSnakeCase($field->name),
-                                        str()->snake($field->name),
+                                        str()->snake($field->code),
                                         GeneratorUtils::cleanSingularLowerCase($field->name),
                                         $fieldUcWords,
                                         $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
@@ -1251,7 +1252,7 @@ class FormViewGenerator
                                         '{{step}}',
                                     ],
                                     [
-                                        GeneratorUtils::singularSnakeCase($field->name),
+                                        GeneratorUtils::singularSnakeCase($field->code),
                                         $fieldUcWords,
                                         GeneratorUtils::singularKebabCase($field->name),
                                         $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
@@ -1289,7 +1290,7 @@ class FormViewGenerator
                                         'requireds' => $field->required,
                                     ],
                                     model: $model,
-                                    field: $field->name,
+                                    field: $field->code,
                                     formatValue: $formatValue
                                 );
                                 break;

@@ -165,7 +165,7 @@ class ShowViewGenerator
                 }
 
                 $fieldUcWords = GeneratorUtils::cleanUcWords($field->name);
-                $fieldSnakeCase = str($field->name)->snake();
+                $fieldSnakeCase = str($field->code)->snake();
 
                 if (isset($field->file_type) && $field->file_type == 'image') {
 

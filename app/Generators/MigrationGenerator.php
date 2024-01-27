@@ -180,7 +180,7 @@ class MigrationGenerator
         $totalFields = count($module->fields);
 
         foreach ($module->fields()->orderBy('created_at', 'desc')->take(1)->get() as $i => $field) {
-            $field->code = GeneratorUtils::singularSnakeCase($field->code);
+            $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
 
             if ($field->type == 'date' && $field->input == 'month') {
                 $setFields .= "\$table->text('" . str()->snake($field->code);

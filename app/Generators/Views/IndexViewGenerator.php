@@ -339,7 +339,7 @@ class IndexViewGenerator
                      */
 
                     $tdColumns .= "{
-                    data: '" . str()->snake($field->name) . "',
+                    data: '" . str()->snake($field->code) . "',
                     name: '" . str()->snake($field->name) . "',
                     orderable: false,
                     searchable: false,
@@ -375,7 +375,7 @@ class IndexViewGenerator
                      * }
                      */
                     $tdColumns .= "{
-                    data: '" . str()->snake($field->name) . "',
+                    data: '" . str()->snake($field->code) . "',
                     name: '" . str()->snake($field->name) . "',
                 },";
                 }

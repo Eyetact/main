@@ -323,7 +323,7 @@ class RequestGenerator
         }
 
         foreach ($module->fields as $i => $field) {
-            $field->code = GeneratorUtils::singularSnakeCase($field->code);
+            $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
             /**
              * will generate like:
              * 'name' =>

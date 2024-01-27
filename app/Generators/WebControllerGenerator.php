@@ -208,7 +208,7 @@ class WebControllerGenerator
                 $query = "$modelNameSingularPascalCase::with(";
 
                 foreach ($module->fields as $i => $field) {
-                    $field->code = GeneratorUtils::singularSnakeCase($field->code);
+                    $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
                     if ($field->constrain != null) {
                         $constrainName = GeneratorUtils::setModelName($field->constrain);
 
