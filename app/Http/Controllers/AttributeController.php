@@ -147,7 +147,7 @@ class AttributeController extends Controller
 
             foreach ($requestData['multi'] as $key => $value) {
                 $m = new Multi();
-                $m->name = str()->snake(str_replace('.','',$value['name']))->lower();
+                $m->name = str(str()->snake(str_replace('.','',$value['name'])))->lower();
                 $m->type = $value['type'];
                 $m->select_options = isset($value['select_options']) ? $value['select_options'] : '';
                 $m->attribute_id = $attribute->id;
