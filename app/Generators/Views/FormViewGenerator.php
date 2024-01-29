@@ -29,7 +29,7 @@ class FormViewGenerator
 
                 if ($request['input_types'][$i] !== 'no-input') {
                     $fieldSnakeCase = str($field)->snake();
-                    
+
                     $fieldUcWords = GeneratorUtils::cleanUcWords($field);
 
                     switch ($request['column_types'][$i]) {
@@ -946,7 +946,7 @@ class FormViewGenerator
                         @endif
 
                         <input type="hidden"  name="' . $field->name . '" />
-                        
+
                         <table class="table table-bordered align-items-center mb-0" id="tbl-field-' . $field->id . '">
                         <thead>';
 
@@ -954,12 +954,12 @@ class FormViewGenerator
                             $template .= '<th>' . $value->name . '</th>';
                         }
 
-                        $template .= ' 
+                        $template .= '
                         <th></th>
                         </thead>
                         <tbody>
                         @if(isset($'.$modelNameSingularCamelCase.')  && $' . $modelNameSingularCamelCase . '->' . $fieldSnakeCase . '!= null )
-                        
+
                         @foreach( $ar as $item )
                         @php
                             $index++;
@@ -1001,9 +1001,9 @@ class FormViewGenerator
                                     case 'textarea':
                                         $template .= ' <td>
                                             <div class="input-box">
-                                              
+
                                             <textarea name="' . $field->code . '[{{ $index }}][' . $value->name . ']"  class="google-input"  placeholder="' . $value->name . '">{{ $item->'.$value->name.' }}</textarea>
-                                            
+
                                             </div>
                                         </td>
                                         ';
@@ -1015,7 +1015,7 @@ class FormViewGenerator
                                                         <div class="col-md-11">
                                                             <div class="input-box">
                                                                 <input onmousemove="' . $value->name . '1.value=value" type="range" name="' . $field->code . '[' . $value->name . ']" class="range " min="1" max="1000" >
-                                                                
+
                                                             </div>
                                                         </div>
                                                         <div class="col-md-1">  <output id="' . $value->name . '1"></output></div>
@@ -1030,7 +1030,7 @@ class FormViewGenerator
                                         <input @checked( $item->'.$value->name.' == "1" ) class="custom-control-input" type="radio" name="' . $field->code . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-1" value="1">
                                         <span class="custom-control-label">True</span>
                                     </label>
-                        
+
                                     <label class="custom-control custom-radio" for="' . $value->name . '-0">
                                         <input @checked( $item->'.$value->name.' == "0" )  class="custom-control-input" type="radio" name="' . $field->code . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-0" value="0">
                                         <span class="custom-control-label">False</span>
@@ -1054,6 +1054,21 @@ class FormViewGenerator
                                         $template .= '</select>';
                                         $template .= '</div></td>';
                                         break;
+                                        case 'foreignId':
+
+                                            $arrOption = explode('|', $value->select_options);
+
+                                            $totalOptions = count($arrOption);
+                                            $template .= '<td><div class="input-box">';
+                                            $template .= ' <select name="' . $field->code . '[{{ $index }}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
+
+                                            $template.= '@foreach( \\App\\Models\\'.$value->constrain.'::all() as $item2 )';
+                                                $template .= '<option @selected( $item->'.$value->name.' == "$item2->'.$value->attribute . '" )  value="{{ $item2->'.$value->attribute . '}}" >{{ $item2->'.$value->attribute . '}}</option>';
+
+                                            $template.= '@endforeach';
+                                            $template .= '</select>';
+                                            $template .= '</div></td>';
+                                            break;
 
                                     default:
                                         # code...

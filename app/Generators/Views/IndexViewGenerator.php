@@ -205,10 +205,24 @@ class IndexViewGenerator
                 if ($field->type == 'multi') {
                     $trhtml .= "        $(document).on('click', '#add_new_tr_".$field->id."', function() {
                         let table = $('#tbl-field-".$field->id." tbody')
-            
-                        let no = table.find('tr').length + 1
-            
-                        let tr = `";
+                        var list_".$field->id." = ''
+                        let no = table.find('tr').length + 1\n";
+
+                        foreach ($field->multis as $key => $value) {
+                            switch ($value->type) {
+                            case 'foreignId':
+                                $trhtml .= '@foreach( \\App\\Models\\'.$value->constrain.'::all() as $item2 )
+                                ';
+                                $trhtml .= 'list_'.$field->id.' += \'<option  value="{{ $item2->'.$value->attribute . '}}" >{{ $item2->'.$value->attribute . '}}</option>\'
+                                ';
+                                $trhtml .= '@endforeach
+                                console.log(list_'.$field->id.')
+                                ';
+                                break;
+                             }
+                        }
+
+                        $trhtml .= "let tr = `";
 
                     $trhtml .= '<tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">';
                     foreach ($field->multis as $key => $value) {
@@ -245,9 +259,9 @@ class IndexViewGenerator
                             case 'textarea':
                                 $trhtml .= ' <td>
                                             <div class="input-box">
-                                              
+
                                             <textarea name="' . $field->code . '[${no}][' . $value->name . ']"  class="google-input"  placeholder="' . $value->name . '"></textarea>
-                                            
+
                                             </div>
                                         </td>
                                         ';
@@ -259,7 +273,7 @@ class IndexViewGenerator
                                                         <div class="col-md-11">
                                                             <div class="input-box">
                                                                 <input onmousemove="' . $value->name . '1.value=value" type="range" name="' . $field->code . '[' . $value->name . ']" class="range " min="1" max="1000" >
-                                                                
+
                                                             </div>
                                                         </div>
                                                         <div class="col-md-1">  <output id="' . $value->name . '1"></output></div>
@@ -274,7 +288,7 @@ class IndexViewGenerator
                                         <input class="custom-control-input" type="radio" name="' . $field->code . '[${no}][' . $value->name . ']" id="' . $value->name . '-1" value="1">
                                         <span class="custom-control-label">True</span>
                                     </label>
-                        
+
                                     <label class="custom-control custom-radio" for="' . $value->name . '-0">
                                         <input class="custom-control-input" type="radio" name="' . $field->code . '[${no}][' . $value->name . ']" id="' . $value->name . '-0" value="0">
                                         <span class="custom-control-label">False</span>
@@ -293,11 +307,23 @@ class IndexViewGenerator
 
                                 foreach ($arrOption as $arrOptionIndex => $value) {
                                     $trhtml .= '<option value="'.$value.'" >'.$value.'</option>';
-                                
+
                                 }
                                 $trhtml .= '</select>';
                                 $trhtml .= '</div></td>';
                                 break;
+
+                                case 'foreignId':
+                                    $model = "\\App\\Models\\".$value->constrain;
+                                    $arrOption = $model::pluck($value->attribute);
+
+                                    $totalOptions = count($arrOption);
+                                    $trhtml .= '<td><div class="input-box">';
+                                    $trhtml .= ' <select name="' . $field->code . '[${no}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
+                                    $trhtml .= '${list_'.$field->id.'}';
+                                    $trhtml .= '</select>';
+                                    $trhtml .= '</div></td>';
+                                    break;
 
                             default:
                                 # code...
@@ -317,7 +343,7 @@ class IndexViewGenerator
                     </td>
                     </tr>';
                     $trhtml .= "`
-            
+
                             table.append(tr)
                         });\n";
                         }
@@ -387,7 +413,7 @@ class IndexViewGenerator
                 }
             }
         }
-        
+
         // dd($trhtml);
         $template = str_replace(
             [
