@@ -259,6 +259,7 @@ class WebControllerGenerator
                 '{{viewPath}}',
                 '{{insertDataAction}}',
                 '{{updateDataAction}}',
+                '{{ID}}'
             ],
             [
                 $modelNameSingularPascalCase,
@@ -275,6 +276,7 @@ class WebControllerGenerator
                 $path != '' ? str_replace('\\', '.', strtolower($path)) . "." : '',
                 $insertDataAction,
                 $updateDataAction,
+                $id
             ],
             GeneratorUtils::getTemplate('controllers/controller')
         );

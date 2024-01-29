@@ -25,7 +25,7 @@ class AttributeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return 
+     * @return
      */
     public function index()
     {
@@ -64,8 +64,10 @@ class AttributeController extends Controller
         }
         $all = Module::all();
         $options = '';
+        $options = '<option  >-- select --</option>';
+
         foreach ($all as $key => $value) {
-            $options .= '<option value="' . $value->name . '" >' . $value->name . '</option>';
+            $options .= '<option data-id="'.$value->id.'" value="' . $value->name . '" >' . $value->name . '</option>';
         }
 
         return view('attribute.list', ['attribute' => new Attribute(), 'all' => $options]);
@@ -74,7 +76,7 @@ class AttributeController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return 
+     * @return
      */
     public function create()
     {
@@ -151,12 +153,15 @@ class AttributeController extends Controller
 
         if (isset($requestData['multi'])) {
 
+
             foreach ($requestData['multi'] as $key => $value) {
                 $m = new Multi();
                 $m->name = str()->snake(str_replace('.', '', str($value['name'])->lower()));
                 $m->type = $value['type'];
                 $m->select_options = isset($value['select_options']) ? $value['select_options'] : '';
                 $m->attribute_id = $attribute->id;
+                $m->constrain = isset($value['constrain']) ? $value['constrain'] : '';
+                $m->attribute = isset($value['attribute']) ? $value['attribute'] : '';
                 $m->save();
             }
         }
@@ -177,7 +182,7 @@ class AttributeController extends Controller
             $this->generatorService->reGenerateController($request['module']);
             $this->generatorService->reGenerateRequest($request['module']);
             $this->generatorService->reGenerateViews($request['module']);
-            
+
         }
 
         // dd($requestData['multi']);
@@ -197,11 +202,24 @@ class AttributeController extends Controller
 
     }
 
+
+    public function getAttrByModel(Module $module)
+    {
+        $attributes = Attribute::where('module',$module->id)->get();
+        $options = '<option>-- select --</option>';
+
+        foreach ($attributes as $key => $value) {
+            $options .= '<option data-id="'.$value->id.'" value="' . $value->name . '" >' . $value->name . '</option>';
+        }
+        return $options;
+
+
+    }
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return 
+     * @return
      */
     public function edit(Attribute $attribute)
     {
@@ -222,7 +240,7 @@ class AttributeController extends Controller
         $attribute->name = str(str_replace('.', '', $request['name']))->lower();
         $attribute->is_enable = isset($request['is_enable']) ? 1 : 0;
         $attribute->is_system = isset($request['is_system']) ? 1 : 0;
-        
+
         $attribute->save();
 
         $this->generatorService->reGenerateViews($attribute->module);

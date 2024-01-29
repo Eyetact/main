@@ -100,4 +100,11 @@ class GeneratorService
         (new ViewComposerGenerator)->reGenerate($id);
     }
 
+    public function reGenerateForm($id): void
+    {
+        (new IndexViewGenerator)->reGenerate($id);
+        (new FormViewGenerator)->reGenerate($id);
+
+    }
+
 }

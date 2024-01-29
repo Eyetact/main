@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Multi extends Model
 {
     use HasFactory;
+    protected $guarded = [];
 }

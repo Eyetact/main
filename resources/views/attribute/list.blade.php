@@ -332,7 +332,7 @@
             <tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">
                                             <td class="text-center">
                                                 <div class="input-box">
-                                                
+
                                                     ${no}
                                                 </div>
                                             </td>
@@ -363,6 +363,7 @@
                                                         <option value="datalist">Datalist ( Year List )</option>
                                                         <option value="datetime-local">Datetime local</option>
                                                         <option value="select">Select</option>
+                                                        <option value="foreignId">Lookup</option>
 
                                                     </select>
 
@@ -390,6 +391,23 @@
             table.append(tr)
         })
 
+        $(document).on('change', '.select-module', function() {
+            var id = $(this).find(':selected').data('id');
+            var parent = $(this).parent().parent().parent().parent().find('.select_options');
+            $.ajax({
+                url: '{{ url('/') }}/attribute-by-module/' + id,
+                success: function(response) {
+                     console.log(response);
+                    parent.append(` <div class="input-box form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input " name="multi[${index}][attribute]" required>
+                           ${response}
+                        </select>
+                    </div></div>`);
+                }
+            });
+        })
+
         $(document).on('change', '.multi-type', function() {
             let index = parseInt($(this).parent().parent().parent().find('.text-center').find('.input-box').html());
             // alert(index);
@@ -397,7 +415,26 @@
                 $(this).parent().parent().find('.select_options').append(`<div class="input-box s-option mt-2">
                 <input type="text" name="multi[${index}][select_options]" class="google-input" placeholder="Seperate with '|', e.g.: water|fire">
             </div>`);
-            } else {
+            } else if($(this).val() == 'foreignId') {
+                var list = `{!! $all !!}`;
+
+                $(this).parent().parent().find('.select_options').append(` <div class="input-box form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input select-module" name="multi[${index}][constrain]" required>
+                           ${list}
+                        </select>
+                    </div>
+                    <small class="text-secondary">
+                        <ul class="my-1 mx-2 p-0">
+                            <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
+                            <li>Field name must be related model + "_id", e.g.: user_id</li>
+                        </ul>
+                    </small>
+                </div>
+
+              `);
+
+            }else {
                 $(this).parent().parent().find('.s-option').remove();
 
             }
@@ -478,7 +515,7 @@
                                             ondragover="dragOver()" style="cursor: move;">
                                             <td class="text-center">
                                                 <div class="input-box">
-                                                
+
                                                 1
                                                 </div>
                                             </td>
@@ -507,6 +544,7 @@
                                                         <option value="date">Date</option>
                                                         <option value="time">Time</option>
                                                         <option value="select">Select</option>
+                                                        <option value="foreignId">Lookup</option>
 
                                                     </select>
                                                 </div>
@@ -628,7 +666,7 @@
 
                 <input type="hidden" name="on_delete_foreign" class="google-input" value="1">
 
-                
+
             `)
 
                 //     $(`.form-input-types`).html(`
