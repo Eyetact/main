@@ -398,7 +398,7 @@
                 url: '{{ url('/') }}/attribute-by-module/' + id,
                 success: function(response) {
                      console.log(response);
-                    parent.append(` <div class="input-box form-constrain mt-2">
+                    parent.html(` <div class="input-box form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="multi[${index}][attribute]" required>
                            ${response}
