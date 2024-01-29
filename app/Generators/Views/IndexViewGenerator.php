@@ -314,10 +314,7 @@ class IndexViewGenerator
                                 break;
 
                                 case 'foreignId':
-                                    $model = "\\App\\Models\\".$value->constrain;
-                                    $arrOption = $model::pluck($value->attribute);
-
-                                    $totalOptions = count($arrOption);
+                                    
                                     $trhtml .= '<td><div class="input-box">';
                                     $trhtml .= ' <select name="' . $field->code . '[${no}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
                                     $trhtml .= '${list_'.$field->id.'}';
