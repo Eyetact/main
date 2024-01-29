@@ -1062,7 +1062,7 @@ class FormViewGenerator
                                             $template .= '<td><div class="input-box">';
                                             $template .= ' <select name="' . $field->code . '[{{ $index }}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
 
-                                            $template.= '@foreach( \\App\\Models\\'.$value->constrain.'::all() as $item2 )';
+                                            $template.= '@foreach( \\App\\Models\\'.GeneratorUtils::singularPascalCase($value->constrain).'::all() as $item2 )';
                                                 $template .= '<option @selected( $item->'.$value->name.' == "$item2->'.$value->attribute . '" )  value="{{ $item2->'.$value->attribute . '}}" >{{ $item2->'.$value->attribute . '}}</option>';
 
                                             $template.= '@endforeach';
