@@ -265,3 +265,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::get('Test', [ App\Http\Controllers\Admin\TestController::class, 'index' ])->middleware('auth');
 
 Route::resource('tests', App\Http\Controllers\Admin\TestController::class)->middleware('auth');
+Route::get('materials', [ App\Http\Controllers\Admin\MaterialController::class, 'index' ])->middleware('auth');
+
+Route::resource('materials', App\Http\Controllers\Admin\MaterialController::class)->middleware('auth');
+Route::get('mixtures', [ App\Http\Controllers\Admin\MixtureController::class, 'index' ])->middleware('auth');
+
+Route::resource('mixtures', App\Http\Controllers\Admin\MixtureController::class)->middleware('auth');
