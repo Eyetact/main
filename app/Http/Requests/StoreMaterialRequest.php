@@ -24,8 +24,8 @@ class StoreMaterialRequest extends FormRequest
     public function rules()
     {
         return [
-            'material_name' => 'required|string|min:10|max:text',
-			'material_id' => 'required|string|min:5|max:text',
+            'material_name' => 'required|string',
+			'material_id' => 'required|string',
 			'materials_eu_category' => 'nullable',
 			'material_unit' => 'required|in:I.U.,mg,mcg',
         ];

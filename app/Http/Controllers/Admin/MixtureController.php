@@ -5,9 +5,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Mixture;
 use App\Http\Requests\{StoreMixtureRequest, UpdateMixtureRequest};
 use Yajra\DataTables\Facades\DataTables;
+use App\Services\GeneratorService;
+
 
 class MixtureController extends Controller
 {
+    private $generatorService;
+
+    public function __construct()
+    {
+        $this->generatorService = new GeneratorService();
+
+    }
 
     /**
      * Display a listing of the resource.
@@ -34,6 +43,7 @@ class MixtureController extends Controller
      */
     public function create()
     {
+
         return view('admin.mixtures.create');
     }
 
