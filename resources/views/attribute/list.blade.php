@@ -430,6 +430,7 @@
         $(document).on('change', '.multi-type', function() {
             let index = parseInt($(this).parent().parent().parent().find('.text-center').find('.input-box').html());
             // alert(index);
+            $('.c-f').remove()
             if ($(this).val() == 'select') {
                 $(this).parent().parent().find('.select_options').append(`<div class="input-box s-option mt-2">
                 <input type="text" name="multi[${index}][select_options]" class="google-input" placeholder="Seperate with '|', e.g.: water|fire">
@@ -437,7 +438,9 @@
             } else if($(this).val() == 'foreignId') {
                 var list = `{!! $all !!}`;
 
-                $(this).parent().parent().find('.select_options').append(` <div class="input-box form-constrain mt-2">
+
+
+                $(this).parent().parent().find('.select_options').append(` <div class="input-box c-f form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input select-module" name="multi[${index}][constrain]" required>
                            ${list}

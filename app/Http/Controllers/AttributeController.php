@@ -210,7 +210,7 @@ class AttributeController extends Controller
         $options = '<option>-- select --</option>';
 
         foreach ($attributes as $key => $value) {
-            $options .= '<option data-id="'.$value->id.'" value="' . $value->name . '" >' . $value->name . '</option>';
+            $options .= '<option data-id="'.$value->id.'" value="' . $value->code . '" >' . $value->name . '</option>';
         }
         return $options;
 

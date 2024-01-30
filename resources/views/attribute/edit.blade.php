@@ -17,7 +17,7 @@
                             <label class="form-label" for="module">Module<span class="text-red">*</span></label>
                             <select disabled name="module" class="google-input module" id="module" required>
                                 <option value="{{ $module->id }}" selected>{{ $module->name }}</option>
-                                
+
                             </select>
                             <label id="module-error" class="error text-red hide" for="module"></label>
                             @error('module')
@@ -81,14 +81,105 @@
                             @error('field_type')
                                 <span class="error field_type-error">{{ $message }}</span>
                             @enderror
-                            <div class="input-options"></div>
+                            <div class="input-options">
+                               @if ($attribute->input == "multi")
+                               <div class="multi-options">
+                                <div class="attr_header row flex justify-content-end my-5 align-items-end">
+                                    <input title="Reset form" class="btn btn-success" id="add_new_tr" type="button"
+                                        value="+ Add">
+                                </div>
+
+                                <table class="table table-bordered align-items-center mb-0" id="tbl-field">
+                                    <thead>
+                                        <tr>
+                                            <th width="30">#</th>
+                                            <th>{{ __('Field name') }}</th>
+                                            <th>{{ __('Column Type') }}</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+
+                                        @foreach ($attribute->multis as $multi )
+
+
+                                        <tr draggable="true" containment="tbody" ondragstart="dragStart()"
+                                            ondragover="dragOver()" style="cursor: move;">
+                                            <td class="text-center">
+                                                <div class="input-box">
+
+                                                {{$multi->id}}
+
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-box">
+                                                    <input type="text" name="multi[1][name]"
+                                                        class="form-control google-input"
+                                                        placeholder="{{ __('Field Name') }}" value="{{$multi->name}}" required>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-box">
+                                                    <select name="multi[1][type]"
+                                                        class="form-select  google-input multi-type" required>
+                                                        <option value="" disabled selected>
+                                                            --{{ __('Select column type') }}--
+                                                        </option>
+                                                        <option @selected( $multi->type == "text" ) value="text">Text</option>
+                                                        <option @selected( $multi->type == "textarea" ) value="textarea">Textarea</option>
+                                                        <option @selected( $multi->type == "email" ) value="email">Email</option>
+                                                        <option @selected( $multi->type == "tel" ) value="tel">Telepon</option>
+                                                        <option @selected( $multi->type == "url" ) value="url">Url</option>
+                                                        <option @selected( $multi->type == "search" ) value="search">Search</option>
+                                                        <option @selected( $multi->type == "number" ) value="number">Number</option>
+                                                        <option @selected( $multi->type == "radio" ) value="radio">Radio ( True, False )</option>
+                                                        <option @selected( $multi->type == "date" ) value="date">Date</option>
+                                                        <option @selected( $multi->type == "time" ) value="time">Time</option>
+                                                        <option @selected( $multi->type == "select" ) value="select">Select</option>
+                                                        <option @selected( $multi->type == "Lookup" ) value="foreignId">Lookup</option>
+
+                                                    </select>
+                                                </div>
+                                                <div class="select_options"></div>
+                                            </td>
+
+
+
+
+
+                                            <td>
+                                                <div class="input-box">
+
+                                                    <button type="button"
+                                                        class="btn btn-outline-danger btn-xs btn-delete">
+                                                        x
+                                                    </button>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+
+                                        @endforeach
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                               @endif
+
+
+                            </div>
 
                             {{-- <div class="multi">
                                 <div class="attr_header row flex justify-content-end my-5 align-items-end pr-5">
                                     <input title="Reset form" class="btn btn-success" id="add_new" type="button"
                                         value="+ Add Another">
                                 </div>
-                               
+
                                 <div class="multi-item">
                                     <input type="text" name="name" value="Size" class="google-input" />
                                     <div class="row">
@@ -122,7 +213,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            
+
                             </div> --}}
 
                         </div>
@@ -145,7 +236,7 @@
                             <input type="hidden" name="select_options" class="form-option">
                             <input type="hidden" name="constrains" class="form-constrain">
                             <input type="hidden" name="foreign_ids" class="form-foreign-id">
-                         
+
                         </div>
                     </div>
                 </div>
@@ -175,7 +266,7 @@
                             admin)</span>
                     </label>
                 </div>
-         
+
             </div>
         </div>
     </div>
