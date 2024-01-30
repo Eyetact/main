@@ -398,9 +398,28 @@
                 url: '{{ url('/') }}/attribute-by-module/' + id,
                 success: function(response) {
                      console.log(response);
-                    parent.append(` <div class="input-box form-constrain mt-2">
+                     $('.child-drop').remove()
+                    parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="multi[${index}][attribute]" required>
+                           ${response}
+                        </select>
+                    </div></div>`);
+                }
+            });
+        })
+
+        $(document).on('change', '.lookup-drop', function() {
+            var id = $(this).find(':selected').data('id');
+            var parent = $(this).parent().parent().parent().parent().find('.options');
+            $.ajax({
+                url: '{{ url('/') }}/attribute-by-module/' + id,
+                success: function(response) {
+                     console.log(response);
+                     $('.child-drop').remove()
+                    parent.append(` <div class="input-box child-drop form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input " name="attribute" required>
                            ${response}
                         </select>
                     </div></div>`);
@@ -647,7 +666,7 @@
                 $(`.options`).append(`
                 <div class="input-box form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
-                        <select class="google-input" name="constrains" required>
+                        <select class="google-input lookup-drop"  name="constrains" required>
                            ${list}
                         </select>
                     </div>

@@ -193,7 +193,7 @@ class ShowViewGenerator
 
                         $trs .= "<tr>
                                         <td class=\"fw-bold\">{{ __('" . GeneratorUtils::cleanSingularUcWords($constrainModel) . "') }}</td>
-                                        <td>{{ $" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . " ? $" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "->" . GeneratorUtils::getColumnAfterId($constrainModel) . " : '' }}</td>
+                                        <td>{{ $" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . " ? $" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "->" . $field->attribute . " : '' }}</td>
                                     </tr>";
                         break;
                     case 'date':
@@ -259,8 +259,8 @@ class ShowViewGenerator
                                                          @endif
                                                         </tbody>
                                                     </table>
-                                                    
-                                                    
+
+
                                                     </td>
                                                 </tr>";
                         break;

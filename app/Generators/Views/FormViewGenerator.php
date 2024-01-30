@@ -717,7 +717,7 @@ class FormViewGenerator
 
                         $constrainSingularCamelCase = GeneratorUtils::singularCamelCase($constrainModel);
 
-                        $columnAfterId = GeneratorUtils::getColumnAfterId($constrainModel);
+                        $columnAfterId = $field->attribute;
 
                         $options = "
                         @foreach ($" . GeneratorUtils::pluralCamelCase($constrainModel) . " as $$constrainSingularCamelCase)

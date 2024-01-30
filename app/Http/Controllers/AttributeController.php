@@ -144,6 +144,7 @@ class AttributeController extends Controller
             'max_size' => $request['files_sizes'],
             'file_type' => $request['file_types'],
             'code' => $request['code'],
+            'attribute' => isset($request['attribute']) ? $request['attribute'] : ' ',
         ];
 
         // dd($createArr);
@@ -242,6 +243,29 @@ class AttributeController extends Controller
         $attribute->is_system = isset($request['is_system']) ? 1 : 0;
 
         $attribute->save();
+
+        if (isset($requestData['multi'])) {
+
+
+            foreach ($requestData['multi'] as $key => $value) {
+                $m = Multi::find($attribute);
+                $m->name = str()->snake(str_replace('.', '', str($value['name'])->lower()));
+                $m->type = $value['type'];
+                $m->select_options = isset($value['select_options']) ? $value['select_options'] : '';
+                $m->attribute_id = $attribute->id;
+                $m->constrain = isset($value['constrain']) ? $value['constrain'] : '';
+                $m->attribute = isset($value['attribute']) ? $value['attribute'] : '';
+                $m->save();
+            }
+
+            $this->generatorService->reGenerateModel($module);
+            $this->generatorService->reGenerateMigration($module);
+            Artisan::call("migrate");
+            $this->generatorService->reGenerateController($module);
+            $this->generatorService->reGenerateRequest($module);
+            $this->generatorService->reGenerateViews($module);
+
+        }
 
         $this->generatorService->reGenerateViews($attribute->module);
 

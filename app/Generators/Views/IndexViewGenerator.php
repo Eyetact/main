@@ -390,7 +390,7 @@ class IndexViewGenerator
                      */
                     $tdColumns .= "{
                     data: '" . GeneratorUtils::singularSnakeCase($constrainModel) . "',
-                    name: '" . GeneratorUtils::singularSnakeCase($constrainModel) . "." . GeneratorUtils::getColumnAfterId($constrainModel) . "'
+                    name: '" . GeneratorUtils::singularSnakeCase($constrainModel) . "." . $field->attribute . "'
                 },";
                 } else {
                     /**

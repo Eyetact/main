@@ -213,8 +213,8 @@ class WebControllerGenerator
                         $constrainName = GeneratorUtils::setModelName($field->constrain);
 
                         $constrainSnakeCase = GeneratorUtils::singularSnakeCase($constrainName);
-                        $selectedColumns = GeneratorUtils::selectColumnAfterIdAndIdItself($constrainName);
-                        $columnAfterId = GeneratorUtils::getColumnAfterId($constrainName);
+                        $selectedColumns =  'id,'. $field->attribute;
+                        $columnAfterId = $field->attribute;
 
                         if ($countForeidnId + 1 < $i) {
                             $relations .= "'$constrainSnakeCase:$selectedColumns', ";
@@ -223,6 +223,9 @@ class WebControllerGenerator
                             $relations .= "'$constrainSnakeCase:$selectedColumns'";
                             $query .= "'$constrainSnakeCase:$selectedColumns'";
                         }
+
+                        // id name created_at
+                        //$row->category->name
 
                         $addColumns .= "->addColumn('$constrainSnakeCase', function (\$row) {
                     return \$row->" . $constrainSnakeCase . " ? \$row->" . $constrainSnakeCase . "->$columnAfterId : '';
