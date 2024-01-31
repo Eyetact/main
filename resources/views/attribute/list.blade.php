@@ -394,11 +394,13 @@
         $(document).on('change', '.select-module', function() {
             var id = $(this).find(':selected').data('id');
             var parent = $(this).parent().parent().parent().parent().find('.select_options');
+            let index = parseInt($(this).parent().parent().parent().parent().parent().find('.text-center').find('.input-box').html());
+            // alert(index)
             $.ajax({
                 url: '{{ url('/') }}/attribute-by-module/' + id,
                 success: function(response) {
                      console.log(response);
-                     $('.child-drop').remove()
+                     parent.find('.child-drop').remove()
                     parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="multi[${index}][attribute]" required>
@@ -430,7 +432,9 @@
         $(document).on('change', '.multi-type', function() {
             let index = parseInt($(this).parent().parent().parent().find('.text-center').find('.input-box').html());
             // alert(index);
-            $('.c-f').remove()
+            $(this).parent().parent().find('.c-f').remove()
+            $(this).parent().parent().find('.child-drop').remove()
+            $(this).parent().parent().find('.s-option').remove()
             if ($(this).val() == 'select') {
                 $(this).parent().parent().find('.select_options').append(`<div class="input-box s-option mt-2">
                 <input type="text" name="multi[${index}][select_options]" class="google-input" placeholder="Seperate with '|', e.g.: water|fire">

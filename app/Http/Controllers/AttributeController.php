@@ -67,7 +67,7 @@ class AttributeController extends Controller
         $options = '<option  >-- select --</option>';
 
         foreach ($all as $key => $value) {
-            $options .= '<option data-id="'.$value->id.'" value="' . $value->name . '" >' . $value->name . '</option>';
+            $options .= '<option data-id="'.$value->id.'" value="' . $value->code . '" >' . $value->name . '</option>';
         }
 
         return view('attribute.list', ['attribute' => new Attribute(), 'all' => $options]);
@@ -244,11 +244,13 @@ class AttributeController extends Controller
 
         $attribute->save();
 
-        if (isset($requestData['multi'])) {
 
+        if (isset($request['multi'])) {
+            $attribute->multis()->delete();
 
-            foreach ($requestData['multi'] as $key => $value) {
-                $m = Multi::find($attribute);
+            // dd($request['multi']);
+            foreach ($request['multi'] as $key => $value) {
+                $m = new Multi();
                 $m->name = str()->snake(str_replace('.', '', str($value['name'])->lower()));
                 $m->type = $value['type'];
                 $m->select_options = isset($value['select_options']) ? $value['select_options'] : '';
@@ -258,12 +260,12 @@ class AttributeController extends Controller
                 $m->save();
             }
 
-            $this->generatorService->reGenerateModel($module);
-            $this->generatorService->reGenerateMigration($module);
-            Artisan::call("migrate");
-            $this->generatorService->reGenerateController($module);
-            $this->generatorService->reGenerateRequest($module);
-            $this->generatorService->reGenerateViews($module);
+            $this->generatorService->reGenerateModel($attribute->module);
+            // $this->generatorService->reGenerateMigration($attribute->module);
+            // Artisan::call("migrate");
+            $this->generatorService->reGenerateController($attribute->module);
+            $this->generatorService->reGenerateRequest($attribute->module);
+            $this->generatorService->reGenerateViews($attribute->module);
 
         }
 

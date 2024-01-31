@@ -101,28 +101,30 @@
                                     <tbody>
 
 
-                                        @foreach ($attribute->multis as $multi )
+                                        @foreach ($attribute->multis as $index => $multi )
 
-
+                                        @php
+                                            $index += 1;
+                                        @endphp
                                         <tr draggable="true" containment="tbody" ondragstart="dragStart()"
                                             ondragover="dragOver()" style="cursor: move;">
                                             <td class="text-center">
                                                 <div class="input-box">
 
-                                                {{$multi->id}}
+                                                {{$index}}
 
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-box">
-                                                    <input type="text" name="multi[1][name]"
+                                                    <input type="text" name="multi[{{$index}}][name]"
                                                         class="form-control google-input"
                                                         placeholder="{{ __('Field Name') }}" value="{{$multi->name}}" required>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-box">
-                                                    <select name="multi[1][type]"
+                                                    <select name="multi[{{$index}}][type]"
                                                         class="form-select  google-input multi-type" required>
                                                         <option value="" disabled selected>
                                                             --{{ __('Select column type') }}--
@@ -138,11 +140,53 @@
                                                         <option @selected( $multi->type == "date" ) value="date">Date</option>
                                                         <option @selected( $multi->type == "time" ) value="time">Time</option>
                                                         <option @selected( $multi->type == "select" ) value="select">Select</option>
-                                                        <option @selected( $multi->type == "Lookup" ) value="foreignId">Lookup</option>
+                                                        <option @selected( $multi->type == "foreignId" ) value="foreignId">Lookup</option>
 
                                                     </select>
                                                 </div>
-                                                <div class="select_options"></div>
+                                                <div class="select_options">
+                                                  @if ($multi->type == "select")
+
+                                                  <div class="input-box s-option mt-2">
+                                                    <input type="text" name="multi[{{$index}}][select_options]" value="{{$multi->select_options}}" class="google-input" placeholder="Seperate with '|', e.g.: water|fire">
+                                                </div>
+
+                                                  @endif
+
+                                                  @if ($multi->type == "foreignId")
+
+                                                  <div class="input-box c-f form-constrain mt-2">
+                                                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                                                        <select class="google-input select-module" name="multi[{{$index}}][constrain]" required>
+                                                            @foreach (\App\Models\Module::all() as $key => $value)
+                                                                <option data-id="{{ $value->id }}" value="{{ $value->code }}" @selected($value->code == $multi->constrain) >{{ $value->name }}</option>;
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <small class="text-secondary">
+                                                        <ul class="my-1 mx-2 p-0">
+                                                            <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
+                                                            <li>Field name must be related model + "_id", e.g.: user_id</li>
+                                                        </ul>
+                                                    </small>
+
+                                                    @php
+                                                        $module = \App\Models\Module::where('name', $multi->constrain)->first();
+                                                    @endphp
+
+                                                <div class="input-box child-drop form-constrain mt-2">
+                                                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                                                        <select class="google-input " name="multi[{{$index}}][attribute]" required>
+                                                            @foreach ($module->fields as $key => $value)
+                                                            <option data-id="{{ $value->id }}" value="{{ $value->code }}" @selected($value->code == $multi->attribute) >{{ $value->name }}</option>;
+                                                        @endforeach
+                                                        </select>
+                                                    </div></div>
+                                                </div>
+
+                                                  @endif
+
+                                                </div>
                                             </td>
 
 
