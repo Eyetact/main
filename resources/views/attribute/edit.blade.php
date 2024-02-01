@@ -82,6 +82,69 @@
                                 <span class="error field_type-error">{{ $message }}</span>
                             @enderror
                             <div class="input-options">
+
+                                @if ($attribute->input == "select")
+
+
+
+
+                                @php
+                                          $options = explode('|', $attribute->select_option);
+
+                                @endphp
+
+                                <div class="option_fields mt-5">
+
+                                <div class="form-group col-sm-12">
+                                    <label class="custom-switch form-label">
+                                        <input @checked($attribute->is_multi == 1) type="checkbox" name="is_multi" class="custom-switch-input" id="multi-select" >
+                                        <span class="custom-switch-indicator"></span>
+                                        <span class="custom-switch-description">Multi Select</span>
+                                    </label>
+                                </div>
+                                    <div class="table-responsive">
+                                        <table class="table card-table table-vcenter text-nowrap table-light draggable-table"
+                                            id="type_options">
+                                            <thead class="bg-gray-700 text-white">
+                                                <tr>
+                                                    <th></th>
+                                                    <th class="text-white">Is Default</th>
+                                                    <th class="text-white">Label</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                @foreach ($options as $index => $option )
+
+
+                                                <tr>
+                                                    <td class="text-center" scope="row">{{$index + 1}}</td>
+                                                    <td><input @checked( $option == $attribute->default_value ) type="radio" name="fields_info_radio" onchange="addValue({{$index + 1}})" class="m-input mr-2">
+                                                        <input  type="hidden" value="0" id="fields_info[{{$index + 1}}][default]" name="fields_info[{{$index + 1}}][default]">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="fields_info[{{$index + 1}}][value]" value="{{$option}}" class="form-control m-input mr-2"  autocomplete="off">
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+
+                                                @endforeach
+
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="4"><button id="addRow" type="button"
+                                                            class="btn btn-info">Add Option</button></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                @endif
                                @if ($attribute->input == "multi")
                                <div class="multi-options">
                                 <div class="attr_header row flex justify-content-end my-5 align-items-end">

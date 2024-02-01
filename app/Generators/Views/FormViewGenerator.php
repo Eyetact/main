@@ -580,6 +580,8 @@ class FormViewGenerator
 
         foreach ($module->fields as $i => $field) {
             $field->name = GeneratorUtils::singularSnakeCase($field->name);
+            $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
+
             if ($field->input !== 'no-input') {
                 $fieldSnakeCase = str($field->code)->snake();
                 $fieldUcWords = GeneratorUtils::cleanUcWords($field->name);
@@ -596,16 +598,31 @@ class FormViewGenerator
                             case 'select':
                                 // select
                                 foreach ($arrOption as $arrOptionIndex => $value) {
-                                    if ($field->default_value) {
-                                        $options .= <<<BLADE
-                                    <option value="$value" {{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase->$fieldSnakeCase == '$value' ? 'selected' : ('$field->default_value' == '$value' ? 'selected' : '') }}>$value</option>
-                                    BLADE;
-                                    } else {
-                                        $options .= <<<BLADE
-                                    <option value="$value" {{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase->$fieldSnakeCase == '$value' ? 'selected' : ('$field->default_value' == '$value' ? 'selected' : '') }}>$value</option>
-                                    BLADE;
-                                    }
 
+
+                                    $multiple = '';
+                                    if ($field->is_multi) {
+                                        $multiple = "multiple";
+                                        if ($field->default_value) {
+                                            $options .= <<<BLADE
+                                        <option value="$value" {{ isset(\$$modelNameSingularCamelCase) && in_array('$value', json_decode(\$$modelNameSingularCamelCase->$fieldSnakeCase)) ? 'selected' :'' }}>$value</option>
+                                        BLADE;
+                                        } else {
+                                            $options .= <<<BLADE
+                                        <option value="$value" {{ isset(\$$modelNameSingularCamelCase) && in_array('$value', json_decode(\$$modelNameSingularCamelCase->$fieldSnakeCase))  ? 'selected' :'' }}>$value</option>
+                                        BLADE;
+                                        }
+                                    }else{
+                                        if ($field->default_value) {
+                                            $options .= <<<BLADE
+                                        <option value="$value" {{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase->$fieldSnakeCase == '$value' ? 'selected' : ('$field->default_value' == '$value' ? 'selected' : '') }}>$value</option>
+                                        BLADE;
+                                        } else {
+                                            $options .= <<<BLADE
+                                        <option value="$value" {{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase->$fieldSnakeCase == '$value' ? 'selected' : ('$field->default_value' == '$value' ? 'selected' : '') }}>$value</option>
+                                        BLADE;
+                                        }
+                                    }
 
 
                                     if ($arrOptionIndex + 1 != $totalOptions) {
@@ -623,14 +640,16 @@ class FormViewGenerator
                                         '{{fieldSpaceLowercase}}',
                                         '{{options}}',
                                         '{{nullable}}',
+                                        '{{multiple}}'
                                     ],
                                     [
                                         $fieldUcWords,
                                         GeneratorUtils::kebabCase($field->name),
-                                        $fieldSnakeCase,
+                                        $field->is_multi ? $fieldSnakeCase ."[]" : $fieldSnakeCase ,
                                         GeneratorUtils::cleanLowerCase($field->name),
                                         $options,
                                         $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                        $multiple
                                     ],
                                     GeneratorUtils::getTemplate('views/forms/select')
                                 );

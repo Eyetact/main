@@ -159,6 +159,7 @@ class ShowViewGenerator
 
         foreach ($module->fields as $i => $field) {
             $field->name = GeneratorUtils::singularSnakeCase($field->name);
+            $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
             if ($field->input != 'password') {
                 if ($i >= 1) {
                     $trs .= "\t\t\t\t\t\t\t\t\t";

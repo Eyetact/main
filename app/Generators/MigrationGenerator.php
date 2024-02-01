@@ -186,25 +186,28 @@ class MigrationGenerator
                 $setFields .= "\$table->text('" . str()->snake($field->code);
             } elseif ($field->type == 'multi' && $field->input == 'multi') {
                 $setFields .= "\$table->text('" . str()->snake($field->code);
+            }elseif ($field->type == 'enum' && $field->input == 'select') {
+                $setFields .= "\$table->text('" . str()->snake($field->code);
             } else {
                 $setFields .= "\$table->" . $field->type . "('" . str()->snake($field->code);
             }
 
             if ($field->type == 'enum') {
-                $options = explode('|', $field->select_option);
-                $totalOptions = count($options);
+            //     $options = explode('|', $field->select_option);
+            //     $totalOptions = count($options);
 
-                $enum = "[";
+            //     $enum = "[";
 
-                foreach ($options as $key => $value) {
-                    if ($key + 1 != $totalOptions) {
-                        $enum .= "'$value', ";
-                    } else {
-                        $enum .= "'$value']";
-                    }
-                }
+            //     foreach ($options as $key => $value) {
+            //         if ($key + 1 != $totalOptions) {
+            //             $enum .= "'$value', ";
+            //         } else {
+            //             $enum .= "'$value']";
+            //         }
+            //     }
 
-                $setFields .= "', " . $enum;
+                // $setFields .= "', " . $enum;
+                $setFields .= "'" ;
             }
 
             if (isset($field->max_length) && $field->max_length >= 0) {
@@ -335,8 +338,8 @@ class MigrationGenerator
         $module = Module::find($id);
 
         $field = Attribute::find($attr_id);
-        
-        
+
+
 
         $model = GeneratorUtils::setModelName($module->code);
         $tableNamePluralLowercase = GeneratorUtils::pluralSnakeCase($model);

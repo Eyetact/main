@@ -141,6 +141,7 @@ class AttributeController extends Controller
             'on_delete_foreign' => $request['on_delete_foreign'],
             'is_enable' => isset($request['is_enable']) ? 1 : 0,
             'is_system' => isset($request['is_system']) ? 1 : 0,
+            'is_multi' => isset($request['is_multi']) ? 1 : 0, //for multi select
             'max_size' => $request['files_sizes'],
             'file_type' => $request['file_types'],
             'code' => $request['code'],
@@ -241,6 +242,32 @@ class AttributeController extends Controller
         $attribute->name = str(str_replace('.', '', $request['name']))->lower();
         $attribute->is_enable = isset($request['is_enable']) ? 1 : 0;
         $attribute->is_system = isset($request['is_system']) ? 1 : 0;
+        $attribute->is_multi = isset($request['is_multi']) ? 1 : 0; //for multi select
+
+        $enumValues = '';
+        if (isset($request['fields_info'])) {
+            $count = count($request['fields_info']);
+            // dd($count);
+            $i = 1;
+            foreach ($request['fields_info'] as $value) {
+
+                if ($value['default'] == 1) {
+                    $attribute->default_value = $value['value'];
+                }
+                if ($i == $count) {
+
+                    $enumValues .= $value['value'];
+                } else {
+
+                    $enumValues .= $value['value'] . '|';
+                }
+                $i++;
+
+            }
+
+            $attribute->select_option = $enumValues;
+
+        }
 
         $attribute->save();
 
@@ -260,15 +287,15 @@ class AttributeController extends Controller
                 $m->save();
             }
 
-            $this->generatorService->reGenerateModel($attribute->module);
+
             // $this->generatorService->reGenerateMigration($attribute->module);
             // Artisan::call("migrate");
             $this->generatorService->reGenerateController($attribute->module);
-            $this->generatorService->reGenerateRequest($attribute->module);
-            $this->generatorService->reGenerateViews($attribute->module);
+
 
         }
-
+        $this->generatorService->reGenerateModel($attribute->module);
+        $this->generatorService->reGenerateRequest($attribute->module);
         $this->generatorService->reGenerateViews($attribute->module);
 
 

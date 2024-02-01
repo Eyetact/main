@@ -490,6 +490,13 @@
 
                 $(`.options`).append(`
             <div class="option_fields mt-5">
+                <div class="form-group col-sm-12">
+                                    <label class="custom-switch form-label">
+                                        <input type="checkbox" name="is_multi" class="custom-switch-input" id="multi-select" >
+                                        <span class="custom-switch-indicator"></span>
+                                        <span class="custom-switch-description">Multi Select</span>
+                                    </label>
+                                </div>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap table-light draggable-table"
                                 id="type_options">
@@ -983,17 +990,20 @@
             }
         });
 
-        var index = 1;
+
         $(document).on("click", "#addRow", function() {
             var html = '';
+            var index = parseInt($(this).parent().parent().parent().parent().find('.text-center:last').html()) > 0 ? parseInt($(this).parent().parent().parent().parent().find('.text-center:last').html()) +1 :1
+
             html +=
-                '<tr><td scope="row"></td><td><input type="radio" name="fields_info_radio" onchange="addValue(' +
+                '<tr><td class="text-center" scope="row">' + index +
+                '</td><td><input type="radio" name="fields_info_radio" onchange="addValue(' +
                 index + ')" class="m-input mr-2"><input type="hidden" value="0" id="fields_info[' + index +
                 '][default]" name="fields_info[' + index +
                 '][default]"></td><td><input type="text" name="fields_info[' + index +
                 '][value]" class="form-control m-input mr-2"  autocomplete="off"></td><td><button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button></td></tr>';
             $('.option_fields tbody').append(html);
-            index++;
+
         });
 
         function addValue(index) {
