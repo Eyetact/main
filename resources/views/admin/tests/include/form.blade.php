@@ -72,7 +72,7 @@
                                         <div class="input-box">
                                             <input type="number" name="multi[{{ $index }}][sku]"
                                                 class="form-control google-input"
-                                                placeholder="sku" value="{{ $item?->sku }}" required>
+                                                placeholder="sku" value="{{ isset($item->sku) ? $item->sku : '' }}" required>
                                         </div>
                                     </td>
 
