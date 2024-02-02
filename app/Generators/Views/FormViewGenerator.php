@@ -1003,7 +1003,7 @@ class FormViewGenerator
                                         <div class="input-box">
                                             <input type="' . $value->type . '" name="' . $field->code . '[{{ $index }}][' . $value->name . ']"
                                                 class="form-control google-input"
-                                                placeholder="' . $value->name . '" value="{{ $item->'.$value->name.' }}" required>
+                                                placeholder="' . $value->name . '" value="{{ isset($item->'.$value->name.') ? $item->'.$value->name.' : \'\' }}" required>
                                         </div>
                                     </td>
                                     ';
@@ -1023,7 +1023,7 @@ class FormViewGenerator
                                         $template .= ' <td>
                                             <div class="input-box">
 
-                                            <textarea name="' . $field->code . '[{{ $index }}][' . $value->name . ']"  class="google-input"  placeholder="' . $value->name . '">{{ $item->'.$value->name.' }}</textarea>
+                                            <textarea name="' . $field->code . '[{{ $index }}][' . $value->name . ']"  class="google-input"  placeholder="' . $value->name . '">{{ isset($item->'.$value->name.') ? $item->'.$value->name.' : \'\' }}</textarea>
 
                                             </div>
                                         </td>
@@ -1048,12 +1048,12 @@ class FormViewGenerator
                                         $template .= '<td>
                                     <div class="custom-controls-stacked">
                                     <label class="custom-control custom-radio" for="' . $value->name . '-1">
-                                        <input @checked( $item->'.$value->name.' == "1" ) class="custom-control-input" type="radio" name="' . $field->code . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-1" value="1">
+                                        <input @checked( isset($item->'.$value->name.') ? $item->'.$value->name.' == 1 : 0 ) class="custom-control-input" type="radio" name="' . $field->code . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-1" value="1">
                                         <span class="custom-control-label">True</span>
                                     </label>
 
                                     <label class="custom-control custom-radio" for="' . $value->name . '-0">
-                                        <input @checked( $item->'.$value->name.' == "0" )  class="custom-control-input" type="radio" name="' . $field->code . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-0" value="0">
+                                        <input @checked( isset($item->'.$value->name.') ? $item->'.$value->name.' == 0 : 0)  class="custom-control-input" type="radio" name="' . $field->code . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-0" value="0">
                                         <span class="custom-control-label">False</span>
                                     </label>
                                 </div>
@@ -1069,7 +1069,7 @@ class FormViewGenerator
                                         $template .= ' <select name="' . $field->code . '[{{ $index }}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
 
                                         foreach ($arrOption as $arrOptionIndex => $value2) {
-                                            $template .= '<option @selected( $item->'.$value->name.' == "'.$value2.'" ) value="' . $value2 . '" >' . $value2 . '</option>';
+                                            $template .= '<option @selected( isset($item->'.$value->name.') ? $item->'.$value->name.' == "'.$value2.'" : 0 ) value="' . $value2 . '" >' . $value2 . '</option>';
 
                                         }
                                         $template .= '</select>';
@@ -1084,7 +1084,7 @@ class FormViewGenerator
                                             $template .= ' <select name="' . $field->code . '[{{ $index }}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
 
                                             $template.= '@foreach( \\App\\Models\\'.GeneratorUtils::singularPascalCase($value->constrain).'::all() as $item2 )';
-                                                $template .= '<option @selected( $item->'.$value->name.' == "$item2->'.$value->attribute . '" )  value="{{ $item2->'.$value->attribute . '}}" >{{ $item2->'.$value->attribute . '}}</option>';
+                                                $template .= '<option @selected( isset($item->'.$value->name.') ? $item->'.$value->name.' == "$item2->'.$value->attribute . '" : 0 )  value="{{ $item2->'.$value->attribute . '}}" >{{ $item2->'.$value->attribute . '}}</option>';
 
                                             $template.= '@endforeach';
                                             $template .= '</select>';
