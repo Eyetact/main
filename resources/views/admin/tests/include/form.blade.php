@@ -8,7 +8,7 @@
 		<option value="blue" {{ isset($test) && (is_array( json_decode($test->color)) ?in_array('blue', json_decode($test->color)) : $test->color == 'blue') ? 'selected' :'' }}>blue</option>
 		<option value="black" {{ isset($test) && (is_array( json_decode($test->color)) ?in_array('black', json_decode($test->color)) : $test->color == 'black') ? 'selected' :'' }}>black</option>
 		<option value="white" {{ isset($test) && (is_array( json_decode($test->color)) ?in_array('white', json_decode($test->color)) : $test->color == 'white') ? 'selected' :'' }}>white</option>
-		<option value="green" {{ isset($test) && (is_array( json_decode($test->color)) ?in_array('green', json_decode($test->color)) : $test->color == 'green') ? 'selected' :'' }}>green</option>			
+		<option value="green" {{ isset($test) && (is_array( json_decode($test->color)) ?in_array('green', json_decode($test->color)) : $test->color == 'green') ? 'selected' :'' }}>green</option>
             </select>
             @error('color[]')
                 <span class="text-danger">
@@ -22,7 +22,7 @@
             <label for="material-id">{{ __('Material') }}</label>
             <select class="google-input @error('material_id') is-invalid @enderror" name="material_id" id="material-id" class="form-control" required >
                 <option value="" selected disabled>-- {{ __('Select material') }} --</option>
-                
+
                         @foreach ($materials as $material)
                             <option value="{{ $material->id }}" {{ isset($test) && $test->material_id == $material->id ? 'selected' : (old('material_id') == $material->id ? 'selected' : '') }}>
                                 {{ $material->material_name }}
@@ -72,10 +72,10 @@
                                         <div class="input-box">
                                             <input type="number" name="multi[{{ $index }}][sku]"
                                                 class="form-control google-input"
-                                                placeholder="sku" value="{{ $item->sku }}" required>
+                                                placeholder="sku" value="{{ $item?->sku }}" required>
                                         </div>
                                     </td>
-                                    
+
                             <td>
                                 <div class="input-box">
 
