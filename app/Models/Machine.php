@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Mixture extends Model
+class Machine extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class Mixture extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['testllllo'];
+    protected $fillable = [];
 
     /**
      * The attributes that should be cast.
@@ -26,9 +26,5 @@ class Mixture extends Model
     
     
     
-	public function setTestlllloAttribute($value)
-	{
-		if($value){$this->attributes['testllllo'] = json_encode($value,true);}else{ $this->attributes['testllllo'] = null; }
-	}
 
 }

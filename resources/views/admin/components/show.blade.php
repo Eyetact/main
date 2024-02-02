@@ -4,10 +4,10 @@
     <!--Page header-->
     <div class="page-header">
         <div class="page-leftheader">
-            <h4 class="page-title mb-0">{{ __('Mixtures') }}</h4>
+            <h4 class="page-title mb-0">{{ __('Components') }}</h4>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Settings</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="#">{{ __('Mixtures') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">{{ __('Components') }}</a></li>
             </ol>
         </div>
         <div class="page-rightheader">
@@ -24,45 +24,27 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                <div class="card-title">{{ __('Mixtures') }}</div>
+                <div class="card-title">{{ __('Components') }}</div>
 
                 </div>
                  <div class="card-body">
                     <div class="table-responsive">
                         <table class="table ">
                             <tr>
-                                                    <td class="fw-bold">{{ __('Testllllo') }}</td>
-                                                    <td>
-
-                                                    @php
-
-                                                    $ar = json_decode($mixture->testllllo)
-
-                                                    @endphp
-
-                                                    <table>
-                                                        <thead>
-                                                        <th>testllllo</th></thead>
-
-                                                        <tbody>
-                                                        @if(!empty($ar))
-                                                        @foreach( $ar as $item )
-                                                        <tr><td>{{ $item->testllllo }}</td></tr>
-                                                         @endforeach
-                                                         @endif
-                                                        </tbody>
-                                                    </table>
-                                                    
-                                                    
-                                                    </td>
-                                                </tr>
+                                            <td class="fw-bold">{{ __('Component Id') }}</td>
+                                            <td>{{ $component->component_id }}</td>
+                                        </tr>
+									<tr>
+                                            <td class="fw-bold">{{ __('Component Name') }}</td>
+                                            <td>{{ $component->component_name }}</td>
+                                        </tr>
                             <tr>
                                 <td class="fw-bold">{{ __('Created at') }}</td>
-                                <td>{{ $mixture->created_at->format('d/m/Y H:i') }}</td>
+                                <td>{{ $component->created_at->format('d/m/Y H:i') }}</td>
                             </tr>
                             <tr>
                                 <td class="fw-bold">{{ __('Updated at') }}</td>
-                                <td>{{ $mixture->updated_at->format('d/m/Y H:i') }}</td>
+                                <td>{{ $component->updated_at->format('d/m/Y H:i') }}</td>
                             </tr>
                         </table>
                     </div>

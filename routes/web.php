@@ -272,3 +272,9 @@ Route::resource('materials', App\Http\Controllers\Admin\MaterialController::clas
 Route::get('mixtures', [ App\Http\Controllers\Admin\MixtureController::class, 'index' ])->middleware('auth');
 
 Route::resource('mixtures', App\Http\Controllers\Admin\MixtureController::class)->middleware('auth');
+Route::get('components', [ App\Http\Controllers\Admin\ComponentController::class, 'index' ])->middleware('auth');
+
+Route::resource('components', App\Http\Controllers\Admin\ComponentController::class)->middleware('auth');
+Route::get('machines', [ App\Http\Controllers\Admin\MachineController::class, 'index' ])->middleware('auth');
+
+Route::resource('machines', App\Http\Controllers\Admin\MachineController::class)->middleware('auth');

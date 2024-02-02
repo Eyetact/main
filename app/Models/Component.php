@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Mixture extends Model
+class Component extends Model
 {
     use HasFactory;
 
@@ -14,21 +14,17 @@ class Mixture extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['testllllo'];
+    protected $fillable = ['component_id', 'component_name'];
 
     /**
      * The attributes that should be cast.
      *
      * @var string[]
      */
-    protected $casts = ['created_at' => 'datetime:d/m/Y H:i', 'updated_at' => 'datetime:d/m/Y H:i'];
+    protected $casts = ['component_id' => 'string', 'component_name' => 'string', 'created_at' => 'datetime:d/m/Y H:i', 'updated_at' => 'datetime:d/m/Y H:i'];
     
     
     
     
-	public function setTestlllloAttribute($value)
-	{
-		if($value){$this->attributes['testllllo'] = json_encode($value,true);}else{ $this->attributes['testllllo'] = null; }
-	}
 
 }

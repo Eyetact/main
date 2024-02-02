@@ -4,10 +4,10 @@
     <!--Page header-->
     <div class="page-header">
         <div class="page-leftheader">
-            <h4 class="page-title mb-0">{{ __('Mixtures') }}</h4>
+            <h4 class="page-title mb-0">{{ __('Components') }}</h4>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Settings</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="#">{{ __('Mixtures') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">{{ __('Components') }}</a></li>
             </ol>
         </div>
         <div class="page-rightheader">
@@ -24,7 +24,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                <div class="card-title">{{ __('Mixtures') }}</div>
+                <div class="card-title">{{ __('Components') }}</div>
 
                 </div>
                 <div class="card-body">
@@ -33,7 +33,8 @@
                             <thead>
                                 <tr>
                                     <th width="30px"></th>
-                                    <th>{{ __('Testllllo') }}</th>
+                                    <th>{{ __('Component Id') }}</th>
+											<th>{{ __('Component Name') }}</th>
                                     <th>{{ __('Created At') }}</th>
                                     <th>{{ __('Updated At') }}</th>
                                     <th>{{ __('Action') }}</th>
@@ -242,7 +243,7 @@ output {
 
             // }, false);
             $.ajax({
-                url: "{{ route('mixtures.create') }}",
+                url: "{{ route('components.create') }}",
                 success: function(response) {
                     //  console.log(response);
                     $(".modal-body").html(response);
@@ -264,7 +265,7 @@ output {
                 sSearch: '',
                 lengthMenu: '_MENU_ ',
             },
-            ajax: "{{ route('mixtures.index') }}",
+            ajax: "{{ route('components.index') }}",
             columnDefs: [{
                 orderable: false,
                 className: 'select-checkbox',
@@ -285,8 +286,12 @@ output {
                     }
                 },
                 {
-                    data: 'testllllo',
-                    name: 'testllllo',
+                    data: 'component_id',
+                    name: 'component_id',
+                },
+				{
+                    data: 'component_name',
+                    name: 'component_name',
                 },
                 {
                     data: 'created_at',
@@ -325,7 +330,7 @@ output {
 
                         $.ajax({
                             type: "DELETE",
-                            url: '{{url("/")}}/mixtures/' + id,
+                            url: '{{url("/")}}/components/' + id,
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
@@ -362,29 +367,7 @@ output {
 
 
 
-                $(document).on('click', '#add_new_tr_8', function() {
-                        let table = $('#tbl-field-8 tbody')
-                        var list_8 = ''
-                        let no = table.find('tr').length + 1
-@foreach( \App\Models\Material::all() as $item2 )
-                                list_8 += '<option  value="{{ $item2->material_name}}" >{{ $item2->material_name}}</option>'
-                                @endforeach
-                                console.log(list_8)
-                                let tr = `<tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;"><td><div class="input-box"> <select name="testllllo[${no}][testllllo]" class="form-select  google-input multi-type" required="">${list_8}</select></div></td>
-                    <td>
-                        <div class="input-box">
-
-                            <button type="button"
-                                class="btn btn-outline-danger btn-xs btn-delete">
-                                x
-                            </button>
-                        </div>
-                    </td>
-                    </tr>`
-
-                            table.append(tr)
-                        });
-
+        
 
         $(document).on('click', '.btn-delete', function() {
             $(this).parent().parent().parent().remove()

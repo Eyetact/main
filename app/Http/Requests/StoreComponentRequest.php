@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateMixtureRequest extends FormRequest
+class StoreComponentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,8 @@ class UpdateMixtureRequest extends FormRequest
     public function rules()
     {
         return [
-            'testllllo' => 'nullable',
+            'component_id' => 'required|string|min:10|max:text',
+			'component_name' => 'required|string|min:10|max:text',
         ];
     }
 }

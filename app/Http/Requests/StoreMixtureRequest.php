@@ -24,7 +24,7 @@ class StoreMixtureRequest extends FormRequest
     public function rules()
     {
         return [
-            
+            'testllllo' => 'nullable',
         ];
     }
 }
