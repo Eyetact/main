@@ -265,7 +265,7 @@ class ModelGenerator
                     $methods .= "\n\tpublic function set" . $fieldNameSingularPascalCase . "Attribute(\$value)\n\t{\n\t\t\$this->attributes['" . $field->code . "'] = bcrypt(\$value);\n\t}";
                 }
 
-                if ($field->input == 'multi') {
+                if ($field->input == 'multi' ||( $field->input == 'select' && $field->is_multi )) {
 
                     if ($i > 0) {
                         $methods .= "\t";

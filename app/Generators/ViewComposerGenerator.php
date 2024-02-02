@@ -107,7 +107,7 @@ class ViewComposerGenerator
                 $allColums = Schema::getColumnListing($table);
 
                 if (sizeof($allColums) > 0) {
-                    $fieldsSelect = "'id', '$allColums[1]'";
+                    $fieldsSelect = "'id', '$field->attribute'";
                 } else {
                     $fieldsSelect = "'id'";
                 }

@@ -193,6 +193,8 @@ class IndexViewGenerator
 
         foreach ($module->fields as $i => $field) {
             $field->name = GeneratorUtils::singularSnakeCase($field->name);
+            $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
+
             if ($field->input != 'password') {
                 /**
                  * will generate something like:
@@ -387,7 +389,7 @@ class IndexViewGenerator
                      */
                     $tdColumns .= "{
                     data: '" . GeneratorUtils::singularSnakeCase($constrainModel) . "',
-                    name: '" . GeneratorUtils::singularSnakeCase($constrainModel) . "." . GeneratorUtils::getColumnAfterId($constrainModel) . "'
+                    name: '" . GeneratorUtils::singularSnakeCase($constrainModel) . "." . $field->attribute . "'
                 },";
                 } else {
                     /**

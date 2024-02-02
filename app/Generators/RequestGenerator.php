@@ -344,7 +344,7 @@ class RequestGenerator
             }else{
                 $validations .= "'nullable";
             }
-            
+
 
             switch ($field->input) {
                 case 'url':
@@ -424,6 +424,10 @@ class RequestGenerator
                         // for latest validation
                         $in .= $option;
                     }
+                }
+
+                if($field->is_multi){
+                    $in = '';
                 }
 
                 $validations .= $in;

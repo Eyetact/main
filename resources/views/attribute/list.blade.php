@@ -394,14 +394,34 @@
         $(document).on('change', '.select-module', function() {
             var id = $(this).find(':selected').data('id');
             var parent = $(this).parent().parent().parent().parent().find('.select_options');
+            let index = parseInt($(this).parent().parent().parent().parent().parent().find('.text-center').find('.input-box').html());
+            // alert(index)
             $.ajax({
                 url: '{{ url('/') }}/attribute-by-module/' + id,
                 success: function(response) {
                      console.log(response);
-                     $('.small-select').remove();
-                    parent.append(` <div class="input-box small-select form-constrain mt-2">
+                     parent.find('.child-drop').remove()
+                    parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="multi[${index}][attribute]" required>
+                           ${response}
+                        </select>
+                    </div></div>`);
+                }
+            });
+        })
+
+        $(document).on('change', '.lookup-drop', function() {
+            var id = $(this).find(':selected').data('id');
+            var parent = $(this).parent().parent().parent().parent().find('.options');
+            $.ajax({
+                url: '{{ url('/') }}/attribute-by-module/' + id,
+                success: function(response) {
+                     console.log(response);
+                     $('.child-drop').remove()
+                    parent.append(` <div class="input-box child-drop form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input " name="attribute" required>
                            ${response}
                         </select>
                     </div></div>`);
@@ -412,6 +432,9 @@
         $(document).on('change', '.multi-type', function() {
             let index = parseInt($(this).parent().parent().parent().find('.text-center').find('.input-box').html());
             // alert(index);
+            $(this).parent().parent().find('.c-f').remove()
+            $(this).parent().parent().find('.child-drop').remove()
+            $(this).parent().parent().find('.s-option').remove()
             if ($(this).val() == 'select') {
                 $(this).parent().parent().find('.select_options').append(`<div class="input-box s-option mt-2">
                 <input type="text" name="multi[${index}][select_options]" class="google-input" placeholder="Seperate with '|', e.g.: water|fire">
@@ -419,7 +442,9 @@
             } else if($(this).val() == 'foreignId') {
                 var list = `{!! $all !!}`;
 
-                $(this).parent().parent().find('.select_options').append(` <div class="input-box form-constrain mt-2">
+
+
+                $(this).parent().parent().find('.select_options').append(` <div class="input-box c-f form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input select-module" name="multi[${index}][constrain]" required>
                            ${list}
@@ -465,6 +490,13 @@
 
                 $(`.options`).append(`
             <div class="option_fields mt-5">
+                <div class="form-group col-sm-12">
+                                    <label class="custom-switch form-label">
+                                        <input type="checkbox" name="is_multi" class="custom-switch-input" id="multi-select" >
+                                        <span class="custom-switch-indicator"></span>
+                                        <span class="custom-switch-description">Multi Select</span>
+                                    </label>
+                                </div>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap table-light draggable-table"
                                 id="type_options">
@@ -648,7 +680,7 @@
                 $(`.options`).append(`
                 <div class="input-box form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
-                        <select class="google-input" name="constrains" required>
+                        <select class="google-input lookup-drop"  name="constrains" required>
                            ${list}
                         </select>
                     </div>
@@ -958,17 +990,20 @@
             }
         });
 
-        var index = 1;
+
         $(document).on("click", "#addRow", function() {
             var html = '';
+            var index = parseInt($(this).parent().parent().parent().parent().find('.text-center:last').html()) > 0 ? parseInt($(this).parent().parent().parent().parent().find('.text-center:last').html()) +1 :1
+
             html +=
-                '<tr><td scope="row"></td><td><input type="radio" name="fields_info_radio" onchange="addValue(' +
+                '<tr><td class="text-center" scope="row">' + index +
+                '</td><td><input type="radio" name="fields_info_radio" onchange="addValue(' +
                 index + ')" class="m-input mr-2"><input type="hidden" value="0" id="fields_info[' + index +
                 '][default]" name="fields_info[' + index +
                 '][default]"></td><td><input type="text" name="fields_info[' + index +
                 '][value]" class="form-control m-input mr-2"  autocomplete="off"></td><td><button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button></td></tr>';
             $('.option_fields tbody').append(html);
-            index++;
+
         });
 
         function addValue(index) {
