@@ -605,11 +605,11 @@ class FormViewGenerator
                                         $multiple = "multiple";
                                         if ($field->default_value) {
                                             $options .= <<<BLADE
-                                        <option value="$value" {{ isset(\$$modelNameSingularCamelCase) && in_array('$value', json_decode(\$$modelNameSingularCamelCase->$fieldSnakeCase)) ? 'selected' :'' }}>$value</option>
+                                        <option value="$value" {{ isset(\$$modelNameSingularCamelCase) && (is_array( json_decode(\$$modelNameSingularCamelCase->$fieldSnakeCase)) ?in_array('$value', json_decode(\$$modelNameSingularCamelCase->$fieldSnakeCase)) : \$$modelNameSingularCamelCase->$fieldSnakeCase == '$value') ? 'selected' :'' }}>$value</option>
                                         BLADE;
                                         } else {
                                             $options .= <<<BLADE
-                                        <option value="$value" {{ isset(\$$modelNameSingularCamelCase) && in_array('$value', json_decode(\$$modelNameSingularCamelCase->$fieldSnakeCase))  ? 'selected' :'' }}>$value</option>
+                                        <option value="$value" {{ isset(\$$modelNameSingularCamelCase) && (is_array( json_decode(\$$modelNameSingularCamelCase->$fieldSnakeCase)) ?in_array('$value', json_decode(\$$modelNameSingularCamelCase->$fieldSnakeCase)) : \$$modelNameSingularCamelCase->$fieldSnakeCase == '$value')  ? 'selected' :'' }}>$value</option>
                                         BLADE;
                                         }
                                     }else{
@@ -779,6 +779,7 @@ class FormViewGenerator
                                         '{{options}}',
                                         '{{nullable}}',
                                         '{{fieldSnakeCase}}',
+                                        '{{multiple}}'
                                     ],
                                     [
                                         GeneratorUtils::singularKebabCase($field->name),
@@ -787,6 +788,7 @@ class FormViewGenerator
                                         $options,
                                         $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
                                         $fieldSnakeCase,
+                                        ''
                                     ],
                                     GeneratorUtils::getTemplate('views/forms/select')
                                 );

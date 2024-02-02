@@ -291,3 +291,9 @@ Route::resource('products', App\Http\Controllers\Admin\ProductController::class)
 Route::get('product', [ App\Http\Controllers\Admin\ProductController::class, 'index' ])->middleware('auth');
 
 Route::resource('products', App\Http\Controllers\Admin\ProductController::class)->middleware('auth');
+Route::get('products', [ App\Http\Controllers\Admin\ProductController::class, 'index' ])->middleware('auth');
+
+Route::resource('products', App\Http\Controllers\Admin\ProductController::class)->middleware('auth');
+Route::get('category', [ App\Http\Controllers\Admin\CategoryController::class, 'index' ])->middleware('auth');
+
+Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class)->middleware('auth');
