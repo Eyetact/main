@@ -213,7 +213,7 @@ class IndexViewGenerator
                         foreach ($field->multis as $key => $value) {
                             switch ($value->type) {
                             case 'foreignId':
-                                $trhtml .= '@foreach( \\App\\Models\\'.$value->constrain.'::all() as $item2 )
+                                $trhtml .= '@foreach( \\App\\Models\\'. GeneratorUtils::singularPascalCase($value->constrain).'::all() as $item2 )
                                 ';
                                 $trhtml .= 'list_'.$field->id.' += \'<option  value="{{ $item2->'.$value->attribute . '}}" >{{ $item2->'.$value->attribute . '}}</option>\'
                                 ';
@@ -316,10 +316,7 @@ class IndexViewGenerator
                                 break;
 
                                 case 'foreignId':
-                                    $model = "\\App\\Models\\".$value->constrain;
-                                    $arrOption = $model::pluck($value->attribute);
-
-                                    $totalOptions = count($arrOption);
+                                    
                                     $trhtml .= '<td><div class="input-box">';
                                     $trhtml .= ' <select name="' . $field->code . '[${no}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
                                     $trhtml .= '${list_'.$field->id.'}';
