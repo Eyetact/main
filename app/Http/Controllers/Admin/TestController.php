@@ -5,9 +5,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Test;
 use App\Http\Requests\{StoreTestRequest, UpdateTestRequest};
 use Yajra\DataTables\Facades\DataTables;
+use App\Services\GeneratorService;
+
 
 class TestController extends Controller
 {
+    private $generatorService;
+
+    public function __construct()
+    {
+        $this->generatorService = new GeneratorService();
+
+    }
 
     /**
      * Display a listing of the resource.
@@ -17,13 +26,12 @@ class TestController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $tests = Test::query();
+            $tests = Test::with('material:id,material_name');
 
             return DataTables::of($tests)
-                ->addColumn('name', function($row){
-                    return str($row->name)->limit(200);
-                })
-				->addColumn('action', 'admin.tests.include.action')
+                ->addColumn('material', function ($row) {
+                    return $row->material ? $row->material->material_name : '';
+                })->addColumn('action', 'admin.tests.include.action')
                 ->toJson();
         }
 
@@ -37,6 +45,7 @@ class TestController extends Controller
      */
     public function create()
     {
+
         return view('admin.tests.create');
     }
 
@@ -63,7 +72,9 @@ class TestController extends Controller
      */
     public function show(Test $test)
     {
-        return view('admin.tests.show', compact('test'));
+        $test->load('material:id,material_name');
+
+		return view('admin.tests.show', compact('test'));
     }
 
     /**
@@ -74,7 +85,9 @@ class TestController extends Controller
      */
     public function edit(Test $test)
     {
-        return view('admin.tests.edit', compact('test'));
+        $test->load('material:id,material_name');
+
+		return view('admin.tests.edit', compact('test'));
     }
 
     /**

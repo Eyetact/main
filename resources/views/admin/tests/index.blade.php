@@ -33,7 +33,9 @@
                             <thead>
                                 <tr>
                                     <th width="30px"></th>
-                                    <th>{{ __('Name') }}</th>
+                                    <th>{{ __('Color') }}</th>
+											<th>{{ __('Material') }}</th>
+											<th>{{ __('Multi') }}</th>
                                     <th>{{ __('Created At') }}</th>
                                     <th>{{ __('Updated At') }}</th>
                                     <th>{{ __('Action') }}</th>
@@ -285,8 +287,16 @@ output {
                     }
                 },
                 {
-                    data: 'name',
-                    name: 'name',
+                    data: 'color',
+                    name: 'color',
+                },
+				{
+                    data: 'material',
+                    name: 'material.material_name'
+                },
+				{
+                    data: 'multi',
+                    name: 'multi',
                 },
                 {
                     data: 'created_at',
@@ -362,7 +372,43 @@ output {
 
 
 
-        
+                $(document).on('click', '#add_new_tr_13', function() {
+                        let table = $('#tbl-field-13 tbody')
+                        var list_13 = ''
+                        let no = table.find('tr').length + 1
+@foreach( \App\Models\Material::all() as $item2 )
+                                list_13 += '<option  value="{{ $item2->material_name}}" >{{ $item2->material_name}}</option>'
+                                @endforeach
+                                console.log(list_13)
+                                let tr = `<tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;"><td><div class="input-box"> <select name="multi[${no}][mat]" class="form-select  google-input multi-type" required="">${list_13}</select></div></td> <td>
+                                        <div class="input-box">
+                                            <input type="text" name="multi[${no}][name]"
+                                                class="form-control google-input"
+                                                placeholder="name" required>
+                                        </div>
+                                    </td>
+                                     <td>
+                                        <div class="input-box">
+                                            <input type="number" name="multi[${no}][sku]"
+                                                class="form-control google-input"
+                                                placeholder="sku" required>
+                                        </div>
+                                    </td>
+                                    
+                    <td>
+                        <div class="input-box">
+
+                            <button type="button"
+                                class="btn btn-outline-danger btn-xs btn-delete">
+                                x
+                            </button>
+                        </div>
+                    </td>
+                    </tr>`
+
+                            table.append(tr)
+                        });
+
 
         $(document).on('click', '.btn-delete', function() {
             $(this).parent().parent().parent().remove()

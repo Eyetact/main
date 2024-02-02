@@ -14,17 +14,29 @@ class Test extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['color', 'material_id', 'multi'];
 
     /**
      * The attributes that should be cast.
      *
      * @var string[]
      */
-    protected $casts = ['name' => 'string', 'created_at' => 'datetime:d/m/Y H:i', 'updated_at' => 'datetime:d/m/Y H:i'];
+    protected $casts = ['created_at' => 'datetime:d/m/Y H:i', 'updated_at' => 'datetime:d/m/Y H:i'];
     
     
+    	
+	public function material()
+	{
+		return $this->belongsTo(\App\Models\Material::class);
+	}
     
-    
+	public function setColorAttribute($value)
+	{
+		if($value){$this->attributes['color'] = json_encode($value,true);}else{ $this->attributes['colors'] = null; }
+	}	
+	public function setMultiAttribute($value)
+	{
+		if($value){$this->attributes['multi'] = json_encode($value,true);}else{ $this->attributes['multi'] = null; }
+	}
 
 }

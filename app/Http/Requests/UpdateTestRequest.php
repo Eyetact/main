@@ -24,7 +24,9 @@ class UpdateTestRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
+            'color' => 'required',
+			'material_id' => 'required|exists:App\Models\Material,id',
+			'multi' => 'nullable',
         ];
     }
 }

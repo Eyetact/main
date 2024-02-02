@@ -31,9 +31,39 @@
                     <div class="table-responsive">
                         <table class="table ">
                             <tr>
-                                            <td class="fw-bold">{{ __('Name') }}</td>
-                                            <td>{{ $test->name }}</td>
+                                            <td class="fw-bold">{{ __('Color') }}</td>
+                                            <td>{{ $test->color }}</td>
                                         </tr>
+									<tr>
+                                        <td class="fw-bold">{{ __('Material') }}</td>
+                                        <td>{{ $test->material ? $test->material->material_name : '' }}</td>
+                                    </tr>
+									<tr>
+                                                    <td class="fw-bold">{{ __('Multi') }}</td>
+                                                    <td>
+
+                                                    @php
+
+                                                    $ar = json_decode($test->multi)
+
+                                                    @endphp
+
+                                                    <table>
+                                                        <thead>
+                                                        <th>mat</th><th>name</th><th>sku</th></thead>
+
+                                                        <tbody>
+                                                        @if(!empty($ar))
+                                                        @foreach( $ar as $item )
+                                                        <tr><td>{{ $item->mat }}</td><td>{{ $item->name }}</td><td>{{ $item->sku }}</td></tr>
+                                                         @endforeach
+                                                         @endif
+                                                        </tbody>
+                                                    </table>
+
+
+                                                    </td>
+                                                </tr>
                             <tr>
                                 <td class="fw-bold">{{ __('Created at') }}</td>
                                 <td>{{ $test->created_at->format('d/m/Y H:i') }}</td>

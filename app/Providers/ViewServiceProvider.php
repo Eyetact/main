@@ -33,5 +33,36 @@ class ViewServiceProvider extends ServiceProvider
             return $view->with( 'side_menus', $menus );
         });
 
+
+		View::composer(['admin.tests.create', 'admin.tests.edit'], function ($view) {
+            return $view->with(
+                'materials',
+                \App\Models\Material::select('id', 'material_name')->get()
+            );
+        });
+
+
+
+
+		View::composer(['admin.tests.create', 'admin.tests.edit'], function ($view) {
+            return $view->with(
+                'materials',
+                \App\Models\Material::select('id', 'material_name')->get()
+            );
+        });
+
+
+
+
+		View::composer(['admin.tests.create', 'admin.tests.edit'], function ($view) {
+            return $view->with(
+                'materials',
+                \App\Models\Material::select('id', 'material_name')->get()
+            );
+        });
+
+
+
+
 	}
 }

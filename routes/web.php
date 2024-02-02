@@ -278,3 +278,7 @@ Route::resource('components', App\Http\Controllers\Admin\ComponentController::cl
 Route::get('machines', [ App\Http\Controllers\Admin\MachineController::class, 'index' ])->middleware('auth');
 
 Route::resource('machines', App\Http\Controllers\Admin\MachineController::class)->middleware('auth');
+
+Route::get('test', [ App\Http\Controllers\Admin\TestController::class, 'index' ])->middleware('auth');
+
+Route::resource('tests', App\Http\Controllers\Admin\TestController::class)->middleware('auth');
