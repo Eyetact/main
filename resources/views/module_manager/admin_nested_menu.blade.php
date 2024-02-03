@@ -18,7 +18,7 @@
 
                     @if ($aMenu->children->count())
                         <ol class="dd-list">
-                            @foreach ($aMenu->children as $aaMenu)
+                            @foreach ($aMenu->children()->orderBy('sequence', 'asc')->get() as $aaMenu)
                                 <li class="dd-item" data-path="{{ route('module_manager.edit',$aaMenu->module_id) }}" data-json="{{json_encode($aaMenu)}}" data-id="{{$aaMenu->id}}" data-name="{{$aaMenu->name}}" data-module="{{$aaMenu->module_id}}" data-code="{{$aaMenu->code}}" data-path="{{$aaMenu->path}}" data-is_enable="{{$aaMenu->is_enable}}" data-include_in_menu="{{$aaMenu->include_in_menu}}"  data-assigned_attributes="{{$aaMenu->assigned_attributes}}" data-created_date="{{date('m-d-Y',strtotime($aaMenu->created_date))}}">
                                     <div class="dd-handle">
                                         {{$aaMenu->name}}<input type="hidden" class="admin-menu" value="{{$aaMenu->id}}">

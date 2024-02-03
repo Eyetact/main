@@ -13,7 +13,9 @@ class Module extends Model
         'name',
         'description',
         'is_system',
-        'code'
+        'code',
+        'user_id',
+       
     ];
 
     public function fields(){

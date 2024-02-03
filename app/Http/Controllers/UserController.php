@@ -222,7 +222,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        // dd( $request->group_id );
+        // dd( $request->all() );
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -231,10 +231,10 @@ class UserController extends Controller
             'address' => $request->address,
             'phone' => $request->phone,
             'avatar' => $request->avatar,
-            'access_table' => $request->access_table,
+            'access_table' =>  "Individual",
             'password' => bcrypt($request->password),
             'user_id' => Auth::user()->id,
-            'group_id' => 1,
+            'group_id' =>  1,
             'ugroup_id' => 1,
         ]);
         if ($request->group_id):
@@ -244,6 +244,7 @@ class UserController extends Controller
                 $c->user_id = $user->id;
                 $c->save();
             }
+            // dd($request->group_id);
         endif;
 
         $plan = Plan::where('name', 'Free Plan')->first();

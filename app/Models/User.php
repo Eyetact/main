@@ -102,4 +102,30 @@ class User extends Authenticatable
         return $this->hasMany( File::class );
     }
 
+
+    public function setAccessTableAttribute($value)
+    {
+        if(empty($value))
+        {
+            $this->attributes['access_table'] =  "Individual";
+        }
+        $this->attributes['access_table'] =  $value;
+
+    }
+
+    public function getAccessTableAttribute()
+    {
+        if($this->attributes['access_table'] == null)
+        {
+            return "Individual";
+        }
+
+        return $this->attributes['access_table'] ;
+
+    }
+
+
+
+
+
 }

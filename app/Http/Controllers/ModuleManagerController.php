@@ -63,6 +63,8 @@ class ModuleManagerController extends Controller
             'name' => $request->name,
             'is_system' => isset($request->is_system) ? 1 : 0,
             'code' => $request->code,
+            'user_id' => auth()->user()->id,
+           
         ]);
 
         $requestData = $request->all();
@@ -105,6 +107,9 @@ class ModuleManagerController extends Controller
         }
 
         if ($module) {
+
+
+
             $lastSequenceData = MenuManager::where('parent', '0')->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->orderBy('id', 'desc')->first();
             $sequence = 0;
             if ($lastSequenceData) {
