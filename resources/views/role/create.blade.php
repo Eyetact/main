@@ -54,9 +54,9 @@
                                                     $key = array_search($permission->id, array_column($scheduler, 'permission_id'));
                                                     $scheduler_data = $scheduler[$key];
                                                 }
-                                            
+
                                                 // dump($scheduler[$key]);
-                                            
+
                                                 if (array_search($permission->id, array_column($scheduler, 'permission_id')) !== false) {
                                                     // $edit_no=$scheduler['scheduler_no'];
                                                     // $edit_type=$scheduler['type'];

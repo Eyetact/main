@@ -312,3 +312,21 @@ Route::resource('categories', App\Http\Controllers\Admin\CategoryController::cla
 Route::get('product', [ App\Http\Controllers\Admin\ProductController::class, 'index' ])->middleware('auth');
 
 Route::resource('products', App\Http\Controllers\Admin\ProductController::class)->middleware('auth');
+Route::get('product', [ App\Http\Controllers\Admin\ProductController::class, 'index' ])->middleware('auth');
+
+Route::resource('products', App\Http\Controllers\Admin\ProductController::class)->middleware('auth');
+Route::get('cat', [ App\Http\Controllers\Admin\CategoryController::class, 'index' ])->middleware('auth');
+
+Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class)->middleware('auth');
+Route::get('cat2', [ App\Http\Controllers\Admin\Category2Controller::class, 'index' ])->middleware('auth');
+
+Route::resource('category2s', App\Http\Controllers\Admin\Category2Controller::class)->middleware('auth');
+Route::get('cat3', [ App\Http\Controllers\Admin\Category3Controller::class, 'index' ])->middleware('auth');
+
+Route::resource('category3s', App\Http\Controllers\Admin\Category3Controller::class)->middleware('auth');
+Route::get('cat4', [ App\Http\Controllers\Admin\Category4Controller::class, 'index' ])->middleware('auth');
+
+Route::resource('category4s', App\Http\Controllers\Admin\Category4Controller::class)->middleware('auth');
+Route::get('product2', [ App\Http\Controllers\Admin\Product2Controller::class, 'index' ])->middleware('auth');
+
+Route::resource('product2s', App\Http\Controllers\Admin\Product2Controller::class)->middleware('auth');

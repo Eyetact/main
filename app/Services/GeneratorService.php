@@ -14,6 +14,8 @@ use App\Generators\WebRouteGenerator;
 use App\Generators\Views\IndexViewGenerator;
 use App\Generators\Views\EditViewGenerator;
 use App\Generators\ViewComposerGenerator;
+use App\Generators\PermissionGenerator;
+
 
 
 
@@ -105,6 +107,11 @@ class GeneratorService
         (new IndexViewGenerator)->reGenerate($id);
         (new FormViewGenerator)->reGenerate($id);
 
+    }
+
+    public function generatePermission(array $request,$id): void
+    {
+        (new PermissionGenerator)->generate($request,$id);
     }
 
 }

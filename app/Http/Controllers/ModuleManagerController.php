@@ -64,7 +64,7 @@ class ModuleManagerController extends Controller
             'is_system' => isset($request->is_system) ? 1 : 0,
             'code' => $request->code,
             'user_id' => auth()->user()->id,
-           
+
         ]);
 
         $requestData = $request->all();
@@ -76,6 +76,8 @@ class ModuleManagerController extends Controller
         $this->generatorService->generateRequest($request->all()); // req
         $this->generatorService->generateRoute($request->all()); // route
         $this->generatorService->generateViews($request->all()); // views
+        $this->generatorService->generatePermission($request->all(), $module->id);
+
 
         if (!empty($request->fields[0])) {
             foreach ($request->fields as $i => $attr) {
