@@ -32,6 +32,24 @@ class AttributeController extends Controller
         if (request()->ajax()) {
             $attribute = Attribute::all();
 
+
+            if (auth()->user()->access_table == "Group") {
+                $group_ids = auth()->user()->groups()->pluck('group_id');
+
+                $userids= UCGroup::whereIn('group_id', $group_ids)
+                ->pluck('user_id');
+
+
+
+                $attribute = Attribute::whereIn('user_id', $userids)->get();
+            }
+
+            if (auth()->user()->access_table == "Individual") {
+
+                $attribute = Attribute::where('user_id', auth()->user()->id)->get();
+
+            }
+
             return datatables()->of($attribute)
                 ->addColumn('module', function ($row) {
                     return $row->moduleObj->name;
@@ -62,7 +80,30 @@ class AttributeController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
+
         $all = Module::all();
+
+        if (auth()->user()->access_table == "Group") {
+            $group_ids = auth()->user()->groups()->pluck('group_id');
+
+            $userids= UCGroup::whereIn('group_id', $group_ids)
+            ->pluck('user_id');
+
+            $all = Module::whereIn('user_id', $userids)
+                ->get();
+
+
+        }
+
+        if (auth()->user()->access_table == "Individual") {
+
+            $all = Module::where('user_id', auth()->user()->id)
+                ->get();
+
+
+        }
+
+
         $options = '';
         $options = '<option  >-- select --</option>';
 
@@ -81,7 +122,29 @@ class AttributeController extends Controller
     public function create()
     {
         $moduleData = Module::where('migration', '!=', NULL)->get();
+
+        if (auth()->user()->access_table == "Group") {
+            $group_ids = auth()->user()->groups()->pluck('group_id');
+
+            $userids= UCGroup::whereIn('group_id', $group_ids)
+            ->pluck('user_id');
+
+            $moduleData = Module::whereIn('user_id', $userids)
+                ->get();
+
+
+        }
+
+        if (auth()->user()->access_table == "Individual") {
+
+            $moduleData = Module::where('user_id', auth()->user()->id)
+                ->get();
+
+
+        }
+
         $all = Module::all();
+
         return view('attribute.create', ['attribute' => new Attribute(), 'moduleData' => $moduleData, 'all' => $all]);
     }
 
@@ -146,6 +209,7 @@ class AttributeController extends Controller
             'file_type' => $request['file_types'],
             'code' => $request['code'],
             'attribute' => isset($request['attribute']) ? $request['attribute'] : ' ',
+            'user_id' => auth()->user()->id,
         ];
 
         // dd($createArr);
