@@ -22,7 +22,17 @@ class {{modelName}} extends Model
      * @var string[]
      */
     protected $casts = {{casts}};
-    
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // auto-sets values on creation
+        static::creating(function ($query) {
+            $query->user_id = auth()->user()->id;
+        });
+    }
+
     {{protectedHidden}}
     {{relations}}
     {{methods}}

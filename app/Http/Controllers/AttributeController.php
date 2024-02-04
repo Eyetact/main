@@ -33,22 +33,22 @@ class AttributeController extends Controller
             $attribute = Attribute::all();
 
 
-            if (auth()->user()->access_table == "Group") {
-                $group_ids = auth()->user()->groups()->pluck('group_id');
+            // if (auth()->user()->access_table == "Group") {
+            //     $group_ids = auth()->user()->groups()->pluck('group_id');
 
-                $userids= UCGroup::whereIn('group_id', $group_ids)
-                ->pluck('user_id');
+            //     $userids= UCGroup::whereIn('group_id', $group_ids)
+            //     ->pluck('user_id');
 
 
 
-                $attribute = Attribute::whereIn('user_id', $userids)->get();
-            }
+            //     $attribute = Attribute::whereIn('user_id', $userids)->get();
+            // }
 
-            if (auth()->user()->access_table == "Individual") {
+            // if (auth()->user()->access_table == "Individual") {
 
-                $attribute = Attribute::where('user_id', auth()->user()->id)->get();
+            //     $attribute = Attribute::where('user_id', auth()->user()->id)->get();
 
-            }
+            // }
 
             return datatables()->of($attribute)
                 ->addColumn('module', function ($row) {
@@ -83,25 +83,25 @@ class AttributeController extends Controller
 
         $all = Module::all();
 
-        if (auth()->user()->access_table == "Group") {
-            $group_ids = auth()->user()->groups()->pluck('group_id');
+        // if (auth()->user()->access_table == "Group") {
+        //     $group_ids = auth()->user()->groups()->pluck('group_id');
 
-            $userids= UCGroup::whereIn('group_id', $group_ids)
-            ->pluck('user_id');
+        //     $userids= UCGroup::whereIn('group_id', $group_ids)
+        //     ->pluck('user_id');
 
-            $all = Module::whereIn('user_id', $userids)
-                ->get();
-
-
-        }
-
-        if (auth()->user()->access_table == "Individual") {
-
-            $all = Module::where('user_id', auth()->user()->id)
-                ->get();
+        //     $all = Module::whereIn('user_id', $userids)
+        //         ->get();
 
 
-        }
+        // }
+
+        // if (auth()->user()->access_table == "Individual") {
+
+        //     $all = Module::where('user_id', auth()->user()->id)
+        //         ->get();
+
+
+        // }
 
 
         $options = '';
@@ -354,10 +354,11 @@ class AttributeController extends Controller
 
             // $this->generatorService->reGenerateMigration($attribute->module);
             // Artisan::call("migrate");
-            $this->generatorService->reGenerateController($attribute->module);
+
 
 
         }
+        $this->generatorService->reGenerateController($attribute->module);
         $this->generatorService->reGenerateModel($attribute->module);
         $this->generatorService->reGenerateRequest($attribute->module);
         $this->generatorService->reGenerateViews($attribute->module);

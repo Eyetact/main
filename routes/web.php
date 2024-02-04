@@ -330,3 +330,6 @@ Route::resource('category4s', App\Http\Controllers\Admin\Category4Controller::cl
 Route::get('product2', [ App\Http\Controllers\Admin\Product2Controller::class, 'index' ])->middleware('auth');
 
 Route::resource('product2s', App\Http\Controllers\Admin\Product2Controller::class)->middleware('auth');
+Route::get('product', [ App\Http\Controllers\Admin\ProductController::class, 'index' ])->middleware('auth');
+
+Route::resource('products', App\Http\Controllers\Admin\ProductController::class)->middleware('auth');
