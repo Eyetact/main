@@ -1,0 +1,140 @@
+<?php
+
+{{namespace}}
+use {{modelPath}};
+use {{requestPath}};
+use App\Models\UCGroup;
+use Yajra\DataTables\Facades\DataTables;
+use App\Services\GeneratorService;
+
+
+class {{modelNameSingularPascalCase}}Controller extends Controller
+{
+    private $generatorService;
+
+    public function __construct()
+    {
+        $this->generatorService = new GeneratorService();
+
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return
+     */
+    public function index()
+    {
+
+
+
+        if (request()->ajax()) {
+            ${{modelNamePluralCamelCase}} = {{query}};
+
+               if (auth()->user()->access_table == "Group") {
+                $group_ids = auth()->user()->groups()->pluck('group_id');
+
+                $userids= UCGroup::whereIn('group_id', $group_ids)
+                ->pluck('user_id');
+
+
+
+                ${{modelNamePluralCamelCase}} = {{modelNameSingularPascalCase}}::whereIn('user_id', $userids)->get();
+            }
+
+            if (auth()->user()->access_table == "Individual") {
+
+                ${{modelNamePluralCamelCase}} = {{modelNameSingularPascalCase}}::where('user_id', auth()->user()->id)->get();
+
+            }
+
+            return DataTables::of(${{modelNamePluralCamelCase}})
+                {{addColumns}}->addColumn('action', 'admin.{{viewPath}}{{modelNamePluralKebabCase}}.include.action')
+                ->toJson();
+        }
+
+        return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.index');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return
+     */
+    public function create()
+    {
+
+        return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return
+     */
+    public function store(Store{{modelNameSingularPascalCase}}Request $request)
+    {
+        {{insertDataAction}}
+
+        return redirect()
+            ->route('{{modelNamePluralKebabCase}}.index')
+            ->with('success', __('The {{modelNameSingularCamelCase}} was created successfully.'));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\{{modelNameSingularPascalCase}}  ${{modelNameSingularCamelCase}}
+     * @return
+     */
+    public function show({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
+    {
+        {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.show', compact('{{modelNameSingularCamelCase}}'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\{{modelNameSingularPascalCase}}  ${{modelNameSingularCamelCase}}
+     * @return
+     */
+    public function edit({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
+    {
+        {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.edit', compact('{{modelNameSingularCamelCase}}'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\{{modelNameSingularPascalCase}}  ${{modelNameSingularCamelCase}}
+     * @return
+     */
+    public function update(Update{{modelNameSingularPascalCase}}Request $request, {{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
+    {
+        {{updateDataAction}}
+
+        return redirect()
+            ->route('{{modelNamePluralKebabCase}}.index')
+            ->with('success', __('The {{modelNameSingularCamelCase}} was updated successfully.'));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\{{modelNameSingularPascalCase}}  ${{modelNameSingularCamelCase}}
+     * @return
+     */
+    public function destroy({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
+    {
+        try {
+            ${{modelNameSingularCamelCase}}->delete();
+
+
+            return response()->json(['msg' => 'Item deleted successfully!'], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['msg' => 'Not deleted'], 500);
+        }
+    }
+}
