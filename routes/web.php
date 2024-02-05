@@ -333,3 +333,15 @@ Route::resource('product2s', App\Http\Controllers\Admin\Product2Controller::clas
 Route::get('product', [ App\Http\Controllers\Admin\ProductController::class, 'index' ])->middleware('auth');
 
 Route::resource('products', App\Http\Controllers\Admin\ProductController::class)->middleware('auth');
+Route::get('product', [ App\Http\Controllers\Admin\ProductController::class, 'index' ])->middleware('auth');
+
+Route::resource('products', App\Http\Controllers\Admin\ProductController::class)->middleware('auth');
+Route::get('category', [ App\Http\Controllers\Admin\CategoryController::class, 'index' ])->middleware('auth');
+
+Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class)->middleware('auth');
+Route::get('intro', [ App\Http\Controllers\Admin\IntroController::class, 'index' ])->middleware('auth');
+
+Route::resource('intros', App\Http\Controllers\Admin\IntroController::class)->middleware('auth');
+Route::get('page', [ App\Http\Controllers\Admin\PageController::class, 'index' ])->middleware('auth');
+
+Route::resource('pages', App\Http\Controllers\Admin\PageController::class)->middleware('auth');

@@ -123,25 +123,25 @@ class AttributeController extends Controller
     {
         $moduleData = Module::where('migration', '!=', NULL)->get();
 
-        if (auth()->user()->access_table == "Group") {
-            $group_ids = auth()->user()->groups()->pluck('group_id');
+        // if (auth()->user()->access_table == "Group") {
+        //     $group_ids = auth()->user()->groups()->pluck('group_id');
 
-            $userids= UCGroup::whereIn('group_id', $group_ids)
-            ->pluck('user_id');
+        //     $userids= UCGroup::whereIn('group_id', $group_ids)
+        //     ->pluck('user_id');
 
-            $moduleData = Module::whereIn('user_id', $userids)
-                ->get();
-
-
-        }
-
-        if (auth()->user()->access_table == "Individual") {
-
-            $moduleData = Module::where('user_id', auth()->user()->id)
-                ->get();
+        //     $moduleData = Module::whereIn('user_id', $userids)
+        //         ->get();
 
 
-        }
+        // }
+
+        // if (auth()->user()->access_table == "Individual") {
+
+        //     $moduleData = Module::where('user_id', auth()->user()->id)
+        //         ->get();
+
+
+        // }
 
         $all = Module::all();
 

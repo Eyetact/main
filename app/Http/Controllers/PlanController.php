@@ -22,27 +22,7 @@ class PlanController extends Controller
                 ->editColumn('image', function ($row) {
                     return $row->image ? '<img src="' . asset($row->image) . '" alt="user-img" class="avatar-xl rounded-circle mb-1">' : "<span>No Image</span>";
                 })
-                ->addColumn('action', function ($row) {
-                    $btn = '<div class="dropdown">
-                    <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-
-                    </a>
-
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li class="dropdown-item">
-                        <a href="#" id="edit_item"  data-path="' . route('plans.view', $row->id) . '">View or Edit</a>
-                        </li>
-
-                        <li class="dropdown-item">
-                        <a  href="#" data-id="' . $row->id . '" class="plan-delete">Delete</a>
-                        </li>
-                    </ul>
-                </div>';
-
-                    return $btn;
-                })
+                ->addColumn('action', 'plans.action')
                 ->rawColumns(['image', 'action'])
 
                 ->addIndexColumn()

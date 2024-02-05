@@ -143,10 +143,11 @@ class IndexViewGenerator
             [
                 '{{modelNamePluralUcWords}}',
                 '{{modelNamePluralKebabCase}}',
-                '{{modelNameSingularLowerCase}}',
+                '{{modelNameSingularLowercase}}',
                 '{{modelNamePluralLowerCase}}',
                 '{{thColumns}}',
-                '{{tdColumns}}'
+                '{{tdColumns}}',
+                '{{trHtml}}'
             ],
             [
                 $modelNamePluralUcWords,
@@ -154,7 +155,8 @@ class IndexViewGenerator
                 $modelNameSingularLowercase,
                 $modelNamePluralLowerCase,
                 $thColums,
-                $tdColumns
+                $tdColumns,
+                ''
             ],
             GeneratorUtils::getTemplate('views/index')
         );
@@ -184,7 +186,7 @@ class IndexViewGenerator
         $modelNamePluralUcWords = GeneratorUtils::cleanPluralUcWords($model);
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNamePluralLowerCase = GeneratorUtils::cleanPluralLowerCase($model);
-        $modelNameSingularLowercase = GeneratorUtils::cleanSingularLowerCase($model);
+        $modelNameSingularLowercase = GeneratorUtils::cleanSingularLowerCase($code);
 
         $thColums = '';
         $tdColumns = '';
@@ -316,7 +318,7 @@ class IndexViewGenerator
                                 break;
 
                                 case 'foreignId':
-                                    
+
                                     $trhtml .= '<td><div class="input-box">';
                                     $trhtml .= ' <select name="' . $field->code . '[${no}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
                                     $trhtml .= '${list_'.$field->id.'}';
@@ -418,7 +420,7 @@ class IndexViewGenerator
             [
                 '{{modelNamePluralUcWords}}',
                 '{{modelNamePluralKebabCase}}',
-                '{{modelNameSingularLowerCase}}',
+                '{{modelNameSingularLowercase}}',
                 '{{modelNamePluralLowerCase}}',
                 '{{thColumns}}',
                 '{{tdColumns}}',

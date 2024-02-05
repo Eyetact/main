@@ -24,6 +24,8 @@ class PermSeeder extends Seeder
             ['name' => 'User', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'Role', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'Permission', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'Plan', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'Subscription', 'created_at' => $date, 'updated_at' => $date],
         ];
 
         $permission = [
@@ -36,13 +38,23 @@ class PermSeeder extends Seeder
             ['name' => 'edit.role', 'guard_name' => 'web', 'module' => 2, 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'delete.role', 'guard_name' => 'web', 'module' => 2, 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'view.role', 'guard_name' => 'web', 'module' => 2, 'created_at' => $date, 'updated_at' => $date],
-            
+
             ['name' => 'create.permission', 'guard_name' => 'web', 'module' => 3, 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'edit.permission', 'guard_name' => 'web', 'module' => 3, 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'delete.permission', 'guard_name' => 'web', 'module' => 3, 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'view.permission', 'guard_name' => 'web', 'module' => 3, 'created_at' => $date, 'updated_at' => $date],
+
+            ['name' => 'create.plan', 'guard_name' => 'web', 'module' => 4, 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'edit.plan', 'guard_name' => 'web', 'module' => 4, 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'delete.plan', 'guard_name' => 'web', 'module' => 4, 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'view.plan', 'guard_name' => 'web', 'module' => 4, 'created_at' => $date, 'updated_at' => $date],
+
+            ['name' => 'create.subscription', 'guard_name' => 'web', 'module' => 5, 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'edit.subscription', 'guard_name' => 'web', 'module' => 5, 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'delete.subscription', 'guard_name' => 'web', 'module' => 5, 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'view.subscription', 'guard_name' => 'web', 'module' => 5, 'created_at' => $date, 'updated_at' => $date],
         ];
-        Module::insert($module);    
+        Module::insert($module);
         Permission::insert($permission);
         $role = Role::where('name','super')->first();
         $role->givePermissionTo(Permission::all());

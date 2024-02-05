@@ -26,28 +26,9 @@ class SubscriptionController extends Controller {
                 ->editColumn('user_id', function ($row) {
                     return $row->user->username;
                 })
+                ->addColumn('action', 'subscriptions.action')
 
-                ->addColumn('action', function ($row) {
-                    $btn = '<div class="dropdown">
-                    <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
 
-                    </a>
-
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li class="dropdown-item">
-                        <a  href="#" id="edit_item" data-path="'.route('subscriptions.view', $row->id).'">View or Edit</a>
-                        </li>
-
-                        <li class="dropdown-item">
-                        <a  href="#" data-id="'.$row->id.'" class="subscription-delete">Delete</a>
-                        </li>
-                    </ul>
-                </div>';
-
-                    return $btn;
-                })
                 ->rawColumns(['plan_id', 'action'])
 
                 ->addIndexColumn()

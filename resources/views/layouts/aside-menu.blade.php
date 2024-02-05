@@ -130,16 +130,21 @@
                     <span class="side-menu__label">{{ $item->sidebar_name }}</span><i
                         class="angle fa fa-angle-right"></i></a>
                 <ul class="slide-menu ">
+                    @can("view.".$item->module->code)
                     <li class="sub-slide">
                         <a class="sub-side-menu__item" href="{{ url('/' . $item->path) }}"><span
                                 class="sub-side-menu__label">{{ $item->name }}</span></a>
                     </li>
+                    @endcan
 
                     @foreach ($item->children as $item)
+                    @can("view.".$item->module->code)
+
                     <li class="sub-slide">
                         <a class="sub-side-menu__item" href="{{ url('/' . $item->path) }}"><span
                                 class="sub-side-menu__label">{{ $item->name }}</span></a>
                     </li>
+                    @endcan
                     @endforeach
                 </ul>
 
@@ -254,8 +259,9 @@
 
             </ul>
         </li>
-
+        @if (Auth::user()->hasAnyPermission(['view.plan', 'view.subscription']))
         <li class="slide">
+
             <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}">
                 <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24"
                     width="24">
@@ -264,19 +270,28 @@
                 </svg>
                 <span class="side-menu__label">Subscriptions</span><i class="angle fa fa-angle-right"></i>
             </a>
+
             <ul class="slide-menu ">
+                @can('view.subscription')
+
                 <li class="sub-slide">
                     <a class="sub-side-menu__item" href="{{ route('subscriptions.index') }}"><span
                             class="sub-side-menu__label">Subscriptions</span></a>
                 </li>
+                @endcan
+                @can('view.plan')
+
                 <li class="sub-slide">
                     {{-- {{ url('module')}} --}}
                     <a class="sub-side-menu__item" href="{{ route('plans.index') }}"><span
                             class="sub-side-menu__label">Plans</span></a>
                 </li>
+                @endcan
+
 
             </ul>
         </li>
+        @endif
     </ul>
 </aside>
 <!--aside closed-->

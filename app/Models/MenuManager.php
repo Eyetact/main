@@ -37,4 +37,7 @@ class MenuManager extends Model
     {
         return $this->belongsTo(MenuManager::class, 'parent');
     }
+    public function module(){
+        return $this->belongsTo(Module::class);
+    }
 }

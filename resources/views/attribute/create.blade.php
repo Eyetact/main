@@ -42,7 +42,7 @@
                         <div class="col-sm-12 input-box">
                             <label class="form-label" for="code">Code<span class="text-red">*</span></label>
                             <input type="text" name="code"
-                                class="google-input @error('code') is-invalid @enderror"
+                                class="google-input input-code @error('code') is-invalid @enderror"
                                 value="{{ old('code', $attribute->code) }}">
                                 <small class="text-secondary">
                                     <ul class="my-1 mx-2 p-0">
@@ -93,7 +93,7 @@
                                     <input title="Reset form" class="btn btn-success" id="add_new" type="button"
                                         value="+ Add Another">
                                 </div>
-                               
+
                                 <div class="multi-item">
                                     <input type="text" name="name" value="Size" class="google-input" />
                                     <div class="row">
@@ -127,7 +127,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            
+
                             </div> --}}
 
                         </div>
@@ -150,7 +150,7 @@
                             <input type="hidden" name="select_options" class="form-option">
                             <input type="hidden" name="constrains" class="form-constrain">
                             <input type="hidden" name="foreign_ids" class="form-foreign-id">
-                         
+
                         </div>
                     </div>
                 </div>

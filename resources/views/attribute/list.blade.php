@@ -413,6 +413,7 @@
 
         $(document).on('change', '.lookup-drop', function() {
             var id = $(this).find(':selected').data('id');
+
             var parent = $(this).parent().parent().parent().parent().find('.options');
             $.ajax({
                 url: '{{ url('/') }}/attribute-by-module/' + id,
@@ -425,6 +426,16 @@
                            ${response}
                         </select>
                     </div></div>`);
+
+                    var selectedValue = $('.lookup-drop').val();
+                    var modifiedValue = selectedValue + '_id';
+                    // alert(modifiedValue);
+
+                    $('.input-code').val(modifiedValue);
+                    $('.input-code').prop('readonly', true);
+
+
+
                 }
             });
         })
@@ -473,6 +484,7 @@
 
             switchRequired.prop('checked', true)
             switchRequired.prop('disabled', false)
+            $('.input-code').val('');
 
             $(`.form-default-value`).remove()
             $(`.custom-values`).append(`

@@ -35,7 +35,7 @@
                                         <div class="custom-control custom-checkbox ms-3 row  input-box">
                                             <div class="col-md-5">
                                                 <input id="{{ $permission->id }}" type="checkbox" class="check-one"
-                                                    name="permission_data[]" value="{{ $permission->id }}"
+                                                    name="permission_data[]" value="{{ $permission->name }}"
                                                     {{ $role->id != null && count($role->permission_data) > 0 && isset($role->permission_data[$permission->id]) ? 'checked' : '' }}>
                                                 <input id="{{ $permission->module }}" type="hidden"
                                                     name="permission_module[{{ $permission->id }}]"

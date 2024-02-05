@@ -61,10 +61,12 @@ table {
             </ol>
         </div>
         <div class="page-rightheader">
+            @can('create.plan')
             <div class="btn btn-list">
                 <a id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
                     data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
             </div>
+            @endcan
         </div>
     </div>
     <!--End Page header-->
@@ -234,11 +236,11 @@ table {
                 'data':null,
                 'defaultContent':'',
                 'checkboxes':{
- 
- 
+
+
                     'selectRow':true
                 }
-            },  
+            },
                 {
                     data: 'name',
                     name: 'name'
@@ -321,7 +323,7 @@ table {
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 
     <script type="text/javascript">
-   
+
         $(function(e) {
             $('.content').richText();
             $('.content2').richText();
