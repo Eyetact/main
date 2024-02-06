@@ -68,7 +68,7 @@ class IndexViewGenerator
                     searchable: false,
                     render: function(data, type, full, meta) {
                         return `<div class=\"avatar\">
-                            <img src=\"" . '$' . "{data}\" alt=\"" . GeneratorUtils::cleanSingularUcWords($field) . "\">
+                            <img src=\"' . '$' . '{data}\" alt=\"" . GeneratorUtils::cleanSingularUcWords($field) . "\">
                         </div>`;
                         }
                     },';
@@ -372,7 +372,7 @@ class IndexViewGenerator
                     searchable: false,
                     render: function(data, type, full, meta) {
                         return `<div class=\"avatar\">
-                            <img src=\"" . '$' . "{data}\" alt=\"" . GeneratorUtils::cleanSingularUcWords($field->name) . "\">
+                            <img src=\"' . '$' . '{data}\" alt=\"" . GeneratorUtils::cleanSingularUcWords($field->name) . "\">
                         </div>`;
                         }
                     },';
