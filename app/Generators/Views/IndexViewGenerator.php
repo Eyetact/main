@@ -61,17 +61,17 @@ class IndexViewGenerator
                          * },
                          */
 
-                        $tdColumns .= '{
-                    data: "' . str()->snake($field) . '",
-                    name: "' . str()->snake($field) . '",
+                        $tdColumns .= "{
+                    data: \"" . str()->snake($field) . "\",
+                    name: \"" . str()->snake($field) . "\",
                     orderable: false,
                     searchable: false,
                     render: function(data, type, full, meta) {
                         return `<div class=\"avatar\">
-                            <img src=\"' . '$' . '{data}\" alt=\"" . GeneratorUtils::cleanSingularUcWords($field) . "\">
+                            <img src=\"" . '$' . "{data}\" alt=\"" . GeneratorUtils::cleanSingularUcWords($field) . "\">
                         </div>`;
                         }
-                    },';
+                    },";
                     } else if ($request['input_types'][$i] == 'file') {
                         /**
                          * will generate something like:
@@ -88,9 +88,9 @@ class IndexViewGenerator
                          * },
                          */
 
-                        $tdColumns .= '{
-                            data: "' . str()->snake($field) . '",
-                            name: "' . str()->snake($field) . '",
+                        $tdColumns .= "{
+                    data: \"" . str()->snake($field) . "\",
+                    name: \"" . str()->snake($field) . "\",
                     orderable: false,
                     searchable: false,
                     render: function(data, type, full, meta) {
@@ -98,7 +98,7 @@ class IndexViewGenerator
                             {data}
                         </div>`;
                         }
-                    },';
+                    },";
                     } elseif ($request['column_types'][$i] == 'foreignId') {
                         // remove '/' or sub folders
                         $constrainModel = GeneratorUtils::setModelName($request['constrains'][$i], 'default');
@@ -112,10 +112,10 @@ class IndexViewGenerator
                          *    name: 'user.name'
                          * }
                          */
-                        $tdColumns .= '{
-                    data: "' . GeneratorUtils::singularSnakeCase($constrainModel) . '",
-                    name: "' . GeneratorUtils::singularSnakeCase($constrainModel) . '.' . GeneratorUtils::getColumnAfterId($constrainModel) . '"
-                },';
+                        $tdColumns .= "{
+                    data: \"" . GeneratorUtils::singularSnakeCase($constrainModel) . "\",
+                    name: \"" . GeneratorUtils::singularSnakeCase($constrainModel) . "." . GeneratorUtils::getColumnAfterId($constrainModel) . "\"
+                },";
                     } else {
                         /**
                          * will generate something like:
@@ -124,10 +124,10 @@ class IndexViewGenerator
                          *    name: 'price'
                          * }
                          */
-                        $tdColumns .= '{
-                            data: "' . str()->snake($field) . '",
-                            name: "' . str()->snake($field) . '",
-                },';
+                        $tdColumns .= "{
+                    data: \"" . str()->snake($field) . "\",
+                    name: \"" . str()->snake($field) . "\",
+                },";
                     }
 
                     if ($i + 1 != $totalFields) {
@@ -365,17 +365,17 @@ class IndexViewGenerator
                      * },
                      */
 
-                    $tdColumns .= '{
-                        data: "' . str()->snake($field) . '",
-                        name: "' . str()->snake($field) . '",
+                    $tdColumns .= "{
+                    data: \"" . str()->snake($field->code) . "\",
+                    name: \"" . str()->snake($field->name) . "\",
                     orderable: false,
                     searchable: false,
                     render: function(data, type, full, meta) {
                         return `<div class=\"avatar\">
-                            <img src=\"' . '$' . '{data}\" alt=\"" . GeneratorUtils::cleanSingularUcWords($field->name) . "\">
+                            <img src=\"" . '$' . "{data}\" alt=\"" . GeneratorUtils::cleanSingularUcWords($field->name) . "\">
                         </div>`;
                         }
-                    },';
+                    },";
                 } elseif ($field->type == 'foreignId') {
                     // remove '/' or sub folders
                     $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
@@ -389,10 +389,10 @@ class IndexViewGenerator
                      *    name: 'user.name'
                      * }
                      */
-                    $tdColumns .= '{
-                    data: "' . GeneratorUtils::singularSnakeCase($constrainModel) . '",
-                    name: "' . GeneratorUtils::singularSnakeCase($constrainModel) . '.' . $field->attribute . '"
-                },';
+                    $tdColumns .= "{
+                    data: \"" . GeneratorUtils::singularSnakeCase($constrainModel) . "\",
+                    name: \"" . GeneratorUtils::singularSnakeCase($constrainModel) . "." . $field->attribute . "\"
+                },";
                 } else {
                     /**
                      * will generate something like:
@@ -401,10 +401,10 @@ class IndexViewGenerator
                      *    name: 'price'
                      * }
                      */
-                    $tdColumns .= '{
-                        data: "' . str()->snake($field) . '",
-                        name: "' . str()->snake($field) . '",
-                },';
+                    $tdColumns .= "{
+                    data: \"" . str()->snake($field->code) . "\",
+                    name: \"" . str()->snake($field->name) . "\",
+                },";
                 }
 
                 if ($i + 1 != $totalFields) {
