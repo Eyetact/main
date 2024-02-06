@@ -373,7 +373,7 @@ class MigrationGenerator
         // $module = Module::find($id);
         // $migrationName = $module->migration ;
 
-        file_put_contents(database_path("/migrations/$migrationName"), $template);
+        file_put_contents(database_path("/migrations/Admin/$migrationName"), $template);
 
         Artisan::call("migrate");
 
