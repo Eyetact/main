@@ -24,10 +24,10 @@ class RequestGenerator
 
         switch ($path) {
             case '':
-                $namespace = "namespace App\Http\Requests;";
+                $namespace = "namespace App\Http\Requests\Admin;";
                 break;
             default:
-                $namespace = "namespace App\Http\Requests\\$path;";
+                $namespace = "namespace App\Http\Requests\Admin\\$path;";
                 break;
         }
 
@@ -315,10 +315,10 @@ class RequestGenerator
 
         switch ($path) {
             case '':
-                $namespace = "namespace App\Http\Requests;";
+                $namespace = "namespace App\Http\Requests\Admin;";
                 break;
             default:
-                $namespace = "namespace App\Http\Requests\\$path;";
+                $namespace = "namespace App\Http\Requests\Admin\\$path;";
                 break;
         }
 

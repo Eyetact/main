@@ -29,12 +29,12 @@ class WebControllerGenerator
         switch ($path) {
             case '':
                 $namespace = "namespace App\Http\Controllers\Admin;\nuse App\Http\Controllers\Controller;";
-                $requestPath = "App\Http\Requests\{Store" . $modelNameSingularPascalCase . "Request, Update" . $modelNameSingularPascalCase . "Request}";
+                $requestPath = "App\Http\Requests\Admin\{Store" . $modelNameSingularPascalCase . "Request, Update" . $modelNameSingularPascalCase . "Request}";
                 break;
             default:
 
                 $namespace = "namespace App\Http\Controllers\Admin\\$path;\n\nuse App\Http\Controllers\Controller;";
-                $requestPath = "App\Http\Requests\\" . $path . "\{Store" . $modelNameSingularPascalCase . "Request, Update" . $modelNameSingularPascalCase . "Request}";
+                $requestPath = "App\Http\Requests\Admin\\" . $path . "\{Store" . $modelNameSingularPascalCase . "Request, Update" . $modelNameSingularPascalCase . "Request}";
                 break;
         }
 
@@ -128,7 +128,7 @@ class WebControllerGenerator
                 $query,
                 $namespace,
                 $requestPath,
-                $path != '' ? "App\Models\\$path\\$modelNameSingularPascalCase" : "App\Models\\$modelNameSingularPascalCase",
+                $path != '' ? "App\Models\Admin\\$path\\$modelNameSingularPascalCase" : "App\Models\Admin\\$modelNameSingularPascalCase",
                 $path != '' ? str_replace('\\', '.', strtolower($path)) . "." : '',
                 $insertDataAction,
                 $updateDataAction,
@@ -171,12 +171,12 @@ class WebControllerGenerator
         switch ($path) {
             case '':
                 $namespace = "namespace App\Http\Controllers\Admin;\nuse App\Http\Controllers\Controller;";
-                $requestPath = "App\Http\Requests\{Store" . $modelNameSingularPascalCase . "Request, Update" . $modelNameSingularPascalCase . "Request}";
+                $requestPath = "App\Http\Requests\Admin\{Store" . $modelNameSingularPascalCase . "Request, Update" . $modelNameSingularPascalCase . "Request}";
                 break;
             default:
 
                 $namespace = "namespace App\Http\Controllers\Admin\\$path;\n\nuse App\Http\Controllers\Controller;";
-                $requestPath = "App\Http\Requests\\" . $path . "\{Store" . $modelNameSingularPascalCase . "Request, Update" . $modelNameSingularPascalCase . "Request}";
+                $requestPath = "App\Http\Requests\Admin\\" . $path . "\{Store" . $modelNameSingularPascalCase . "Request, Update" . $modelNameSingularPascalCase . "Request}";
                 break;
         }
 
@@ -275,7 +275,7 @@ class WebControllerGenerator
                 $query,
                 $namespace,
                 $requestPath,
-                $path != '' ? "App\Models\\$path\\$modelNameSingularPascalCase" : "App\Models\\$modelNameSingularPascalCase",
+                $path != '' ? "App\Models\Admin\\$path\\$modelNameSingularPascalCase" : "App\Models\Admin\\$modelNameSingularPascalCase",
                 $path != '' ? str_replace('\\', '.', strtolower($path)) . "." : '',
                 $insertDataAction,
                 $updateDataAction,

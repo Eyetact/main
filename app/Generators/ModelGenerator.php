@@ -39,10 +39,10 @@ class ModelGenerator
 
         switch ($path) {
             case '':
-                $namespace = "namespace App\\Models;";
+                $namespace = "namespace App\\Models\Admin;";
                 break;
             default:
-                $namespace = "namespace App\\Models\\$path;";
+                $namespace = "namespace App\\Models\Admin\\$path;";
                 break;
         }
 
@@ -235,10 +235,10 @@ class ModelGenerator
 
         switch ($path) {
             case '':
-                $namespace = "namespace App\\Models;";
+                $namespace = "namespace App\\Models\Admin;";
                 break;
             default:
-                $namespace = "namespace App\\Models\\$path;";
+                $namespace = "namespace App\\Models\Admin\\$path;";
                 break;
         }
 
