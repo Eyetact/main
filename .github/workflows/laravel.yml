@@ -14,4 +14,4 @@ jobs:
         username: ${{ secrets.username }}
         host: ${{ secrets.host }}
         password: ${{ secrets.password }}
-        script: 'ls '
+        script: 'cd public_html/laravel && ./server_deploy.sh '
