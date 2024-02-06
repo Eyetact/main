@@ -263,4 +263,4 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 });
 
-include_once(base_path('routes/generator.php'));
+include_once(base_path('routes/generator/generator.php'));

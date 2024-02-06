@@ -23,9 +23,9 @@ Homestead.json
 .phpunit.result.cache
 
 resources/views/admin
-routes/generator.php
+routes/generator
 database/migrations/admin
-app/Providers/ViewServiceProvider.php
+app/Providers/Generator
 app/Models/Admin
 app/Http/Controllers/Admin
 app/Http/Requests/Admin

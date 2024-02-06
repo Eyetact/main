@@ -26,7 +26,7 @@ class WebRouteGenerator
         $controllerClass .= "\n" . "Route::resource('" . $modelNamePluralLowercase . "', App\Http\Controllers\Admin\\" . $modelNameSingularPascalCase . "Controller::class)->middleware('auth');";
 
 
-        File::append(base_path('routes/generator.php'), $controllerClass);
+        File::append(base_path('routes/generator/generator.php'), $controllerClass);
     }
 
     /**

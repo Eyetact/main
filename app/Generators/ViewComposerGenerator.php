@@ -69,7 +69,7 @@ class ViewComposerGenerator
                         ],
                         GeneratorUtils::getTemplate('view-composer')
                     );
-                    $path = app_path('Providers/ViewServiceProvider.php');
+                    $path = app_path('Providers/Generator/ViewServiceProvider.php');
 
                     $viewProviderTemplate = substr(file_get_contents($path), 0, -6) . "\n\n\t\t" . $template . "\n\t}\n}";
 
@@ -135,7 +135,7 @@ class ViewComposerGenerator
                     ],
                     GeneratorUtils::getTemplate('view-composer')
                 );
-                $path = app_path('Providers/ViewServiceProvider.php');
+                $path = app_path('Providers/Generator/ViewServiceProvider.php');
 
                 $viewProviderTemplate = substr(file_get_contents($path), 0, -6) . "\n\n\t\t" . $template . "\n\t}\n}";
 
