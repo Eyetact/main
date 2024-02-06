@@ -21,3 +21,12 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+
+resources/views/admin
+routes/generator.php
+database/migrations/admin
+app/Providers/ViewServiceProvider.php
+app/Models/Admin
+app/Http/Controllers/Admin
+app/Http/Requests/Admin
+/public/
