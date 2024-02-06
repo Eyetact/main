@@ -8,26 +8,24 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::dropIfExists('machines');
-        Schema::create('machines', function (Blueprint $table) {
+        Schema::create('permission_counts', function (Blueprint $table) {
             $table->id();
-            
+            $table->integer('role_id');
+            $table->integer('permission_id');
+            $table->integer('count');
+            $table->text('type');
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('machines');
+        Schema::dropIfExists('permission_counts');
     }
 };

@@ -130,7 +130,7 @@
                     <span class="side-menu__label">{{ $item->sidebar_name }}</span><i
                         class="angle fa fa-angle-right"></i></a>
                 <ul class="slide-menu ">
-                    @can("view.".$item->module->code)
+                    @can("view.".strtolower($item->module->code))
                     <li class="sub-slide">
                         <a class="sub-side-menu__item" href="{{ url('/' . $item->path) }}"><span
                                 class="sub-side-menu__label">{{ $item->name }}</span></a>
@@ -138,7 +138,7 @@
                     @endcan
 
                     @foreach ($item->children as $item)
-                    @can("view.".$item->module->code)
+                    @can("view.".strtolower($item->module->code))
 
                     <li class="sub-slide">
                         <a class="sub-side-menu__item" href="{{ url('/' . $item->path) }}"><span

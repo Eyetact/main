@@ -72,16 +72,14 @@
 
 
                                                     @if (str_contains($permission->name, 'edit'))
+                                                       
                                                         <div class="col-md-6 select-box">
 
                                                             <select name="schedule_no_edit[{{ $permission->id }}]"
                                                                 class="google-input" title="Number">
-                                                                <option value="0"
-                                                                    {{ $scheduler_data['scheduler_no'] == '0' || $scheduler_data['scheduler_no'] == null ? 'selected' : '' }}>
-                                                                    0</option>
-                                                                @for ($i = 1; $i <= 10; $i++)
-                                                                    <option value="{{ $i }}"
-                                                                        {{ $scheduler_data['scheduler_no'] == $i ? 'selected' : '' }}>
+
+                                                                @for ($i = 0; $i <= 10; $i++)
+                                                                    <option value="{{ $i }}" @selected( $permission->getCountByrole($role->id) == $i )>
                                                                         {{ $i }}</option>
                                                                 @endfor
                                                             </select>
@@ -115,12 +113,9 @@
                                                             <select name="schedule_no_delete[{{ $permission->id }}]"
                                                                 class="google-input schedule_no_delete schedule_no"
                                                                 title="Number">
-                                                                <option value="0"
-                                                                    {{ $scheduler_data['scheduler_no'] == '0' || $scheduler_data['scheduler_no'] == null ? 'selected' : '' }}>
-                                                                    0</option>
-                                                                @for ($i = 1; $i <= 10; $i++)
-                                                                    <option value="{{ $i }}"
-                                                                        {{ $scheduler_data['scheduler_no'] == $i ? 'selected' : '' }}>
+                   
+                                                                @for ($i = 0; $i <= 10; $i++)
+                                                                    <option value="{{ $i }}" @selected( $permission->getCountByrole($role->id) == $i )>
                                                                         {{ $i }}</option>
                                                                 @endfor
                                                             </select>
@@ -129,11 +124,9 @@
                                                             <select name="schedule_time_delete[{{ $permission->id }}]"
                                                                 class="google-input schedule_time_delete schedule_time"
                                                                 title="Time">
-                                                                <option value="day"
-                                                                    {{ $scheduler_data['type'] == 'day' || $scheduler_data['type'] == null ? 'selected' : '' }}>
+                                                                <option value="day" @selected( $permission->getCountByrole($role->id,1) == 'day' )>
                                                                     Days</option>
-                                                                <option value="week"
-                                                                    {{ $scheduler_data['type'] == 'week' ? 'selected' : '' }}>
+                                                                <option value="week" @selected( $permission->getCountByrole($role->id,1) == 'day' )>
                                                                     Weeks</option>
                                                                 <option value="month"
                                                                     {{ $scheduler_data['type'] == 'month' ? 'selected' : '' }}>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Permission;
+use App\Models\PermissionCount;
 use App\Models\Role;
 use App\Models\RoleSchedulerSetting;
 use Illuminate\Http\Request;
@@ -12,7 +14,7 @@ use Illuminate\Support\Facades\Session;
 use App\Repositories\FlashRepository;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Spatie\Permission\Models\Permission;
+
 
 class RoleController extends Controller
 {
@@ -233,11 +235,6 @@ class RoleController extends Controller
         $inputData = $request->all();
 
         $permission_data = $inputData['permission_data'];
-        $schedule_no_edit = $inputData['schedule_no_edit'];
-        $schedule_time_edit = $inputData['schedule_time_edit'];
-        $schedule_no_delete = $inputData['schedule_no_delete'];
-        $schedule_time_delete = $inputData['schedule_time_delete'];
-        $permission_module = $inputData['permission_module'];
 
         $request->validate([
             'name' => ['required',
@@ -249,60 +246,40 @@ class RoleController extends Controller
 
         $role->update(['name' => $request->name, 'guard_name' => $request->guard_name]);
 
-        // dd($request->get('permission_data'));
-
-        $permission_data = $request->get('permission_data');
         $role->syncPermissions($permission_data);
 
-        RoleSchedulerSetting::where('role_id', $id)->delete();
+        $type = $request->schedule_time_delete;
 
-        $insertData = array();
-        for ($i = 0; $i < count($permission_data); $i++) {
-            $permission_id = Permission::where('name',$permission_data[$i])->first()->id  ;
-            $module_id = $permission_module[$permission_id];
-
-            if (isset($schedule_no_edit[$permission_data[$i]])) {
-                //For edit
-                $scheduler_no = $schedule_no_edit[$permission_data[$i]];
-                $type = $schedule_time_edit[$permission_data[$i]];
-
-                $date = date('Y-m-d', strtotime('+ 10 days')); //set integer based on the type selected
-
-                $insertData[] = array(
-                    'user_id' => auth()->user()->id,
-                    'role_id' => $role->id,
-                    'permission_id' => $permission_id,
-                    'module_id' => $module_id,
-                    'scheduler_no' => $scheduler_no,
-                    'type' => $type,
-                    'status' => ($scheduler_no == 0 ? 0 : 1),
-                    'access_action_date_time' => $date,
-                    'model_access_action_permission' => 'edit',
-                );
-            }
-
-            if (isset($schedule_no_delete[$permission_data[$i]])) {
-                //For delete
-                $scheduler_no = $schedule_no_delete[$permission_data[$i]];
-                $type = $schedule_time_delete[$permission_data[$i]];
-
-                $date = date('Y-m-d', strtotime('+ 10 days')); //set integer based on the type selected
-
-                $insertData[] = array(
-                    'user_id' => auth()->user()->id,
-                    'role_id' => $role->id,
-                    'permission_id' => $permission_id,
-                    'module_id' => $module_id,
-                    'scheduler_no' => $scheduler_no,
-                    'type' => $type,
-                    'status' => ($scheduler_no == 0 ? 0 : 1),
-                    'access_action_date_time' => $date,
-                    'model_access_action_permission' => 'delete',
-                );
-            }
+        foreach ($request->schedule_no_delete as $key => $value) {
+            PermissionCount::updateOrCreate(
+                [
+                    'role_id'=>$id,
+                    'permission_id'=>$key,
+                    
+                ],
+                [
+                    'count'=>$value,
+                    'type' => $type[$key]
+                ]
+            );
         }
 
-        RoleSchedulerSetting::insert($insertData);
+        $type = $request->schedule_time_edit;
+
+        foreach ($request->schedule_no_edit as $key => $value) {
+            PermissionCount::updateOrCreate(
+                [
+                    'role_id'=>$id,
+                    'permission_id'=>$key,
+                    
+                ],
+                [
+                    'count'=>$value,
+                    'type' => $type[$key]
+                ]
+            );
+        }
+
 
         $this->flashRepository->setFlashSession('alert-success', 'Role updated successfully.');
 

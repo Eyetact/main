@@ -3,10 +3,12 @@
 namespace App\Helpers;
 
 use App\Models\MenuManager;
+use App\Models\Permission;
 use App\Models\ThemeSetting;
 use App\Models\Module;
 use App\Models\UCGroup;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -88,4 +90,34 @@ class Helper
         return $data;
     }
 
+
+    public function canWithCount($name,$created_at){
+        $count      = Permission::where('name',$name)->first()->count;
+        $count_type = Permission::where('name',$name)->first()->count_type;
+
+        if($count == 0){
+            return true;
+        }
+
+        switch ($count_type) {
+            case 'days':
+                $date = Carbon::parse($created_at);
+                $now = Carbon::now();
+                $diff = $date->diffInDays($now);
+                if($diff <=  $count){
+                    return true;
+                }
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
+        return false;
+        
+    }
+
 }
+
+

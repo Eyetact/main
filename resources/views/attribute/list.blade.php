@@ -484,7 +484,10 @@
 
             switchRequired.prop('checked', true)
             switchRequired.prop('disabled', false)
-            $('.input-code').val('');
+
+            $('.input-code').prop('readonly', false);
+
+            
 
             $(`.form-default-value`).remove()
             $(`.custom-values`).append(`

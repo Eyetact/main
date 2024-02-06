@@ -47,6 +47,18 @@ class Permission extends Model
         return $query;
     }
 
+    public function permissionCount(){
+        return $this->hasMany(PermissionCount::class);
+    }
 
+
+    public function getCountByRole($role,$type =0){
+        if($type){
+            return isset($this->permissionCount()?->where('role_id',$role)?->first()?->type) ? $this->permissionCount()?->where('role_id',$role)?->first()?->type : 'day';
+        }
+        return (int)$this->permissionCount()?->where('role_id',$role)?->first()?->count;
+    }
+
+    
 
 }
