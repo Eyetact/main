@@ -166,7 +166,9 @@ class MigrationGenerator
         $module = Module::find($id);
         $module->migration = $migrationName;
         $module->save();
-        file_put_contents(database_path("/migrations/$migrationName"), $template);
+        GeneratorUtils::checkFolder(database_path('/migrations/Admin'));
+
+        file_put_contents(database_path("/migrations/Admin/$migrationName"), $template);
     }
 
     public function reGenerate($id)
@@ -327,8 +329,9 @@ class MigrationGenerator
         $migrationName = date('Y') . '_' . date('m') . '_' . date('d') . '_' . date('h') . date('i') . date('s') . '_edit_' . $tableNamePluralLowercase . '_table.php';
         // $module = Module::find($id);
         // $migrationName = $module->migration ;
+        GeneratorUtils::checkFolder(database_path('/migrations/Admin'));
 
-        file_put_contents(database_path("/migrations/$migrationName"), $template);
+        file_put_contents(database_path("/migrations/Admin/$migrationName"), $template);
 
 
     }

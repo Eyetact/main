@@ -291,12 +291,12 @@ class RequestGenerator
          */
         switch ($path) {
             case '':
-                GeneratorUtils::checkFolder(app_path('/Http/Requests'));
-                file_put_contents(app_path("/Http/Requests/Store{$model}Request.php"), $storeRequestTemplate);
-                file_put_contents(app_path("/Http/Requests/Update{$model}Request.php"), $updateRequestTemplate);
+                GeneratorUtils::checkFolder(app_path('/Http/Requests/Admin'));
+                file_put_contents(app_path("/Http/Requests/Admin/Store{$model}Request.php"), $storeRequestTemplate);
+                file_put_contents(app_path("/Http/Requests/Admin/Update{$model}Request.php"), $updateRequestTemplate);
                 break;
             default:
-                $fullPath = app_path("/Http/Requests/$path");
+                $fullPath = app_path("/Http/Requests/Admin/$path");
                 GeneratorUtils::checkFolder($fullPath);
                 file_put_contents("$fullPath/Store{$model}Request.php", $storeRequestTemplate);
                 file_put_contents("$fullPath/Update{$model}Request.php", $updateRequestTemplate);
@@ -590,12 +590,12 @@ class RequestGenerator
          */
         switch ($path) {
             case '':
-                GeneratorUtils::checkFolder(app_path('/Http/Requests'));
-                file_put_contents(app_path("/Http/Requests/Store{$model}Request.php"), $storeRequestTemplate);
-                file_put_contents(app_path("/Http/Requests/Update{$model}Request.php"), $updateRequestTemplate);
+                GeneratorUtils::checkFolder(app_path('/Http/Requests/Admin'));
+                file_put_contents(app_path("/Http/Requests/Admin/Store{$model}Request.php"), $storeRequestTemplate);
+                file_put_contents(app_path("/Http/Requests/Admin/Update{$model}Request.php"), $updateRequestTemplate);
                 break;
             default:
-                $fullPath = app_path("/Http/Requests/$path");
+                $fullPath = app_path("/Http/Requests/Admin/$path");
                 GeneratorUtils::checkFolder($fullPath);
                 file_put_contents("$fullPath/Store{$model}Request.php", $storeRequestTemplate);
                 file_put_contents("$fullPath/Update{$model}Request.php", $updateRequestTemplate);
