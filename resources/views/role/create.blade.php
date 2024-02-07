@@ -1,6 +1,7 @@
 <form action="{{ $role->id == null ? route('role.store') : route('role.update', ['role' => $role->id]) }}" method="POST"
     id="role_form" novalidate="" class="needs-validation">
     <div class="card-body">
+        
         @csrf
         <div class="row">
             <div class="col-sm-12 col-lg-12">
@@ -89,17 +90,13 @@
                                                             <select name="schedule_time_edit[{{ $permission->id }}]"
                                                                 class="google-input schedule_time_edit schedule_time"
                                                                 title="Time">
-                                                                <option value="day"
-                                                                    {{ $scheduler_data['type'] == 'day' || $scheduler_data['type'] ==null ? 'selected' : '' }}>
+                                                                <option value="day" @selected( $permission->getCountByrole($role->id,1) == 'day' )>
                                                                     Days</option>
-                                                                <option value="week"
-                                                                    {{ $scheduler_data['type'] == 'week' ? 'selected' : '' }}>
+                                                                <option value="week" @selected( $permission->getCountByrole($role->id,1) == 'week' )>
                                                                     Weeks</option>
-                                                                <option value="month"
-                                                                    {{ $scheduler_data['type'] == 'month' ? 'selected' : '' }}>
+                                                                <option value="month" @selected( $permission->getCountByrole($role->id,1) == 'month' )>
                                                                     Months</option>
-                                                                <option value="year"
-                                                                    {{ $scheduler_data['type'] == '0' ? 'selected' : '' }}>
+                                                                <option value="year" @selected( $permission->getCountByrole($role->id,1) == 'year' )>
                                                                     Years</option>
                                                             </select>
                                                         </div>
@@ -126,13 +123,11 @@
                                                                 title="Time">
                                                                 <option value="day" @selected( $permission->getCountByrole($role->id,1) == 'day' )>
                                                                     Days</option>
-                                                                <option value="week" @selected( $permission->getCountByrole($role->id,1) == 'day' )>
+                                                                <option value="week" @selected( $permission->getCountByrole($role->id,1) == 'week' )>
                                                                     Weeks</option>
-                                                                <option value="month"
-                                                                    {{ $scheduler_data['type'] == 'month' ? 'selected' : '' }}>
+                                                                <option value="month" @selected( $permission->getCountByrole($role->id,1) == 'month' )>
                                                                     Months</option>
-                                                                <option value="year"
-                                                                    {{ $scheduler_data['type'] == '0' ? 'selected' : '' }}>
+                                                                <option value="year" @selected( $permission->getCountByrole($role->id,1) == 'year' )>
                                                                     Years</option>
                                                             </select>
                                                         </div>

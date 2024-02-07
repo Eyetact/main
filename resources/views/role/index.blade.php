@@ -111,6 +111,7 @@
 @endsection
 
 @section('content')
+
     <div class="row">
         <!-- Zero Configuration  Starts-->
         <div class="col-sm-12">

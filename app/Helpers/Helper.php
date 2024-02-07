@@ -11,6 +11,7 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class Helper
 {
@@ -91,31 +92,64 @@ class Helper
     }
 
 
-    public function canWithCount($name,$created_at){
-        $count      = Permission::where('name',$name)->first()->count;
-        $count_type = Permission::where('name',$name)->first()->count_type;
+    public static function canWithCount($name, $created_at)
+    {
 
-        if($count == 0){
+        $role = Role::where('name', Auth::user()->getRoleNames()->first())->first();
+        $permission = Permission::where('name', $name)->first();
+        $count = $permission->getCountByrole($role->id);
+        $count_type = $permission->getCountByrole($role->id, 1);
+
+        if ($count == 0) {
             return true;
         }
 
         switch ($count_type) {
-            case 'days':
+            case 'day':
                 $date = Carbon::parse($created_at);
                 $now = Carbon::now();
                 $diff = $date->diffInDays($now);
-                if($diff <=  $count){
+                if ($diff < $count) {
                     return true;
                 }
                 break;
-            
+
+            case 'week':
+                $date = Carbon::parse($created_at);
+                $now = Carbon::now();
+                $diff = $date->diffInWeeks($now);
+                // echo $diff;
+                if ($diff < $count) {
+                    return true;
+                }
+                break;
+
+            case 'month':
+                $date = Carbon::parse($created_at);
+                $now = Carbon::now();
+                $diff = $date->diffInMonths($now);
+                // echo $diff;
+                if ($diff < $count) {
+                    return true;
+                }
+                break;
+            case 'year':
+                $date = Carbon::parse($created_at);
+                $now = Carbon::now();
+                $diff = $date->diffInYears($now);
+                // echo $diff;
+                if ($diff < $count) {
+                    return true;
+                }
+                break;
+
             default:
                 # code...
                 break;
         }
 
         return false;
-        
+
     }
 
 }
