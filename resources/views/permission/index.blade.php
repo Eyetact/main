@@ -78,7 +78,6 @@
                                     <th>Permission</th>
                                     <th>type</th>
                                     <th>module</th>
-                                    <th>count</th>
                                     <th>Guard</th>
                                     <th width="300px"></th>
                                 </tr>
@@ -219,11 +218,7 @@
                     data: 'module',
                     name: 'module'
                 },
-                
-                {
-                    data: 'count',
-                    name: 'count'
-                },
+            
                 {
                     data: 'guard_name',
                     name: 'guard_name'

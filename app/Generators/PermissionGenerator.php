@@ -19,7 +19,7 @@ class PermissionGenerator
         $model = GeneratorUtils::setModelName($request['code'], 'default');
         $modelNameSingular = GeneratorUtils::cleanSingularLowerCase($model);
 
-        $this->insertRoleAndPermissions($modelNameSingular,$id);
+        $this->insertRoleAndPermissions(strtolower($modelNameSingular),$id);
     }
 
     /**
