@@ -101,6 +101,7 @@ class Helper
             return true;
         }
 
+
         $role = Role::where('name', Auth::user()->getRoleNames()->first())->first();
         $permission = Permission::where('name', $name)->first();
         $count = $permission->getCountByrole($role->id);

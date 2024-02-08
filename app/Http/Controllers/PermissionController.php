@@ -33,37 +33,10 @@ class PermissionController extends Controller
                 $module_name = Module::find($row->module);
                 return ($module_name->name ?? $row->module);
             })
-            // ->addColumn('action', 'company-action')
-            ->addColumn('action', function($row){
-                // // $btn = '<a class="btn-default  edit-role edit_form" data-path="'.route('permission.edit', ['permission' => $row->id]).'"> <button><i class="fa fa-edit"></i></button> </a>';
-
-                // // $btn = $btn.'<button type="submit" class="btn-danger btn-xs delete-permission" data-id="'.$row->id.'"><i class="fa fa-trash"></i></button>';
-
-                // // $btn = '<a class="edit-permission edit_form btn btn-icon btn-success mr-1 white" data-path="'.route('permission.edit', ['permission' => $row->id]).'" data-name="'.$row->name.'" data-id='.$row->id.' title="Edit"> <i class="fa fa-edit"></i> </a>';
-
-                // $btn = '<a href="'.route('permission.edit', ['permission' => $row->id]).'" class="btn btn-success btn-xs edit-permission" data-name="'.$row->name.'" data-id='.$row->id.'> <i class="fa fa-edit"></i> </a>';
-
-                // $btn = $btn.'<a class="btn btn-icon btn-danger mr-1 white delete-permission" data-id="'.$row->id.'" title="Delete"> <i class="fa fa-trash-o"></i> </a>';
 
 
 
-                $btn = '<div class="dropdown">
-                    <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-
-                    </a>
-
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-
-
-                        <li class="dropdown-item">
-                        <a  href="#" data-id="'. $row->id .'" class="user-delete">Delete</a>
-                        </li>
-                    </ul>
-                </div>';
-                return $btn;
-            })
+            ->addColumn('action', 'permission.action')
             ->addIndexColumn()
             ->make(true);
         }
