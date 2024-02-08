@@ -75,27 +75,7 @@ class UserController extends Controller
                 ->addColumn('admin', function ($row) {
                     return $row?->admin?->name;
                 })
-                ->addColumn('action', function ($row) {
-                    $btn = '<div class="dropdown">
-                    <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-
-                    </a>
-
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li class="dropdown-item">
-                        <a  href="' . route('profile.index', $row->id) . '">View or Edit</a>
-                        </li>
-
-                        <li class="dropdown-item">
-                        <a  href="#" data-id="' . $row->id . '" class="user-delete">Delete</a>
-                        </li>
-                    </ul>
-                </div>';
-
-                    return $btn;
-                })
+                ->addColumn('action', 'users.action')
                 ->rawColumns(['avatar', 'action'])
 
                 ->addIndexColumn()

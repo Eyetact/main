@@ -95,10 +95,18 @@ class Helper
     public static function canWithCount($name, $created_at)
     {
 
+        $super= Auth::user()->hasRole('super');
+        if($super)
+        {
+            return true;
+        }
+
         $role = Role::where('name', Auth::user()->getRoleNames()->first())->first();
         $permission = Permission::where('name', $name)->first();
         $count = $permission->getCountByrole($role->id);
         $count_type = $permission->getCountByrole($role->id, 1);
+
+
 
         if ($count == 0) {
             return true;
