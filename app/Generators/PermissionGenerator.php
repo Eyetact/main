@@ -65,6 +65,22 @@ class PermissionGenerator
             "edit.$model",
             "delete.$model"
         ]);
+
+        $user = auth()->user();
+        $role2 = $user->getRoleNames()->first(); // Retrieve the first role assigned to the user
+
+
+        if ($role2 && $role2 !== $role->name) {
+            $role2 = Role::where('name',$role2)->first();
+            $role2->givePermissionTo([
+                "view.$model",
+                "create.$model",
+                "edit.$model",
+                "delete.$model"
+            ]);
+        }
+
+
     }
 
     /**
