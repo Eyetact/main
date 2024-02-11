@@ -47,27 +47,7 @@ class RoleController extends Controller
                 //     }
                 //     return $btn;
                 // })
-                ->addColumn('action', function ($row) {
-                    $btn = '<div class="dropdown">
-                    <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-
-                    </a>
-
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li class="dropdown-item">
-                        <a class="edit-role edit_form" data-path="' . route('role.edit', ['role' => $row->id]) . '" data-name="' . $row->name . '" data-id=' . $row->id . '  href="#">View or Edit</a>
-                        </li>
-
-                        <li class="dropdown-item">
-                        <a  href="#" data-id="'.$row->id.'" class="delete-role">Delete</a>
-                        </li>
-                    </ul>
-                </div>';
-
-                    return $btn;
-                })
+                ->addColumn('action', 'role.action')
                 ->addIndexColumn()
                 ->make(true);
         }
@@ -227,6 +207,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $role = Role::find($id);
         if (empty($role)) {
             $this->flashRepository->setFlashSession('alert-danger', 'Role not found.');
@@ -251,11 +232,12 @@ class RoleController extends Controller
         $type = $request->schedule_time_delete;
 
         foreach ($request->schedule_no_delete as $key => $value) {
+
             PermissionCount::updateOrCreate(
                 [
                     'role_id'=>$id,
                     'permission_id'=>$key,
-                    
+
                 ],
                 [
                     'count'=>$value,
@@ -271,7 +253,7 @@ class RoleController extends Controller
                 [
                     'role_id'=>$id,
                     'permission_id'=>$key,
-                    
+
                 ],
                 [
                     'count'=>$value,

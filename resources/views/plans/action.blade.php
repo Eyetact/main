@@ -16,9 +16,11 @@
                 @endif
             @endcan
             @can('delete.plan')
+            @if (\App\Helpers\Helper::canWithCount('delete.plan', $model->created_at))
                 <li class="dropdown-item">
                     <a href="#" data-id="{{ $model->id }}" class="plan-delete">Delete</a>
                 </li>
+                @endif
             @endcan
         </ul>
     </div>

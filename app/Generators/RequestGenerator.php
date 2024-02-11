@@ -311,7 +311,7 @@ class RequestGenerator
         $path = GeneratorUtils::getModelLocation($module->code);
 
         $validations = '';
-        $totalFields = count($module->fields);
+        $totalFields = count($module->fields()->where('is_enable',1)->get());
 
         switch ($path) {
             case '':
@@ -322,7 +322,7 @@ class RequestGenerator
                 break;
         }
 
-        foreach ($module->fields as $i => $field) {
+        foreach ($module->fields()->where('is_enable',1)->get() as $i => $field) {
             $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
             /**
              * will generate like:
@@ -492,14 +492,14 @@ class RequestGenerator
                              * will generate like:
                              * 'name' => 'required|max:30|exists:App\Models\Master\Product,id',
                              */
-                            $validations .= "|exists:App\Models\\" . str_replace('/', '\\', $constrainpath) . "\\" . GeneratorUtils::singularPascalCase($constrainModel) . ",id',";
+                            $validations .= "|exists:App\Models\Admin\\" . str_replace('/', '\\', $constrainpath) . "\\" . GeneratorUtils::singularPascalCase($constrainModel) . ",id',";
                             break;
                         default:
                             /**
                              * will generate like:
                              * 'name' => 'required|max:30|exists:App\Models\Product,id',
                              */
-                            $validations .= "|exists:App\Models\\" . GeneratorUtils::singularPascalCase($constrainModel) . ",id',";
+                            $validations .= "|exists:App\Models\Admin\\" . GeneratorUtils::singularPascalCase($constrainModel) . ",id',";
                             break;
                     }
                     break;
@@ -556,7 +556,7 @@ class RequestGenerator
             $updateValidations = str_replace("->id'", "->id", $updateValidations);
         }
         if (count($module->fields()->where('input', 'password')->get()) > 0) {
-            foreach ($module->fields as $key => $field) {
+            foreach ($module->fields()->where('is_enable',1)->get() as $key => $field) {
                 if ($field->input == 'password' && ($field->required == 'yes' || $field->required == 'on')) {
                     /**
                      * change:

@@ -207,7 +207,7 @@ class AttributeController extends Controller
             'is_multi' => isset($request['is_multi']) ? 1 : 0, //for multi select
             'max_size' => $request['files_sizes'],
             'file_type' => $request['file_types'],
-            'code' => $request['code'],
+            'code' => str()->snake(str_replace(['.','/','\\','-',' ','!','@','#','$','%','^','&','*','(',')','+','=','<','>',',','{','}','[',']',':',';','"','\''], '', str($request['code'])->lower())),
             'attribute' => isset($request['attribute']) ? $request['attribute'] : ' ',
             'user_id' => auth()->user()->id,
         ];
@@ -222,7 +222,7 @@ class AttributeController extends Controller
 
             foreach ($requestData['multi'] as $key => $value) {
                 $m = new Multi();
-                $m->name = str()->snake(str_replace('.', '', str($value['name'])->lower()));
+                $m->name = str()->snake(str_replace(['.','/','\\','-',' ','!','@','#','$','%','^','&','*','(',')','+','=','<','>',',','{','}','[',']',':',';','"','\''], '', str($value['name'])->lower()));
                 $m->type = $value['type'];
                 $m->select_options = isset($value['select_options']) ? $value['select_options'] : '';
                 $m->attribute_id = $attribute->id;

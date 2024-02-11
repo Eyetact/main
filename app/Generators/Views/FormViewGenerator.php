@@ -578,7 +578,7 @@ class FormViewGenerator
         $template = "<div class=\"row mb-2\">\n";
 
 
-        foreach ($module->fields as $i => $field) {
+        foreach ($module->fields()->where('is_enable',1)->get() as $i => $field) {
             $field->name = GeneratorUtils::singularSnakeCase($field->name);
             $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
 
@@ -1083,7 +1083,7 @@ class FormViewGenerator
                                             $template .= '<td><div class="input-box">';
                                             $template .= ' <select name="' . $field->code . '[{{ $index }}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
 
-                                            $template.= '@foreach( \\App\\Models\\'.GeneratorUtils::singularPascalCase($value->constrain).'::all() as $item2 )';
+                                            $template.= '@foreach( \\App\\Models\\Admin\\'.GeneratorUtils::singularPascalCase($value->constrain).'::all() as $item2 )';
                                                 $template .= '<option @selected( isset($item->'.$value->name.') ? $item->'.$value->name.' == "$item2->'.$value->attribute . '" : 0 )  value="{{ $item2->'.$value->attribute . '}}" >{{ $item2->'.$value->attribute . '}}</option>';
 
                                             $template.= '@endforeach';

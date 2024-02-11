@@ -216,7 +216,7 @@ class ModelGenerator
         $casts = "[";
         $relations = "";
         $methods = "";
-        $totalFields = count($module->fields);
+        $totalFields = count($module->fields()->where('is_enable',1)->get());
         $dateTimeFormat = config('generator.format.datetime') ? config('generator.format.datetime') : 'd/m/Y H:i';
         $protectedHidden = "";
 
@@ -244,7 +244,7 @@ class ModelGenerator
 
 
 
-            foreach ($module->fields as $i => $field) {
+            foreach ($module->fields()->where('is_enable',1)->get() as $i => $field) {
                 $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
                 switch ($i + 1 != $totalFields) {
                     case true:
@@ -327,9 +327,9 @@ class ModelGenerator
                         }
 
                         if ($constrainPath != '') {
-                            $constrainPath = "\\App\\Models\\$constrainPath\\$constrainName";
+                            $constrainPath = "\\App\\Models\Admin\\$constrainPath\\$constrainName";
                         } else {
-                            $constrainPath = "\\App\\Models\\$constrainName";
+                            $constrainPath = "\\App\\Models\Admin\\$constrainName";
                         }
 
                         $relations .= "\n\tpublic function " . str()->snake($constrainName) . "()\n\t{\n\t\treturn \$this->belongsTo(" . $constrainPath . "::class" . $foreign_id . ");\n\t}";

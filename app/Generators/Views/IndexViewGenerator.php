@@ -191,9 +191,9 @@ class IndexViewGenerator
         $thColums = '';
         $tdColumns = '';
         $trhtml='';
-        $totalFields = count($module->fields);
+        $totalFields = count($module->fields()->where('is_enable',1)->get());
 
-        foreach ($module->fields as $i => $field) {
+        foreach ($module->fields()->where('is_enable',1)->get() as $i => $field) {
             $field->name = GeneratorUtils::singularSnakeCase($field->name);
             $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
 
@@ -215,7 +215,7 @@ class IndexViewGenerator
                         foreach ($field->multis as $key => $value) {
                             switch ($value->type) {
                             case 'foreignId':
-                                $trhtml .= '@foreach( \\App\\Models\\'. GeneratorUtils::singularPascalCase($value->constrain).'::all() as $item2 )
+                                $trhtml .= '@foreach( \\App\\Models\\Admin\\'. GeneratorUtils::singularPascalCase($value->constrain).'::all() as $item2 )
                                 ';
                                 $trhtml .= 'list_'.$field->id.' += \'<option  value="{{ $item2->'.$value->attribute . '}}" >{{ $item2->'.$value->attribute . '}}</option>\'
                                 ';

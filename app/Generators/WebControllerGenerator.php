@@ -189,7 +189,7 @@ class WebControllerGenerator
             ) {
                 $limitText = config('generator.format.limit_text') ? config('generator.format.limit_text') : 200;
 
-                foreach ($module->fields as $i => $field) {
+                foreach ($module->fields()->where('is_enable',1)->get() as $i => $field) {
                     if ($field->type == 'text' || $field->type == 'longText') {
                         $addColumns .= "->addColumn('" . str($field->code)->snake() . "', function(\$row){
                     return str(\$row->" . str($field->code)->snake() . ")->limit($limitText);
@@ -199,7 +199,7 @@ class WebControllerGenerator
             }
 
             // load the relations for create, show, and edit
-            if ( count($module->fields()->where('type','foreignId')->get()) > 0) {
+            if ( count($module->fields()->where('is_enable',1)->where('type','foreignId')->get()) > 0) {
 
                 $relations .= "$" . $modelNameSingularCamelCase . "->load(";
 
@@ -207,7 +207,7 @@ class WebControllerGenerator
 
                 $query = "$modelNameSingularPascalCase::with(";
 
-                foreach ($module->fields as $i => $field) {
+                foreach ($module->fields()->where('is_enable',1)->get() as $i => $field) {
                     $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
                     if ($field->constrain != null) {
                         $constrainName = GeneratorUtils::setModelName($field->constrain);

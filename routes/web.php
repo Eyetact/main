@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\Helper;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\FileManagerController;
@@ -265,3 +266,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 include_once(base_path('routes/generator/generator.php'));
+
+Route::get('clear', function(){
+    Artisan::call('optimize:clear');
+    echo "done";
+});
+

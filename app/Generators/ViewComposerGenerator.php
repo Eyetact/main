@@ -99,9 +99,9 @@ class ViewComposerGenerator
                 $table = GeneratorUtils::pluralSnakeCase($constrainModel);
 
                 if ($relatedModelPath != '') {
-                    $relatedModelPath = "\App\Models\\$relatedModelPath\\$constrainModel";
+                    $relatedModelPath = "\App\Models\Admin\\$relatedModelPath\\$constrainModel";
                 } else {
-                    $relatedModelPath = "\App\Models\\" . GeneratorUtils::singularPascalCase($constrainModel);
+                    $relatedModelPath = "\App\Models\Admin\\" . GeneratorUtils::singularPascalCase($constrainModel);
                 }
 
                 $allColums = Schema::getColumnListing($table);
