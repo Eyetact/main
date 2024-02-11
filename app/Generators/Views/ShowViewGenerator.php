@@ -154,10 +154,10 @@ class ShowViewGenerator
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
 
         $trs = "";
-        $totalFields = count($module->fields);
+        $totalFields = count($module->fields()->where('is_enable',1)->get());
         $dateTimeFormat = config('generator.format.datetime') ? config('generator.format.datetime') : 'd/m/Y H:i';
 
-        foreach ($module->fields as $i => $field) {
+        foreach ($module->fields()->where('is_enable',1)->get() as $i => $field) {
             $field->name = GeneratorUtils::singularSnakeCase($field->name);
             $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
             if ($field->input != 'password') {

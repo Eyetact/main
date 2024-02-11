@@ -50,9 +50,10 @@
         #tbl-field .form-check.form-switch div {
             margin: 0;
         }
+
         .input-box .google-input[disabled] {
-    background: #f3f3f3;
-}
+            background: #f3f3f3;
+        }
     </style>
 @endsection
 @section('page-header')
@@ -153,7 +154,7 @@
     <script src="{{ URL::asset('assets/plugins/select2/select2.full.min.js') }}"></script>
 
     <script type="text/javascript">
-    $(document).on('click', '#edit_item', function() {
+        $(document).on('click', '#edit_item', function() {
             // window.addEventListener('load', function() {
 
             // }, false);
@@ -161,8 +162,8 @@
             $.ajax({
                 url: path,
                 success: function(response) {
-                     console.log(path);
-                     console.log(response);
+                    console.log(path);
+                    console.log(response);
                     $(".modal-body").html(response);
                     $(".modal-title").html("edit Plan");
                     $("#role_form_modal").modal('show');
@@ -394,13 +395,14 @@
         $(document).on('change', '.select-module', function() {
             var id = $(this).find(':selected').data('id');
             var parent = $(this).parent().parent().parent().parent().find('.select_options');
-            let index = parseInt($(this).parent().parent().parent().parent().parent().find('.text-center').find('.input-box').html());
+            let index = parseInt($(this).parent().parent().parent().parent().parent().find('.text-center').find(
+                '.input-box').html());
             // alert(index)
             $.ajax({
                 url: '{{ url('/') }}/attribute-by-module/' + id,
                 success: function(response) {
-                     console.log(response);
-                     parent.find('.child-drop').remove()
+                    console.log(response);
+                    parent.find('.child-drop').remove()
                     parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="multi[${index}][attribute]" required>
@@ -418,8 +420,8 @@
             $.ajax({
                 url: '{{ url('/') }}/attribute-by-module/' + id,
                 success: function(response) {
-                     console.log(response);
-                     $('.child-drop').remove()
+                    console.log(response);
+                    $('.child-drop').remove()
                     parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="attribute" required>
@@ -450,7 +452,7 @@
                 $(this).parent().parent().find('.select_options').append(`<div class="input-box s-option mt-2">
                 <input type="text" name="multi[${index}][select_options]" class="google-input" placeholder="Seperate with '|', e.g.: water|fire">
             </div>`);
-            } else if($(this).val() == 'foreignId') {
+            } else if ($(this).val() == 'foreignId') {
                 var list = `{!! $all !!}`;
 
 
@@ -471,7 +473,7 @@
 
               `);
 
-            }else {
+            } else {
                 $(this).parent().parent().find('.s-option').remove();
 
             }
@@ -487,7 +489,7 @@
 
             $('.input-code').prop('readonly', false);
 
-            
+
 
             $(`.form-default-value`).remove()
             $(`.custom-values`).append(`
@@ -688,9 +690,9 @@
                 <input type="hidden" name="select_options" class="form-option">
             `)
 
-            // var list = `<option>aaaa</option>`;
-            var list = `{!! $all !!}`;
-            // alert( list )
+                // var list = `<option>aaaa</option>`;
+                var list = `{!! $all !!}`;
+                // alert( list )
 
                 $(`.options`).append(`
                 <div class="input-box form-constrain mt-2">
@@ -1008,7 +1010,8 @@
 
         $(document).on("click", "#addRow", function() {
             var html = '';
-            var index = parseInt($(this).parent().parent().parent().parent().find('.text-center:last').html()) > 0 ? parseInt($(this).parent().parent().parent().parent().find('.text-center:last').html()) +1 :1
+            var index = parseInt($(this).parent().parent().parent().parent().find('.text-center:last').html()) > 0 ?
+                parseInt($(this).parent().parent().parent().parent().find('.text-center:last').html()) + 1 : 1
 
             html +=
                 '<tr><td class="text-center" scope="row">' + index +
@@ -1032,6 +1035,59 @@
         $(document).on('click', '.removeSection', function() {
             $(this).closest('tr').remove();
             index--;
+        });
+
+        jQuery.validator.addMethod("notEqual", function(value, element, param) {
+            return this.optional(element) || value != param;
+        }, "Please change the name, you can't enter id");
+
+        jQuery.validator.addMethod("notEqual2", function(value, element, param) {
+            return this.optional(element) || value != param;
+        }, "Please change the name, you can't enter id");
+
+
+        jQuery.validator.addMethod("notEqual3", function(value, element, param) {
+            return this.optional(element) || value != param;
+        }, "Please change the name, you can't enter id");
+
+        jQuery.validator.addMethod("notEqual4", function(value, element, param) {
+            return this.optional(element) || value != param;
+        }, "Please change the name, you can't enter id");
+
+        $(document).on('change', '#attributeCreate', function() {
+            $("#attributeCreate").validate({
+                onkeyup: function(el, e) {
+
+                    $(el).valid();
+                },
+                // errorClass: "invalid-feedback is-invalid",
+                // validClass: 'valid-feedback is-valid',
+                ignore: ":hidden",
+                rules: {
+                    name: {
+                        required: true,
+                        maxlength: 255,
+                    },
+                    code: {
+                        required: true,
+                        maxlength: 255,
+                        notEqual: 'id',
+                        notEqual2: 'ID',
+                        notEqual3: 'iD',
+                        notEqual4: 'Id',
+                    },
+                    input_types: {
+                        required: true,
+                        maxlength: 255,
+                    },
+
+                },
+                messages: {},
+                errorPlacement: function(error, element) {
+                    error.insertAfter($(element).parent());
+                },
+            });
+            // alert($('#attributeCreate').valid());
         });
     </script>
 @endsection

@@ -31,7 +31,7 @@
                         </div>
                         <div class="col-sm-12 input-box">
                             <label class="form-label" for="name">Name<span class="text-red">*</span></label>
-                            <input type="text" name="name"
+                            <input type="text" name="name" id="name"
                                 class="google-input @error('name') is-invalid @enderror"
                                 value="{{ old('name', $attribute->name) }}">
                             @error('name')
