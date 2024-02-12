@@ -109,6 +109,12 @@ class GeneratorService
 
     }
 
+    public function reGenerateFormWithSub($id): void
+    {
+        (new FormViewGenerator)->reGenerateWithSub($id);
+
+    }
+
     public function generatePermission(array $request,$id): void
     {
         (new PermissionGenerator)->generate($request,$id);

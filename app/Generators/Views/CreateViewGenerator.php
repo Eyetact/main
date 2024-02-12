@@ -43,15 +43,36 @@ class CreateViewGenerator
             GeneratorUtils::getTemplate('views/create')
         );
 
+        $template_less = str_replace(
+            [
+                '{{modelNamePluralUcWords}}',
+                '{{modelNameSingularLowerCase}}',
+                '{{modelNamePluralKebabCase}}',
+                '{{enctype}}',
+                '{{viewPath}}',
+            ],
+            [
+                $modelNamePluralUcWords,
+                $modelNameSingularLowerCase,
+                $modelNamePluralKebabCase,
+
+                ' enctype="multipart/form-data"',
+                $path != '' ? str_replace('\\', '.', $path) . "." : ''
+            ],
+            GeneratorUtils::getTemplate('views/create-less')
+        );
+
         switch ($path) {
             case '':
                 GeneratorUtils::checkFolder(resource_path("/views/admin/$modelNamePluralKebabCase"));
                 file_put_contents(resource_path("/views/admin/$modelNamePluralKebabCase/create.blade.php"), $template);
+                file_put_contents(resource_path("/views/admin/$modelNamePluralKebabCase/create-less.blade.php"), $template_less);
                 break;
             default:
                 $fullPath = resource_path("/views/admin/" . strtolower($path) . "/$modelNamePluralKebabCase");
                 GeneratorUtils::checkFolder($fullPath);
                 file_put_contents($fullPath . "/create.blade.php", $template);
+                file_put_contents($fullPath . "/create-less.blade.php", $template_less);
                 break;
         }
     }

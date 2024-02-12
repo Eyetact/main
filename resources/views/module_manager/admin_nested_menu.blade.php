@@ -15,6 +15,8 @@
                             <span class="tag tag-deleted  tag-red">Deleted</span>
                         @endif
                     </div>
+                    <button data-path="{{ route('module_manager.addSub',$aMenu->module_id) }}" class="sub-add" type="button">+</button>
+
 
                     @if ($aMenu->children->count())
                         <ol class="dd-list">

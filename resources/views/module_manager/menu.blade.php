@@ -25,7 +25,14 @@
     #attr_tbl {
         cursor: move;
     }
+    button.sub-add {
+    float: right;
+}
 
+.dd-handle {
+    width: 92% !important;
+    float: left;
+}
     #tbl-field>tbody>tr>td {
         min-height: 97px;
         text-align: center !important;
@@ -104,7 +111,7 @@
                 <div class="card-header">
                     <h4 class="card-title">Storfront</h4>
                 </div>
-                {{-- @dump($errors->all()) --}}
+                
                 <div class="card-body">
                     @include('module_manager.storfront_nested_menu')
                 </div>
@@ -124,6 +131,21 @@
                     class="btn btn-primary">Add</button></div>
             </div>
             <div class="editc"></div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="role_form_modal" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+            </div>
         </div>
     </div>
 @endsection
@@ -648,6 +670,22 @@
                 $(type + ' #restore-admin-menu').addClass("d-none");
             }
         }
+
+        $(document).on('click', '.sub-add', function(event) {
+            event.preventDefault();
+            var path = $(this).data('path');
+            // alert(id)
+            $.ajax({
+                url: path,
+                success: function(response) {
+                     console.log(path);
+                    $(".modal-body").html(response);
+                    $(".modal-title").html("Add sub Module");
+                    $("#role_form_modal").modal('show');
+                    $('.dropify').dropify();
+                }
+            });
+        });
     </script>
 
     @include('module_manager.js.functions')

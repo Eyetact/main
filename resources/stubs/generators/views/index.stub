@@ -369,6 +369,19 @@ output {
             generateNo()
         })
 
+        $(document).on('change', '.select-sub', function() {
+            var path = "{{ url('/') }}/create-less/" + $(this).find(":selected").val() + '/'
+            // alert(path)
+            $.ajax({
+                url: path,
+                success: function(response) {
+                     console.log(path);
+                     console.log(response);
+                    $(".view-sub-form").html(response);
+                    $('.dropify').dropify();
+                }
+            });
+        });
     </script>
 @endsection
 

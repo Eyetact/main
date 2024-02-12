@@ -15,6 +15,8 @@ class Module extends Model
         'is_system',
         'code',
         'user_id',
+        'parent_id',
+        'migration'
        
     ];
 
@@ -24,5 +26,9 @@ class Module extends Model
 
     public function menu(){
         return $this->hasOne(MenuManager::class, 'module_id');
+    }
+
+    public function childs(){
+        return $this->hasMany(Module::class, 'parent_id');
     }
 }

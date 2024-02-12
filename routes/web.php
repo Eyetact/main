@@ -127,6 +127,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
         // update is deleted menu item
         Route::post('module_manager/menu_delete', 'menuDelete')->name('module_manager.menu_delete');
+
+        Route::get('add-sub/{id}', 'addSub')->name('module_manager.addSub');
+        Route::post('add-sub/{id}', 'storeSub')->name('module_manager.storSub');
     });
     Route::get('/myadmins/{user_id}', [UserController::class, 'myAdmins'])->name('users.myadmins');
     Route::get('/vendors', [UserController::class, 'vendors'])->name('users.vendors');

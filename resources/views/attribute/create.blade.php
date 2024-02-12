@@ -166,7 +166,7 @@
                 <div class="form-group col-sm-4">
                     <label class="custom-switch form-label">
                         <input type="checkbox" name="is_enable" class="custom-switch-input" id="is_enable"
-                            {{ $attribute->is_enable == 1 ? 'checked' : '' }}>
+                            {{ $attribute->is_enable == 1 ? 'checked' : 'checked' }}>
                         <span class="custom-switch-indicator"></span>
                         <span class="custom-switch-description">Status</span>
                     </label>

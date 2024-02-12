@@ -31,10 +31,12 @@
         .dt-buttons.btn-group {
             float: left;
         }
+
         .parent {
-    animation: unset !important;
-}
-table {
+            animation: unset !important;
+        }
+
+        table {
             max-width: 99% !important;
             width: 99% !important;
         }
@@ -62,10 +64,10 @@ table {
         </div>
         <div class="page-rightheader">
             @can('create.plan')
-            <div class="btn btn-list">
-                <a id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
-                    data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
-            </div>
+                <div class="btn btn-list">
+                    <a id="add_new" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="Add new"><i
+                            class="fe fe-plus mr-1"></i> Add new </a>
+                </div>
             @endcan
         </div>
     </div>
@@ -91,7 +93,7 @@ table {
                                     <th width="30px">No.</th>
                                     <th>Name</th>
                                     <th>details</th>
-                                    <th >image</th>
+                                    <th>image</th>
                                     <th>period</th>
                                     <th>price</th>
                                     <th data-priority="1"></th>
@@ -112,20 +114,20 @@ table {
     </div>
 
     <div class="modal fade bd-example-modal-lg" id="role_form_modal" tabindex="-1" role="dialog"
-    aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
-                        aria-hidden="true">×</span> </button>
-            </div>
-            <div class="modal-body">
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
 
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 @section('js')
     <!-- INTERNAL Data tables -->
@@ -199,8 +201,8 @@ table {
             $.ajax({
                 url: path,
                 success: function(response) {
-                     console.log(path);
-                     console.log(response);
+                    console.log(path);
+                    console.log(response);
                     $(".modal-body").html(response);
                     $(".modal-title").html("edit Plan");
                     $("#role_form_modal").modal('show');
@@ -231,16 +233,15 @@ table {
                 style: 'multi',
                 selector: 'td:first-child'
             },
-            columns: [
-                {
-                'data':null,
-                'defaultContent':'',
-                'checkboxes':{
+            columns: [{
+                    'data': null,
+                    'defaultContent': '',
+                    'checkboxes': {
 
 
-                    'selectRow':true
-                }
-            },
+                        'selectRow': true
+                    }
+                },
                 {
                     data: 'name',
                     name: 'name'
@@ -286,49 +287,46 @@ table {
         }
 
         $(document).on('click', '.plan-delete', function() {
-        	var id = $(this).attr("data-id");
+            var id = $(this).attr("data-id");
             swal({
-                    title: "Are you sure?",
-                    text: "Once deleted, you will not be able to recover this attribute!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                    showCancelButton: true,
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this attribute!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                showCancelButton: true,
 
 
-                }, function (willDelete) {
-                    if (willDelete) {
+            }, function(willDelete) {
+                if (willDelete) {
 
-                        $.ajax({
-                            type: "POST",
-                            url: '{{url("/")}}/plan/delete/' + id,
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(response) {
-	                            swal({
-	                				title: response.msg
-	                			}, function (result) {
-	                				location.reload();
-	                			});
-                            }
-                        });
-                    }
-                });
+                    $.ajax({
+                        type: "POST",
+                        url: '{{ url('/') }}/plan/delete/' + id,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            swal({
+                                title: response.msg
+                            }, function(result) {
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+            });
         });
     </script>
-        <script src="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/plugins/wysiwyag/jquery.richtext.js">
+    <script src="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/plugins/wysiwyag/jquery.richtext.js">
     </script>
 
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 
     <script type="text/javascript">
-
         $(function(e) {
             $('.content').richText();
             $('.content2').richText();
         });
-
     </script>
-
 @endsection

@@ -290,4 +290,49 @@ class ModuleManagerController extends Controller
 
         return view('module_manager.menu-edit', compact('module'));
     }
+
+    public function addSub( $id ){
+        return view('module_manager.subform',compact('id'));
+    }
+
+
+    public function storeSub(Request $request,$id)
+    {
+
+        // try {
+        //     DB::beginTransaction();
+        $module = Module::create([
+            'name' => $request->name,
+            'is_system' => 0,
+            'code' => $request->code,
+            'user_id' => auth()->user()->id,
+            'parent_id' => $id,
+            'migration' => $id,
+
+        ]);
+
+        $this->generatorService->reGenerateFormWithSub($id); // sub
+
+
+        $this->generatorService->generateModel($request->all()); // model
+        $this->generatorService->generateMigration($request->all(), $module->id); // migration
+        Artisan::call('migrate'); // run php artisan mnigrate in background
+        $this->generatorService->generateController($request->all()); // migration
+        $this->generatorService->generateRequest($request->all()); // req
+        $this->generatorService->generateRoute($request->all()); // route
+        $this->generatorService->generateViews($request->all()); // views
+        $this->generatorService->generatePermission($request->all(), $module->id);
+
+
+        $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
+        return redirect()->route('module_manager.index');
+
+        //     DB::commit();
+        // } catch (Exception $ex) {
+        //     DB::rollback();
+        //     dd($ex);
+        // }
+
+    }
+
 }

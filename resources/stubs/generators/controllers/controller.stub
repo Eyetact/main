@@ -6,6 +6,10 @@ use {{requestPath}};
 use App\Models\UCGroup;
 use Yajra\DataTables\Facades\DataTables;
 use App\Services\GeneratorService;
+use App\Models\Module;
+use App\Generators\GeneratorUtils;
+
+
 
 
 class {{modelNameSingularPascalCase}}Controller extends Controller
@@ -67,6 +71,13 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
         return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.create');
     }
 
+
+    public function createLess()
+    {
+
+        return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.create-less');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -77,9 +88,35 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
     {
         {{insertDataAction}}
 
-        return redirect()
+        if( !empty($request->module) ){
+            $module = Module::find($request->module);
+            $modelName = "App\Models\Admin\\".$module->code; 
+            
+            $data = new $modelName();
+            foreach ($module->fields as $value) {
+
+                $attr = $value->code;
+
+                $data->$attr = $request[$attr];
+            }
+            $data->save();
+
+        }
+
+        $parent_id = Module::where('code','{{modelNameSingularPascalCase}}')->first()->parent_id;
+        if($parent_id == 0){
+            return redirect()
             ->route('{{modelNamePluralKebabCase}}.index')
             ->with('success', __('The {{modelNameSingularCamelCase}} was created successfully.'));
+        }else{
+            $parent = Module::find($parent_id);
+            $parent = GeneratorUtils::cleanPluralLowerCase($parent->code);
+            // dd($parent);
+            return redirect()
+                ->route($parent.'.index')
+                ->with('success', __('The {{modelNameSingularCamelCase}}  was created successfully.'));
+
+        }
     }
 
     /**

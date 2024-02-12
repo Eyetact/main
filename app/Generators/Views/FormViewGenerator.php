@@ -556,11 +556,13 @@ class FormViewGenerator
             case '':
                 GeneratorUtils::checkFolder(resource_path("/views/admin/$modelNamePluralKebabCase/include"));
                 file_put_contents(resource_path("/views/admin/$modelNamePluralKebabCase/include/form.blade.php"), $template);
+                file_put_contents(resource_path("/views/admin/$modelNamePluralKebabCase/include/dropdown.blade.php"), '');
                 break;
             default:
                 $fullPath = resource_path("/views/admin/" . strtolower($path) . "/$modelNamePluralKebabCase/include");
                 GeneratorUtils::checkFolder($fullPath);
                 file_put_contents($fullPath . "/form.blade.php", $template);
+                file_put_contents($fullPath . "/dropdown.blade.php", '');
                 break;
         }
     }
@@ -1357,6 +1359,49 @@ class FormViewGenerator
                 $fullPath = resource_path("/views/admin/" . strtolower($path) . "/$modelNamePluralKebabCase/include");
                 GeneratorUtils::checkFolder($fullPath);
                 file_put_contents($fullPath . "/form.blade.php", $template);
+                break;
+        }
+    }
+
+    public function reGenerateWithSub($id)
+    {
+        $module = Module::find($id);
+        $model = GeneratorUtils::setModelName($module->name);
+        $path = GeneratorUtils::getModelLocation($module->name);
+        $code = GeneratorUtils::setModelName($module->code);
+
+        $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
+        $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
+
+        $template = "";
+        $options = "<option>-- Select --</option>";
+
+        foreach ($module->childs as $model) {
+            $options .= '<option value="'. GeneratorUtils::pluralKebabCase($model->code)  .'" >'. $model->name .'</option>';
+        }
+
+        $template = str_replace(
+            [
+                '{{options}}',  
+            ],
+            [
+                $options,
+
+            ],
+            GeneratorUtils::getTemplate('views/create-sub')
+        );
+
+
+        // create a blade file
+        switch ($path) {
+            case '':
+                GeneratorUtils::checkFolder(resource_path("/views/admin/$modelNamePluralKebabCase/include"));
+                file_put_contents(resource_path("/views/admin/$modelNamePluralKebabCase/include/dropdown.blade.php"), $template);
+                break;
+            default:
+                $fullPath = resource_path("/views/admin/" . strtolower($path) . "/$modelNamePluralKebabCase/include");
+                GeneratorUtils::checkFolder($fullPath);
+                file_put_contents($fullPath . "/dropdown.blade.php", $template);
                 break;
         }
     }

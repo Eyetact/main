@@ -16,13 +16,14 @@ class WebRouteGenerator
     public function generate(array $request)
     {
         $model = GeneratorUtils::setModelName($request['code']);
-        $path = $request['path'];
+        $path = isset($request['path']) ? $request['path'] : $request['code'];
 
         $modelNameSingularPascalCase = GeneratorUtils::singularPascalCase($model);
         $modelNamePluralLowercase = GeneratorUtils::pluralKebabCase($model);
 
 
         $controllerClass = "\n" . "Route::get('" . $path . "', [ App\Http\Controllers\Admin\\" . $modelNameSingularPascalCase . "Controller::class, 'index' ])->middleware('auth');\n";
+        $controllerClass .= "\n" . "Route::get('create-less/" . $modelNamePluralLowercase . "', [ App\Http\Controllers\Admin\\" . $modelNameSingularPascalCase . "Controller::class, 'createLess' ])->middleware('auth');\n";
         $controllerClass .= "\n" . "Route::resource('" . $modelNamePluralLowercase . "', App\Http\Controllers\Admin\\" . $modelNameSingularPascalCase . "Controller::class)->middleware('auth');";
 
 
