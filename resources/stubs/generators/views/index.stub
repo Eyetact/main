@@ -355,6 +355,7 @@ output {
                     $(".modal-title").html("edit ");
                     $("#role_form_modal").modal('show');
                     $('.dropify').dropify();
+                    $('.select-sub').trigger('change');
                 }
             });
         });
@@ -370,7 +371,14 @@ output {
         })
 
         $(document).on('change', '.select-sub', function() {
-            var path = "{{ url('/') }}/create-less/" + $(this).find(":selected").val() + '/'
+
+            var id = $(this).find(":selected").data('id')
+
+            var path = "{{ url('/') }}/create-less/" + $(this).find(":selected").data('value') + '/'
+
+            if(id > 0){
+                path = "{{ url('/') }}/edit-less/" + $(this).find(":selected").data('value') + '/'+ id
+            }
             // alert(path)
             $.ajax({
                 url: path,

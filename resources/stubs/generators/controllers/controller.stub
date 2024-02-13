@@ -86,11 +86,12 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
      */
     public function store(Store{{modelNameSingularPascalCase}}Request $request)
     {
-        {{insertDataAction}}
+        $insert = {{insertDataAction}}
 
         if( !empty($request->module) ){
+           
             $module = Module::find($request->module);
-            $modelName = "App\Models\Admin\\".$module->code; 
+            $modelName = "App\Models\Admin\\".GeneratorUtils::setModelName($module->code); 
             
             $data = new $modelName();
             foreach ($module->fields as $value) {
@@ -101,9 +102,13 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
             }
             $data->save();
 
+             $insert->sub_id = $request->module;
+              $insert->data_id = $data->id;
+            $insert->save();
+
         }
 
-        $parent_id = Module::where('code','{{modelNameSingularPascalCase}}')->first()->parent_id;
+        $parent_id = Module::where('code','LIKE', '%' . '{{modelNameSingularPascalCase}}' . '%' )->first()->parent_id;
         if($parent_id == 0){
             return redirect()
             ->route('{{modelNamePluralKebabCase}}.index')
@@ -137,6 +142,11 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
      * @return
      */
     public function edit({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
+    {
+        {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.edit', compact('{{modelNameSingularCamelCase}}'));
+    }
+
+     public function editLess({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
     {
         {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.edit', compact('{{modelNameSingularCamelCase}}'));
     }

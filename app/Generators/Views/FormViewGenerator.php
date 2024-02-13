@@ -1377,7 +1377,7 @@ class FormViewGenerator
         $options = "<option>-- Select --</option>";
 
         foreach ($module->childs as $model) {
-            $options .= '<option value="'. GeneratorUtils::pluralKebabCase($model->code)  .'" >'. $model->name .'</option>';
+            $options .= "<option data-id=\"{{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase"."->data_id  ? \$$modelNameSingularCamelCase"."->data_id : '' }}\"  {{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase"."->sub_id == '$model->id' ? 'selected' : '' }} data-value=\"". GeneratorUtils::pluralKebabCase($model->code)  ."\" value=\"". $model->id ."\" >". $model->name ."</option>";
         }
 
         $template = str_replace(
