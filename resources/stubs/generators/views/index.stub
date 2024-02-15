@@ -374,10 +374,10 @@ output {
 
             var id = $(this).find(":selected").data('id')
 
-            var path = "//admin.eyt.app/create-less/" + $(this).find(":selected").data('value') + '/'
+            var path = "{{ url('/') }}/create-less/" + $(this).find(":selected").data('value') 
 
             if(id > 0){
-                path = "//admin.eyt.app/edit-less/" + $(this).find(":selected").data('value') + '/'+ id
+                path = "{{ url('/') }}/edit-less/" + $(this).find(":selected").data('value') + '/'+ id + '/'
             }
             // alert(path)
                      console.log(path);
