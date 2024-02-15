@@ -44,16 +44,38 @@ class EditViewGenerator
             GeneratorUtils::getTemplate('views/edit')
         );
 
+        $template_less = str_replace(
+            [
+                '{{modelNamePluralUcWords}}',
+                '{{modelNameSingularLowerCase}}',
+                '{{modelNamePluralKebabCase}}',
+                '{{modelNameSingularCamelCase}}',
+                '{{enctype}}',
+                '{{viewPath}}',
+            ],
+            [
+                $modelNamePluralUcWords,
+                $modelNameSingularLowerCase,
+                $modelNamePluralKebabCase,
+                $modelNameSingularCamelCase,
+                ' enctype="multipart/form-data"',
+                $path != '' ? str_replace('\\', '.', $path) . "." : ''
+            ],
+            GeneratorUtils::getTemplate('views/edit-less')
+        );
+
         if ($path != '') {
             $fullPath = resource_path("/views/admin/" . strtolower($path) . "/$modelNamePluralKebabCase");
 
             GeneratorUtils::checkFolder($fullPath);
 
             file_put_contents($fullPath . "/edit.blade.php", $template);
+            file_put_contents($fullPath . "/edit-less.blade.php", $template_less);
         } else {
             GeneratorUtils::checkFolder(resource_path("/views/admin/$modelNamePluralKebabCase"));
 
             file_put_contents(resource_path("/views/admin/$modelNamePluralKebabCase/edit.blade.php"), $template);
+            file_put_contents(resource_path("/views/admin/$modelNamePluralKebabCase/edit-less.blade.php"), $template_less);
         }
     }
 

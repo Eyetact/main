@@ -4,6 +4,7 @@
 use {{modelPath}};
 use {{requestPath}};
 use App\Models\UCGroup;
+use App\Models\Attribute;
 use Yajra\DataTables\Facades\DataTables;
 use App\Services\GeneratorService;
 use App\Models\Module;
@@ -89,10 +90,10 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
         $insert = {{insertDataAction}}
 
         if( !empty($request->module) ){
-           
+
             $module = Module::find($request->module);
-            $modelName = "App\Models\Admin\\".GeneratorUtils::setModelName($module->code); 
-            
+            $modelName = "App\Models\Admin\\".GeneratorUtils::setModelName($module->code);
+
             $data = new $modelName();
             foreach ($module->fields as $value) {
 
@@ -130,10 +131,36 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
      * @param  \App\Models\{{modelNameSingularPascalCase}}  ${{modelNameSingularCamelCase}}
      * @return
      */
-    public function show({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
+    public function show2({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
     {
-        {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.show', compact('{{modelNameSingularCamelCase}}'));
+
+        $module = Module::find(${{modelNameSingularCamelCase}}->sub_id);
+        $modelName = "App\Models\Admin\\".GeneratorUtils::setModelName($module->code);
+        $child =  $modelName::find(${{modelNameSingularCamelCase}}->data_id);
+        $attrs= Attribute::where('module',$module->id)->pluck('code');
+        $children= [];
+        foreach ($attrs as $attr) {
+            $children[] = $child->$attr;
+        }
+
+        {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.show', compact('{{modelNameSingularCamelCase}}','children'));
     }
+
+     public function show({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}} )
+    {
+
+
+        $module = Module::find(${{modelNameSingularCamelCase}}->sub_id);
+        $modelName = "App\Models\Admin\\".GeneratorUtils::setModelName($module->code);
+        $child =  $modelName::find(${{modelNameSingularCamelCase}}->data_id);
+         ${$module->code} = $child;
+
+        {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.show', compact('{{modelNameSingularCamelCase}}',$module->code));
+    }
+
+
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -146,9 +173,11 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
         {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.edit', compact('{{modelNameSingularCamelCase}}'));
     }
 
-     public function editLess({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
+     public function editLess($id)
     {
-        {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.edit', compact('{{modelNameSingularCamelCase}}'));
+
+        ${{modelNameSingularCamelCase}} = {{modelNameSingularPascalCase}}::find($id);
+        {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.edit-less', compact('{{modelNameSingularCamelCase}}'));
     }
 
     /**
@@ -162,9 +191,62 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
     {
         {{updateDataAction}}
 
-        return redirect()
+
+        if( !empty($request->module) ){
+
+            $module = Module::find($request->module);
+            $modelName = "App\Models\Admin\\".GeneratorUtils::setModelName($module->code);
+
+                      if($request->module == ${{modelNameSingularCamelCase}}->sub_id)
+                      {
+
+            $data =  $modelName::find(${{modelNameSingularCamelCase}}->data_id);
+            foreach ($module->fields as $value) {
+
+                $attr = $value->code;
+
+                $data->$attr = $request[$attr];
+            }
+            $data->save();
+                      }
+
+                      else{
+
+                           $data = new $modelName();
+            foreach ($module->fields as $value) {
+
+                $attr = $value->code;
+
+                $data->$attr = $request[$attr];
+            }
+            $data->save();
+
+             ${{modelNameSingularCamelCase}}->sub_id = $request->module;
+              ${{modelNameSingularCamelCase}}->data_id = $data->id;
+            ${{modelNameSingularCamelCase}}->save();
+
+                      }
+
+
+        }
+
+             $parent_id = Module::where('code','LIKE', '%' . '{{modelNameSingularPascalCase}}' . '%' )->first()->parent_id;
+        if($parent_id == 0){
+            return redirect()
             ->route('{{modelNamePluralKebabCase}}.index')
             ->with('success', __('The {{modelNameSingularCamelCase}} was updated successfully.'));
+        }else{
+            $parent = Module::find($parent_id);
+            $parent = GeneratorUtils::cleanPluralLowerCase($parent->code);
+            // dd($parent);
+         return redirect()
+            ->route('{{modelNamePluralKebabCase}}.index')
+            ->with('success', __('The {{modelNameSingularCamelCase}} was updated successfully.'));
+
+        }
+
+
+
     }
 
     /**
@@ -176,6 +258,17 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
     public function destroy({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
     {
         try {
+
+
+            if(${{modelNameSingularCamelCase}}->sub_id)
+            {
+
+            $module = Module::find(${{modelNameSingularCamelCase}}->sub_id);
+            $modelName = "App\Models\Admin\\".GeneratorUtils::setModelName($module->code);
+            $child =  $modelName::find(${{modelNameSingularCamelCase}}->data_id);
+            $child->delete();
+            }
+
             ${{modelNameSingularCamelCase}}->delete();
 
 
