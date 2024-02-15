@@ -377,7 +377,7 @@ output {
             var path = "{{ url('/') }}/create-less/" + $(this).find(":selected").data('value') 
 
             if(id > 0){
-                path = "{{ url('/') }}/edit-less/" + $(this).find(":selected").data('value') + '/'+ id + '/'
+                path = "{{ url('/') }}/edit-less/" + $(this).find(":selected").data('value') + '/'+ id 
             }
             // alert(path)
                      console.log(path);
