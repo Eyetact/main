@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         if (env('APP_ENV') !== 'local') { //so you can work on it locally
-            // $url->forceScheme('https');
+            $url->forceScheme('https');
         }
 
         $mainPath = database_path('migrations');
