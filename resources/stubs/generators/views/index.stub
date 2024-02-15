@@ -390,7 +390,9 @@ output {
                 }
             });
         });
+
     </script>
+    @include('admin.{{modelNamePluralKebabCase}}.include.multi')
 @endsection
 
 

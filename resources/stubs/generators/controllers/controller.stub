@@ -131,20 +131,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
      * @param  \App\Models\{{modelNameSingularPascalCase}}  ${{modelNameSingularCamelCase}}
      * @return
      */
-    public function show2({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
-    {
 
-        $module = Module::find(${{modelNameSingularCamelCase}}->sub_id);
-        $modelName = "App\Models\Admin\\".GeneratorUtils::setModelName($module->code);
-        $child =  $modelName::find(${{modelNameSingularCamelCase}}->data_id);
-        $attrs= Attribute::where('module',$module->id)->pluck('code');
-        $children= [];
-        foreach ($attrs as $attr) {
-            $children[] = $child->$attr;
-        }
-
-        {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.show', compact('{{modelNameSingularCamelCase}}','children'));
-    }
 
      public function show({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}} )
     {
@@ -153,9 +140,9 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
         $module = Module::find(${{modelNameSingularCamelCase}}->sub_id);
         $modelName = "App\Models\Admin\\".GeneratorUtils::setModelName($module->code);
         $child =  $modelName::find(${{modelNameSingularCamelCase}}->data_id);
-         ${$module->code} = $child;
 
-        {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.show', compact('{{modelNameSingularCamelCase}}',$module->code));
+
+        {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.show', compact('{{modelNameSingularCamelCase}}','module','child'));
     }
 
 

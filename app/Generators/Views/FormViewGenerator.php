@@ -557,12 +557,14 @@ class FormViewGenerator
                 GeneratorUtils::checkFolder(resource_path("/views/admin/$modelNamePluralKebabCase/include"));
                 file_put_contents(resource_path("/views/admin/$modelNamePluralKebabCase/include/form.blade.php"), $template);
                 file_put_contents(resource_path("/views/admin/$modelNamePluralKebabCase/include/dropdown.blade.php"), '');
+                file_put_contents(resource_path("/views/admin/$modelNamePluralKebabCase/include/multi.blade.php"), '');
                 break;
             default:
                 $fullPath = resource_path("/views/admin/" . strtolower($path) . "/$modelNamePluralKebabCase/include");
                 GeneratorUtils::checkFolder($fullPath);
                 file_put_contents($fullPath . "/form.blade.php", $template);
                 file_put_contents($fullPath . "/dropdown.blade.php", '');
+                file_put_contents($fullPath . "/multi.blade.php", '');
                 break;
         }
     }
@@ -1382,7 +1384,7 @@ class FormViewGenerator
 
         $template = str_replace(
             [
-                '{{options}}',  
+                '{{options}}',
             ],
             [
                 $options,

@@ -1,4 +1,4 @@
-View::composer(['admin.{{viewPath}}{{modelNamePluralKebabCase}}.create', 'admin.{{viewPath}}{{modelNamePluralKebabCase}}.edit'], function ($view) {
+View::composer(['admin.*', 'admin.*'], function ($view) {
             return $view->with(
                 '{{constrainsPluralCamelCase}}',
                 {{relatedModelPath}}::select({{fieldsSelect}})->get()

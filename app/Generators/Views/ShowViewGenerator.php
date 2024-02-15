@@ -24,7 +24,7 @@ class ShowViewGenerator
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
 
         $trs = "";
-        $totalFields = !empty($request['fields']) ?count($request['fields']) : 0;
+        $totalFields = !empty($request['fields']) ? count($request['fields']) : 0;
         $dateTimeFormat = config('generator.format.datetime') ? config('generator.format.datetime') : 'd/m/Y H:i';
 
         if (!empty($request['fields'][0])) {
@@ -155,10 +155,10 @@ class ShowViewGenerator
 
 
         $trs = "";
-        $totalFields = count($module->fields()->where('is_enable',1)->get());
+        $totalFields = count($module->fields()->where('is_enable', 1)->get());
         $dateTimeFormat = config('generator.format.datetime') ? config('generator.format.datetime') : 'd/m/Y H:i';
 
-        foreach ($module->fields()->where('is_enable',1)->get() as $i => $field) {
+        foreach ($module->fields()->where('is_enable', 1)->get() as $i => $field) {
             $field->name = GeneratorUtils::singularSnakeCase($field->name);
             $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
             if ($field->input != 'password') {
@@ -233,7 +233,7 @@ class ShowViewGenerator
 
                                                     @php
 
-                                                    \$ar = json_decode($". $modelNameSingularCamelCase . "->" . $fieldSnakeCase  .")
+                                                    \$ar = json_decode($" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase  . ")
 
                                                     @endphp
 
@@ -241,22 +241,22 @@ class ShowViewGenerator
                                                         <thead>
                                                         ";
 
-                                                        foreach ($field->multis as $key => $value) {
-                                                            $trs .= "<th>". $value->name ."</th>";
-                                                        }
+                        foreach ($field->multis as $key => $value) {
+                            $trs .= "<th>" . $value->name . "</th>";
+                        }
 
 
-                                                        $trs .= "</thead>
+                        $trs .= "</thead>
 
                                                         <tbody>
                                                         @if(!empty(\$ar))
                                                         @foreach( \$ar as \$item )
                                                         <tr>";
-                                                        foreach ($field->multis as $key => $value) {
-                                                            $trs .= "<td>{{ \$item->".$value->name." }}</td>";
-                                                        }
+                        foreach ($field->multis as $key => $value) {
+                            $trs .= "<td>{{ \$item->" . $value->name . " }}</td>";
+                        }
 
-                                                        $trs .= "</tr>
+                        $trs .= "</tr>
                                                          @endforeach
                                                          @endif
                                                         </tbody>
@@ -283,165 +283,7 @@ class ShowViewGenerator
         }
 
 
-        $modelName = "App\Models\Admin\\".GeneratorUtils::setModelName($module->code);
 
-        $childtrs = "";
-        $childNameSingularCamelCase="";
-        $childNamePluralKebabCase="";
-
-        if(Module::where('parent_id',$module->id)->first())
-        {
-
-            dd($modelNameSingularCamelCase);
-
-            // dd(str_replace('"', '',$modelNameSingularCamelCase));
-
-            // $module = Module::find( "$" .$modelNameSingularCamelCase->sub_id);
-            // dd($module);
-            // $modelName = "App\Models\Admin\\" . GeneratorUtils::setModelName($module->code);
-            // $child = $modelName::find($modelNameSingularCamelCase->data_id);
-            // dd($child);
-
-        $child= Module::where('parent_id',$module->id)->first();
-
-        $child_code = GeneratorUtils::setModelName($child->code, 'default');
-
-        $childNameSingularCamelCase = GeneratorUtils::singularCamelCase($child_code);
-        $childNamePluralKebabCase = GeneratorUtils::pluralKebabCase($child_code);
-
-        $childtotalFields = count($child->fields()->where('is_enable',1)->get());
-        // dd($childtotalFields);
-
-
-
-        foreach ($child->fields()->where('is_enable',1)->get() as $i => $field) {
-            $field->name = GeneratorUtils::singularSnakeCase($field->name);
-            $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
-            if ($field->input != 'password') {
-                if ($i >= 1) {
-                    $childtrs .= "\t\t\t\t\t\t\t\t\t";
-                }
-
-                $fieldUcWords = GeneratorUtils::cleanUcWords($field->name);
-                $fieldSnakeCase = str($field->code)->snake();
-
-                if (isset($field->file_type) && $field->file_type == 'image') {
-
-                    $uploadPath = config('generator.image.path') == 'storage' ? "storage/uploads/" : "uploads/";
-
-                    $childtrs .= "<tr>
-                                        <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
-                                        <td>
-
-                                                <img src=\"{{ asset( $" . $childNameSingularCamelCase . "->" . $fieldSnakeCase . ") }}\" alt=\"$fieldUcWords\" class=\"rounded\" width=\"200\" height=\"150\" style=\"object-fit: cover\">
-                                        </td>
-                                    </tr>";
-                }
-
-                switch ($field->type) {
-                    case 'boolean':
-                        $childtrs .= "<tr>
-                                        <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
-                                        <td>{{ $" . $childNameSingularCamelCase . "->" . $fieldSnakeCase . " == 1 ? 'True' : 'False' }}</td>
-                                    </tr>";
-                        break;
-                    case 'foreignId':
-                        // remove '/' or sub folders
-                        $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
-
-                        $childtrs .= "<tr>
-                                        <td class=\"fw-bold\">{{ __('" . GeneratorUtils::cleanSingularUcWords($constrainModel) . "') }}</td>
-                                        <td>{{ $" . $childNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . " ? $" . $childNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "->" . $field->attribute . " : '' }}</td>
-                                    </tr>";
-                        break;
-                    case 'date':
-                        $dateFormat = config('generator.format.date') ? config('generator.format.date') : 'd/m/Y';
-
-                        if ($module->input == 'month') {
-                            $dateFormat = config('generator.format.month') ? config('generator.format.month') : 'm/Y';
-                        }
-
-                        $childtrs .= "<tr>
-                                            <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
-                                            <td>{{ isset($" . $childNameSingularCamelCase . "->" . $fieldSnakeCase . ") ? $" . $childNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('$dateFormat') : ''  }}</td>
-                                        </tr>";
-                        break;
-                    case 'dateTime':
-                        $childtrs .= "<tr>
-                                            <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
-                                            <td>{{ isset($" . $childNameSingularCamelCase . "->" . $fieldSnakeCase . ") ? $" . $childNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('$dateTimeFormat') : ''  }}</td>
-                                        </tr>";
-                        break;
-                    case 'time':
-                        $timeFormat = config('generator.format.time') ? config('generator.format.time') : 'H:i';
-
-                        $childtrs .= "<tr>
-                                                <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
-                                                <td>{{ isset($" . $childNameSingularCamelCase . "->" . $fieldSnakeCase . ") ? $" . $childNameSingularCamelCase . "->" . $fieldSnakeCase . "->format('$timeFormat') : ''  }}</td>
-                                            </tr>";
-                        break;
-
-                    case 'multi':
-
-                        $childtrs .= "<tr>
-                                                    <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
-                                                    <td>
-
-                                                    @php
-
-                                                    \$ar = json_decode($". $childNameSingularCamelCase . "->" . $fieldSnakeCase  .")
-
-                                                    @endphp
-
-                                                    <table>
-                                                        <thead>
-                                                        ";
-
-                                                        foreach ($field->multis as $key => $value) {
-                                                            $childtrs .= "<th>". $value->name ."</th>";
-                                                        }
-
-
-                                                        $childtrs .= "</thead>
-
-                                                        <tbody>
-                                                        @if(!empty(\$ar))
-                                                        @foreach( \$ar as \$item )
-                                                        <tr>";
-                                                        foreach ($field->multis as $key => $value) {
-                                                            $childtrs .= "<td>{{ \$item->".$value->name." }}</td>";
-                                                        }
-
-                                                        $childtrs .= "</tr>
-                                                         @endforeach
-                                                         @endif
-                                                        </tbody>
-                                                    </table>
-
-
-                                                    </td>
-                                                </tr>";
-                        break;
-                    default:
-                        if ($field->file_type != 'image') {
-                            $childtrs .= "<tr>
-                                            <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
-                                            <td>{{ $" . $childNameSingularCamelCase . "->" . $fieldSnakeCase . " }}</td>
-                                        </tr>";
-
-                        }
-                        break;
-                }
-
-                if ($i + 1 != $childtotalFields) {
-                    $childtrs .= "\n";
-
-                }
-            }
-        }
-
-
-        }
 
 
         $template = str_replace(
@@ -451,9 +293,6 @@ class ShowViewGenerator
                 '{{modelNamePluralKebabCase}}',
                 '{{modelNameSingularCamelCase}}',
                 '{{trs}}',
-                '{{childtrs}}',
-                '{{childNameSingularCamelCase}}',
-                '{{childNamePluralKebabCase}}',
                 '{{dateTimeFormat}}'
             ],
             [
@@ -462,9 +301,6 @@ class ShowViewGenerator
                 $modelNamePluralKebabCase,
                 $modelNameSingularCamelCase,
                 $trs,
-                $childtrs ? $childtrs : " " ,
-                $childNameSingularCamelCase ? $childNameSingularCamelCase : " ",
-                $childNamePluralKebabCase ? $childNamePluralKebabCase : " ",
                 $dateTimeFormat
             ],
             GeneratorUtils::getTemplate('views/show')

@@ -7,6 +7,8 @@ use App\Models\Crud;
 use App\Models\Module;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Illuminate\Support\Facades\File;
+
 
 class IndexViewGenerator
 {
@@ -348,6 +350,22 @@ class IndexViewGenerator
                             table.append(tr)
                         });\n";
                         }
+
+
+                    $subMulti = "<script>". $trhtml ."</script>";
+
+
+
+                    if($module->parent_id > 0){
+                        $parentModule = Module::find($module->parent_id);
+                        $parentCode = GeneratorUtils::setModelName($parentModule->code, 'default');
+                        $parentModelName = GeneratorUtils::pluralKebabCase($parentCode);
+
+                        File::append(resource_path("/views/admin/$parentModelName/include/multi.blade.php"), $subMulti);
+
+                    }
+
+
 
                 if ($field->input == 'image') {
                     /**

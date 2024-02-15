@@ -31,7 +31,94 @@
                     <div class="table-responsive">
                         <table class="table ">
                             {{trs}}
-                            {{childtrs}}
+
+
+                            @foreach ($module->fields as $field)
+                                @php
+                                    $code = str($field->code)->snake();
+                                @endphp
+                                <tr>
+                                    <td class="fw-bold">{{ $field->name }}</td>
+                                    <td>
+                                        @switch($field->type)
+                                            @case('file')
+                                                @if ($field->file_type == 'image')
+                                                    <img src="{{ asset($child->$code) }}" alt="{{ $code }}" class="rounded"
+                                                        width="200" height="150" style="object-fit: cover">
+                                                @else
+                                                    {{ asset($child->$code) }}
+                                                @endif
+                                            @break
+
+                                            @case('boolean')
+                                                {{ $child->$code == 1 ? 'True' : 'False' }}
+                                            @break
+
+                                            @case('foreignId')
+                                                @php
+
+                                                    $constrainModel = App\Generators\GeneratorUtils::setModelName($field->constrain, 'default');
+                                                    $constrainCode = App\Generators\GeneratorUtils::singularSnakeCase($constrainModel);
+                                                    $attr = $field->attribute;
+
+                                                @endphp
+
+                                                {{ $child->$constrainCode ? $child->$constrainCode->$attr : '' }}
+                                            @break
+
+                                            @case('multi')
+                                                @php
+
+                                                    $fieldSnakeCase = str($field->code)->snake();
+
+                                                    $ar = json_decode($child->$fieldSnakeCase);
+
+                                                @endphp
+
+                                                <table>
+                                                    <thead>
+
+
+                                                        @foreach ($field->multis as $key => $value)
+                                                            <th> {{ $value->name }} </th>
+                                                        @endforeach
+
+
+                                                    </thead>
+
+                                                    <tbody>
+                                                        @if (!empty($ar))
+                                                            @foreach ($ar as $item)
+                                                                <tr>
+                                                                    @foreach ($field->multis as $key => $value)
+                                                                        @php
+                                                                            $a = $value->name ;
+                                                                        @endphp
+                                                                        <td>{{ $item->$a }}</td>
+                                                                    @endforeach
+
+                                                                </tr>
+                                                            @endforeach
+                                                        @endif
+                                                    </tbody>
+                                                </table>
+                                            @break
+
+                                            @default
+                                                @php
+
+                                                    $fieldSnakeCase = str($field->code)->snake();
+
+                                                @endphp
+
+                                                {{ $child->$fieldSnakeCase }}
+                                        @endswitch
+                                    </td>
+                                </tr>
+                            @endforeach
+
+                            <tr>
+
                             <tr>
                                 <td class="fw-bold">{{ __('Created at') }}</td>
                                 <td>{{ ${{modelNameSingularCamelCase}}->created_at->format('{{dateTimeFormat}}') }}</td>
