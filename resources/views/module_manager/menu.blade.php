@@ -36,9 +36,15 @@
 }
 
     .dd-handle {
-        width: 87% !important;
+        width: 80% !important;
         float: left;
     }
+    .dd-handle .dd-handle {}
+
+ol.dd-list {
+    clear: both !important;
+    width: 97% !important;
+}
     li.dd-item:after {
     content: no-close-quote;
     display: table;

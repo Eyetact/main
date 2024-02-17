@@ -127,8 +127,9 @@
                         <path
                             d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z" />
                     </svg>
-                    <span class="side-menu__label">{{ $item->sidebar_name }}</span><i
-                        class="angle fa fa-angle-right"></i></a>
+                    <span class="side-menu__label">{{ $item->sidebar_name }}</span>
+                   <i class="angle fe fe-chevron-right"></i>
+                </a>
                 <ul class="slide-menu ">
                     @can('view.' . str($item->module->code)->singular()->lower())
                         <li class="sub-slide">
@@ -140,11 +141,27 @@
                     @foreach ($item->children as $item)
                         @can('view.' . str($item->module->code)->singular()->lower())
                             <li class="sub-slide">
-                                <a class="sub-side-menu__item" href="{{ url('/' . $item->path) }}"><span
-                                        class="sub-side-menu__label">{{ $item->name }}</span></a>
+                                <a class="sub-side-menu__item" data-toggle="sub-slide" href="{{ url('/' . $item->path) }}"><span
+                                        class="sub-side-menu__label">{{ $item->name }}</span>
+
+                                        @if(count($item->children) > 0 )<i class="sub-angle fe fe-chevron-down"></i>@endif
+                                    </a>
+
+                                <ul class="sub-slide-menu">
+                                    @foreach ($item->children as $item)
+                                        @can('view.' . str($item->module->code)->singular()->lower())
+                                            <li><a class="sub-slide-item" href="{{ url('/' . $item->path) }}">{{ $item->name }}</a></li>
+                                        @endcan
+                                    @endforeach
+                                </ul>
                             </li>
                         @endcan
+
                     @endforeach
+                    {{-- <li class="sub-slide is-expanded">
+                        <a class="sub-side-menu__item" data-toggle="sub-slide" href="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/#"><span class="sub-side-menu__label">File Manager</span><i class="sub-angle fe fe-chevron-down"></i></a>
+
+                    </li> --}}
                 </ul>
 
 
