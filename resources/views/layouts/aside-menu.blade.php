@@ -146,8 +146,11 @@
 
                                         @if(count($item->children) > 0 )<i class="sub-angle fe fe-chevron-down"></i>@endif
                                     </a>
+                                    
 
                                 <ul class="sub-slide-menu">
+                                    <li><a class="sub-slide-item" href="{{ url('/' . $item->path) }}">{{ $item->name }}</a></li>
+
                                     @foreach ($item->children as $item)
                                         @can('view.' . str($item->module->code)->singular()->lower())
                                             <li><a class="sub-slide-item" href="{{ url('/' . $item->path) }}">{{ $item->name }}</a></li>
