@@ -470,7 +470,7 @@ class RequestGenerator
                  * will generate like:
                  * 'name' => 'required|max:30',
                  */
-                $validations .= "|max:" . $field->input;
+                $validations .= "|max:" . $field->max_length;
             }
 
             switch ($field->type) {
