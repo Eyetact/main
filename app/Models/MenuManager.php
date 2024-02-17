@@ -23,7 +23,7 @@ class MenuManager extends Model
         'assigned_attributes',
         'sequence',
         'parent',
-        'is_deleted',
+        'is_delete',
         'deleted_at',
         'sidebar_name'
     ];

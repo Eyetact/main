@@ -81,7 +81,7 @@ class AttributeController extends Controller
                 ->make(true);
         }
 
-        $all = Module::all();
+        $all = Module::where('is_delete',0)->where('migration','!=',NULL)->orWhere('id','<=',3)->get();
 
         // if (auth()->user()->access_table == "Group") {
         //     $group_ids = auth()->user()->groups()->pluck('group_id');
@@ -121,7 +121,7 @@ class AttributeController extends Controller
      */
     public function create()
     {
-        $moduleData = Module::where('migration', '!=', NULL)->get();
+        $moduleData = Module::where('is_delete',0)->where('migration', '!=', NULL)->orWhere('id','<=',3)->get();
 
         // if (auth()->user()->access_table == "Group") {
         //     $group_ids = auth()->user()->groups()->pluck('group_id');
@@ -143,7 +143,7 @@ class AttributeController extends Controller
 
         // }
 
-        $all = Module::all();
+        $all = Module::where('is_delete',0)->where('migration','!=',NULL)->get();
 
         return view('attribute.create', ['attribute' => new Attribute(), 'moduleData' => $moduleData, 'all' => $all]);
     }

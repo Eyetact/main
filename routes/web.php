@@ -119,11 +119,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/module_manager', 'index')->name('module_manager.index');
         Route::get('module_manager/create', 'create')->name('module_manager.create');
         Route::post('module_manager/store', 'store')->name('module_manager.store');
+        Route::post('module_manager/storeLabel', 'storeLabel')->name('module_manager.storelabel');
         Route::post('module_manager/menu_update', 'menu_update')->name('module_manager.menu_update');
         Route::get('module_manager/{module}/edit', 'edit')->name('module_manager.edit');
         // Route::post('module_manager/{menu}', 'update')->name('module_manager.update');
         Route::post('module_manager/update/{module}', 'update')->name('module_manager.update');
         Route::delete('module_manager/{menu}', 'destroy')->name('module_manager.destroy');
+        Route::post('module_manager/switch-delete', 'deleteORRestore')->name('module_manager.deleteORRestore');
 
         // update is deleted menu item
         Route::post('module_manager/menu_delete', 'menuDelete')->name('module_manager.menu_delete');

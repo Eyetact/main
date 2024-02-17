@@ -25,14 +25,26 @@
     #attr_tbl {
         cursor: move;
     }
+
     button.sub-add {
-    float: right;
+        float: right;
+        position: relative;
+        z-index: 999;
+    }
+    div#role_form_modal {
+    z-index: 9999999;
 }
 
-.dd-handle {
-    width: 92% !important;
-    float: left;
+    .dd-handle {
+        width: 87% !important;
+        float: left;
+    }
+    li.dd-item:after {
+    content: no-close-quote;
+    display: table;
+    clear: both;
 }
+
     #tbl-field>tbody>tr>td {
         min-height: 97px;
         text-align: center !important;
@@ -54,6 +66,12 @@
     #tbl-field .form-check.form-switch div {
         margin: 0;
     }
+
+    li.dd-item.is_delete .dd-handle {
+        background: #f41919 !important;
+        color: wheat;
+        color: white !important;
+    }
 </style>
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/css/nested_menu.css') }}">
@@ -71,19 +89,21 @@
         ul.my-1.mx-2.p-0 li {
             margin-bottom: 7px;
         }
+
         span.fast-btn {
-    width: 100%;
-    height: 216px;
-    background: #f9f9f9;
-    text-align: center;
-    line-height: 216px;
-    cursor: pointer;
-    border: 1px solid #ddd;
-    font-weight: bold;
-}
-.row.align-items-end.justify-content-end.tt {
-    margin-top: -65px;
-}
+            width: 100%;
+            height: 216px;
+            background: #f9f9f9;
+            text-align: center;
+            line-height: 216px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            font-weight: bold;
+        }
+
+        .row.align-items-end.justify-content-end.tt {
+            margin-top: -65px;
+        }
     </style>
 @endsection
 
@@ -111,14 +131,22 @@
                 <div class="card-header">
                     <h4 class="card-title">Storfront</h4>
                 </div>
-                
+
                 <div class="card-body">
                     @include('module_manager.storfront_nested_menu')
                 </div>
             </div>
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Admin</h4>
+                    <h4 class="card-title" style="width: 100%">
+                        <div class="row">
+                            <div class="col-10" style="padding-top: 10px">Admin</div>
+                            <div class="col-2"><button type="button" data-target="#addMenuLabel" data-toggle="modal"
+                                    class="btn btn-primary">Add</button></div>
+                        </div>
+                    </h4>
+
+
                 </div>
                 <div class="card-body">
                     @include('module_manager.admin_nested_menu')
@@ -128,7 +156,7 @@
         <div class="col-lg-12 col-xl-6 col-md-12 col-sm-12">
             <div class="row align-items-end justify-content-end tt">
                 <div class="col-2"><button type="button" data-target="#addMenuModal" data-toggle="modal"
-                    class="btn btn-primary">Add</button></div>
+                        class="btn btn-primary">Add</button></div>
             </div>
             <div class="editc"></div>
         </div>
@@ -144,6 +172,71 @@
                 </div>
                 <div class="modal-body">
 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="addMenuLabel" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Add Label</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('module_manager.storelabel') }}" id="moduleCreate" method="POST"
+                        autocomplete="off">
+                        @csrf
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Basics</h3>
+                                    </div>
+                                    <div class="card-body pb-2">
+                                        <input type="hidden" name="menu_type" value="admin">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12">
+                                                <div class="">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">Admin </h3>
+                                                        &nbsp; &nbsp;
+                                                        <span id="currentEditName"></span>
+                                                    </div>
+                                                    <div class="card-body pb-2">
+                                                        <div class="row">
+                                                            <div class="col-sm-12 form-group">
+                                                                <label class="form-label" for="name">Name <span
+                                                                        class="text-red">*</span></label>
+                                                                <input type="text" name="name" id="aname"
+                                                                    class="form-control" value="">
+                                                                <input type="hidden" name="id" id="aid"
+                                                                    value="">
+                                                            </div>
+
+
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer text-right">
+                                                        <input title="Reset form" class="btn btn-danger d-none"
+                                                            id="remove-admin-menu" type="button" value="Delete">
+                                                        <input title="Reset form" class="btn btn-success d-none"
+                                                            id="restore-admin-menu" type="button" value="Restore">
+                                                        <input title="Save module" class="btn btn-primary"
+                                                            id="submit-admin-menu" type="submit" value="Save">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -492,9 +585,9 @@
             // Storefront remove event
             $('body').on('click', '#remove-store-front-menu', function() {
                 var type = '#storfront_form_edit';
-                let menuId = $("#storfront_form_edit #sid").val();
+                let modelID = $(this).data('id');
                 let isDeleted = 1;
-                updateIsdeleted(type, menuId, isDeleted);
+                updateIsdeleted(modelID);
             });
 
             // Storefront restore event
@@ -507,22 +600,16 @@
 
             // Admin remove event
             $('body').on('click', '#remove-admin-menu', function() {
-                var type = '#admin_form_edit';
-                let menuId = $("#admin_form_edit #aid").val();
-                let isDeleted = 1;
-                // let selectedItem = $('#admin_menu_list li[data-id="'+menuId+'"]');
-                // let selectedItemDataAttr = selectedItem.data("json");
-                // selectedItemDataAttr.is_deleted=1
-                // selectedItem.attr('json', selectedItemDataAttr);
-                updateIsdeleted(type, menuId, isDeleted);
+                let modelID = $(this).data('id');
+                let isDelete = 1;
+                updateIsdeleted(modelID, isDelete);
             });
 
             // Admin restore event
             $('body').on('click', '#restore-admin-menu', function() {
-                var type = '#admin_form_edit';
-                let menuId = $("#admin_form_edit #aid").val();
-                let isDeleted = 0;
-                updateIsdeleted(type, menuId, isDeleted);
+                let modelID = $(this).data('id');
+                let isDelete = 0;
+                updateIsdeleted(modelID, isDelete);
             });
         });
 
@@ -549,9 +636,13 @@
             return result;
         }
 
-        function updateIsdeleted(type, menuId, isDeleted, current) {
+        function updateIsdeleted(modelID, isDelete) {
             var deleteText =
-                "Data would be there till 30 days and Once deleted, you will not be able to recover this details !"
+                "Data would be restored, Are You Sure ?"
+            if (isDelete == 1) {
+                deleteText =
+                    "Data would be there till 30 days and Once deleted, you will not be able to recover this details !"
+            }
             swal({
                 title: "Are you sure?",
                 text: deleteText,
@@ -569,21 +660,21 @@
                     var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                     $.ajax({
-                        url: '{{ route('module_manager.menu_delete') }}',
+                        url: '{{ route('module_manager.deleteORRestore') }}',
                         type: 'POST',
                         data: {
-                            menu_id: menuId,
-                            is_deleted: isDeleted
+                            model_id: modelID,
+                            is_delete: isDelete
                         },
                         headers: {
                             'X-CSRF-TOKEN': csrfToken
                         },
                         success: function(response) {
-                            if (type == "#storfront_form_edit") {
-                                enabledDisabledStoreFrontFormField(type, response, menuId);
-                            } else if (type == "#admin_form_edit") {
-                                enabledDisabledAdminFormField(type, response, menuId);
-                            }
+                            swal({
+                                title: response.msg
+                            }, function(result) {
+                                location.reload();
+                            });
                         },
                         error: function(error) {
                             console.error(error);
@@ -678,7 +769,7 @@
             $.ajax({
                 url: path,
                 success: function(response) {
-                     console.log(path);
+                    console.log(path);
                     $(".modal-body").html(response);
                     $(".modal-title").html("Add sub Module");
                     $("#role_form_modal").modal('show');

@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use App\Generators\GeneratorUtils;
 
 class ModuleManagerController extends Controller
 {
@@ -146,6 +147,62 @@ class ModuleManagerController extends Controller
 
     }
 
+    public function storeLabel(Request $request)
+    {
+        // dd($request->all());
+
+        // try {
+        //     DB::beginTransaction();
+        $module = Module::create([
+            'name' => $request->name,
+            'is_system' => isset($request->is_system) ? 1 : 0,
+            'code' => $request->name,
+            'user_id' => auth()->user()->id,
+
+        ]);
+
+        $requestData = $request->all();
+
+
+
+        if ($module) {
+
+
+
+            $lastSequenceData = MenuManager::where('parent', '0')->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->orderBy('id', 'desc')->first();
+            $sequence = 0;
+            if ($lastSequenceData) {
+                $sequence = $lastSequenceData->sequence + 1;
+            }
+
+            $createData = array(
+                'name' => $requestData['name'],
+                'module_id' => $module->id,
+                'include_in_menu' => 1,
+                'menu_type' => $requestData['menu_type'],
+                'path' => '',
+                'sequence' => $sequence,
+                'parent' => 0,
+                'sidebar_name' => $requestData['name'],
+            );
+            $menuManager = MenuManager::create($createData);
+        }
+
+        if (!$menuManager) {
+            $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
+            return redirect()->route('module_manager.index');
+        }
+        $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
+        return redirect()->route('module_manager.index');
+
+        //     DB::commit();
+        // } catch (Exception $ex) {
+        //     DB::rollback();
+        //     dd($ex);
+        // }
+
+    }
+
     public function menu_update(Request $request)
     {
         // dd($request);
@@ -259,6 +316,29 @@ class ModuleManagerController extends Controller
         }
     }
 
+    public function deleteORRestore(Request $request)
+    {
+
+        $model=Module::find($request->model_id);
+        $model->is_delete = $request->is_delete ;
+        $model->save();
+
+        $menu=MenuManager::where('module_id',$model->id)->first();
+        $menu->is_delete = $request->is_delete ;
+        $menu->save();
+
+        if ($model) {
+            if($request->is_delete == 1)
+            {
+            return response()->json(['msg' => 'Module deleted successfully!'], 200);
+            }
+            return response()->json(['msg' => 'Module restored successfully!'], 200);
+        } else {
+            return response()->json(['msg' => 'Something went wrong, please try again.'], 200);
+        }
+
+    }
+
     public function updateStatus(Request $request, $moduleId)
     {
         $module = Module::findOrFail($moduleId);
@@ -322,6 +402,37 @@ class ModuleManagerController extends Controller
         $this->generatorService->generateRoute($request->all()); // route
         $this->generatorService->generateViews($request->all()); // views
         $this->generatorService->generatePermission($request->all(), $module->id);
+
+
+
+        if ($module) {
+
+            $menuParent= MenuManager::where('module_id',$id)->first()->id;
+
+            $requestData=$request->all();
+
+            $lastSequenceData = MenuManager::where('parent', $menuParent)->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->orderBy('id', 'desc')->first();
+            $sequence = 0;
+            if ($lastSequenceData) {
+                $sequence = $lastSequenceData->sequence + 1;
+            }
+
+            $model = GeneratorUtils::setModelName($request['code']);
+
+            $modelNamePluralLowercase = GeneratorUtils::pluralKebabCase($model);
+
+            $createData = array(
+                'name' => $requestData['name'],
+                'module_id' => $module->id,
+                'include_in_menu' => 1,
+                'menu_type' => $requestData['menu_type'],
+                'path' => $modelNamePluralLowercase,
+                'sequence' => $sequence,
+                'parent' => $menuParent,
+                'sidebar_name' =>$request->name,
+            );
+            $menuManager = MenuManager::create($createData);
+        }
 
 
         $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');

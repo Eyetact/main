@@ -16,8 +16,9 @@ class Module extends Model
         'code',
         'user_id',
         'parent_id',
-        'migration'
-       
+        'migration',
+        'is_delete'
+
     ];
 
     public function fields(){
