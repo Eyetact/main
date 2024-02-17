@@ -1,9 +1,11 @@
-View::composer(['admin.*', 'admin.*'], function ($view) {
+if(Schema::hasTable('{{constrainsPluralLowecase}}')){
+    View::composer(['admin.*', 'admin.*'], function ($view) {
             return $view->with(
                 '{{constrainsPluralCamelCase}}',
                 {{relatedModelPath}}::select({{fieldsSelect}})->get()
             );
         });
+}
 
 
 
