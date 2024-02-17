@@ -55,6 +55,7 @@
                                                 <li class="dd-item @if ($aaaMenu->is_delete) is_delete @endif"
                                                     data-json="{{ json_encode($aaaMenu) }}"
                                                     data-id="{{ $aaaMenu->id }}" data-name="{{ $aaaMenu->name }}"
+                                                    data-path="{{ route('module_manager.edit', $aaaMenu->module_id) }}"
                                                     data-module="{{ $aaaMenu->module_id }}"
                                                     data-code="{{ $aaaMenu->code }}" data-path="{{ $aaaMenu->path }}"
                                                     data-is_enable="{{ $aaaMenu->is_enable }}"
