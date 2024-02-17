@@ -138,7 +138,7 @@
                         </li>
                     @endcan
 
-                    @foreach ($item->children as $item)
+                    @foreach ($item->childrens() as $item)
                         @can('view.' . str($item->module->code)->singular()->lower())
                             <li class="sub-slide">
                                 <a class="sub-side-menu__item" data-toggle="sub-slide" href="{{ url('/' . $item->path) }}"><span
@@ -151,7 +151,7 @@
                                 <ul class="sub-slide-menu">
                                     <li><a class="sub-slide-item" href="{{ url('/' . $item->path) }}">{{ $item->name }}</a></li>
 
-                                    @foreach ($item->children as $item)
+                                    @foreach ($item->childrens() as $item)
                                         @can('view.' . str($item->module->code)->singular()->lower())
                                             <li><a class="sub-slide-item" href="{{ url('/' . $item->path) }}">{{ $item->name }}</a></li>
                                         @endcan

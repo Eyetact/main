@@ -33,6 +33,11 @@ class MenuManager extends Model
         return $this->hasMany(MenuManager::class, 'parent');
     }
 
+    public function childrens()
+    {
+        return $this->children()->where('is_delete',0)->get();
+    }
+
     public function parent()
     {
         return $this->belongsTo(MenuManager::class, 'parent');

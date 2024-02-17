@@ -73,7 +73,7 @@ ol.dd-list {
         margin: 0;
     }
 
-    li.dd-item.is_delete .dd-handle {
+    li.dd-item.is_delete > .dd-handle {
         background: #f41919 !important;
         color: wheat;
         color: white !important;
