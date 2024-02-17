@@ -41,10 +41,7 @@
     }
     .dd-handle .dd-handle {}
 
-ol.dd-list {
-    clear: both !important;
-    width: 97% !important;
-}
+
     li.dd-item:after {
     content: no-close-quote;
     display: table;
@@ -110,6 +107,101 @@ ol.dd-list {
         .row.align-items-end.justify-content-end.tt {
             margin-top: -65px;
         }
+
+
+
+
+
+
+        li.dd-item {
+    max-width: 100%;
+    position: relative;
+}
+
+div#admin_nestable {
+    max-width: 100%;
+    width: 100%;
+}
+
+
+button.sub-add {
+    float: none !important;
+}
+
+.dd-handle {
+    float: none !important;
+    width: 100% !important;
+    padding: 0 50px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 3px;
+    background: #ebeef1;
+    margin-bottom: 5px;
+    border-color: #00000012;
+}
+
+.dd-item > button {
+    float: none !important;
+    position: absolute;
+    left: 0;
+    height: 40px;
+    width: 40px;
+    background: #38cb89;
+    top: 0;
+}
+
+button.sub-add {
+    left: auto;
+    right: 0;
+    background: #705ec8;
+}
+
+ol.dd-list {
+    /* width: 100% !important; */
+}
+
+.dd-list {
+    /* padding: 0 15px; */
+}
+
+.admin_nested_form {
+    padding: 0 20px 0 0;
+}
+
+.selected-item {
+    background: #705ec838 !important;
+    color: #333 !important;
+}
+
+li.dd-item.is_delete > .dd-handle {
+    background: #ef4b4b6b !important;
+    color: #333 !important;
+}
+
+li.dd-item.no-pad .dd-handle {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.dd-list .dd-list{
+    padding-left: 40px;
+}
+
+
+
+
+.dd-handle {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    /* padding-top: 3px; */
+    /* padding-bottom: 7px; */
+    line-height: 0;
+}
+
+
+
     </style>
 @endsection
 
@@ -146,9 +238,9 @@ ol.dd-list {
                 <div class="card-header">
                     <h4 class="card-title" style="width: 100%">
                         <div class="row">
-                            <div class="col-10" style="padding-top: 10px">Admin</div>
-                            <div class="col-2"><button type="button" data-target="#addMenuLabel" data-toggle="modal"
-                                    class="btn btn-primary">Add</button></div>
+                            <div class="col-9" style="padding-top: 10px">Admin - ( {{ count(App\Models\MenuManager::where('menu_type','admin')->get()) }} )</div>
+                            <div class="col-3"><button type="button" data-target="#addMenuLabel" data-toggle="modal"
+                                    class="btn btn-primary">Add Label</button></div>
                         </div>
                     </h4>
 

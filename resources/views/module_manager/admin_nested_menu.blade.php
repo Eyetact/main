@@ -9,7 +9,7 @@
     <div class="dd nestable" id="admin_nestable">
         <ol class="dd-list" id="admin_menu_list">
             @foreach ($adminMenu as $aMenu)
-                <li class="dd-item @if ($aMenu->is_delete) is_delete @endif"
+                <li class="dd-item @if ($aMenu->is_delete) is_delete @endif @if ($aMenu->children->count() == 0) no-pad @endif"
                     data-path="{{ route('module_manager.edit', $aMenu->module_id) }}"
                     data-id="{{ $aMenu->module_id_id }}" data-json="{{ json_encode($aMenu) }}"
                     data-id="{{ $aMenu->id }}" data-name="{{ $aMenu->name }}" data-module="{{ $aMenu->module_id }}"
@@ -18,19 +18,31 @@
                     data-assigned_attributes="{{ $aMenu->assigned_attributes }}"
                     data-created_date="{{ date('m-d-Y', strtotime($aMenu->created_date)) }}">
                     <div class="dd-handle">
-                        {{ $aMenu->name }} <input type="hidden" class="admin-menu" value="{{ $aMenu->id }}">
+                        {{ $aMenu->name }}
+                        {{-- - ( {{ $aMenu->children->count() }} ) --}}
+                        <div>
+                            @if (empty($aMenu->module->migration))
+                                <span class="badge badge-danger">Label</span>
+                            @endif
+                            @if ($aMenu->is_delete)
+                                <span class="badge badge-danger">Deleted</span>
+                            @endif
+                        </div>
+                        <input type="hidden" class="admin-menu" value="{{ $aMenu->id }}">
                         @if ($aMenu->is_deleted)
                             <span class="tag tag-deleted  tag-red">Deleted</span>
                         @endif
                     </div>
-                    <button data-path="{{ route('module_manager.addSub', $aMenu->module_id) }}" class="sub-add"
-                        type="button">+</button>
+                    @if ($aMenu->is_delete == 0)
+                        <button data-path="{{ route('module_manager.addSub', $aMenu->module_id) }}" class="sub-add"
+                            type="button">+</button>
+                    @endif
 
 
                     @if ($aMenu->children->count())
                         <ol class="dd-list">
                             @foreach ($aMenu->children()->orderBy('sequence', 'asc')->get() as $aaMenu)
-                                <li class="dd-item @if ($aaMenu->is_delete) is_delete @endif"
+                                <li class="dd-item @if ($aaMenu->is_delete) is_delete @endif @if ($aaMenu->children->count() == 0) no-pad @endif"
                                     data-path="{{ route('module_manager.edit', $aaMenu->module_id) }}"
                                     data-json="{{ json_encode($aaMenu) }}" data-id="{{ $aaMenu->id }}"
                                     data-name="{{ $aaMenu->name }}" data-module="{{ $aaMenu->module_id }}"
@@ -40,19 +52,30 @@
                                     data-assigned_attributes="{{ $aaMenu->assigned_attributes }}"
                                     data-created_date="{{ date('m-d-Y', strtotime($aaMenu->created_date)) }}">
                                     <div class="dd-handle">
-                                        {{ $aaMenu->name }}<input type="hidden" class="admin-menu"
-                                            value="{{ $aaMenu->id }}">
+                                        {{ $aaMenu->name }}
+                                        {{-- - ( {{ $aaMenu->children->count() }} ) --}}
+                                        <div>
+                                            @if (empty($aaMenu->module->migration))
+                                                <span class="badge badge-danger">Label</span>
+                                            @endif
+                                            @if ($aaMenu->is_delete)
+                                                <span class="badge badge-danger">Deleted</span>
+                                            @endif
+                                        </div>
+                                        <input type="hidden" class="admin-menu" value="{{ $aaMenu->id }}">
                                         @if ($aaMenu->is_deleted)
                                             <span class="tag tag-deleted  tag-red">Deleted</span>
                                         @endif
                                     </div>
-                                    <button data-path="{{ route('module_manager.addSub', $aaMenu->module_id) }}"
-                                        class="sub-add" type="button">+</button>
+                                    @if ($aaMenu->is_delete == 0)
+                                        <button data-path="{{ route('module_manager.addSub', $aaMenu->module_id) }}"
+                                            class="sub-add" type="button">+</button>
+                                    @endif
 
                                     @if ($aaMenu->children->count())
                                         <ol class="dd-list">
                                             @foreach ($aaMenu->children as $aaaMenu)
-                                                <li class="dd-item @if ($aaaMenu->is_delete) is_delete @endif"
+                                                <li class="dd-item @if ($aaaMenu->is_delete) is_delete @endif @if ($aaaMenu->children->count() == 0) no-pad @endif"
                                                     data-json="{{ json_encode($aaaMenu) }}"
                                                     data-id="{{ $aaaMenu->id }}" data-name="{{ $aaaMenu->name }}"
                                                     data-path="{{ route('module_manager.edit', $aaaMenu->module_id) }}"
@@ -63,7 +86,16 @@
                                                     data-assigned_attributes="{{ $aaaMenu->assigned_attributes }}"
                                                     data-created_date="{{ date('m-d-Y', strtotime($aaaMenu->created_date)) }}">
                                                     <div class="dd-handle">
-                                                        {{ $aaaMenu->name }}<input type="hidden" class="admin-menu"
+                                                        {{ $aaaMenu->name }}
+                                                        <div>
+                                                            @if (empty($aaaMenu->module->migration))
+                                                                <span class="badge badge-danger">Label</span>
+                                                            @endif
+                                                            @if ($aaaMenu->is_delete)
+                                                                <span class="badge badge-danger">Deleted</span>
+                                                            @endif
+                                                        </div>
+                                                        <input type="hidden" class="admin-menu"
                                                             value="{{ $aaaMenu->id }}">
                                                         @if ($aaaMenu->is_deleted)
                                                             <span class="tag tag-deleted  tag-red">Deleted</span>
@@ -71,7 +103,7 @@
                                                     </div>
 
 
-{{--
+                                                    {{--
                                                     @if ($aaaMenu->children->count())
                                                         <ol class="dd-list">
                                                             @foreach ($aaaMenu->children as $adMenu)
