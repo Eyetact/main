@@ -32,7 +32,7 @@
                                     @if ($aaMenu->children->count())
                                         <ol class="dd-list">
                                             @foreach ($aaMenu->children as $aaaMenu)
-                                                <li class="dd-item" data-json="{{json_encode($aaaMenu)}}" data-id="{{$aaaMenu->id}}" data-name="{{$aaaMenu->name}}" data-module="{{$aaaMenu->module_id}}" data-code="{{$aaaMenu->code}}" data-path="{{$aaaMenu->path}}" data-is_enable="{{$aaaMenu->is_enable}}" data-include_in_menu="{{$aaaMenu->include_in_menu}}"  data-assigned_attributes="{{$aaaMenu->assigned_attributes}}" data-created_date="{{date('m-d-Y',strtotime($aaaMenu->created_date))}}">
+                                                <li class="dd-item" data-json="{{json_encode($aaaMenu)}}" data-path="{{ route('module_manager.edit',$aaaMenu->module_id) }}" data-id="{{$aaaMenu->id}}" data-name="{{$aaaMenu->name}}" data-module="{{$aaaMenu->module_id}}" data-code="{{$aaaMenu->code}}" data-path="{{$aaaMenu->path}}" data-is_enable="{{$aaaMenu->is_enable}}" data-include_in_menu="{{$aaaMenu->include_in_menu}}"  data-assigned_attributes="{{$aaaMenu->assigned_attributes}}" data-created_date="{{date('m-d-Y',strtotime($aaaMenu->created_date))}}">
                                                     <div class="dd-handle">
                                                         {{$aaaMenu->name}}<input type="hidden" class="admin-menu" value="{{$aaaMenu->id}}">
                                                         @if ($aaaMenu->is_deleted)
@@ -40,10 +40,10 @@
                                                         @endif
                                                     </div>
 
-                                                    @if ($aaaMenu->children->count())
+                                                    {{-- @if ($aaaMenu->children->count())
                                                     <ol class="dd-list">
                                                         @foreach ($aaaMenu->children as $adMenu)
-                                                            <li class="dd-item" data-json="{{json_encode($adMenu)}}" data-id="{{$adMenu->id}}" data-name="{{$adMenu->name}}" data-module="{{$adMenu->module}}" data-code="{{$adMenu->code}}" data-path="{{$adMenu->path}}" data-is_enable="{{$adMenu->is_enable}}" data-include_in_menu="{{$adMenu->include_in_menu}}"  data-assigned_attributes="{{$adMenu->assigned_attributes}}" data-created_date="{{date('m-d-Y',strtotime($adMenu->created_date))}}">
+                                                            <li class="dd-item" data-json="{{json_encode($adMenu)}}" data-path="{{ route('module_manager.edit',$adMenu->module_id) }}" data-id="{{$adMenu->id}}" data-name="{{$adMenu->name}}" data-module="{{$adMenu->module}}" data-code="{{$adMenu->code}}" data-path="{{$adMenu->path}}" data-is_enable="{{$adMenu->is_enable}}" data-include_in_menu="{{$adMenu->include_in_menu}}"  data-assigned_attributes="{{$adMenu->assigned_attributes}}" data-created_date="{{date('m-d-Y',strtotime($adMenu->created_date))}}">
                                                                 <div class="dd-handle">
                                                                     {{$adMenu->name}}<input type="hidden" class="admin-menu" value="{{$adMenu->id}}">
                                                                     @if ($adMenu->is_deleted)
@@ -53,7 +53,7 @@
                                                             </li>
                                                         @endforeach
                                                     </ol>
-                                                    @endif
+                                                    @endif --}}
                                                 </li>
                                             @endforeach
                                         </ol>
