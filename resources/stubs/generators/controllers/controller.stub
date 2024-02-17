@@ -117,10 +117,15 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
         }else{
             $parent = Module::find($parent_id);
             $parent = GeneratorUtils::cleanPluralLowerCase($parent->code);
+            if(!empty($parent->migration)){
             // dd($parent);
             return redirect()
                 ->route($parent.'.index')
                 ->with('success', __('The {{modelNameSingularCamelCase}}  was created successfully.'));
+            }
+             return redirect()
+            ->route('{{modelNamePluralKebabCase}}.index')
+            ->with('success', __('The {{modelNameSingularCamelCase}} was created successfully.'));
 
         }
     }
