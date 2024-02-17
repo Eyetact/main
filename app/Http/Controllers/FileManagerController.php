@@ -18,6 +18,7 @@ class FileManagerController extends Controller
      */
     public function index( Request $request)
     {
+
         if (request()->ajax()) {
             return view('files.index-content');
 

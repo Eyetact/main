@@ -223,8 +223,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
 
-    Route::get('/files', [FileManagerController::class, 'index'])->name('files');
-    Route::post('/files', [FileManagerController::class, 'newFile'])->name('files');
+    Route::get('/filesmanager', [FileManagerController::class, 'index'])->name('files');
+    Route::post('/filesmanager', [FileManagerController::class, 'newFile'])->name('files');
     Route::get('/new-folder', [FileManagerController::class, 'newFolder'])->name('newfolder');
     Route::post('/new-folder', [FileManagerController::class, 'newFolder'])->name('newfolder');
 
