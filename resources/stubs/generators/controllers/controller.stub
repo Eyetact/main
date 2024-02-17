@@ -231,7 +231,12 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
             $parent = Module::find($parent_id);
             $parent = GeneratorUtils::cleanPluralLowerCase($parent->code);
             // dd($parent);
+            if(!empty($parent->migration)){
          return redirect()
+            ->route('{{modelNamePluralKebabCase}}.index')
+            ->with('success', __('The {{modelNameSingularCamelCase}} was updated successfully.'));
+            }
+             return redirect()
             ->route('{{modelNamePluralKebabCase}}.index')
             ->with('success', __('The {{modelNameSingularCamelCase}} was updated successfully.'));
 
