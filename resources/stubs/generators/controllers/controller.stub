@@ -97,7 +97,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
             $data = new $modelName();
             foreach ($module->fields as $value) {
 
-                $attr = $value->code;
+                $attr = GeneratorUtils::singularSnakeCase($value->code);
 
                 $data->$attr = $request[$attr];
             }
@@ -201,7 +201,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
             $data =  $modelName::find(${{modelNameSingularCamelCase}}->data_id);
             foreach ($module->fields as $value) {
 
-                $attr = $value->code;
+                $attr =  GeneratorUtils::singularSnakeCase($value->code);
 
                 $data->$attr = $request[$attr];
             }
@@ -213,7 +213,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
                            $data = new $modelName();
             foreach ($module->fields as $value) {
 
-                $attr = $value->code;
+                $attr =  GeneratorUtils::singularSnakeCase($value->code);
 
                 $data->$attr = $request[$attr];
             }
