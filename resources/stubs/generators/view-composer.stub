@@ -1,10 +1,12 @@
 if(Schema::hasTable('{{constrainsPluralLowecase}}')){
+    if (Schema::hasColumn('{{constrainsPluralCamelCase}}', '{{fieldfirst}}')){
     View::composer(['admin.*', 'admin.*'], function ($view) {
             return $view->with(
                 '{{constrainsPluralCamelCase}}',
                 {{relatedModelPath}}::select({{fieldsSelect}})->get()
             );
         });
+}
 }
 
 
