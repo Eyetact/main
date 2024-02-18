@@ -142,12 +142,18 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
     {
 
 
+          if(${{modelNameSingularCamelCase}}->sub_id)
+          {
         $module = Module::find(${{modelNameSingularCamelCase}}->sub_id);
         $modelName = "App\Models\Admin\\".GeneratorUtils::setModelName($module->code);
         $child =  $modelName::find(${{modelNameSingularCamelCase}}->data_id);
 
 
         {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.show', compact('{{modelNameSingularCamelCase}}','module','child'));
+          }
+
+
+        {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.show', compact('{{modelNameSingularCamelCase}}'));
     }
 
 

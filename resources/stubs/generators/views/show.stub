@@ -33,6 +33,7 @@
                             {{trs}}
 
 
+                               @if(isset($module))
                             @foreach ($module->fields as $field)
                                 @php
                                     $code = str($field->code)->snake();
@@ -116,6 +117,7 @@
                                     </td>
                                 </tr>
                             @endforeach
+                            @endif
 
                             <tr>
 
