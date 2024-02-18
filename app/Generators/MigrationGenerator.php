@@ -348,6 +348,10 @@ class MigrationGenerator
         $tableNamePluralLowercase = GeneratorUtils::pluralSnakeCase($model);
 
         $setFields = '';
+        if ($field->type == 'foreignId') {
+            $setFields .= "\$table->dropForeign('" .$tableNamePluralLowercase . '_' . GeneratorUtils::singularSnakeCase(str()->snake($field->code)) . "_foreign');\n";
+
+        }
 
 
 

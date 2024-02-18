@@ -10,6 +10,7 @@ use App\Models\Module;
 use App\Http\Requests\AttributePostRequest;
 use App\Repositories\FlashRepository;
 use Illuminate\Support\Facades\Artisan;
+use App\Generators\GeneratorUtils;
 
 class AttributeController extends Controller
 {
@@ -108,7 +109,8 @@ class AttributeController extends Controller
         $options = '<option  >-- select --</option>';
 
         foreach ($all as $key => $value) {
-            $options .= '<option data-id="'.$value->id.'" value="' . $value->code . '" >' . $value->name . '</option>';
+            $code = $value->code != null ? $value->code :$value->name;
+            $options .= '<option data-id="'.$value->id.'" value="' .GeneratorUtils::singularSnakeCase($code)  . '" >' . $value->name . '</option>';
         }
 
         return view('attribute.list', ['attribute' => new Attribute(), 'all' => $options]);

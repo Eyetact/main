@@ -97,7 +97,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
             $data = new $modelName();
             foreach ($module->fields as $value) {
 
-                $attr = $value->code;
+                $attr = GeneratorUtils::singularSnakeCase($value->code);
 
                 $data->$attr = $request[$attr];
             }
@@ -142,12 +142,18 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
     {
 
 
+          if(${{modelNameSingularCamelCase}}->sub_id)
+          {
         $module = Module::find(${{modelNameSingularCamelCase}}->sub_id);
         $modelName = "App\Models\Admin\\".GeneratorUtils::setModelName($module->code);
         $child =  $modelName::find(${{modelNameSingularCamelCase}}->data_id);
 
 
         {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.show', compact('{{modelNameSingularCamelCase}}','module','child'));
+          }
+
+
+        {{loadRelation}}return view('admin.{{viewPath}}{{modelNamePluralKebabCase}}.show', compact('{{modelNameSingularCamelCase}}'));
     }
 
 
@@ -195,7 +201,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
             $data =  $modelName::find(${{modelNameSingularCamelCase}}->data_id);
             foreach ($module->fields as $value) {
 
-                $attr = $value->code;
+                $attr =  GeneratorUtils::singularSnakeCase($value->code);
 
                 $data->$attr = $request[$attr];
             }
@@ -207,7 +213,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
                            $data = new $modelName();
             foreach ($module->fields as $value) {
 
-                $attr = $value->code;
+                $attr =  GeneratorUtils::singularSnakeCase($value->code);
 
                 $data->$attr = $request[$attr];
             }
