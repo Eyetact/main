@@ -373,6 +373,23 @@
                             admin)</span>
                     </label>
                 </div>
+                @if($attribute->min_length)
+                <div class="col-md-6">
+                    <div class="input-box">
+                        <input type="number" name="min_lengths" value="{{ $attribute->min_length }}" class=" google-input form-control form-min-lengths"
+                            min="1" placeholder="Min">
+                    </div>
+                </div>
+                @endif
+                @if($attribute->max_length)
+                <div class="col-md-6">
+                    <div class="input-box">
+                        <input type="number" name="max_lengths" value="{{ $attribute->max_length }}" class="  google-input form-control form-max-lengths"
+                            min="1" placeholder="Max">
+                    </div>
+                </div>
+                @endif
+
 
             </div>
         </div>

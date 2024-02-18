@@ -308,6 +308,9 @@ class AttributeController extends Controller
         $attribute->is_system = isset($request['is_system']) ? 1 : 0;
         $attribute->is_multi = isset($request['is_multi']) ? 1 : 0; //for multi select
 
+        $attribute->min_length =$request['min_lengths'];
+        $attribute->max_length =$request['max_lengths'];
+
         $enumValues = '';
         if (isset($request['fields_info'])) {
             $count = count($request['fields_info']);
