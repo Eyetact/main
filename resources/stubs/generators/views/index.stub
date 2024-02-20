@@ -89,6 +89,9 @@
 
     <!-- INTERNAL File Uploads css-->
     <link href="{{ asset('assets/plugins/fileupload/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
+      <link href="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/plugins/wysiwyag/richtext.css"
+        rel="stylesheet" />
+
     <style>
         .dropdown-toggle:after {
             content: none !important;
@@ -248,6 +251,8 @@ output {
     <script src="{{ URL::asset('assets/plugins/sweet-alert/jquery.sweet-modal.min.js') }}"></script>
     <script src="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
     <script src="{{ URL::asset('assets/js/sweet-alert.js') }}"></script>
+    <script src="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/plugins/wysiwyag/jquery.richtext.js"></script>
+
     <script>
 
         $(document).on('click', '#add_new', function() {
@@ -262,6 +267,11 @@ output {
                     $(".modal-title").html("Add ");
                     $("#role_form_modal").modal('show');
                     $('.dropify').dropify();
+                    $('.content').each(function(i, obj) {
+                        //test
+                        $(this).richText();
+                    });
+
                 }
             });
         });
@@ -366,6 +376,10 @@ output {
                     $("#role_form_modal").modal('show');
                     $('.dropify').dropify();
                     $('.select-sub').trigger('change');
+                     $('.content').each(function(i, obj) {
+                        //test
+                        $(this).richText();
+                    });
                 }
             });
         });
@@ -384,10 +398,10 @@ output {
 
             var id = $(this).find(":selected").data('id')
 
-            var path = "{{ url('/') }}/create-less/" + $(this).find(":selected").data('value') 
+            var path = "{{ url('/') }}/create-less/" + $(this).find(":selected").data('value')
 
             if(id > 0){
-                path = "{{ url('/') }}/edit-less/" + $(this).find(":selected").data('value') + '/'+ id 
+                path = "{{ url('/') }}/edit-less/" + $(this).find(":selected").data('value') + '/'+ id
             }
             // alert(path)
                      console.log(path);
@@ -397,6 +411,7 @@ output {
                      console.log(response);
                     $(".view-sub-form").html(response);
                     $('.dropify').dropify();
+
                 }
             });
         });

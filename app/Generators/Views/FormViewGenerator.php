@@ -458,6 +458,27 @@ class FormViewGenerator
                                         GeneratorUtils::getTemplate('views/forms/textarea')
                                     );
                                     break;
+                                    case 'texteditor':
+                                        // texteditor
+                                        $template .= str_replace(
+                                            [
+                                                '{{fieldKebabCase}}',
+                                                '{{fieldUppercase}}',
+                                                '{{modelName}}',
+                                                '{{nullable}}',
+                                                '{{fieldSnakeCase}}',
+
+                                            ],
+                                            [
+                                                GeneratorUtils::kebabCase($field),
+                                                $fieldUcWords,
+                                                $modelNameSingularCamelCase,
+                                                $request['requireds'][$i] == 'yes' ? ' required' : '',
+                                                $fieldSnakeCase,
+                                            ],
+                                            GeneratorUtils::getTemplate('views/forms/texteditor')
+                                        );
+                                        break;
                                 case 'file':
 
                                     $template .= str_replace(
@@ -994,6 +1015,7 @@ class FormViewGenerator
                             $template .= '<tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">';
                             foreach ($field->multis as $key => $value) {
                                 switch ($value->type) {
+
                                     case 'text':
                                     case 'email':
                                     case 'tel':
@@ -1006,6 +1028,16 @@ class FormViewGenerator
                                         $template .= ' <td>
                                         <div class="input-box">
                                             <input type="' . $value->type . '" name="' . $field->code . '[{{ $index }}][' . $value->name . ']"
+                                                class="form-control google-input"
+                                                placeholder="' . $value->name . '" value="{{ isset($item->'.$value->name.') ? $item->'.$value->name.' : \'\' }}" required>
+                                        </div>
+                                    </td>
+                                    ';
+                                    break;
+                                    case 'decimal':
+                                        $template .= ' <td>
+                                        <div class="input-box">
+                                            <input type="number" step="0.000000000000000001"  name="' . $field->code . '[{{ $index }}][' . $value->name . ']"
                                                 class="form-control google-input"
                                                 placeholder="' . $value->name . '" value="{{ isset($item->'.$value->name.') ? $item->'.$value->name.' : \'\' }}" required>
                                         </div>
@@ -1033,6 +1065,19 @@ class FormViewGenerator
                                         </td>
                                         ';
                                         break;
+                                        case 'texteditor':
+                                            $template .= ' <td>
+                                                <div class="input-box">
+
+                                                <textarea name="' . $field->code . '[{{ $index }}][' . $value->name . ']"  class="content"  placeholder="' . $value->name . '">{{ isset($item->'.$value->name.') ? $item->'.$value->name.' : \'\' }}</textarea>
+
+                                                </div>
+                                            </td>
+                                            ';
+                                            break;
+
+
+
 
                                     case 'range':
                                         $template .= '<td>
@@ -1254,6 +1299,27 @@ class FormViewGenerator
                                     GeneratorUtils::getTemplate('views/forms/textarea')
                                 );
                                 break;
+                                case 'texteditor':
+                                    // texteditor
+                                    $template .= str_replace(
+                                        [
+                                            '{{fieldKebabCase}}',
+                                            '{{fieldUppercase}}',
+                                            '{{modelName}}',
+                                            '{{nullable}}',
+                                            '{{fieldSnakeCase}}',
+
+                                        ],
+                                        [
+                                            GeneratorUtils::kebabCase($field->name),
+                                            $fieldUcWords,
+                                            $modelNameSingularCamelCase,
+                                            $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                            $fieldSnakeCase,
+                                        ],
+                                        GeneratorUtils::getTemplate('views/forms/texteditor')
+                                    );
+                                    break;
                             case 'file':
                             case 'image':
 
@@ -1310,6 +1376,27 @@ class FormViewGenerator
                                     GeneratorUtils::getTemplate('views/forms/range')
                                 );
                                 break;
+                                case 'decimal':
+                                    $template .= str_replace(
+                                        [
+                                            '{{fieldSnakeCase}}',
+                                            '{{fieldUcWords}}',
+                                            '{{fieldKebabCase}}',
+                                            '{{nullable}}',
+                                            '{{value}}'
+
+                                        ],
+                                        [
+                                            GeneratorUtils::singularSnakeCase($field->code),
+                                            $fieldUcWords,
+                                            GeneratorUtils::singularKebabCase($field->name),
+                                            $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                            $formatValue
+
+                                        ],
+                                        GeneratorUtils::getTemplate('views/forms/input-decimal')
+                                    );
+                                    break;
                             case 'hidden':
                                 $template .= '<input type="hidden" name="' . $fieldSnakeCase . '" value="' . $field->default_value . '">';
                                 break;

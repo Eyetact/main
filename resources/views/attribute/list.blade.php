@@ -352,12 +352,15 @@
                                                             --{{ __('Select column type') }}--
                                                         </option>
                                                         <option value="text">Text</option>
-                                                        <option value="textarea">Textarea</option>
+                                                        <option value="textarea">Text Area</option>
+                                                        <option value="texteditor">Text Editor</option>
+                                                        <option value="text">Letters (a-z, A-Z) or Numbers (0-9)</option>
                                                         <option value="email">Email</option>
                                                         <option value="tel">Telepon</option>
                                                         <option value="url">Url</option>
                                                         <option value="search">Search</option>
-                                                        <option value="number">Number</option>
+                                                        <option value="number">Integer Number</option>
+                                                        <option value="decimal">Decimal Number</option>
                                                         <option value="radio">Radio ( True, False )</option>
                                                         <option value="date">Date</option>
                                                         <option value="time">Time</option>
@@ -584,12 +587,15 @@
                                                             --{{ __('Select column type') }}--
                                                         </option>
                                                         <option value="text">Text</option>
-                                                        <option value="textarea">Textarea</option>
+                                                        <option value="text">Letters (a-z, A-Z) or Numbers (0-9)</option>
+                                                        <option value="textarea">Text Area</option>
+                                                        <option value="texteditor">Text Editor</option>
                                                         <option value="email">Email</option>
                                                         <option value="tel">Telepon</option>
                                                         <option value="url">Url</option>
                                                         <option value="search">Search</option>
-                                                        <option value="number">Number</option>
+                                                        <option value="number">Integer Number</option>
+                                                        <option value="decimal">Decimal Number</option>
                                                         <option value="radio">Radio ( True, False )</option>
                                                         <option value="date">Date</option>
                                                         <option value="time">Time</option>
@@ -844,6 +850,7 @@
             switch ($(this).val()) {
                 case 'text':
                 case 'textarea':
+                case 'texteditor':
                 case 'file':
                 case 'image':
                 case 'email':
@@ -853,6 +860,7 @@
                 case 'search':
                     $('#type').val('text').trigger('change')
                     break;
+                case 'decimal':
                 case 'number':
                 case 'range':
                     $('#type').val('double').trigger('change')

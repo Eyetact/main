@@ -233,6 +233,7 @@ class IndexViewGenerator
                     $trhtml .= '<tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">';
                     foreach ($field->multis as $key => $value) {
                         switch ($value->type) {
+
                             case 'text':
                             case 'email':
                             case 'tel':
@@ -251,6 +252,16 @@ class IndexViewGenerator
                                     </td>
                                     ';
                                 break;
+                                case 'decimal':
+                                    $trhtml .= ' <td>
+                                            <div class="input-box">
+                                                <input type="number" step="0.000000000000000001" name="' . $field->code . '[${no}][' . $value->name . ']"
+                                                    class="form-control google-input"
+                                                    placeholder="' . $value->name . '" required>
+                                            </div>
+                                        </td>
+                                        ';
+                                    break;
                             case 'image':
                                 $trhtml .= ' <td>
                                             <div class="input-box">
@@ -272,6 +283,17 @@ class IndexViewGenerator
                                         </td>
                                         ';
                                 break;
+
+                                case 'texteditor':
+                                    $trhtml .= ' <td>
+                                                <div class="input-box">
+
+                                                <textarea name="' . $field->code . '[${no}][' . $value->name . ']"  class="content"  placeholder="' . $value->name . '"></textarea>
+
+                                                </div>
+                                            </td>
+                                            ';
+                                    break;
 
                             case 'range':
                                 $trhtml .= '<td>
@@ -348,6 +370,9 @@ class IndexViewGenerator
                     $trhtml .= "`
 
                             table.append(tr)
+
+                            table.find('.content:last').richText();
+
                         });\n";
                         }
 

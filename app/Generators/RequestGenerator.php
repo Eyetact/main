@@ -433,7 +433,7 @@ class RequestGenerator
                 $validations .= $in;
             }
 
-            if ($field->input == 'text' || $field->input == 'textarea') {
+            if ($field->input == 'text' || $field->input == 'textarea' || $field->input == 'texteditor') {
                 /**
                  * will generate like:
                  * 'name' => 'required|string',
@@ -441,7 +441,7 @@ class RequestGenerator
                 $validations .= "|string";
             }
 
-            if ($field->input == 'number' || $field->type == 'year' || $field->input == 'range') {
+            if ($field->input == 'number' || $field->input == 'decimal' || $field->type == 'year' || $field->input == 'range') {
                 /**
                  * will generate like:
                  * 'name' => 'required|numeric',

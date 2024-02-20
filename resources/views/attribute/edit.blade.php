@@ -58,22 +58,25 @@
                                 <option @selected( $attribute->input == "" ) value="" disabled selected>-- {{ __('Select input type') }}--</option>
                                 <option @selected( $attribute->input == "multi" ) value="multi">Multi Attribute</option>
                                 <option @selected( $attribute->input == "text" ) value="text">Text</option>
-                                <option @selected( $attribute->input == "textarea" ) value="textarea">Textarea</option>
+                                <option @selected( $attribute->input == "textarea" ) value="textarea">Text Area</option>
+                                <option @selected( $attribute->input == "texteditor" ) value="texteditor">Text Editor</option>
+                                <option @selected( $attribute->input == "text" ) value="text">Letters (a-z, A-Z) or Numbers (0-9)</option>
                                 <option @selected( $attribute->input == "email" ) value="email">Email</option>
                                 <option @selected( $attribute->input == "tel" ) value="tel">Telepon</option>
                                 <option @selected( $attribute->input == "password" ) value="password">Password</option>
                                 <option @selected( $attribute->input == "url" ) value="url">Url</option>
                                 <option @selected( $attribute->input == "search" ) value="search">Search</option>
-                                <option @selected( $attribute->input == "image" ) value="image">Image</option>
+                                <option @selected( $attribute->input == "image" ) value="image">Image (all format: png,jpg,,,etc)</option>
                                 <option @selected( $attribute->input == "file" ) value="file">File</option>
-                                <option @selected( $attribute->input == "number" ) value="number">Number</option>
+                                <option @selected( $attribute->input == "number" ) value="number">Integer Number</option>
+                                <option @selected( $attribute->input == "decimal" ) value="number">Decimal Number</option>
                                 <option @selected( $attribute->input == "range" ) value="range">Range</option>
                                 <option @selected( $attribute->input == "radio" ) value="radio">Radio ( True, False )</option>
                                 <option @selected( $attribute->input == "date" ) value="date">Date</option>
                                 <option @selected( $attribute->input == "month" ) value="month">Month</option>
                                 <option @selected( $attribute->input == "time" ) value="time">Time</option>
                                 <option @selected( $attribute->input == "datalist" ) value="datalist">Datalist ( Year List )</option>
-                                <option @selected( $attribute->input == "datetime-local" ) value="datetime-local">Datetime local</option>
+                                <option @selected( $attribute->input == "datetime-local" ) value="datetime-local">Date And Time</option>
                                 <option @selected( $attribute->input == "select" ) value="select">Select</option>
                                 <option @selected( $attribute->input == "foreignId" ) value="foreignId">Lookup</option>
                             </select>
@@ -193,17 +196,22 @@
                                                             --{{ __('Select column type') }}--
                                                         </option>
                                                         <option @selected( $multi->type == "text" ) value="text">Text</option>
-                                                        <option @selected( $multi->type == "textarea" ) value="textarea">Textarea</option>
+                                                        <option @selected( $multi->type == "text" ) value="text">Letters (a-z, A-Z) or Numbers (0-9)</option>
+                                                        <option @selected( $multi->type == "textarea" ) value="textarea">Text Area</option>
+                                                        <option @selected( $multi->type == "texteditor" ) value="texteditor">Text Editor</option>
                                                         <option @selected( $multi->type == "email" ) value="email">Email</option>
                                                         <option @selected( $multi->type == "tel" ) value="tel">Telepon</option>
                                                         <option @selected( $multi->type == "url" ) value="url">Url</option>
                                                         <option @selected( $multi->type == "search" ) value="search">Search</option>
-                                                        <option @selected( $multi->type == "number" ) value="number">Number</option>
+                                                        <option @selected( $multi->type == "number" ) value="number">Integer Number</option>
+                                                        <option @selected( $multi->type == "decimal" ) value="decimal">Decimal Number</option>
                                                         <option @selected( $multi->type == "radio" ) value="radio">Radio ( True, False )</option>
                                                         <option @selected( $multi->type == "date" ) value="date">Date</option>
                                                         <option @selected( $multi->type == "time" ) value="time">Time</option>
                                                         <option @selected( $multi->type == "select" ) value="select">Select</option>
                                                         <option @selected( $multi->type == "foreignId" ) value="foreignId">Lookup</option>
+
+
 
                                                     </select>
                                                 </div>

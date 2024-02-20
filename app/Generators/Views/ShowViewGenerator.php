@@ -183,6 +183,7 @@ class ShowViewGenerator
                 }
 
                 switch ($field->type) {
+
                     case 'boolean':
                         $trs .= "<tr>
                                         <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
@@ -253,7 +254,17 @@ class ShowViewGenerator
                                                         @foreach( \$ar as \$item )
                                                         <tr>";
                         foreach ($field->multis as $key => $value) {
+
+                            if($value->type=="texteditor"){
+                                $trs .= "<td>{!! \$item->" . $value->name . " !!}</td>";
+
+                            }
+                            else{
+
                             $trs .= "<td>{{ \$item->" . $value->name . " }}</td>";
+                            }
+
+
                         }
 
                         $trs .= "</tr>
@@ -266,12 +277,24 @@ class ShowViewGenerator
                                                     </td>
                                                 </tr>";
                         break;
+
+
+
                     default:
                         if ($field->file_type != 'image') {
+                           if($field->input == 'texteditor'){
+
                             $trs .= "<tr>
-                                            <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
-                                            <td>{{ $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " }}</td>
-                                        </tr>";
+                            <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
+                            <td>{!! $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " !!}</td>
+                        </tr>";
+
+                           }else{
+                            $trs .= "<tr>
+                            <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
+                            <td>{{ $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " }}</td>
+                        </tr>";
+                           }
                         }
                         break;
                 }
