@@ -55,6 +55,14 @@
                                                 {{ $child->$code == 1 ? 'True' : 'False' }}
                                             @break
 
+                                            @case('text')
+                                                @if($field->input == 'texteditor')
+                                                    {!! $child->$code !!}
+                                                @else
+                                                    {{ $child->$code }}
+                                                @endif
+                                            @break
+
                                             @case('foreignId')
                                                 @php
 
@@ -95,7 +103,11 @@
                                                                         @php
                                                                             $a = $value->name ;
                                                                         @endphp
+                                                                        @if($value->type == "texteditor")
+                                                                             <td>{!! $item->$a !!}</td>
+                                                                        @else
                                                                         <td>{{ $item->$a }}</td>
+                                                                          @endif
                                                                     @endforeach
 
                                                                 </tr>

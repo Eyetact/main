@@ -411,6 +411,10 @@ output {
                      console.log(response);
                     $(".view-sub-form").html(response);
                     $('.dropify').dropify();
+                    $('.content').each(function(i, obj) {
+                        //test
+                    $(this).richText();
+                    });
 
                 }
             });
