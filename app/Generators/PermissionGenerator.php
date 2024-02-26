@@ -19,8 +19,12 @@ class PermissionGenerator
     {
         $model = GeneratorUtils::setModelName($request['code'], 'default');
         $modelNameSingular = GeneratorUtils::cleanSingularLowerCase($model);
-
-        $this->insertRoleAndPermissions(strtolower($modelNameSingular),$id);
+        try {
+            //code...
+            $this->insertRoleAndPermissions(strtolower($modelNameSingular),$id);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     public function generateForAttr(array $request,$id)

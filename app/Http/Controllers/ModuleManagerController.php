@@ -446,4 +446,21 @@ class ModuleManagerController extends Controller
 
     }
 
+    public function forceDelete($id){
+
+        $model = Module::find($id);
+        foreach ($model->fields as $attribute) {
+            if ($attribute) {
+                $this->generatorService->removeMigration($id, $attribute->id);
+                $attribute->delete();
+            }
+        }
+        $model->delete();
+        MenuManager::where('module_id',$id)->first()->delete();
+
+        $this->flashRepository->setFlashSession('alert-success', 'Module Was Deleted successfully.');
+        return redirect()->route('module_manager.index');
+
+    }
+
 }

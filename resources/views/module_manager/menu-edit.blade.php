@@ -85,10 +85,15 @@
                         </div>
                         <div class="card-footer text-right">
 
+                            @role('super')
+                                <a title="Delete" class="btn btn-danger" href="{{ route('force-delete', $module->id) }}"
+                                    type="button" alt="">Force Delete</a>
+                            @endrole
+
                             @if ($module->is_delete == 0)
-                                <input title="Reset form" class="btn btn-danger" data-id="{{ $module->id }}"
-                                    id="remove-admin-menu" type="button" value="Delete">
-                            @endif
+                            <input title="Reset form" class="btn btn-danger" data-id="{{ $module->id }}"
+                                id="remove-admin-menu" type="button" value="Delete">
+                        @endif
                             @if ($module->is_delete == 1)
                                 <input title="Reset form" class="btn btn-success" data-id="{{ $module->id }}"
                                  id="restore-admin-menu" type="button"

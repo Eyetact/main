@@ -126,6 +126,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('module_manager/update/{module}', 'update')->name('module_manager.update');
         Route::delete('module_manager/{menu}', 'destroy')->name('module_manager.destroy');
         Route::post('module_manager/switch-delete', 'deleteORRestore')->name('module_manager.deleteORRestore');
+        Route::get('force-delete/{id}', 'forceDelete')->name('force-delete');
+
 
         // update is deleted menu item
         Route::post('module_manager/menu_delete', 'menuDelete')->name('module_manager.menu_delete');
