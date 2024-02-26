@@ -66,33 +66,163 @@
                             <label id="price-error" class="error" for="price">{{ $message }}</label>
                         @enderror
                     </div>
-                    
 
-                    <div class="col-sm-6 col-md-6" style="display: none">
 
+
+                    <div class="col-sm-6 col-md-6">
                         <div class="input-box">
-                            {{-- <label for="permission_type">Permission Type:</label> --}}
-                            <select class="google-input" id="permission_type" name="type">
-                                <option selected disabled>Select Permission Type</option>
-                                <option value="user">User</option>
-                                <option value="customer">Customer</option>
-                            </select>
+                            <label for="model_limit" class="input-label">Module Limit</label>
+                            <input type="number"  max="{{$availableModel}}" class="google-input" name="model_limit" id="model_limit" value="" />
                         </div>
+                        @error('model_limit')
+                            <label id="period-error" class="error" for="model_limit">{{ $message }}</label>
+                        @enderror
                     </div>
+
+                    <div class="col-sm-6 col-md-6">
+                        <div class="input-box">
+                            <label for="data_limit" class="input-label">Data Limit</label>
+                            <input type="number"  max="{{$availableData}}" class="google-input" name="data_limit" id="price" value="" />
+                        </div>
+                        @error('data_limit')
+                            <label id="price-error" class="error" for="data_limit">{{ $message }}</label>
+                        @enderror
+                    </div>
+
+
 
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group ">
-                            <label class="form-label">Permissions</label>
-                            <div class="selectgroup selectgroup-pills">
-                                {{-- @foreach ($permissions as $p)
-                                <label class="selectgroup-item">
-                                    <input type="checkbox" name="permissions[]" value="{{ $p->id }}" class="selectgroup-input"
-                                        >
-                                    <span class="selectgroup-button">{{$p->name}}</span>
-                                </label>
-                                @endforeach --}}
+                            <label class="form-label">Permissions :</label>
+                            <div class="">
 
-                                <div id="permissions"></div>
+                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                                data-accordion="false">
+                                <div class="row">
+                                    @foreach ($groupPermission as $key => $permissions)
+                                        @canany([$permissions[0]->name,$permissions[1]->name,$permissions[2]->name,$permissions[3]->name])
+
+                                        <div class="col-sm-6 role-group">
+                                            <div class="custom-checkbox permission  input-box">
+                                                <input id="{{ $key }}" type="checkbox" class=" check-all"
+                                                    name="checkAll">
+                                                <label for="{{ $key }}">
+                                                    <b>{{ Str::ucfirst(explode('.', $permissions[0]->name)[1]) }}</b></label>
+                                            </div>
+
+
+                                            @foreach ($permissions as $permission)
+                                                @can($permission->name)
+                                                <div class="custom-control custom-checkbox ms-3 row  input-box">
+                                                    <div class="col-md-12">
+                                                        <input  id="{{ $permission->id }}" type="checkbox" class="check-one"
+                                                            name="permissions[]" value="{{ $permission->id }}"
+                                                           >
+
+                                                        <label
+                                                            for="{{ $permission->id }}">{{ Str::ucfirst($permission->name) }}</label>
+                                                    </div>
+                                                    <?php
+                                                    // $edit_no = 0;
+                                                    // $edit_type = '';
+                                                    // $permission_id = 0;
+                                                    // $scheduler_data = ['scheduler_no' => '', 'type' => ''];
+                                                    // if ($role->scheduler->count() > 0) {
+                                                    //     $scheduler = $role->scheduler->toArray();
+                                                    //     if (array_search($permission->id, array_column($scheduler, 'permission_id')) !== false) {
+                                                    //         $key = array_search($permission->id, array_column($scheduler, 'permission_id'));
+                                                    //         $scheduler_data = $scheduler[$key];
+                                                    //     }
+
+                                                    //     // dump($scheduler[$key]);
+
+                                                    //     if (array_search($permission->id, array_column($scheduler, 'permission_id')) !== false) {
+                                                    //         // $edit_no=$scheduler['scheduler_no'];
+                                                    //         // $edit_type=$scheduler['type'];
+                                                    //         $permission_id = $scheduler;
+                                                    //     }
+                                                    //     // echo $key;
+                                                    // }
+                                                    // dump($scheduler_data);
+                                                    // echo $role->scheduler->count().$edit_no.$edit_type;
+                                                    ?>
+                                                    {{-- <div class="col-md-7">
+                                                        <div class="row">
+
+
+                                                            @if (str_contains($permission->name, 'edit'))
+
+                                                                <div class="col-md-6 select-box">
+
+                                                                    <select name="schedule_no_edit[{{ $permission->id }}]"
+                                                                        class="google-input" title="Number">
+
+                                                                        @for ($i = 0; $i <= 10; $i++)
+                                                                            <option value="{{ $i }}" @selected( $permission->getCountByrole($role->id) == $i )>
+                                                                                {{ $i }}</option>
+                                                                        @endfor
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-6  select-box">
+
+                                                                    <select name="schedule_time_edit[{{ $permission->id }}]"
+                                                                        class="google-input schedule_time_edit schedule_time"
+                                                                        title="Time">
+                                                                        <option value="day" @selected( $permission->getCountByrole($role->id,1) == 'day' )>
+                                                                            Days</option>
+                                                                        <option value="week" @selected( $permission->getCountByrole($role->id,1) == 'week' )>
+                                                                            Weeks</option>
+                                                                        <option value="month" @selected( $permission->getCountByrole($role->id,1) == 'month' )>
+                                                                            Months</option>
+                                                                        <option value="year" @selected( $permission->getCountByrole($role->id,1) == 'year' )>
+                                                                            Years</option>
+                                                                    </select>
+                                                                </div>
+                                                            @endif
+
+                                                        </div>
+
+                                                        @if (str_contains($permission->name, 'delete'))
+                                                            <div class="row">
+                                                                <div class="col-md-6  select-box">
+                                                                    <select name="schedule_no_delete[{{ $permission->id }}]"
+                                                                        class="google-input schedule_no_delete schedule_no"
+                                                                        title="Number">
+
+                                                                        @for ($i = 0; $i <= 10; $i++)
+                                                                            <option value="{{ $i }}" @selected( $permission->getCountByrole($role->id) == $i )>
+                                                                                {{ $i }}</option>
+                                                                        @endfor
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-6  select-box">
+                                                                    <select name="schedule_time_delete[{{ $permission->id }}]"
+                                                                        class="google-input schedule_time_delete schedule_time"
+                                                                        title="Time">
+                                                                        <option value="day" @selected( $permission->getCountByrole($role->id,1) == 'day' )>
+                                                                            Days</option>
+                                                                        <option value="week" @selected( $permission->getCountByrole($role->id,1) == 'week' )>
+                                                                            Weeks</option>
+                                                                        <option value="month" @selected( $permission->getCountByrole($role->id,1) == 'month' )>
+                                                                            Months</option>
+                                                                        <option value="year" @selected( $permission->getCountByrole($role->id,1) == 'year' )>
+                                                                            Years</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                    </div> --}}
+
+                                                </div>
+                                                @endcan
+                                            @endforeach
+                                        </div>
+                                        @endcanany
+
+
+                                    @endforeach
+                                </div>
+                            </ul>
 
                             </div>
                         </div>
@@ -100,15 +230,6 @@
 
 
 
-                    <div class="col-sm-6 col-md-6">
-
-                        <div class="input-box">
-                            {{-- <label for="permissions">Permissions:</label> --}}
-                            {{-- <select class="google-input" name="permissions[]" multiple id="permissions">
-                                <!-- Permissions for the selected type will be dynamically loaded here -->
-                            </select> --}}
-                        </div>
-                    </div>
 
                 </div>
 
@@ -119,7 +240,7 @@
                     <a href="{{ route('plans.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
-  
+
 
     <script src="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/plugins/wysiwyag/jquery.richtext.js">
     </script>

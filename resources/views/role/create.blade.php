@@ -1,7 +1,7 @@
 <form action="{{ $role->id == null ? route('role.store') : route('role.update', ['role' => $role->id]) }}" method="POST"
     id="role_form" novalidate="" class="needs-validation">
     <div class="card-body">
-        
+
         @csrf
         <div class="row">
             <div class="col-sm-12 col-lg-12">
@@ -24,6 +24,7 @@
                         data-accordion="false">
                         <div class="row">
                             @foreach ($groupPermission as $key => $permissions)
+                            @canany([$permissions[0]->name,$permissions[1]->name,$permissions[2]->name,$permissions[3]->name])
                                 <div class="col-sm-6 role-group">
                                     <div class="custom-checkbox permission  input-box">
                                         <input id="{{ $key }}" type="checkbox" class=" check-all"
@@ -33,6 +34,7 @@
                                     </div>
 
                                     @foreach ($permissions as $permission)
+                                        @can($permission->name)
                                         <div class="custom-control custom-checkbox ms-3 row  input-box">
                                             <div class="col-md-5">
                                                 <input id="{{ $permission->id }}" type="checkbox" class="check-one"
@@ -73,7 +75,7 @@
 
 
                                                     @if (str_contains($permission->name, 'edit'))
-                                                       
+
                                                         <div class="col-md-6 select-box">
 
                                                             <select name="schedule_no_edit[{{ $permission->id }}]"
@@ -110,7 +112,7 @@
                                                             <select name="schedule_no_delete[{{ $permission->id }}]"
                                                                 class="google-input schedule_no_delete schedule_no"
                                                                 title="Number">
-                   
+
                                                                 @for ($i = 0; $i <= 10; $i++)
                                                                     <option value="{{ $i }}" @selected( $permission->getCountByrole($role->id) == $i )>
                                                                         {{ $i }}</option>
@@ -136,8 +138,10 @@
                                             </div>
 
                                         </div>
+                                        @endcan
                                     @endforeach
                                 </div>
+                                @endcanany
                             @endforeach
                         </div>
                     </ul>

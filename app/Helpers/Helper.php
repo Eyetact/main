@@ -12,6 +12,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
+
 
 class Helper
 {
@@ -44,8 +46,8 @@ class Helper
     //     return $data;
     // }
 
-    public static function getMenu($type)
-    {
+    // public static function getMenu($type)
+    // {
 
 
 
@@ -87,10 +89,36 @@ class Helper
 
         //global
 
-        $data = MenuManager::with('children.children.children')->where('parent', '0')->where('menu_type', $type)->orderBy('sequence', 'asc')->get();
-        return $data;
-    }
+    //     $data = MenuManager::with('children.children.children')->where('parent', '0')->where('menu_type', $type)->orderBy('sequence', 'asc')->get();
+    //     return $data;
+    // }
 
+
+    public static function getMenu($type)
+    {
+
+        $super= Auth::user()->hasRole('super');
+        if($super)
+        {
+
+           $data = MenuManager::with('children.children.children')->where('parent', '0')->where('menu_type', $type)->orderBy('sequence', 'asc')->get();
+           return $data;
+        }
+
+
+        $module_ids = Module::where('user_id', auth()->user()->id)
+                ->pluck('id');
+
+            $data = MenuManager::with('children.children.children')
+                ->where('parent', '0')
+                ->where('menu_type', $type)
+                ->whereIn('module_id', $module_ids) // Filter by module_id
+                ->orderBy('sequence', 'asc')
+                ->get();
+
+            return $data;
+
+    }
 
     public static function canWithCount($name, $created_at)
     {
@@ -104,8 +132,8 @@ class Helper
 
         $role = Role::where('name', Auth::user()->getRoleNames()->first())->first();
         $permission = Permission::where('name', $name)->first();
-        $count = $permission->getCountByrole($role->id);
-        $count_type = $permission->getCountByrole($role->id, 1);
+        $count = $permission->getCountByrole($role->id); // number
+        $count_type = $permission->getCountByrole($role->id, 1); // days or week etc
 
 
 
@@ -118,7 +146,7 @@ class Helper
                 $date = Carbon::parse($created_at);
                 $now = Carbon::now();
                 $diff = $date->diffInDays($now);
-                return $created_at;
+                // return $created_at;
                 if ($diff < $count) {
                     return true;
                 }
@@ -159,6 +187,35 @@ class Helper
         }
 
         return false;
+
+    }
+
+
+    public static function canForSpecificUser($name)
+    {
+
+        $super= Auth::user()->hasRole('super');
+        if($super)
+        {
+            return true;
+        }
+
+
+
+        $permission = Permission::where('name', $name)->first();
+        $per_id=$permission->id;
+        $exist= DB::table('permission_has_models')
+                   ->where('permission_id', $per_id)
+                   ->where('model_type', "App\Models\User")
+                   ->where('model_id', auth()->user()->id)
+                   ->first();
+
+           if($exist)
+           {
+            return true;
+           }
+
+           return false;
 
     }
 

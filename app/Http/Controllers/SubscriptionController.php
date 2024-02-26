@@ -8,13 +8,31 @@ use Illuminate\Http\Request;
 use App\Models\Subscription;
 use App\Models\User;
 use Carbon\Carbon;
+use Spatie\Permission\Models\Role;
 
 
 class SubscriptionController extends Controller {
 
     public function index() {
         if(request()->ajax()) {
+
+            if(auth()->user()->hasRole('super'))
+            {
+
             $subscriptions = Subscription::all();
+
+            }
+
+
+            else{
+            $userId = auth()->user()->id;
+            $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
+
+            $subscriptions = Subscription::whereIn('user_id', $usersOfCustomers)
+                ->orWhere('user_id', $userId)
+                ->get();
+            }
+
 
             return datatables()->of($subscriptions)
 
@@ -39,7 +57,31 @@ class SubscriptionController extends Controller {
 
     public function create() {
 
-        $users = User::all();
+        // $roleNames = ['super', 'admin', 'vendor'];
+        // $users = User::role($roleNames)->get();
+
+        $roleNames = ['admin', 'vendor'];
+
+        if(auth()->user()->hasRole('super'))
+        {
+
+            $users = User::role($roleNames)->get();
+
+        }
+
+
+        else{
+
+        $userId = auth()->user()->id;
+        $usersOfCustomers = User::role($roleNames)
+                                 ->where('user_id', $userId)
+                                 ->pluck('id');
+
+        $users = User::whereIn('id', $usersOfCustomers)
+
+            ->get();
+        }
+
         $plans = Plan::all();
         $groups = CustomerGroup::all();
 
@@ -65,8 +107,10 @@ class SubscriptionController extends Controller {
                 $sub->save();
 
                 $user = User::find($customer->id);
-                foreach($plan->permissions as $p) {
-                    $user->givePermissionTo($p);
+                if($sub->status == 'active'){
+                    foreach($plan->permissions as $p) {
+                        $user->givePermissionTo($p);
+                    }
                 }
             }
 
@@ -82,8 +126,11 @@ class SubscriptionController extends Controller {
         $sub->end_date = $sub->start_date->copy()->addDays($plan->period);
         $sub->save();
         $user = User::find($request->user_id);
-        foreach($plan->permissions as $p) {
-            $user->givePermissionTo($p);
+        if($sub->status == 'active'){
+
+            foreach($plan->permissions as $p) {
+                $user->givePermissionTo($p);
+            }
         }
 
         return redirect()->route('subscriptions.index')
@@ -113,7 +160,16 @@ class SubscriptionController extends Controller {
     public function update(Request $request, string $id) {
         $subscription = Subscription::findOrFail($id);
 
-        $subscription->update($request->all());
+        $subscription->update($request->except('user_id'));
+
+        $plan = Plan::find($subscription->plan_id);
+        $user = User::find($subscription->user_id);
+
+        if($subscription->status == 'active'){
+            foreach($plan->permissions as $p) {
+                $user->givePermissionTo($p);
+            }
+        }
 
         return redirect()->route('subscriptions.index')
             ->with('success', 'Subscription has been updated successfully');

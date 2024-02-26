@@ -102,6 +102,10 @@ class User extends Authenticatable
         return $this->hasMany( File::class );
     }
 
+    public function modules(){
+        return $this->hasMany( Module::class );
+    }
+
 
     public function setAccessTableAttribute($value)
     {
@@ -131,6 +135,67 @@ class User extends Authenticatable
     }
 
 
+
+    public function getModelLimitAttribute() // $user->model_limit
+    {
+
+        $super= $this->hasRole('super');
+        if($super)
+        {
+
+            return 1000;
+
+        }
+         //employee case
+         if(count($this->subscriptions) == 0){
+
+            if(auth()->user()->user_id == 1)
+            {
+                return 1000;
+
+            }
+
+            $customer = User::find($this->user_id);
+            return $customer ->subscriptions()->where('status', 'active')->orderBy('created_at','desc')->first()?->plan?->model_limit;
+        }
+
+        return  (int)$this->subscriptions()->where('status', 'active')->orderBy('created_at','desc')->first()?->plan?->model_limit;
+
+    }
+
+    public function getDataLimitAttribute() // $user->model_limit
+    {
+        $super= $this->hasRole('super');
+        if($super)
+        {
+
+            return 1000;
+
+        }
+        //employee case
+        if(count($this->subscriptions) == 0){
+
+            if(auth()->user()->user_id == 1)
+            {
+                return 1000;
+
+            }
+
+            $customer = User::find($this->user_id);
+            return $customer ->subscriptions()->where('status', 'active')->orderBy('created_at','desc')->first()?->plan?->data_limit;
+        }
+
+        return $this->subscriptions()->where('status', 'active')->orderBy('created_at','desc')->first()?->plan?->data_limit;
+
+    }
+
+    public function getCurrentModelLimitAttribute(){
+        return count($this->modules);
+    }
+
+    //$user->model_limit < $user->current_model_limit
+
+    //$user->data_limit < count(unit::all())
 
 
 }

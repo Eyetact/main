@@ -16,7 +16,22 @@ class PlanController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $plans = Plan::all();
+            if(auth()->user()->hasRole('super'))
+            {
+
+                $plans = Plan::all();
+
+
+            }
+
+
+            else{
+            $userId = auth()->user()->id;
+
+
+            $plans = Plan::where('user_id', $userId)
+                ->get();
+            }
 
             return datatables()->of($plans)
                 ->editColumn('image', function ($row) {
@@ -38,13 +53,24 @@ class PlanController extends Controller
         $permissions = Permission::all();
         $user_permissions = Permission::where('type', 'user')->get();
         $customer_permissions = Permission::where('type', 'customer')->get();
-        return view('plans.create', compact('permissions','user_permissions','customer_permissions'));
+        $allPermission = Permission::all();
+        $groupPermission = $allPermission->groupBy('module');
+
+        $availableModel= (auth()->user()->model_limit) - (auth()->user()->current_model_limit);
+        $availableData= auth()->user()->data_limit;
+
+
+        return view('plans.create', compact('permissions','user_permissions','customer_permissions','allPermission','groupPermission','availableModel','availableData'));
     }
 
-    public function store(PlanRequest $request)
+    public function store(Request $request)
     {
 
-        $plan = Plan::create($request->except('permissions'));
+
+
+        $plan = Plan::create($request->except('permissions','checkAll'));
+        $plan->user_id = auth()->user()->id;
+        $plan->save();
 
         if ($request->permissions) {
             foreach ($request->permissions as $p) {
@@ -61,6 +87,7 @@ class PlanController extends Controller
         ;
 
 
+
     }
 
 
@@ -70,7 +97,9 @@ class PlanController extends Controller
         $user_permissions = Permission::where('type', 'user')->get();
         $customer_permissions = Permission::where('type', 'customer')->get();
         $plan = Plan::findOrFail($id);
-        return view('plans.show', compact('plan', 'permissions','user_permissions','customer_permissions'));
+        $allPermission = Permission::all();
+        $groupPermission = $allPermission->groupBy('module');
+        return view('plans.show', compact('plan', 'permissions','user_permissions','customer_permissions','allPermission','groupPermission'));
     }
 
 
@@ -83,7 +112,7 @@ class PlanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(PlanRequest $request, string $id)
+    public function update(Request $request, string $id)
     {
         $plan = Plan::findOrFail($id);
 
@@ -91,10 +120,11 @@ class PlanController extends Controller
             unlink($plan->image);
         }
 
-        $plan->update($request->except('permissions'));
+        $plan->update($request->except('permissions','checkAll'));
 
         $plan->permissions()->detach();
 
+        if ($request->permissions) {
         foreach ($request->permissions as $p) {
 
             $per = Permission::find($p);
@@ -102,7 +132,18 @@ class PlanController extends Controller
             $plan->permissions()->save($per);
         }
 
+        $subs = $plan->subscriptions;
+        foreach ($subs as $sub) {
+            $user = $sub->user;
+            foreach($plan->permissions as $p) {
+                $user->givePermissionTo($p);
+            }
 
+        }
+
+
+
+    }
         return redirect()->route('plans.index')
             ->with('success', 'Plan has been updated successfully');
     }

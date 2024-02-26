@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserGroup;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserGroupController extends Controller
@@ -11,7 +12,19 @@ class UserGroupController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $groups = UserGroup::all();
+
+
+            if(auth()->user()->hasRole('super')){
+                $groups = UserGroup::all();
+            }else{
+                $userId = auth()->user()->id;
+
+                $ids = User::where('user_id', $userId)->pluck('id');
+                $groups = UserGroup::where('created_by', $userId)
+                ->orWhereIn('created_by',$ids)
+                ->get();
+            }
+
 
             return datatables()->of($groups)
             ->addColumn('name',function($row){
@@ -102,12 +115,50 @@ class UserGroupController extends Controller
 
     public function create()
     {
-        $parents_group = UserGroup::where('group_id', null)->get();
+        // $parents_group = UserGroup::where('group_id', null)->get();
 
-        $roles = Role::where('name','!=','admin')
-        ->where('name','!=','vendor')
-        ->where('name','!=','super')
-        ->get();
+        if(auth()->user()->hasRole('super')){
+            $parents_group = UserGroup::where('group_id', null)->get();
+
+        }else{
+            $userId = auth()->user()->id;
+
+            $ids = User::where('user_id', $userId)->pluck('id');
+            $parents_group = UserGroup::where('created_by', $userId)
+            ->orWhereIn('created_by',$ids)
+            ->where('group_id', null)
+            ->get();
+        }
+
+
+        if(auth()->user()->hasRole('super'))
+        {
+
+            $roles = Role::where('name','!=','admin')
+            ->where('name','!=','vendor')
+            ->where('name','!=','super')
+            ->get();
+
+        }
+
+
+        else{
+
+            $userId = auth()->user()->id;
+
+            $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
+
+            $roles = Role::where(function ($query) use ($usersOfCustomers, $userId) {
+                          $query->whereIn('user_id', $usersOfCustomers)
+                                ->orWhere('user_id', $userId);
+                        })
+                        ->whereNotIn('name', ['admin', 'vendor', 'super'])
+                        // ->orWhere('name', 'user')
+                        ->get();
+
+        }
+
+
 
         return view('users_groups.create',compact('roles','parents_group'));
     }
@@ -116,6 +167,8 @@ class UserGroupController extends Controller
     {
 
         $group = UserGroup::create($request->except('role'));
+        $group->created_by = auth()->user()->id;
+        $group->save();
 
         $group->assignRole($request->role);
 

@@ -55,27 +55,28 @@ class AttributeController extends Controller
                 ->addColumn('module', function ($row) {
                     return $row->moduleObj->name;
                 })
-                ->addColumn('action', function ($row) {
-                    $btn = '<div class="dropdown">
-            <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+        //         ->addColumn('action', function ($row) {
+        //             $btn = '<div class="dropdown">
+        //     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+        //         aria-haspopup="true" aria-expanded="false">
+        //         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
 
-            </a>
+        //     </a>
 
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        //     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
-            <li class="dropdown-item">
-            <a href="#" id="edit_item"  data-path="' . route('attribute.edit', $row->id) . '">View or Edit</a>
-            </li>
-                <li class="dropdown-item">
-                <a class="delete-attribute" href="#" data-id="' . $row->id . '" class="attribute-delete">Delete</a>
-                </li>
-            </ul>
-        </div>';
+        //     <li class="dropdown-item">
+        //     <a href="#" id="edit_item"  data-path="' . route('attribute.edit', $row->id) . '">View or Edit</a>
+        //     </li>
+        //         <li class="dropdown-item">
+        //         <a class="delete-attribute" href="#" data-id="' . $row->id . '" class="attribute-delete">Delete</a>
+        //         </li>
+        //     </ul>
+        // </div>';
 
-                    return $btn;
-                })
+        //             return $btn;
+        //         })
+                ->addColumn('action', 'attribute.action')
                 ->rawColumns(['action'])
 
                 ->addIndexColumn()
@@ -241,10 +242,11 @@ class AttributeController extends Controller
             $this->generatorService->reGenerateController($request['module']);
             $this->generatorService->reGenerateRequest($request['module']);
             $this->generatorService->reGenerateViews($request['module']);
+            $this->generatorService->generatePermissionForAttr($createArr, $attribute->id);
 
         } catch (\Throwable $th) {
 
-            $this->generatorService->removeMigration($request['module'], $attribute->id);
+            // $this->generatorService->removeMigration($request['module'], $attribute->id);
             // $attribute->delete();
             $this->generatorService->reGenerateModel($request['module']);
             $this->generatorService->reGenerateController($request['module']);

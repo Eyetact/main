@@ -263,15 +263,27 @@
                 // alert("aaa");
                 var check = this.checked;
                 $(this).parents('.role-group').find('.check-one').prop("checked", check);
+                $('.permission .check-all').each(function() {
+                var parentItem = $(this).parents('.role-group');
+                var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
+                    '.check-one').length;
+                $(parentItem).find('.check-all').prop("checked", check)
+            });
             });
             $('.permission .check-one').click(function() {
                 var parentItem = $(this).parents('.nav-treeview').parents('.nav-item');
                 var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
                     '.check-one').length;
                 $(parentItem).find('.check-all').prop("checked", check)
+                $('.permission .check-all').each(function() {
+                var parentItem = $(this).parents('.role-group');
+                var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
+                    '.check-one').length;
+                $(parentItem).find('.check-all').prop("checked", check)
+            });
             });
             $('.permission .check-all').each(function() {
-                var parentItem = $(this).parents('.nav-item');
+                var parentItem = $(this).parents('.role-group');
                 var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
                     '.check-one').length;
                 $(parentItem).find('.check-all').prop("checked", check)

@@ -23,7 +23,31 @@ class UserController extends Controller
     public function vendors()
     {
         if (request()->ajax()) {
-            $users = User::role('vendor')->get();
+
+            if(auth()->user()->hasRole('super'))
+            {
+
+                $users = User::role('vendor')->get();
+
+
+            }
+
+
+            else{
+
+            $userId = auth()->user()->id;
+            $usersOfCustomers = User::role('vendor')
+                                     ->where('user_id', $userId)
+                                     ->pluck('id');
+
+            $users = User::whereIn('id', $usersOfCustomers)
+
+                          ->get();
+
+
+            }
+
+
 
             return datatables()->of($users)
                 ->editColumn('avatar', function ($row) {
@@ -64,9 +88,31 @@ class UserController extends Controller
     {
         if (request()->ajax()) {
             // $users = User::role('user')->get();
-            $users = User::whereDoesntHave('roles', function ($query) {
-                $query->whereIn('name', ['super', 'vendor', 'admin']);
-            })->get();
+            if(auth()->user()->hasRole('super'))
+            {
+
+                $users = User::whereDoesntHave('roles', function ($query) {
+                    $query->whereIn('name', ['super', 'vendor', 'admin']);
+                })->get();
+
+
+            }
+
+
+            else{
+
+                $userId = auth()->user()->id;
+                $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
+
+                $users = User::whereIn('id', $usersOfCustomers)
+                    ->whereDoesntHave('roles', function ($query) {
+                        $query->whereIn('name', ['super', 'vendor', 'admin']);
+                    })
+                    ->get();
+
+            }
+
+
 
             return datatables()->of($users)
                 ->editColumn('avatar', function ($row) {
@@ -87,7 +133,29 @@ class UserController extends Controller
     public function admins()
     {
         if (request()->ajax()) {
-            $users = User::role('admin')->get();
+
+            if(auth()->user()->hasRole('super'))
+            {
+
+                $users = User::role('admin')->get();
+
+
+
+            }
+
+
+            else{
+
+            $userId = auth()->user()->id;
+            $usersOfCustomers = User::role('admin')
+                                     ->where('user_id', $userId)
+                                     ->pluck('id');
+
+            $users = User::whereIn('id', $usersOfCustomers)
+
+                          ->get();
+            }
+
 
             return datatables()->of($users)
                 ->editColumn('avatar', function ($row) {
@@ -172,10 +240,34 @@ class UserController extends Controller
     public function create()
     {
         $groups = UserGroup::all();
-        $roles = Role::where('name', '!=', 'admin')
+
+
+            if(auth()->user()->hasRole('super'))
+            {
+
+                $roles = Role::where('name', '!=', 'admin')
+                ->where('name', '!=', 'vendor')
+                ->where('name', '!=', 'super')
+                ->get();
+
+            }
+
+
+            else{
+            $userId = auth()->user()->id;
+            $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
+
+            $roles = Role::whereIn('user_id', $usersOfCustomers)
+            ->where('name', '!=', 'admin')
+            ->where('name', '!=', 'vendor')
+            ->where('name', '!=', 'super')
+
+            ->orWhere('user_id', $userId)
+            ->where('name', '!=', 'admin')
             ->where('name', '!=', 'vendor')
             ->where('name', '!=', 'super')
             ->get();
+            }
         return view('users.create-user', compact('groups', 'roles'));
     }
 
@@ -236,6 +328,9 @@ class UserController extends Controller
             $plan->period = 14;
             $plan->save();
         }
+
+        if(($request->role == "admin") || ($request->role == "vendor") )
+        {
         $sub = new Subscription();
         $sub->user_id = $user->id;
         $sub->plan_id = $plan->id;
@@ -244,6 +339,7 @@ class UserController extends Controller
         $sub->start_date = Carbon::today();
         $sub->end_date = $sub->start_date->copy()->addDays($plan->period);
         $sub->save();
+        }
 
         $user->assignRole($request->role);
 

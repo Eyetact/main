@@ -123,6 +123,8 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'data_limit' => 1000,
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

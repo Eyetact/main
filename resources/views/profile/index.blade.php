@@ -267,7 +267,7 @@
                                                         <option @if($user->access_table == 'Global') selected @endif value="Global">Global</option>
                                                         <option @if($user->access_table == 'Group') selected @endif value="Group">Group</option>
                                                         <option @if($user->access_table == 'Individual') selected @endif value="Individual">Individual</option>
-                                                        
+
                                                     </select>
                                                 </div>
                                                 @error('access_table')

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CustomerGroup;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CustomerGroupController extends Controller
@@ -10,7 +11,16 @@ class CustomerGroupController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $groups = CustomerGroup::all();
+            if(auth()->user()->hasRole('super')){
+                $groups = CustomerGroup::all();
+            }else{
+                $userId = auth()->user()->id;
+
+                $ids = User::where('user_id', $userId)->pluck('id');
+                $groups = CustomerGroup::where('created_by', $userId)
+                ->orWhereIn('created_by',$ids)
+                ->get();
+            }
 
             return datatables()->of($groups)
                 ->addColumn('name', function ($row) {
@@ -98,7 +108,18 @@ class CustomerGroupController extends Controller
 
     public function create()
     {
-        $parents_group = CustomerGroup::where('group_id', null)->get();
+        if(auth()->user()->hasRole('super')){
+            $parents_group = CustomerGroup::where('group_id', null)->get();
+
+        }else{
+            $userId = auth()->user()->id;
+
+            $ids = User::where('user_id', $userId)->pluck('id');
+            $parents_group = CustomerGroup::where('created_by', $userId)
+            ->orWhereIn('created_by',$ids)
+            ->where('group_id', null)
+            ->get();
+        }
         return view('groups.create', compact('parents_group'));
     }
 
@@ -106,6 +127,8 @@ class CustomerGroupController extends Controller
     {
 
         $group = CustomerGroup::create($request->all());
+        $group->created_by = auth()->user()->id;
+        $group->save();
 
         return redirect()->route('groups.index')
             ->with('success', 'group has been added successfully');
@@ -143,9 +166,9 @@ class CustomerGroupController extends Controller
                     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-    
+
                     </a>
-    
+
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     <li class="dropdown-item">
                         <a  href="' . route('profile.index', $row->id) . '">View or Edit</a>

@@ -40,6 +40,85 @@
             max-width: 99% !important;
             width: 99% !important;
         }
+        .dropdown-toggle:after {
+            content: none !important;
+        }
+
+        li.dropdown-item button,
+        li.dropdown-item a {
+            border: none;
+            background: transparent;
+            color: #333;
+            padding: 0px 10px;
+        }
+
+        li.dropdown-item {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .dt-buttons.btn-group {
+            float: left;
+        }
+
+        .parent {
+            animation: unset !important;
+        }
+    </style>
+    <style>
+        .role-group .input-box {
+            border: 1px solid #f1f1f1;
+            align-items: center;
+            margin: 0;
+            border-bottom: 0;
+            padding: 10px 30px 10px;
+            line-height: 0;
+        }
+
+        .role-group {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        table {
+            max-width: 99% !important;
+            width: 99% !important;
+        }
+
+        .role-group .input-box .col-md-6 {
+            display: flex;
+            align-items: center;
+        }
+
+        .role-group .input-box {
+            min-height: 43px;
+            padding-bottom: 0;
+            display: flex;
+            align-items: center !important;
+            padding-top: 0;
+        }
+
+        label {
+            margin: 0;
+            padding-left: 5px;
+        }
+
+        .role-group .input-box:first-child {
+            background: #f1f1f1;
+            padding: 0 18px;
+        }
+
+        .role-group .input-box {
+            padding-left: 15px !important;
+        }
+
+        .col-md-6.select-box {
+            padding: 6px 3px;
+        }
+
+        .modal-lg {
+            max-width: 1024px;
+        }
     </style>
 @endsection
 @push('styles')
@@ -96,6 +175,8 @@
                                     <th>image</th>
                                     <th>period</th>
                                     <th>price</th>
+                                    <th>module limit</th>
+                                    <th>data limit</th>
                                     <th data-priority="1"></th>
                                 </tr>
                             </thead>
@@ -189,6 +270,7 @@
                     $(".modal-title").html("Add Plan");
                     $("#role_form_modal").modal('show');
                     $('.dropify').dropify();
+                    checkInput();
                 }
             });
         });
@@ -207,6 +289,7 @@
                     $(".modal-title").html("edit Plan");
                     $("#role_form_modal").modal('show');
                     $('.dropify').dropify();
+                    checkInput();
                 }
             });
         });
@@ -261,6 +344,14 @@
                 {
                     data: 'price',
                     name: 'price'
+                },
+                {
+                    data: 'model_limit',
+                    name: 'model_limit'
+                },
+                {
+                    data: 'data_limit',
+                    name: 'data_limit'
                 },
 
                 {
@@ -317,6 +408,44 @@
                 }
             });
         });
+
+
+        $(function() {
+            checkInput();
+        });
+
+        function checkInput() {
+            $('body').on('click', '.permission .check-all', function() {
+                // alert("aaa");
+                var check = this.checked;
+                $(this).parents('.role-group').find('.check-one').prop("checked", check);
+                $('.permission .check-all').each(function() {
+                var parentItem = $(this).parents('.role-group');
+                var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
+                    '.check-one').length;
+                $(parentItem).find('.check-all').prop("checked", check)
+            });
+            });
+            $('.permission .check-one').click(function() {
+                var parentItem = $(this).parents('.nav-treeview').parents('.nav-item');
+                var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
+                    '.check-one').length;
+                $(parentItem).find('.check-all').prop("checked", check)
+                $('.permission .check-all').each(function() {
+                var parentItem = $(this).parents('.role-group');
+                var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
+                    '.check-one').length;
+                $(parentItem).find('.check-all').prop("checked", check)
+            });
+            });
+            $('.permission .check-all').each(function() {
+                var parentItem = $(this).parents('.role-group');
+                var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
+                    '.check-one').length;
+                $(parentItem).find('.check-all').prop("checked", check)
+            });
+        }
+
     </script>
     <script src="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/plugins/wysiwyag/jquery.richtext.js">
     </script>

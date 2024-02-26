@@ -253,8 +253,17 @@ li.dd-item.no-pad .dd-handle {
         </div>
         <div class="col-lg-12 col-xl-6 col-md-12 col-sm-12">
             <div class="row align-items-end justify-content-end tt">
+
+                {{-- @php
+                    echo auth()->user()->model_limit;
+                    echo auth()->user()->current_model_limit
+
+                @endphp --}}
+                @if(auth()->user()->model_limit > auth()->user()->current_model_limit)
                 <div class="col-2"><button type="button" data-target="#addMenuModal" data-toggle="modal"
                         class="btn btn-primary">Add</button></div>
+            @endif
+
             </div>
             <div class="editc"></div>
         </div>

@@ -120,4 +120,9 @@ class GeneratorService
         (new PermissionGenerator)->generate($request,$id);
     }
 
+    public function generatePermissionForAttr(array $request,$id): void
+    {
+        (new PermissionGenerator)->generateForAttr($request,$id);
+    }
+
 }

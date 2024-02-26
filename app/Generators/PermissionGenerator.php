@@ -4,6 +4,7 @@ namespace App\Generators;
 
 use Spatie\Permission\Models\{Role, Permission};
 use App\Models\Crud;
+use App\Models\Attribute;
 
 class PermissionGenerator
 {
@@ -20,6 +21,14 @@ class PermissionGenerator
         $modelNameSingular = GeneratorUtils::cleanSingularLowerCase($model);
 
         $this->insertRoleAndPermissions(strtolower($modelNameSingular),$id);
+    }
+
+    public function generateForAttr(array $request,$id)
+    {
+        // $attr = GeneratorUtils::setModelName($request['code'], 'default');
+        $attrNameSingular = GeneratorUtils::cleanSingularLowerCase($request['code']);
+
+        $this->insertRoleAndPermissionsForAttr(strtolower($attrNameSingular),$id);
     }
 
     /**
@@ -52,6 +61,7 @@ class PermissionGenerator
      */
     protected function insertRoleAndPermissions(string $model,$id)
     {
+
         $role = Role::find(1);
 
         Permission::create(['name' => "view.$model" , 'module' => $id , 'guard_name' => 'web']);
@@ -67,18 +77,68 @@ class PermissionGenerator
         ]);
 
         $user = auth()->user();
-        $role2 = $user->getRoleNames()->first(); // Retrieve the first role assigned to the user
+        // $role2 = $user->getRoleNames()->first(); // Retrieve the first role assigned to the user
 
 
-        if ($role2 && $role2 !== $role->name) {
-            $role2 = Role::where('name',$role2)->first();
-            $role2->givePermissionTo([
-                "view.$model",
-                "create.$model",
-                "edit.$model",
-                "delete.$model"
-            ]);
-        }
+        // if ($role2 && $role2 !== $role->name) {
+        //     $role2 = Role::where('name',$role2)->first();
+        //     $role2->givePermissionTo([
+        //         "view.$model",
+        //         "create.$model",
+        //         "edit.$model",
+        //         "delete.$model"
+        //     ]);
+        // }
+
+        $user->givePermissionTo([
+            "view.$model",
+            "create.$model",
+            "edit.$model",
+            "delete.$model"
+        ]);
+
+
+    }
+
+    protected function insertRoleAndPermissionsForAttr(string $attr,$id)
+    {
+
+        $role = Role::find(1);
+        $model_id=Attribute::find($id)->module;
+
+
+
+        Permission::create(['name' => "view.$attr" ,'module' => $model_id,'attribute' => $id , 'guard_name' => 'web']);
+        Permission::create(['name' => "edit.$attr", 'module' => $model_id,'attribute' => $id , 'guard_name' => 'web']);
+        Permission::create(['name' => "delete.$attr", 'module' => $model_id,'attribute' => $id , 'guard_name' => 'web']);
+
+
+        $role->givePermissionTo([
+            "view.$attr",
+            "edit.$attr",
+            "delete.$attr"
+        ]);
+
+        $user = auth()->user();
+        // $role2 = $user->getRoleNames()->first(); // Retrieve the first role assigned to the user
+
+
+        // if ($role2 && $role2 !== $role->name) {
+        //     $role2 = Role::where('name',$role2)->first();
+        //     $role2->givePermissionTo([
+        //         "view.$model",
+        //         "create.$model",
+        //         "edit.$model",
+        //         "delete.$model"
+        //     ]);
+        // }
+
+        $user->givePermissionTo([
+            "view.$attr",
+            // "create.$attr",
+            "edit.$attr",
+            "delete.$attr"
+        ]);
 
 
     }

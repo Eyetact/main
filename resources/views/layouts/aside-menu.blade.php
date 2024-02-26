@@ -146,7 +146,7 @@
 
                                         @if(count($item->children) > 0 )<i class="sub-angle fe fe-chevron-down"></i>@endif
                                     </a>
-                                    
+
 
                                 <ul class="sub-slide-menu">
                                     <li><a class="sub-slide-item" href="{{ url('/' . $item->path) }}">{{ $item->name }}</a></li>
@@ -213,6 +213,7 @@
                 @endrole
 
                 @hasanyrole('super|admin')
+
                     <li class="sub-slide">
                         {{-- {{ url('module')}} --}}
                         <a class="sub-side-menu__item" href="{{ route('users.vendors') }}"><span
@@ -264,6 +265,7 @@
                                 class="sub-side-menu__label">Permissions</span></a>
                     </li>
                 @endif
+                @if (Auth::user()->hasAnyPermission(['view.user']))
                 <li class="sub-slide">
                     {{-- {{ url('module')}} --}}
                     <a class="sub-side-menu__item" href="{{ route('ugroups.index') }}"><span
@@ -274,6 +276,7 @@
                     <a class="sub-side-menu__item" href="{{ route('users.users') }}"><span
                             class="sub-side-menu__label">Users</span></a>
                 </li>
+                @endif
 
 
             </ul>

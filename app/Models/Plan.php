@@ -26,4 +26,11 @@ class Plan extends Model
     {
         return $this->belongsToMany(Permission::class);
     }
+
+    public function subscriptions()
+    {
+
+        return $this->hasMany( Subscription::class );
+
+    }
 }

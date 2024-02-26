@@ -96,22 +96,7 @@
 
         </div>
 
-{{--
-        <div class="col-sm-6 col-md-6">
-            <div class="input-box">
-                <select class=" google-input" name="access_table" tabindex="null">
-                    <option disabled>Select Access Scoup</option>
-                    <option  value="Global">Global</option>
-                    <option  value="Group">Group</option>
-                    <option  value="Individual">Individual</option>
 
-                </select>
-            </div>
-            @error('access_table')
-                <label id="user_id-error" class="error"
-                    for="access_table">{{ $message }}</label>
-            @enderror
-        </div> --}}
 
 
     </div>

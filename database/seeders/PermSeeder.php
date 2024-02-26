@@ -26,6 +26,7 @@ class PermSeeder extends Seeder
             ['name' => 'Permission', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'Plan', 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'Subscription', 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'Attribute', 'created_at' => $date, 'updated_at' => $date],
         ];
 
         $permission = [
@@ -53,6 +54,11 @@ class PermSeeder extends Seeder
             ['name' => 'edit.subscription', 'guard_name' => 'web', 'module' => 5, 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'delete.subscription', 'guard_name' => 'web', 'module' => 5, 'created_at' => $date, 'updated_at' => $date],
             ['name' => 'view.subscription', 'guard_name' => 'web', 'module' => 5, 'created_at' => $date, 'updated_at' => $date],
+
+            ['name' => 'create.attribute', 'guard_name' => 'web', 'module' => 6, 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'edit.attribute', 'guard_name' => 'web', 'module' => 6, 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'delete.attribute', 'guard_name' => 'web', 'module' => 6, 'created_at' => $date, 'updated_at' => $date],
+            ['name' => 'view.attribute', 'guard_name' => 'web', 'module' => 6, 'created_at' => $date, 'updated_at' => $date],
         ];
         Module::insert($module);
         Permission::insert($permission);

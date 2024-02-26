@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Repositories\FlashRepository;
 use Illuminate\Validation\Rule;
 use App\Models\Module;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
@@ -27,7 +28,12 @@ class PermissionController extends Controller
     public function index()
     {
         if(request()->ajax()) {
-            return datatables()->of(Permission::select('*'))
+            if(auth()->user()->hasRole('super')){
+                $perms = Permission::select('*');
+            }else{
+                $perms  = auth()->user()->permissions;
+            }
+            return datatables()->of($perms)
             ->addColumn('module', function($row){
 
                 $module_name = Module::find($row->module);
@@ -50,7 +56,22 @@ class PermissionController extends Controller
      */
     public function create()
     {
+        if(auth()->user()->hasRole('super')){
         $moduleList = Module::all();
+        }
+        else{
+
+            $userId = auth()->user()->id;
+
+            $ids = User::where('user_id', $userId)->pluck('id');
+            $moduleList = Module::where('user_id', $userId)
+            ->orWhereIn('user_id',$ids)
+            ->get();
+        }
+
+
+
+
         // dd( $moduleList );
         $permission = Permission::whereNull('id')->get();
 
@@ -95,8 +116,8 @@ class PermissionController extends Controller
                 'name' => $value,
                 'guard_name' => $request->guard_name,
                 'module' => $request->module,
-                'type' => $request->type,
-                'count' => $request->count,
+                // 'type' => $request->type,
+                // 'count' => $request->count,
                 'created_at' => $now,
                 'updated_at' => $now
             ];

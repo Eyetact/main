@@ -9,6 +9,7 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Services\GeneratorService;
 use App\Models\Module;
 use App\Generators\GeneratorUtils;
+use App\Models\User;
 
 
 
@@ -49,7 +50,11 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
 
             if (auth()->user()->access_table == "Individual") {
 
-                ${{modelNamePluralCamelCase}} = {{modelNameSingularPascalCase}}::where('user_id', auth()->user()->id)->get();
+                     $empl_ids = User::where('user_id',auth()->user()->id)->pluck('id');
+
+
+
+                ${{modelNamePluralCamelCase}} = {{modelNameSingularPascalCase}}::where('user_id', auth()->user()->id)->orWhereIn('user_id', $empl_ids)->get();
 
             }
 

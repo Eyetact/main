@@ -3,7 +3,7 @@
                 @csrf
 
                 <div class="row">
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-6">
                         <label for="name">Permission</label>
                         <div class="permission">
                             <div class="each-input">
@@ -11,7 +11,7 @@
                                     class="permission Input permissionInput form-control @error('name') is-invalid @enderror"
                                     name="name[0]" type="text" placeholder="Enter permission name"
                                     value="{{ old('name[0]') }}">
-                              
+
                             </div>
                             <div class="append-list"></div>
                         </div>
@@ -23,7 +23,7 @@
                         <div class="valid-feedback">Looks good!</div>
                         <div class="invalid-feedback">Please enter name.</div>
                     </div>
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-6">
                         <label for="module">Module</label>
 
                         <select class="form-control custom-select @error('module') is-invalid @enderror" name="module"
@@ -46,7 +46,7 @@
                         <div class="invalid-feedback">Please enter module.</div>
                     </div>
 
-                    <div class="form-group col-sm-3">
+                    {{-- <div class="form-group col-sm-3">
 
                             <label>Type<span class="text-danger">*</span></label>
                             <select class="form-control custom-select" name="type" tabindex="null">
@@ -58,17 +58,17 @@
                         @error('type')
                             <label id="type-error" class="error" for="type">{{ $message }}</label>
                         @enderror
-                    </div>
-                    <div class="form-group col-sm-3">
+                    </div> --}}
+                    {{-- <div class="form-group col-sm-3">
                         <label for="count">Count</label>
                         <div class="permission">
                             <div class="each-input">
                                 <input
                                     class="permission Input permissionInput form-control @error('count') is-invalid @enderror"
-                                    name="count" type="number" 
+                                    name="count" type="number"
                                     value="{{ old('count') }}">
-                              
-                            </div>
+
+                            </div> --}}
                             <div class="append-list"></div>
                         </div>
 
@@ -91,4 +91,3 @@
                     <a href="{{ route('main_mailbox.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
-        
