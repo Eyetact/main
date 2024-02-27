@@ -1,5 +1,5 @@
 
-@if (Auth::user()->hasAnyPermission(['edit.attribute', 'delete.attribute']))
+@if (Auth::user()->hasAnyPermission(['edit.attribute', 'delete.attribute']) || Auth::user()->hasRole('super'))
 <div class="dropdown">
     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
