@@ -114,7 +114,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
 
         }
 
-        $parent_id = Module::where('code','LIKE', '%' . '{{modelNameSingularPascalCase}}' . '%' )->first()->parent_id;
+        $parent_id = (int)Module::where('code','LIKE', '%' . '{{modelNameSingularPascalCase}}' . '%' )->first()?->parent_id;
         if($parent_id == 0){
             return redirect()
             ->route('{{modelNamePluralKebabCase}}.index')
@@ -233,7 +233,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
 
         }
 
-             $parent_id = Module::where('code','LIKE', '%' . '{{modelNameSingularPascalCase}}' . '%' )->first()->parent_id;
+             $parent_id = (int)Module::where('code','LIKE', '%' . '{{modelNameSingularPascalCase}}' . '%' )->first()?->parent_id;
         if($parent_id == 0){
             return redirect()
             ->route('{{modelNamePluralKebabCase}}.index')
