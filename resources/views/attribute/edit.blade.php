@@ -247,7 +247,7 @@
 
                                                 <div class="input-box child-drop form-constrain mt-2">
                                                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
-                                                        @if($module->fields)
+                                                        @if($module)
                                                         <select class="google-input " name="multi[{{$index}}][attribute]" required>
                                                             @foreach ($module->fields as $key => $value)
                                                             <option data-id="{{ $value->id }}" value="{{ $value->code }}" @selected($value->code == $multi->attribute) >{{ $value->name }}</option>;
