@@ -36,7 +36,7 @@ class PermissionGenerator
         $module->code = str()->snake(str_replace(['.','/','\\','-',' ','!','@','#','$','%','^','&','*','(',')','+','=','<','>',',','{','}','[',']',':',';','"','\''], '', str($module->code)->lower()));
         $module->save();
         $model = GeneratorUtils::setModelName($module->code, 'default');
-        $modelNameSingular = GeneratorUtils::cleanSingularLowerCase($model);
+        $modelNameSingular = GeneratorUtils::singularSnakeCase($model);
         try {
             //code...
             $this->insertRoleAndPermissions(strtolower($modelNameSingular),$id);
@@ -48,7 +48,7 @@ class PermissionGenerator
     public function generateForAttr(array $request,$id)
     {
         // $attr = GeneratorUtils::setModelName($request['code'], 'default');
-        $attrNameSingular = GeneratorUtils::cleanSingularLowerCase($request['code']);
+        $attrNameSingular = GeneratorUtils::singularSnakeCase($request['code']);
 
         $this->insertRoleAndPermissionsForAttr(strtolower($attrNameSingular),$id);
     }
