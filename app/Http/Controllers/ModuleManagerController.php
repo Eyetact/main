@@ -463,8 +463,16 @@ class ModuleManagerController extends Controller
                 $attribute->delete();
             }
         }
+
+        
         $model->delete();
-        MenuManager::where('module_id',$id)->first()->delete();
+        $menu = MenuManager::where('module_id',$id)->first();
+
+        $menus = MenuManager::where('parent',$menu->id)->update(['parent'=>0]);
+
+        $menu->delete();
+
+        
 
         $this->flashRepository->setFlashSession('alert-success', 'Module Was Deleted successfully.');
         return redirect()->route('module_manager.index');
