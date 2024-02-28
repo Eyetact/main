@@ -119,9 +119,9 @@
     <ul class="side-menu app-sidebar3">
         <li class="side-item side-item-category mt-4">Module Manger</li>
         @foreach ($side_menus as $item)
-        @php 
+        {{-- @php 
             echo json_encode($item->childrens(),true)
-        @endphp
+        @endphp --}}
             <li class="slide">
                 <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . $item->path) }}">
                     <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height="24"

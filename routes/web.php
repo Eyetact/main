@@ -279,3 +279,8 @@ Route::get('clear', function(){
     echo "done";
 });
 
+
+
+Route::get('reg-perm',function(){
+
+});

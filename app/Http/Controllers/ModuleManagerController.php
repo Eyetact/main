@@ -63,10 +63,12 @@ class ModuleManagerController extends Controller
         $module = Module::create([
             'name' => $request->name,
             'is_system' => isset($request->is_system) ? 1 : 0,
-            'code' => $request->code,
+            'code' => str()->snake(str_replace(['.','/','\\','-',' ','!','@','#','$','%','^','&','*','(',')','+','=','<','>',',','{','}','[',']',':',';','"','\''], '', str($request['code'])->lower())),
             'user_id' => auth()->user()->id,
 
         ]);
+
+        $request->code = str()->snake(str_replace(['.','/','\\','-',' ','!','@','#','$','%','^','&','*','(',')','+','=','<','>',',','{','}','[',']',':',';','"','\''], '', str($request['code'])->lower()));
 
         $requestData = $request->all();
         $request->validated();
@@ -263,6 +265,12 @@ class ModuleManagerController extends Controller
         $this->generatorService->reGenerateController($request['module']);
         $this->generatorService->reGenerateRequest($request['module']);
         $this->generatorService->reGenerateViews($request['module']);
+
+        try {
+            $this->generatorService->reGeneratePermission($request['module']);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
 
         $this->flashRepository->setFlashSession('alert-success', 'Module updated successfully.');
         return redirect()->route('module_manager.index');

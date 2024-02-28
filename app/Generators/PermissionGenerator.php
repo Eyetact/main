@@ -2,6 +2,7 @@
 
 namespace App\Generators;
 
+use App\Models\Module;
 use Spatie\Permission\Models\{Role, Permission};
 use App\Models\Crud;
 use App\Models\Attribute;
@@ -18,6 +19,23 @@ class PermissionGenerator
     public function generate(array $request,$id)
     {
         $model = GeneratorUtils::setModelName($request['code'], 'default');
+        $modelNameSingular = GeneratorUtils::cleanSingularLowerCase($model);
+        try {
+            //code...
+            $this->insertRoleAndPermissions(strtolower($modelNameSingular),$id);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+
+
+    public function regenerate($id)
+    
+    {
+        $module = Module::find($id);
+        $module->code = str()->snake(str_replace(['.','/','\\','-',' ','!','@','#','$','%','^','&','*','(',')','+','=','<','>',',','{','}','[',']',':',';','"','\''], '', str($module->code)->lower()));
+        $module->save();
+        $model = GeneratorUtils::setModelName($module->code, 'default');
         $modelNameSingular = GeneratorUtils::cleanSingularLowerCase($model);
         try {
             //code...
