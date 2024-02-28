@@ -242,7 +242,7 @@
                                                     </small>
 
                                                     @php
-                                                        $module = \App\Models\Module::where('name', $multi->constrain)->first();
+                                                        $module = \App\Models\Module::where('name', $multi->constrain)?->first();
                                                     @endphp
 
                                                 <div class="input-box child-drop form-constrain mt-2">
