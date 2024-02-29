@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Plan;
+use App\Models\User;
+use App\Models\Limit;
 use App\Http\Requests\PlanRequest;
 use Spatie\Permission\Models\Permission;
 
@@ -29,8 +31,13 @@ class PlanController extends Controller
             $userId = auth()->user()->id;
 
 
+            $ids = User::where('user_id', $userId)->pluck('id');
+
+
             $plans = Plan::where('user_id', $userId)
-                ->get();
+            ->orWhereIn('user_id',$ids)
+            ->get();
+
             }
 
             return datatables()->of($plans)
@@ -66,11 +73,23 @@ class PlanController extends Controller
     public function store(Request $request)
     {
 
+        // dd($request->limit);
 
-
-        $plan = Plan::create($request->except('permissions','checkAll'));
+        $plan = Plan::create($request->except('permissions','checkAll','limit'));
         $plan->user_id = auth()->user()->id;
         $plan->save();
+
+        foreach ($request->limit as $key => $value) {
+            $limit = new Limit();
+            $limit->plan_id = $plan->id;
+            $limit->module_id = $key;
+            $limit->data_limit= $value;
+            $limit->save();
+        }
+
+
+
+
 
         if ($request->permissions) {
             foreach ($request->permissions as $p) {
@@ -120,7 +139,13 @@ class PlanController extends Controller
             unlink($plan->image);
         }
 
-        $plan->update($request->except('permissions','checkAll'));
+        $plan->update($request->except('permissions','checkAll','limit'));
+
+        foreach ($request->limit as $key => $value) {
+            $limit = Limit::where('module_id',$key)->where('plan_id',$id)->first();
+            $limit->data_limit= $value;
+            $limit->save();
+        }
 
         $plan->permissions()->detach();
 

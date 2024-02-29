@@ -115,7 +115,7 @@
                                             <select class="default-select form-control wide mb-3" name="plan_id"
                                                 tabindex="null">
                                                 @foreach ($plans as $plan)
-                                                    <option value="{{ $plan->id }}">{{ $plan->name }}</option>
+                                                    <option @selected($subscription->plan_id == $plan->id) value="{{ $plan->id }}">{{ $plan->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

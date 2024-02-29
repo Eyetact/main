@@ -12,6 +12,7 @@ use App\Models\Role;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use DB;
 
 class UserController extends Controller
 {
@@ -315,6 +316,20 @@ class UserController extends Controller
                 $c->group_id = $id;
                 $c->user_id = $user->id;
                 $c->save();
+                if(($request->role != "admin") || ($request->role != "vendor") ){
+
+
+                $role_id = DB::table('model_has_roles')
+                              ->where('model_type',"App\Models\UserGroup")
+                              ->where('model_id', $id)
+                              ->first()
+                              ->role_id;
+                $role = Role::find($role_id)->name;
+
+
+
+                $user->assignRole($role);
+            }
             }
             // dd($request->group_id);
         endif;
@@ -342,6 +357,8 @@ class UserController extends Controller
         }
 
         $user->assignRole($request->role);
+
+
 
         switch ($request->role) {
             case 'admin':

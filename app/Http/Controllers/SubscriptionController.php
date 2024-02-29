@@ -29,7 +29,7 @@ class SubscriptionController extends Controller {
             $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
 
             $subscriptions = Subscription::whereIn('user_id', $usersOfCustomers)
-                ->orWhere('user_id', $userId)
+                // ->orWhere('user_id', $userId)
                 ->get();
             }
 
@@ -65,7 +65,12 @@ class SubscriptionController extends Controller {
         if(auth()->user()->hasRole('super'))
         {
 
-            $users = User::role($roleNames)->get();
+            $users = User::role('admin')->get();
+            $plans = Plan::all();
+
+           $groups = CustomerGroup::all();
+
+
 
         }
 
@@ -80,10 +85,25 @@ class SubscriptionController extends Controller {
         $users = User::whereIn('id', $usersOfCustomers)
 
             ->get();
+
+            $ids = User::where('user_id', $userId)->pluck('id');
+
+
+            $plans = Plan::where('user_id', $userId)
+            ->orWhereIn('user_id',$ids)
+            ->get();
+
+
+            $groups = CustomerGroup::where('created_by', $userId)
+            ->orWhereIn('created_by',$ids)
+            ->get();
         }
 
-        $plans = Plan::all();
-        $groups = CustomerGroup::all();
+
+
+
+
+
 
         return view('subscriptions.create', compact('users', 'plans', 'groups'));
 
