@@ -130,7 +130,7 @@
                                             <select class="default-select form-control wide mb-3" name="user_id"
                                                 tabindex="null">
                                                 @foreach ($users as $user)
-                                                    <option value="{{ $user->id }}">{{ $user->id }}</option>
+                                                    <option @selected($user->id == $subscription->user_id) value="{{ $user->id }}">{{ $user->id . ' - '  . $user->username }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

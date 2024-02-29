@@ -105,7 +105,7 @@
                                         <div class="col-sm-6 role-group">
 
                                             <div class="row">
-                                                <div class="col-6">
+                                                <div class="col-9">
                                                     <div class="custom-checkbox permission  input-box">
                                                         <input id="{{ $key }}" type="checkbox" class=" check-all"
                                                             name="checkAll">
@@ -113,9 +113,9 @@
                                                             <b>{{ Str::ucfirst(explode('.', $permissions[0]->name)[1]) }}</b></label>
                                                     </div>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-3">
                                                     <div class="input-box">
-                                                        <input type="number" value="0"   class="google-input" name="limit[{{ $permissions[0]->module }}]" id="price"  />
+                                                        <input type="number" value="0"   class="google-input custom-limit" name="limit[{{ $permissions[0]->module }}]" id="price"  />
                                                     </div>
                                                 </div>
                                             </div>

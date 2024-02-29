@@ -119,6 +119,28 @@
         .modal-lg {
             max-width: 1024px;
         }
+        .custom-limit {
+    height: 30px !important;
+    width: 70px !important;
+    /* float: right !important; */
+}
+
+.custom-checkbox.permission.input-box:after {
+    content: no-close-quote;
+    top: 0px;
+    bottom: 0px;
+    left: 100%;
+    right: -27px;
+    background: #f1f1f1;
+    position: absolute;
+    width: auto;
+    height: auto;
+    z-index: 0;
+}
+
+.custom-checkbox.permission.input-box {
+    position: relative;
+}
     </style>
 @endsection
 @push('styles')

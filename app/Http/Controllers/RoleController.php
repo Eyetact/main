@@ -32,24 +32,26 @@ class RoleController extends Controller
      */
     public function index()
     {
+
+        if(auth()->user()->hasRole('super'))
+        {
+
+        $roles = Role::all();
+
+        }
+
+
+        else{
+        $userId = auth()->user()->id;
+        $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
+
+        $roles = Role::whereIn('user_id', $usersOfCustomers)
+            ->orWhere('user_id', $userId)
+            ->get();
+        }
         $this->flashRepository = new FlashRepository;
         if (request()->ajax()) {
-            if(auth()->user()->hasRole('super'))
-            {
-
-            $roles = Role::all();
-
-            }
-
-
-            else{
-            $userId = auth()->user()->id;
-            $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
-
-            $roles = Role::whereIn('user_id', $usersOfCustomers)
-                ->orWhere('user_id', $userId)
-                ->get();
-            }
+         
 
 
             return datatables()->of($roles)
@@ -72,7 +74,7 @@ class RoleController extends Controller
         }
         $allPermission = Permission::all();
         $groupPermission = $allPermission->groupBy('module');
-        return view('role.index', ['role' => new Role(), 'allPermission' => $allPermission, 'groupPermission' => $groupPermission]);
+        return view('role.index', ['role' => new Role(), 'allPermission' => $allPermission, 'groupPermission' => $groupPermission,'roles'=>$roles]);
     }
 
     /**
