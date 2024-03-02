@@ -12,6 +12,7 @@ use App\Models\Role;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use DB;
 
 class UserController extends Controller
 {
@@ -24,25 +25,21 @@ class UserController extends Controller
     {
         if (request()->ajax()) {
 
-            if(auth()->user()->hasRole('super'))
-            {
+            if (auth()->user()->hasRole('super')) {
 
                 $users = User::role('vendor')->get();
 
 
-            }
+            } else {
+
+                $userId = auth()->user()->id;
+                $users = User::role('vendor')
+                    ->where('user_id', $userId)
+                    ->get();
 
 
-            else{
 
-            $userId = auth()->user()->id;
-            $usersOfCustomers = User::role('vendor')
-                                     ->where('user_id', $userId)
-                                     ->pluck('id');
-
-            $users = User::whereIn('id', $usersOfCustomers)
-
-                          ->get();
+                // $users = User::whereIn('id', $usersOfCustomers)->get();
 
 
             }
@@ -86,31 +83,43 @@ class UserController extends Controller
     }
     public function users()
     {
-        if (request()->ajax()) {
-            // $users = User::role('user')->get();
-            if(auth()->user()->hasRole('super'))
-            {
+        if (auth()->user()->hasRole('super')) {
 
-                $users = User::whereDoesntHave('roles', function ($query) {
-                    $query->whereIn('name', ['super', 'vendor', 'admin']);
-                })->get();
+            $users = User::whereDoesntHave('roles', function ($query) {
+                $query->whereIn('name', ['super', 'vendor', 'admin']);
+            })->get();
 
 
-            }
+        } else {
 
-
-            else{
+            if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('vendor')) {
 
                 $userId = auth()->user()->id;
                 $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
 
-                $users = User::whereIn('id', $usersOfCustomers)
+                $users = User::whereIn('user_id', $usersOfCustomers)
+                    ->orWhere('user_id', $userId)
                     ->whereDoesntHave('roles', function ($query) {
                         $query->whereIn('name', ['super', 'vendor', 'admin']);
                     })
                     ->get();
+            } else {
 
+                $userId = auth()->user()->user_id;
+                $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
+
+                $users = User::whereIn('user_id', $usersOfCustomers)
+                    ->orWhere('user_id', $userId)
+                    ->whereDoesntHave('roles', function ($query) {
+                        $query->whereIn('name', ['super', 'vendor', 'admin']);
+                    })
+                    ->get();
             }
+        }
+
+        if (request()->ajax()) {
+            // $users = User::role('user')->get();
+
 
 
 
@@ -126,34 +135,31 @@ class UserController extends Controller
 
                 ->addIndexColumn()
                 ->make(true);
+
         }
-        return view('users.users');
+        return view('users.users',compact('users'));
     }
 
     public function admins()
     {
         if (request()->ajax()) {
 
-            if(auth()->user()->hasRole('super'))
-            {
+            if (auth()->user()->hasRole('super')) {
 
                 $users = User::role('admin')->get();
 
 
 
-            }
+            } else {
 
+                $userId = auth()->user()->id;
+                $usersOfCustomers = User::role('admin')
+                    ->where('user_id', $userId)
+                    ->pluck('id');
 
-            else{
+                $users = User::whereIn('id', $usersOfCustomers)
 
-            $userId = auth()->user()->id;
-            $usersOfCustomers = User::role('admin')
-                                     ->where('user_id', $userId)
-                                     ->pluck('id');
-
-            $users = User::whereIn('id', $usersOfCustomers)
-
-                          ->get();
+                    ->get();
             }
 
 
@@ -242,32 +248,28 @@ class UserController extends Controller
         $groups = UserGroup::all();
 
 
-            if(auth()->user()->hasRole('super'))
-            {
+        if (auth()->user()->hasRole('super')) {
 
-                $roles = Role::where('name', '!=', 'admin')
+            $roles = Role::where('name', '!=', 'admin')
                 ->where('name', '!=', 'vendor')
                 ->where('name', '!=', 'super')
                 ->get();
 
-            }
-
-
-            else{
+        } else {
             $userId = auth()->user()->id;
             $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
 
             $roles = Role::whereIn('user_id', $usersOfCustomers)
-            ->where('name', '!=', 'admin')
-            ->where('name', '!=', 'vendor')
-            ->where('name', '!=', 'super')
+                ->where('name', '!=', 'admin')
+                ->where('name', '!=', 'vendor')
+                ->where('name', '!=', 'super')
 
-            ->orWhere('user_id', $userId)
-            ->where('name', '!=', 'admin')
-            ->where('name', '!=', 'vendor')
-            ->where('name', '!=', 'super')
-            ->get();
-            }
+                ->orWhere('user_id', $userId)
+                ->where('name', '!=', 'admin')
+                ->where('name', '!=', 'vendor')
+                ->where('name', '!=', 'super')
+                ->get();
+        }
         return view('users.create-user', compact('groups', 'roles'));
     }
 
@@ -306,7 +308,7 @@ class UserController extends Controller
             'access_table' => $request->access_table ? $request->access_table : "Individual",
             'password' => bcrypt($request->password),
             'user_id' => Auth::user()->id,
-            'group_id' =>  1,
+            'group_id' => 1,
             'ugroup_id' => 1,
         ]);
         if ($request->group_id):
@@ -315,6 +317,23 @@ class UserController extends Controller
                 $c->group_id = $id;
                 $c->user_id = $user->id;
                 $c->save();
+                if (($request->role != "admin") || ($request->role != "vendor")) {
+
+
+                    $role_id = DB::table('model_has_roles')
+                        ->where('model_type', "App\Models\UserGroup")
+                        ->where('model_id', $id)
+                        ->first()
+                        ->role_id;
+                    $role = Role::find($role_id)->name;
+
+
+
+                    $user->assignRole($role);
+                    foreach (Role::find($role_id)->permissions as $p) {
+                        $user->givePermissionTo($p);
+                    }
+                }
             }
             // dd($request->group_id);
         endif;
@@ -329,19 +348,27 @@ class UserController extends Controller
             $plan->save();
         }
 
-        if(($request->role == "admin") || ($request->role == "vendor") )
-        {
-        $sub = new Subscription();
-        $sub->user_id = $user->id;
-        $sub->plan_id = $plan->id;
-        $sub->save();
+        if (($request->role == "admin") || ($request->role == "vendor")) {
+            $sub = new Subscription();
+            $sub->user_id = $user->id;
+            $sub->plan_id = $plan->id;
+            $sub->save();
 
-        $sub->start_date = Carbon::today();
-        $sub->end_date = $sub->start_date->copy()->addDays($plan->period);
-        $sub->save();
+            $sub->start_date = Carbon::today();
+            $sub->end_date = $sub->start_date->copy()->addDays($plan->period);
+            $sub->save();
+
+            $user->assignRole($request->role);
+        } else {
+            // $user->assignRole('user'); // TODO::
+            $user->assignRole($request->role);
+                    // foreach (Role::find($role_id)->permissions as $p) {
+                    //     $user->givePermissionTo($p);
+                    // }
         }
 
-        $user->assignRole($request->role);
+
+
 
         switch ($request->role) {
             case 'admin':

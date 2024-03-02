@@ -35,8 +35,6 @@ class FixParent extends Command
 
                 $menu->parent = 0;
                 $menu->save();
-
-
             }
             
         }

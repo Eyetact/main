@@ -52,8 +52,11 @@
         </div>
         <div class="page-rightheader">
             <div class="btn btn-list">
+                {{-- @if(auth()->user()->getDataLimitByModel(2) > count($roles)) --}}
+
                 <a id="add_new" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="Add new"><i
                         class="fe fe-plus mr-1"></i> Add new </a>
+                        @endif
             </div>
         </div>
     </div>

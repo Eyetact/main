@@ -33,4 +33,8 @@ class Plan extends Model
         return $this->hasMany( Subscription::class );
 
     }
+
+    public function limits( $module_id ){
+        return (int)Limit::where('plan_id',$this->id)->where('module_id',$module_id)->first()?->data_limit;
+    }
 }

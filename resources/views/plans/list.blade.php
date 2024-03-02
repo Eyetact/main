@@ -119,6 +119,28 @@
         .modal-lg {
             max-width: 1024px;
         }
+        .custom-limit {
+    height: 30px !important;
+    width: 70px !important;
+    /* float: right !important; */
+}
+
+.custom-checkbox.permission.input-box:after {
+    content: no-close-quote;
+    top: 0px;
+    bottom: 0px;
+    left: 100%;
+    right: -27px;
+    background: #f1f1f1;
+    position: absolute;
+    width: auto;
+    height: auto;
+    z-index: 0;
+}
+
+.custom-checkbox.permission.input-box {
+    position: relative;
+}
     </style>
 @endsection
 @push('styles')
@@ -143,10 +165,15 @@
         </div>
         <div class="page-rightheader">
             @can('create.plan')
+            @if(auth()->user()->getDataLimitByModel(4) > count($plans))
+
                 <div class="btn btn-list">
                     <a id="add_new" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="Add new"><i
                             class="fe fe-plus mr-1"></i> Add new </a>
+
                 </div>
+                @endif
+
             @endcan
         </div>
     </div>

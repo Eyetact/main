@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Psy\SuperglobalsEnv;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -57,16 +58,17 @@ class User extends Authenticatable
 
     public function getProfileUrlAttribute()
     {
-        return asset('uploads/users/'.$this->avatar);
+        return asset('uploads/users/' . $this->avatar);
     }
 
-    public function setAvatarAttribute($value){
-        if( $value ){
+    public function setAvatarAttribute($value)
+    {
+        if ($value) {
             // dd($value);
             $ext = $value->getClientOriginalExtension();
-            $file_name = time().mt_rand( 1000, 9000 ) . '.' . $ext;
-            $value->move( public_path( 'uploads/users/' ), $file_name );
-            $this->attributes['avatar'] =  $file_name;
+            $file_name = time() . mt_rand(1000, 9000) . '.' . $ext;
+            $value->move(public_path('uploads/users/'), $file_name);
+            $this->attributes['avatar'] = $file_name;
         }
     }
 
@@ -75,57 +77,98 @@ class User extends Authenticatable
         return $this->hasMany(Subscription::class);
     }
 
-    public function vendors(){
+    public function vendors()
+    {
         return $this->hasMany(User::class, 'user_id');
     }
 
-    public function admins(){
+    public function admins()
+    {
         return $this->hasMany(User::class, 'user_id');
     }
 
-    public function admin(){
-        return $this->belongsTo( User::class, 'user_id' );
+    public function admin()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
-    public function settings(){
-        return $this->hasOne( Setting::class, 'created_by' );
-    }
-
-    public function groups(){
-        return $this->hasMany( UCGroup::class, 'user_id' );
+    public function settings()
+    {
+        return $this->hasOne(Setting::class, 'created_by');
     }
 
-    public function folders(){
-        return $this->hasMany( Folder::class );
+    public function groups()
+    {
+        return $this->hasMany(UCGroup::class, 'user_id');
     }
 
-    public function files(){
-        return $this->hasMany( File::class );
+    public function folders()
+    {
+        return $this->hasMany(Folder::class);
     }
 
-    public function modules(){
-        return $this->hasMany( Module::class );
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
+
+    public function modules()
+    {
+        return $this->hasMany(Module::class);
     }
 
 
     public function setAccessTableAttribute($value)
     {
-        if(empty($value))
-        {
-            $this->attributes['access_table'] =  "Individual";
+        if (empty($value)) {
+            $this->attributes['access_table'] = "Individual";
         }
-        $this->attributes['access_table'] =  $value;
+        $this->attributes['access_table'] = $value;
 
     }
 
     public function getAccessTableAttribute()
     {
-        if($this->attributes['access_table'] == null)
-        {
+        if ($this->attributes['access_table'] == null) {
             return "Individual";
         }
 
-        return $this->attributes['access_table'] ;
+        return $this->attributes['access_table'];
 
+    }
+
+    public function getCountAttribute()
+    {
+        $super = $this->hasRole('super');
+        if ($super) {
+
+            return 1000;
+
+        }
+        //employee case
+        if (count($this->subscriptions) == 0) {
+
+            if (auth()->user()->user_id == 1) {
+                return 1000;
+
+            }
+        }
+
+        if ($this->hasRole('vendor') || $this->hasRole('admin')) {
+
+            $sub_id = $this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->id;
+
+            $sum=Limit::where('subscription_id',$sub_id)->sum('data_limit');
+
+        }
+        else{
+
+            $customer = User::find($this->user_id);
+            $sub_id = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->id;
+            $sum=Limit::where('subscription_id',$sub_id)->sum('data_limit');
+
+        }
+
+        return $sum;
     }
 
 
@@ -139,57 +182,86 @@ class User extends Authenticatable
     public function getModelLimitAttribute() // $user->model_limit
     {
 
-        $super= $this->hasRole('super');
-        if($super)
-        {
-
-            return 1000;
-
-        }
-         //employee case
-         if(count($this->subscriptions) == 0){
-
-            if(auth()->user()->user_id == 1)
-            {
-                return 1000;
-
-            }
-
-            $customer = User::find($this->user_id);
-            return $customer ->subscriptions()->where('status', 'active')->orderBy('created_at','desc')->first()?->plan?->model_limit;
-        }
-
-        return  (int)$this->subscriptions()->where('status', 'active')->orderBy('created_at','desc')->first()?->plan?->model_limit;
-
-    }
-
-    public function getDataLimitAttribute() // $user->model_limit
-    {
-        $super= $this->hasRole('super');
-        if($super)
-        {
+        $super = $this->hasRole('super');
+        if ($super) {
 
             return 1000;
 
         }
         //employee case
-        if(count($this->subscriptions) == 0){
+        if (count($this->subscriptions) == 0) {
 
-            if(auth()->user()->user_id == 1)
-            {
+            if (auth()->user()->user_id == 1) {
                 return 1000;
 
             }
 
             $customer = User::find($this->user_id);
-            return $customer ->subscriptions()->where('status', 'active')->orderBy('created_at','desc')->first()?->plan?->data_limit;
+            return $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan?->model_limit;
         }
 
-        return $this->subscriptions()->where('status', 'active')->orderBy('created_at','desc')->first()?->plan?->data_limit;
+        return (int) $this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan?->model_limit;
 
     }
 
-    public function getCurrentModelLimitAttribute(){
+    public function getDataLimitAttribute() // $user->model_limit
+    {
+        $super = $this->hasRole('super');
+        if ($super) {
+
+            return 2000;
+
+        }
+        //employee case
+        if (count($this->subscriptions) == 0) {
+
+            if (auth()->user()->user_id == 1) {
+                return 2000;
+
+            }
+
+            $customer = User::find($this->user_id);
+            return $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan?->data_limit;
+        }
+
+        return $this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan?->data_limit;
+
+    }
+
+
+    public function getDataLimitByModel($module_id)
+    {
+        $super = $this->hasRole('super');
+        if ($super) {
+            return 1000;
+        }
+        //employee case
+        if (count($this->subscriptions) == 0) {
+
+            if (auth()->user()->user_id == 1) {
+                return 1000;
+
+            }
+
+            $customer = User::find($this->user_id);
+            $current_plan = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan;
+
+            $limit = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first()->data_limit;
+
+            return $limit;
+
+        }
+
+        $current_plan = $this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan;
+
+        $limit = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first()->data_limit;
+
+        return $limit;
+
+    }
+
+    public function getCurrentModelLimitAttribute()
+    {
         return count($this->modules);
     }
 

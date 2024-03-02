@@ -91,7 +91,7 @@
         }
     </style>
     <!--/app header-->
-    <div class="main-proifle {{ $user->roles()->first()->name }}">
+    <div class="main-proifle {{ $user?->roles()?->first()?->name }}">
         <div class="row">
             <div class="col-lg-8">
                 <div class="box-widget widget-user">
@@ -113,7 +113,7 @@
                         <div class="mt-1 ml-lg-5">
                             <h4 class="pro-user-username mb-3 font-weight-bold">{{ $user->name }} <i
                                     class="fa fa-check-circle text-success"></i></h4> <span
-                                class="badge badge-default mt-2">{{ $user->roles()->first()->name }}</span>
+                                class="badge badge-default mt-2">{{ $user?->roles()?->first()?->name }}</span>
                             <ul class="mb-0 pro-details">
                                 <li><span class="profile-icon"><i class="fe fe-mail"></i></span><span
                                         class="h6 mt-3">{{ $user->email }}</span></li>
@@ -259,7 +259,7 @@
 
 
 
-                                        @if ((auth()->user()->hasRole('super') || auth()->user()->id == $user->user_id) && $user->hasanyrole('super|admin|vendor'))
+                                        @if ((auth()->user()->hasRole('super') || auth()->user()->id == $user->user_id) )
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="input-box">
                                                     <select class=" google-input" name="access_table" tabindex="null">
@@ -281,8 +281,7 @@
                                         {{-- @role('user') --}}
                                         @if (
                                             (auth()->user()->hasRole('super') ||
-                                                auth()->user()->id == $user->user_id) &&
-                                                $user->hasanyrole('user'))
+                                                auth()->user()->id == $user->user_id))
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="input-box">
                                                     <select class=" google-input" name="ugroup_id" tabindex="null">

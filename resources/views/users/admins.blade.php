@@ -181,7 +181,7 @@
                 success: function(response) {
                     //  console.log(response);
                     $(".modal-body").html(response);
-                    $(".modal-title").html("Add User");
+                    $(".modal-title").html("Add Admin");
                     $("#role_form_modal").modal('show');
                     $('.dropify').dropify();
                 }

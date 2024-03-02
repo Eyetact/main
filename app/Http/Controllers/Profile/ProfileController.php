@@ -13,6 +13,9 @@ use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use DB;
+use App\Models\Role;
+
 
 class ProfileController extends Controller
 {
@@ -73,6 +76,7 @@ class ProfileController extends Controller
 
     public function update(Request $request, $id = null)
     {
+        // dd($request->all());
                 // dd($request->last_used);
         $user_id = $id == null ? Auth::id() : $id;
         $validator = Validator::make($request->all(), [
@@ -114,6 +118,28 @@ class ProfileController extends Controller
             $user->last_used = $ar;
 
         }
+
+        // if( $user->group_id != $request->group_id){
+
+            if(isset($request->ugroup_id)){
+                $role_id = DB::table('model_has_roles')
+                          ->where('model_type',"App\Models\UserGroup")
+                          ->where('model_id', $request->ugroup_id)
+                          ->first()
+                          ->role_id;
+
+                $role = Role::find($role_id)->name;
+                $user->assignRole($role);
+                foreach (Role::find($role_id)->permissions as $p) {
+                    $user->givePermissionTo($p);
+                }
+            }
+
+
+
+
+
+        // }
 
         $user->group_id = $request->group_id ?? 1;
         $user->ugroup_id = $request->ugroup_id ?? 1;

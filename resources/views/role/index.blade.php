@@ -101,10 +101,14 @@
             </ol>
         </div>
         <div class="page-rightheader">
+            @if(auth()->user()->getDataLimitByModel(2) > count($roles))
+
             <div class="btn btn-list">
                 <a href="javascript:void(0)" id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
                     data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
             </div>
+            @endif
+
         </div>
     </div>
     <!--End Page header-->
@@ -150,6 +154,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
+
                     <h4 class="modal-title" id="myLargeModalLabel">Add Role</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
                             aria-hidden="true">×</span> </button>

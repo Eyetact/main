@@ -58,6 +58,28 @@
                     <div class="row">
 
                         <div class="input-box col-sm-12">
+                            {{-- <label class="form-label">Select Colmun type<span class="text-red">*</span></label>
+
+                            <select name="column_types" class="form-select  google-input form-column-types" required>
+                                    <option value="" disabled selected>--{{ __('Select column type') }}--
+                                    </option>
+                                    @foreach (['string', 'integer', 'text', 'bigInteger', 'boolean', 'char', 'date', 'time', 'year', 'dateTime', 'decimal', 'double', 'enum', 'float', 'foreignId', 'tinyInteger', 'mediumInteger', 'tinyText', 'mediumText', 'longText'] as $type)
+                                        <option value="{{ $type }}">{{ ucwords($type) }}</option>
+                                    @endforeach
+                                </select> --}}
+
+                            <input type="hidden" name="column_types" id="type" class="form-column-types" />
+
+
+                            <div class="options">
+                                <input type="hidden" name="select_options" class="form-option">
+                                <input type="hidden" name="constrains" class="form-constrain">
+                                <input type="hidden" name="foreign_ids" class="form-foreign-id">
+
+                            </div>
+                        </div>
+
+                        <div class="input-box col-sm-12">
                             <label class="form-label">Select Attribute type<span class="text-red">*</span></label>
                             <select name="input_types" class="form-select form-input-types  google-input" required>
                                 <option value="" disabled selected>-- {{ __('Select input type') }}--</option>
@@ -135,27 +157,7 @@
 
                         </div>
                     </div>
-                    <div class="input-box col-sm-12">
-                        {{-- <label class="form-label">Select Colmun type<span class="text-red">*</span></label> --}}
 
-                        {{-- <select name="column_types" class="form-select  google-input form-column-types" required>
-                                <option value="" disabled selected>--{{ __('Select column type') }}--
-                                </option>
-                                @foreach (['string', 'integer', 'text', 'bigInteger', 'boolean', 'char', 'date', 'time', 'year', 'dateTime', 'decimal', 'double', 'enum', 'float', 'foreignId', 'tinyInteger', 'mediumInteger', 'tinyText', 'mediumText', 'longText'] as $type)
-                                    <option value="{{ $type }}">{{ ucwords($type) }}</option>
-                                @endforeach
-                            </select> --}}
-
-                        <input type="hidden" name="column_types" id="type" class="form-column-types" />
-
-
-                        <div class="options">
-                            <input type="hidden" name="select_options" class="form-option">
-                            <input type="hidden" name="constrains" class="form-constrain">
-                            <input type="hidden" name="foreign_ids" class="form-foreign-id">
-
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

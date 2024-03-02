@@ -170,6 +170,12 @@ class UserGroupController extends Controller
         $group->created_by = auth()->user()->id;
         $group->save();
 
+        // dd($group->users);
+
+        // foreach($group->users as $user) {
+        //     $user->assignRole($request->role);
+        // }
+
         $group->assignRole($request->role);
 
         return redirect()->route('ugroups.index')
@@ -248,6 +254,9 @@ class UserGroupController extends Controller
         $group = UserGroup::findOrFail($id);
 
         $group->update($request->except('role'));
+        // foreach($group->users as $user) {
+        //     $user->assignRole($request->role);
+        // }
 
         $group->assignRole($request->role);
 

@@ -239,11 +239,25 @@
                                                     <div class="row">
                                                         @foreach ($groupPermission as $key => $permissions)
                                                             <div class="col-sm-6 role-group">
-                                                                <div class="custom-checkbox permission  input-box">
-                                                                    <input id="{{ $key }}" type="checkbox" class=" check-all"
-                                                                        name="checkAll">
-                                                                    <label for="{{ $key }}">
-                                                                        <b>{{ Str::ucfirst(explode('.', $permissions[0]->name)[1]) }}</b></label>
+                                                                <div class="row">
+                                                                    <div class="col-9">
+                                                                        <div class="custom-checkbox permission  input-box">
+                                                                            <input id="{{ $key }}" type="checkbox" class=" check-all"
+                                                                                name="checkAll">
+                                                                            <label for="{{ $key }}">
+                                                                                <b>{{ Str::ucfirst(explode('.', $permissions[0]->name)[1]) }}</b></label>
+                                                                        </div>
+                                                                    </div>
+
+
+
+                                                                    <div class="col-3">
+                                                                        @if(in_array($permissions[0]->module, [1,2,3,4,5,6]))
+                                                                        <div class="input-box">
+                                                                            <input type="number" value="{{ $plan->limits($permissions[0]->module) }}"   class="google-input custom-limit" name="limit[{{ $permissions[0]->module }}]" id="price"  />
+                                                                        </div>
+                                                                        @endif
+                                                                    </div>
                                                                 </div>
 
                                                                 @php
