@@ -7,6 +7,7 @@ use App\Services\GeneratorService;
 use Illuminate\Http\Request;
 use App\Models\Attribute;
 use App\Models\Module;
+use App\Models\User;
 use App\Http\Requests\AttributePostRequest;
 use App\Repositories\FlashRepository;
 use Illuminate\Support\Facades\Artisan;
@@ -21,7 +22,6 @@ class AttributeController extends Controller
     {
         $this->flashRepository = new FlashRepository;
         $this->generatorService = new GeneratorService();
-
     }
     /**
      * Display a listing of the resource.
@@ -30,8 +30,58 @@ class AttributeController extends Controller
      */
     public function index()
     {
+
+
+        if (auth()->user()->hasRole('super')) {
+
+            $attributes = Attribute::all();
+        } else {
+
+            if (auth()->user()->hasRole('vendor') || auth()->user()->hasRole('admin')) {
+
+                $userId = auth()->user()->id;
+
+
+                $ids = User::where('user_id', $userId)->pluck('id');
+
+
+                $attributes = Attribute::where('user_id', $userId)
+                    ->orWhereIn('user_id', $ids)
+                    ->get();
+            } else {
+
+                if (auth()->user()->hasRole('vendor') || auth()->user()->hasRole('admin')) {
+
+
+                    $userId = auth()->user()->id;
+
+
+                    $ids = User::where('user_id', $userId)->pluck('id');
+
+
+                    $attributes = Attribute::where('user_id', $userId)
+                        ->orWhereIn('user_id', $ids)
+                        ->get();
+                } else {
+
+
+                    $userId = auth()->user()->user_id;
+
+
+                    $ids = User::where('user_id', $userId)->pluck('id');
+
+
+                    $attributes = Attribute::where('user_id', $userId)
+                        ->orWhereIn('user_id', $ids)
+                        ->get();
+                }
+            }
+        }
+
         if (request()->ajax()) {
-            $attribute = Attribute::all();
+
+            // $attribute = Attribute::all();
+
 
 
             // if (auth()->user()->access_table == "Group") {
@@ -51,31 +101,31 @@ class AttributeController extends Controller
 
             // }
 
-            return datatables()->of($attribute)
+            return datatables()->of($attributes)
                 ->addColumn('module', function ($row) {
                     return $row->moduleObj->name;
                 })
-        //         ->addColumn('action', function ($row) {
-        //             $btn = '<div class="dropdown">
-        //     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-        //         aria-haspopup="true" aria-expanded="false">
-        //         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                //         ->addColumn('action', function ($row) {
+                //             $btn = '<div class="dropdown">
+                //     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                //         aria-haspopup="true" aria-expanded="false">
+                //         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
 
-        //     </a>
+                //     </a>
 
-        //     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                //     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
-        //     <li class="dropdown-item">
-        //     <a href="#" id="edit_item"  data-path="' . route('attribute.edit', $row->id) . '">View or Edit</a>
-        //     </li>
-        //         <li class="dropdown-item">
-        //         <a class="delete-attribute" href="#" data-id="' . $row->id . '" class="attribute-delete">Delete</a>
-        //         </li>
-        //     </ul>
-        // </div>';
+                //     <li class="dropdown-item">
+                //     <a href="#" id="edit_item"  data-path="' . route('attribute.edit', $row->id) . '">View or Edit</a>
+                //     </li>
+                //         <li class="dropdown-item">
+                //         <a class="delete-attribute" href="#" data-id="' . $row->id . '" class="attribute-delete">Delete</a>
+                //         </li>
+                //     </ul>
+                // </div>';
 
-        //             return $btn;
-        //         })
+                //             return $btn;
+                //         })
                 ->addColumn('action', 'attribute.action')
                 ->rawColumns(['action'])
 
@@ -83,7 +133,7 @@ class AttributeController extends Controller
                 ->make(true);
         }
 
-        $all = Module::where('is_delete',0)->where('migration','!=',NULL)->orWhere('id','<=',3)->get();
+        $all = Module::where('is_delete', 0)->where('migration', '!=', NULL)->orWhere('id', '<=', 3)->get();
 
         // if (auth()->user()->access_table == "Group") {
         //     $group_ids = auth()->user()->groups()->pluck('group_id');
@@ -110,11 +160,11 @@ class AttributeController extends Controller
         $options = '<option  >-- select --</option>';
 
         foreach ($all as $key => $value) {
-            $code = $value->code != null ? $value->code :$value->name;
-            $options .= '<option data-id="'.$value->id.'" value="' .GeneratorUtils::singularSnakeCase($code)  . '" >' . $value->name . '</option>';
+            $code = $value->code != null ? $value->code : $value->name;
+            $options .= '<option data-id="' . $value->id . '" value="' . GeneratorUtils::singularSnakeCase($code)  . '" >' . $value->name . '</option>';
         }
 
-        return view('attribute.list', ['attribute' => new Attribute(), 'all' => $options]);
+        return view('attribute.list', ['attribute' => new Attribute(), 'all' => $options, 'attributes' => $attributes]);
     }
 
     /**
@@ -124,7 +174,7 @@ class AttributeController extends Controller
      */
     public function create()
     {
-        $moduleData = Module::where('is_delete',0)->where('migration', '!=', NULL)->orWhere('id','<=',3)->get();
+        $moduleData = Module::where('is_delete', 0)->where('migration', '!=', NULL)->orWhere('id', '<=', 3)->get();
 
         // if (auth()->user()->access_table == "Group") {
         //     $group_ids = auth()->user()->groups()->pluck('group_id');
@@ -146,7 +196,7 @@ class AttributeController extends Controller
 
         // }
 
-        $all = Module::where('is_delete',0)->where('migration','!=',NULL)->get();
+        $all = Module::where('is_delete', 0)->where('migration', '!=', NULL)->get();
 
         return view('attribute.create', ['attribute' => new Attribute(), 'moduleData' => $moduleData, 'all' => $all]);
     }
@@ -181,11 +231,9 @@ class AttributeController extends Controller
 
                     $enumValues .= $value['value'] . '|';
                 }
-
             }
 
             $request['select_options'] = $enumValues;
-
         }
 
         // dd($request);
@@ -210,7 +258,7 @@ class AttributeController extends Controller
             'is_multi' => isset($request['is_multi']) ? 1 : 0, //for multi select
             'max_size' => $request['files_sizes'],
             'file_type' => $request['file_types'],
-            'code' => str()->snake(str_replace(['.','/','\\','-',' ','!','@','#','$','%','^','&','*','(',')','+','=','<','>',',','{','}','[',']',':',';','"','\''], '', str($request['code'])->lower())),
+            'code' => str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower())),
             'attribute' => isset($request['attribute']) ? $request['attribute'] : ' ',
             'user_id' => auth()->user()->id,
         ];
@@ -225,7 +273,7 @@ class AttributeController extends Controller
 
             foreach ($requestData['multi'] as $key => $value) {
                 $m = new Multi();
-                $m->name = str()->snake(str_replace(['.','/','\\','-',' ','!','@','#','$','%','^','&','*','(',')','+','=','<','>',',','{','}','[',']',':',';','"','\''], '', str($value['name'])->lower()));
+                $m->name = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($value['name'])->lower()));
                 $m->type = $value['type'];
                 $m->select_options = isset($value['select_options']) ? $value['select_options'] : '';
                 $m->attribute_id = $attribute->id;
@@ -243,7 +291,6 @@ class AttributeController extends Controller
             $this->generatorService->reGenerateRequest($request['module']);
             $this->generatorService->reGenerateViews($request['module']);
             $this->generatorService->generatePermissionForAttr($createArr, $attribute->id);
-
         } catch (\Throwable $th) {
 
             // $this->generatorService->removeMigration($request['module'], $attribute->id);
@@ -252,7 +299,6 @@ class AttributeController extends Controller
             $this->generatorService->reGenerateController($request['module']);
             $this->generatorService->reGenerateRequest($request['module']);
             $this->generatorService->reGenerateViews($request['module']);
-
         }
 
         // dd($requestData['multi']);
@@ -269,21 +315,18 @@ class AttributeController extends Controller
     public function test($id)
     {
         $this->generatorService->reGenerateViews($id);
-
     }
 
 
     public function getAttrByModel(Module $module)
     {
-        $attributes = Attribute::where('module',$module->id)->get();
+        $attributes = Attribute::where('module', $module->id)->get();
         $options = '<option>-- select --</option>';
 
         foreach ($attributes as $key => $value) {
-            $options .= '<option data-id="'.$value->id.'" value="' . $value->code . '" >' . $value->name . '</option>';
+            $options .= '<option data-id="' . $value->id . '" value="' . $value->code . '" >' . $value->name . '</option>';
         }
         return $options;
-
-
     }
     /**
      * Show the form for editing the specified resource.
@@ -312,8 +355,8 @@ class AttributeController extends Controller
         $attribute->is_system = isset($request['is_system']) ? 1 : 0;
         $attribute->is_multi = isset($request['is_multi']) ? 1 : 0; //for multi select
 
-        $attribute->min_length =$request['min_lengths'];
-        $attribute->max_length =$request['max_lengths'];
+        $attribute->min_length = $request['min_lengths'];
+        $attribute->max_length = $request['max_lengths'];
 
         $enumValues = '';
         if (isset($request['fields_info'])) {
@@ -333,11 +376,9 @@ class AttributeController extends Controller
                     $enumValues .= $value['value'] . '|';
                 }
                 $i++;
-
             }
 
             $attribute->select_option = $enumValues;
-
         }
 
         $attribute->save();
@@ -399,7 +440,6 @@ class AttributeController extends Controller
             $this->generatorService->reGenerateViews($id);
 
             return response()->json(['msg' => 'Attribute deleted successfully!'], 200);
-
         } else {
             return response()->json(['msg' => 'Something went wrong, please try again.'], 200);
         }

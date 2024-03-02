@@ -119,7 +119,7 @@ class UserController extends Controller
 
         if (request()->ajax()) {
             // $users = User::role('user')->get();
-          
+
 
 
 
@@ -330,6 +330,9 @@ class UserController extends Controller
 
 
                     $user->assignRole($role);
+                    foreach (Role::find($role_id)->permissions as $p) {
+                        $user->givePermissionTo($p);
+                    }
                 }
             }
             // dd($request->group_id);
@@ -357,7 +360,11 @@ class UserController extends Controller
 
             $user->assignRole($request->role);
         } else {
-            $user->assignRole('user');
+            // $user->assignRole('user'); // TODO::
+            $user->assignRole($request->role);
+                    // foreach (Role::find($role_id)->permissions as $p) {
+                    //     $user->givePermissionTo($p);
+                    // }
         }
 
 

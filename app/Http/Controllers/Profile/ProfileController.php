@@ -130,6 +130,9 @@ class ProfileController extends Controller
 
                 $role = Role::find($role_id)->name;
                 $user->assignRole($role);
+                foreach (Role::find($role_id)->permissions as $p) {
+                    $user->givePermissionTo($p);
+                }
             }
 
 

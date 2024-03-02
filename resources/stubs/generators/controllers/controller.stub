@@ -10,6 +10,8 @@ use App\Services\GeneratorService;
 use App\Models\Module;
 use App\Generators\GeneratorUtils;
 use App\Models\User;
+use App\Models\Limit;
+
 
 
 
@@ -92,6 +94,51 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
      */
     public function store(Store{{modelNameSingularPascalCase}}Request $request)
     {
+          $module_id = (int) Module::where('code','LIKE', '%' . '{{modelNameSingularPascalCase}}' . '%')->first()?->id;
+
+
+
+        // dd(auth()->user());
+        if (auth()->user()->id != 1) {
+
+            $sub = auth()->user()?->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first();
+
+            $limit = Limit::where('module_id', $module_id)
+                ->where('subscription_id', $sub?->id)
+                ->first();
+
+
+            if (!$limit) {
+                $do = true;
+
+                if ((!(auth()->user()->hasRole('vendor')) || !(auth()->user()->hasRole('admin'))) && auth()->user()->user_id != 1) {
+                    $customer = User::find(auth()->user()->user_id);
+                    $sub = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first();
+                } elseif ((!(auth()->user()->hasRole('vendor')) && !(auth()->user()->hasRole('admin'))) && auth()->user()->user_id == 1) {
+                    $do = false;
+                }
+
+                // dd($do);
+                if ($do) {
+
+                    $limit = new Limit();
+                    $limit->plan_id = $sub->plan_id;
+                    $limit->subscription_id = $sub->id;
+                    $limit->data_limit = 0;
+                    $limit->module_id = $module_id;
+                    $limit->save();
+
+
+                }
+
+            }
+            if($limit){
+                $limit->data_limit = (int)$limit->data_limit + 1;
+                $limit->save();
+            }
+        }
+
+
         $insert = {{insertDataAction}}
 
         if( !empty($request->module) ){
@@ -266,6 +313,38 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
     public function destroy({{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
     {
         try {
+
+     $module_id = (int) Module::where('code','LIKE', '%' . '{{modelNameSingularPascalCase}}' . '%')->first()?->id;
+
+
+            if (auth()->user()->id != 1) {
+
+                $sub = auth()->user()?->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first();
+
+                $limit = Limit::where('module_id', $module_id)
+                    ->where('subscription_id', $sub?->id)
+                    ->first();
+
+                if ($limit) {
+                    $do = true;
+
+                    if ((!(auth()->user()->hasRole('vendor')) || !(auth()->user()->hasRole('admin')) )&& auth()->user()->user_id != 1) {
+                        $customer = User::find(auth()->user()->user_id);
+                        $sub = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first();
+                    } elseif ((!(auth()->user()->hasRole('vendor')) && !(auth()->user()->hasRole('admin'))) && auth()->user()->user_id == 1) {
+                        $do = false;
+                    }
+                    if ($do) {
+
+
+
+
+                        $limit->data_limit=(int)$limit->data_limit - 1;
+                        $limit->save();
+                    }
+
+                }
+            }
 
 
             if(${{modelNameSingularCamelCase}}->sub_id)

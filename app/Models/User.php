@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Psy\SuperglobalsEnv;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -135,6 +136,41 @@ class User extends Authenticatable
 
     }
 
+    public function getCountAttribute()
+    {
+        $super = $this->hasRole('super');
+        if ($super) {
+
+            return 1000;
+
+        }
+        //employee case
+        if (count($this->subscriptions) == 0) {
+
+            if (auth()->user()->user_id == 1) {
+                return 1000;
+
+            }
+        }
+
+        if ($this->hasRole('vendor') || $this->hasRole('admin')) {
+
+            $sub_id = $this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->id;
+
+            $sum=Limit::where('subscription_id',$sub_id)->sum('data_limit');
+
+        }
+        else{
+
+            $customer = User::find($this->user_id);
+            $sub_id = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->id;
+            $sum=Limit::where('subscription_id',$sub_id)->sum('data_limit');
+
+        }
+
+        return $sum;
+    }
+
 
     protected function getDefaultGuardName(): string
     {
@@ -173,14 +209,14 @@ class User extends Authenticatable
         $super = $this->hasRole('super');
         if ($super) {
 
-            return 1000;
+            return 2000;
 
         }
         //employee case
         if (count($this->subscriptions) == 0) {
 
             if (auth()->user()->user_id == 1) {
-                return 1000;
+                return 2000;
 
             }
 

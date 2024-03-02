@@ -16,20 +16,39 @@ class SubscriptionController extends Controller
 
     public function index()
     {
-        if (request()->ajax()) {
 
-            if (auth()->user()->hasRole('super')) {
+        if (auth()->user()->hasRole('super')) {
 
-                $subscriptions = Subscription::all();
+            $subscriptions = Subscription::all();
 
-            } else {
-                $userId = auth()->user()->id;
+        } else {
+
+            if(auth()->user()->hasRole('vendor') || auth()->user()->hasRole('admin') ){
+
+            $userId = auth()->user()->id;
+            $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
+
+            $subscriptions = Subscription::whereIn('created_by', $usersOfCustomers)
+                ->orWhere('created_by', $userId)
+                ->get();
+            }
+
+            else{
+
+
+                $userId = auth()->user()->user_id;
                 $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
 
-                $subscriptions = Subscription::whereIn('user_id', $usersOfCustomers)
-                    // ->orWhere('user_id', $userId)
+                $subscriptions = Subscription::whereIn('created_by', $usersOfCustomers)
+                    ->orWhere('created_by', $userId)
                     ->get();
+
             }
+        }
+
+
+        if (request()->ajax()) {
+
 
 
             return datatables()->of($subscriptions)
@@ -50,7 +69,7 @@ class SubscriptionController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
-        return view('subscriptions.list');
+        return view('subscriptions.list',compact('subscriptions'));
     }
 
     public function create()
@@ -108,6 +127,7 @@ class SubscriptionController extends Controller
                 $sub = new Subscription();
                 $sub->user_id = $customer->id;
                 $sub->plan_id = $request->plan_id;
+                $sub->created_by = auth()->user()->id;
                 $sub->save();
 
                 $plan = Plan::find($sub->plan_id);

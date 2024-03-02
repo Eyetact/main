@@ -119,7 +119,7 @@
     <ul class="side-menu app-sidebar3">
         <li class="side-item side-item-category mt-4">Module Manger</li>
         @foreach ($side_menus as $item)
-        {{-- @php 
+        {{-- @php
             echo json_encode($item->childrens(),true)
         @endphp --}}
             <li class="slide">

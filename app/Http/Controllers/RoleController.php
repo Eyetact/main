@@ -42,16 +42,26 @@ class RoleController extends Controller
 
 
         else{
-        $userId = auth()->user()->id;
+            if(auth()->user()->hasRole('vendor') || auth()->user()->hasRole('admin') ){
+                $userId = auth()->user()->id;
+                $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
+
+                $roles = Role::whereIn('user_id', $usersOfCustomers)
+                    ->orWhere('user_id', $userId)
+                    ->get();
+            }else{
+                $userId = auth()->user()->user_id;
         $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
 
         $roles = Role::whereIn('user_id', $usersOfCustomers)
             ->orWhere('user_id', $userId)
             ->get();
+            }
+
         }
         $this->flashRepository = new FlashRepository;
         if (request()->ajax()) {
-         
+
 
 
             return datatables()->of($roles)

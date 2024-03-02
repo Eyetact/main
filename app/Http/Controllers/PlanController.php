@@ -17,18 +17,34 @@ class PlanController extends Controller
 
     public function index()
     {
-        if (request()->ajax()) {
-            if(auth()->user()->hasRole('super'))
-            {
 
-                $plans = Plan::all();
+        if(auth()->user()->hasRole('super'))
+        {
 
-
-            }
+            $plans = Plan::all();
 
 
-            else{
-            $userId = auth()->user()->id;
+        }
+
+
+        else{
+            if(auth()->user()->hasRole('vendor') || auth()->user()->hasRole('admin') ){
+
+        $userId = auth()->user()->id;
+
+
+        $ids = User::where('user_id', $userId)->pluck('id');
+
+
+        $plans = Plan::where('user_id', $userId)
+        ->orWhereIn('user_id',$ids)
+        ->get();
+
+        }
+
+        else{
+
+            $userId = auth()->user()->user_id;
 
 
             $ids = User::where('user_id', $userId)->pluck('id');
@@ -38,7 +54,11 @@ class PlanController extends Controller
             ->orWhereIn('user_id',$ids)
             ->get();
 
-            }
+        }
+    }
+
+        if (request()->ajax()) {
+
 
             return datatables()->of($plans)
                 ->editColumn('image', function ($row) {
@@ -50,7 +70,7 @@ class PlanController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
-        return view('plans.list');
+        return view('plans.list',compact('plans'));
     }
 
 

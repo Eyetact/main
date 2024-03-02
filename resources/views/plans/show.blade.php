@@ -252,9 +252,11 @@
 
 
                                                                     <div class="col-3">
+                                                                        @if(in_array($permissions[0]->module, [1,2,3,4,5,6]))
                                                                         <div class="input-box">
                                                                             <input type="number" value="{{ $plan->limits($permissions[0]->module) }}"   class="google-input custom-limit" name="limit[{{ $permissions[0]->module }}]" id="price"  />
                                                                         </div>
+                                                                        @endif
                                                                     </div>
                                                                 </div>
 

@@ -35,6 +35,6 @@ class Plan extends Model
     }
 
     public function limits( $module_id ){
-        return Limit::where('plan_id',$this->id)->where('module_id',$module_id)->first()->data_limit;
+        return (int)Limit::where('plan_id',$this->id)->where('module_id',$module_id)->first()?->data_limit;
     }
 }
