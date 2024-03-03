@@ -344,7 +344,7 @@ class IndexViewGenerator
                                 case 'foreignId':
 
                                     $trhtml .= '<td><div class="input-box">';
-                                    $trhtml .= ' <select name="' . $field->code . '[${no}][' . $value->code . ']" class="form-select  google-input multi-type" required="">';
+                                    $trhtml .= ' <select name="' . $field->code . '[${no}][\'' . $value->code . '\']" class="form-select  google-input multi-type" required="">';
                                     $trhtml .= '${list_'.$field->id.'}';
                                     $trhtml .= '</select>';
                                     $trhtml .= '</div></td>';
