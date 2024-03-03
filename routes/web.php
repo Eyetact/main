@@ -18,6 +18,7 @@ use App\Http\Controllers\SmtpController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
+use App\Http\Controllers\MailsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -112,6 +113,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('main_mailbox/{main_mailbox}', 'update')->name('main_mailbox.update');
         Route::delete('main_mailbox/{main_mailbox}', 'destroy')->name('main_mailbox.destroy');
     });
+
+    Route::controller(MailsController::class)->group(function () {
+        Route::get('/all_mails', 'index')->name('all_mails');
+        Route::get('/mails/{id}', 'mails')->name('inbox');
+        Route::get('/fetch/{id}/{mail_id}', 'getDataByUID')->name('fetch');
+        Route::post('/sendReply/{id?}', 'sendReply')->name('sendReply');
+    }); 
 
     Route::post('theme-setting/update', [Helper::class, 'update'])->name('update.theme');
 
