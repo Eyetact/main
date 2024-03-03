@@ -137,7 +137,7 @@ class UserController extends Controller
                 ->make(true);
 
         }
-        return view('users.users',compact('users'));
+        return view('users.users', compact('users'));
     }
 
     public function admins()
@@ -320,19 +320,22 @@ class UserController extends Controller
                 if (($request->role != "admin") || ($request->role != "vendor")) {
 
 
-                    $role_id = DB::table('model_has_roles')
+                    $role_db = DB::table('model_has_roles')
                         ->where('model_type', "App\Models\UserGroup")
                         ->where('model_id', $id)
-                        ->first()
-                        ->role_id;
-                    $role = Role::find($role_id)->name;
+                        ->first();
+                    if ($role_db) {
+                        $role_id = $role_db->role_id;
+                        $role = Role::find($role_id)->name;
 
 
 
-                    $user->assignRole($role);
-                    foreach (Role::find($role_id)->permissions as $p) {
-                        $user->givePermissionTo($p);
+                        $user->assignRole($role);
+                        foreach (Role::find($role_id)->permissions as $p) {
+                            $user->givePermissionTo($p);
+                        }
                     }
+
                 }
             }
             // dd($request->group_id);
@@ -362,9 +365,9 @@ class UserController extends Controller
         } else {
             // $user->assignRole('user'); // TODO::
             $user->assignRole($request->role);
-                    // foreach (Role::find($role_id)->permissions as $p) {
-                    //     $user->givePermissionTo($p);
-                    // }
+            // foreach (Role::find($role_id)->permissions as $p) {
+            //     $user->givePermissionTo($p);
+            // }
         }
 
 
