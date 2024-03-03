@@ -301,6 +301,9 @@ class AttributeController extends Controller
             $this->generatorService->reGenerateViews($request['module']);
         }
 
+        Artisan::call("optimize:clear");
+
+
         // dd($requestData['multi']);
 
         if (!$attribute) {
@@ -410,7 +413,8 @@ class AttributeController extends Controller
         $this->generatorService->reGenerateModel($attribute->module);
         $this->generatorService->reGenerateRequest($attribute->module);
         $this->generatorService->reGenerateViews($attribute->module);
-
+        
+        Artisan::call("optimize:clear");
 
 
         if (!$attribute) {

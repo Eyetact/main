@@ -265,7 +265,7 @@ class ModuleManagerController extends Controller
         $this->generatorService->reGenerateController($request['module']);
         $this->generatorService->reGenerateRequest($request['module']);
         $this->generatorService->reGenerateViews($request['module']);
-
+        Artisan::call("optimize:clear");
         try {
             $this->generatorService->reGeneratePermission($request['module']);
         } catch (\Throwable $th) {
