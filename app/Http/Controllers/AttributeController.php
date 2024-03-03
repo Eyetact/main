@@ -397,8 +397,12 @@ class AttributeController extends Controller
                 $m->type = $value['type'];
                 $m->select_options = isset($value['select_options']) ? $value['select_options'] : '';
                 $m->attribute_id = $attribute->id;
-                $m->constrain = isset($value['constrain']) ? $value['constrain'] : '';
-                $m->attribute = isset($value['attribute']) ? $value['attribute'] : '';
+                if(isset($value['constrain'])){
+                    $m->constrain = isset($value['constrain']) ? $value['constrain'] : '';
+                }
+                if(isset($value['attribute'])){
+                    $m->attribute = isset($value['attribute']) ? $value['attribute'] : '';
+                }
                 $m->save();
             }
 
