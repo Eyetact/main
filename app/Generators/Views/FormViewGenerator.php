@@ -1130,10 +1130,10 @@ class FormViewGenerator
 
                                             $totalOptions = count($arrOption);
                                             $template .= '<td><div class="input-box">';
-                                            $template .= ' <select name="' . $field->code . '[{{ $index }}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
+                                            $template .= ' <select name="' . $field->code . '[{{ $index }}][' . $value->code . ']" class="form-select  google-input multi-type" required="">';
 
                                             $template.= '@foreach( \\App\\Models\\Admin\\'.GeneratorUtils::singularPascalCase($value->constrain).'::all() as $item2 )';
-                                                $template .= '<option @selected( isset($item->'.$value->name.') ? $item->'.$value->name.' == "$item2->'.$value->attribute . '" : 0 )  value="{{ $item2->'.$value->attribute . '}}" >{{ $item2->'.$value->attribute . '}}</option>';
+                                                $template .= '<option @selected( isset($item->'.$value->code.') ? $item->'.$value->code.' == "$item2->'.$value->attribute . '" : 0 )  value="{{ $item2->'.$value->attribute . '}}" >{{ $item2->'.$value->attribute . '}}</option>';
 
                                             $template.= '@endforeach';
                                             $template .= '</select>';
