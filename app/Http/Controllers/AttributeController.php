@@ -212,6 +212,8 @@ class AttributeController extends Controller
         $request->validated();
         $requestData = $request->all();
 
+        // dd($requestData);
+
         $attr = Attribute::where('name', $request['name'])->where('module', $request['module'])->first();
         if ($attr) {
             $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');

@@ -458,27 +458,27 @@ class FormViewGenerator
                                         GeneratorUtils::getTemplate('views/forms/textarea')
                                     );
                                     break;
-                                    case 'texteditor':
-                                        // texteditor
-                                        $template .= str_replace(
-                                            [
-                                                '{{fieldKebabCase}}',
-                                                '{{fieldUppercase}}',
-                                                '{{modelName}}',
-                                                '{{nullable}}',
-                                                '{{fieldSnakeCase}}',
+                                case 'texteditor':
+                                    // texteditor
+                                    $template .= str_replace(
+                                        [
+                                            '{{fieldKebabCase}}',
+                                            '{{fieldUppercase}}',
+                                            '{{modelName}}',
+                                            '{{nullable}}',
+                                            '{{fieldSnakeCase}}',
 
-                                            ],
-                                            [
-                                                GeneratorUtils::kebabCase($field),
-                                                $fieldUcWords,
-                                                $modelNameSingularCamelCase,
-                                                $request['requireds'][$i] == 'yes' ? ' required' : '',
-                                                $fieldSnakeCase,
-                                            ],
-                                            GeneratorUtils::getTemplate('views/forms/texteditor')
-                                        );
-                                        break;
+                                        ],
+                                        [
+                                            GeneratorUtils::kebabCase($field),
+                                            $fieldUcWords,
+                                            $modelNameSingularCamelCase,
+                                            $request['requireds'][$i] == 'yes' ? ' required' : '',
+                                            $fieldSnakeCase,
+                                        ],
+                                        GeneratorUtils::getTemplate('views/forms/texteditor')
+                                    );
+                                    break;
                                 case 'file':
 
                                     $template .= str_replace(
@@ -603,15 +603,43 @@ class FormViewGenerator
         $template = "<div class=\"row mb-2\">\n";
 
 
-        foreach ($module->fields()->where('is_enable',1)->get() as $i => $field) {
+        foreach ($module->fields()->where('is_enable', 1)->get() as $i => $field) {
             $field->name = GeneratorUtils::singularSnakeCase($field->name);
-            $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
+            $field->code = !empty($field->code) ? GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
 
             if ($field->input !== 'no-input') {
                 $fieldSnakeCase = str($field->code)->snake();
                 $fieldUcWords = GeneratorUtils::cleanUcWords($field->name);
 
                 switch ($field->type) {
+                    case 'assign':
+                        $template  .= '
+                        <div class="col-sm-12 col-md-12">
+                            <div class="input-box">
+                                <label class="form-label">Customer Group<span class="text-danger">*</span></label>
+                                <select class="google-input" name="customer_group_id" tabindex="null">
+                                    <option selected disabled>Select Group</option>
+                                    @foreach ($customer_groups as $group)
+                                        <option {{ isset($' .$modelNameSingularCamelCase . ') && $' .$modelNameSingularCamelCase .'->customer_group_id == $group->id ? \'selected\' : \'\' }} value="{{ $group->id }}">{{$group->id}} - {{$group->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <span>OR</span>
+                            <div class="input-box">
+
+                                <label class="form-label">Customer<span class="text-danger">*</span></label>
+                                <select class="google-input" name="customer_id" tabindex="null">
+                                    <option selected disabled>Select Customer</option>
+                                    @foreach ($customers as $customer)
+                                        <option {{ isset($' .$modelNameSingularCamelCase . ') && $' .$modelNameSingularCamelCase .'->customer_id == $customer->id ? \'selected\' : \'\' }} value="{{ $customer->id }}">{{$customer->id}} - {{$customer->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                        </div>
+                        ';
+                        break;
                     case 'enum':
                         $options = "";
 
@@ -637,7 +665,7 @@ class FormViewGenerator
                                         <option value="$value" {{ isset(\$$modelNameSingularCamelCase) && (is_array( json_decode(\$$modelNameSingularCamelCase->$fieldSnakeCase)) ?in_array('$value', json_decode(\$$modelNameSingularCamelCase->$fieldSnakeCase)) : \$$modelNameSingularCamelCase->$fieldSnakeCase == '$value')  ? 'selected' :'' }}>$value</option>
                                         BLADE;
                                         }
-                                    }else{
+                                    } else {
                                         if ($field->default_value) {
                                             $options .= <<<BLADE
                                         <option value="$value" {{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase->$fieldSnakeCase == '$value' ? 'selected' : ('$field->default_value' == '$value' ? 'selected' : '') }}>$value</option>
@@ -670,7 +698,7 @@ class FormViewGenerator
                                     [
                                         $fieldUcWords,
                                         GeneratorUtils::kebabCase($field->name),
-                                        $field->is_multi ? $fieldSnakeCase ."[]" : $fieldSnakeCase ,
+                                        $field->is_multi ? $fieldSnakeCase . "[]" : $fieldSnakeCase,
                                         GeneratorUtils::cleanLowerCase($field->name),
                                         $options,
                                         $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
@@ -983,10 +1011,10 @@ class FormViewGenerator
                         </div>';
 
                         $template .= '
-                        @if(isset($'.$modelNameSingularCamelCase.')  && $' . $modelNameSingularCamelCase . '->' . $fieldSnakeCase . '!= null )
+                        @if(isset($' . $modelNameSingularCamelCase . ')  && $' . $modelNameSingularCamelCase . '->' . $fieldSnakeCase . '!= null )
                         @php
 
-                        $ar = json_decode($'. $modelNameSingularCamelCase . '->' . $fieldSnakeCase  .');
+                        $ar = json_decode($' . $modelNameSingularCamelCase . '->' . $fieldSnakeCase . ');
                         $index = 0;
                         @endphp
                         @endif
@@ -1004,7 +1032,7 @@ class FormViewGenerator
                         <th></th>
                         </thead>
                         <tbody>
-                        @if(isset($'.$modelNameSingularCamelCase.')  && $' . $modelNameSingularCamelCase . '->' . $fieldSnakeCase . '!= null )
+                        @if(isset($' . $modelNameSingularCamelCase . ')  && $' . $modelNameSingularCamelCase . '->' . $fieldSnakeCase . '!= null )
 
                         @foreach( $ar as $item )
                         @php
@@ -1012,40 +1040,40 @@ class FormViewGenerator
                         @endphp
                         ';
                         // foreach ($field->multi as $key => $value) {
-                            $template .= '<tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">';
-                            foreach ($field->multis as $key => $value) {
-                                switch ($value->type) {
+                        $template .= '<tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">';
+                        foreach ($field->multis as $key => $value) {
+                            switch ($value->type) {
 
-                                    case 'text':
-                                    case 'email':
-                                    case 'tel':
-                                    case 'url':
-                                    case 'search':
-                                    case 'file':
-                                    case 'number':
-                                    case 'date':
-                                    case 'time':
-                                        $template .= ' <td>
+                                case 'text':
+                                case 'email':
+                                case 'tel':
+                                case 'url':
+                                case 'search':
+                                case 'file':
+                                case 'number':
+                                case 'date':
+                                case 'time':
+                                    $template .= ' <td>
                                         <div class="input-box">
                                             <input type="' . $value->type . '" name="' . $field->code . '[{{ $index }}][' . $value->name . ']"
                                                 class="form-control google-input"
-                                                placeholder="' . $value->name . '" value="{{ isset($item->'.$value->name.') ? $item->'.$value->name.' : \'\' }}" required>
+                                                placeholder="' . $value->name . '" value="{{ isset($item->' . $value->name . ') ? $item->' . $value->name . ' : \'\' }}" required>
                                         </div>
                                     </td>
                                     ';
                                     break;
-                                    case 'decimal':
-                                        $template .= ' <td>
+                                case 'decimal':
+                                    $template .= ' <td>
                                         <div class="input-box">
                                             <input type="number" step="0.000000000000000001"  name="' . $field->code . '[{{ $index }}][' . $value->name . ']"
                                                 class="form-control google-input"
-                                                placeholder="' . $value->name . '" value="{{ isset($item->'.$value->name.') ? $item->'.$value->name.' : \'\' }}" required>
+                                                placeholder="' . $value->name . '" value="{{ isset($item->' . $value->name . ') ? $item->' . $value->name . ' : \'\' }}" required>
                                         </div>
                                     </td>
                                     ';
-                                        break;
-                                    case 'image':
-                                        $template .= ' <td>
+                                    break;
+                                case 'image':
+                                    $template .= ' <td>
                                             <div class="input-box">
                                                 <input type="file" name="' . $field->code . '[{{ $index }}][' . $value->name . ']"
                                                     class="form-control google-input"
@@ -1053,34 +1081,34 @@ class FormViewGenerator
                                             </div>
                                         </td>
                                         ';
-                                        break;
+                                    break;
 
-                                    case 'textarea':
-                                        $template .= ' <td>
+                                case 'textarea':
+                                    $template .= ' <td>
                                             <div class="input-box">
 
-                                            <textarea name="' . $field->code . '[{{ $index }}][' . $value->name . ']"  class="google-input"  placeholder="' . $value->name . '">{{ isset($item->'.$value->name.') ? $item->'.$value->name.' : \'\' }}</textarea>
+                                            <textarea name="' . $field->code . '[{{ $index }}][' . $value->name . ']"  class="google-input"  placeholder="' . $value->name . '">{{ isset($item->' . $value->name . ') ? $item->' . $value->name . ' : \'\' }}</textarea>
 
                                             </div>
                                         </td>
                                         ';
-                                        break;
-                                        case 'texteditor':
-                                            $template .= ' <td>
+                                    break;
+                                case 'texteditor':
+                                    $template .= ' <td>
                                                 <div class="input-box">
 
-                                                <textarea name="' . $field->code . '[{{ $index }}][' . $value->name . ']"  class="content"  placeholder="' . $value->name . '">{{ isset($item->'.$value->name.') ? $item->'.$value->name.' : \'\' }}</textarea>
+                                                <textarea name="' . $field->code . '[{{ $index }}][' . $value->name . ']"  class="content"  placeholder="' . $value->name . '">{{ isset($item->' . $value->name . ') ? $item->' . $value->name . ' : \'\' }}</textarea>
 
                                                 </div>
                                             </td>
                                             ';
-                                            break;
+                                    break;
 
 
 
 
-                                    case 'range':
-                                        $template .= '<td>
+                                case 'range':
+                                    $template .= '<td>
                                                     <div class="row">
                                                         <div class="col-md-11">
                                                             <div class="input-box">
@@ -1092,61 +1120,61 @@ class FormViewGenerator
                                                     </div>
                                                 </td>
                                                     ';
-                                        break;
-                                    case 'radio':
-                                        $template .= '<td>
+                                    break;
+                                case 'radio':
+                                    $template .= '<td>
                                     <div class="custom-controls-stacked">
                                     <label class="custom-control custom-radio" for="' . $value->name . '-1">
-                                        <input @checked( isset($item->'.$value->name.') ? $item->'.$value->name.' == 1 : 0 ) class="custom-control-input" type="radio" name="' . $field->code . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-1" value="1">
+                                        <input @checked( isset($item->' . $value->name . ') ? $item->' . $value->name . ' == 1 : 0 ) class="custom-control-input" type="radio" name="' . $field->code . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-1" value="1">
                                         <span class="custom-control-label">True</span>
                                     </label>
 
                                     <label class="custom-control custom-radio" for="' . $value->name . '-0">
-                                        <input @checked( isset($item->'.$value->name.') ? $item->'.$value->name.' == 0 : 0)  class="custom-control-input" type="radio" name="' . $field->code . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-0" value="0">
+                                        <input @checked( isset($item->' . $value->name . ') ? $item->' . $value->name . ' == 0 : 0)  class="custom-control-input" type="radio" name="' . $field->code . '[{{ $index }}][' . $value->name . ']" id="' . $value->name . '-0" value="0">
                                         <span class="custom-control-label">False</span>
                                     </label>
                                 </div>
                                                 </td>
                                                             ';
-                                        break;
-                                    case 'select':
+                                    break;
+                                case 'select':
 
-                                        $arrOption = explode('|', $value->select_options);
+                                    $arrOption = explode('|', $value->select_options);
 
-                                        $totalOptions = count($arrOption);
-                                        $template .= '<td><div class="input-box">';
-                                        $template .= ' <select name="' . $field->code . '[{{ $index }}][\'' . $value->name . '\']" class="form-select  google-input multi-type" required="">';
+                                    $totalOptions = count($arrOption);
+                                    $template .= '<td><div class="input-box">';
+                                    $template .= ' <select name="' . $field->code . '[{{ $index }}][\'' . $value->name . '\']" class="form-select  google-input multi-type" required="">';
 
-                                        foreach ($arrOption as $arrOptionIndex => $value2) {
-                                            $template .= '<option @selected( isset($item->'.$value->name.') ? $item->'.$value->name.' == "'.$value2.'" : 0 ) value="' . $value2 . '" >' . $value2 . '</option>';
+                                    foreach ($arrOption as $arrOptionIndex => $value2) {
+                                        $template .= '<option @selected( isset($item->' . $value->name . ') ? $item->' . $value->name . ' == "' . $value2 . '" : 0 ) value="' . $value2 . '" >' . $value2 . '</option>';
 
-                                        }
-                                        $template .= '</select>';
-                                        $template .= '</div></td>';
-                                        break;
-                                        case 'foreignId':
+                                    }
+                                    $template .= '</select>';
+                                    $template .= '</div></td>';
+                                    break;
+                                case 'foreignId':
 
-                                            $arrOption = explode('|', $value->select_options);
+                                    $arrOption = explode('|', $value->select_options);
 
-                                            $totalOptions = count($arrOption);
-                                            $template .= '<td><div class="input-box">';
-                                            $template .= ' <select name="' . $field->code . '[{{ $index }}][\'' . $value->code . '\']" class="form-select  google-input multi-type" required="">';
+                                    $totalOptions = count($arrOption);
+                                    $template .= '<td><div class="input-box">';
+                                    $template .= ' <select name="' . $field->code . '[{{ $index }}][\'' . $value->code . '\']" class="form-select  google-input multi-type" required="">';
 
-                                            $template.= '@foreach( \\App\\Models\\Admin\\'.GeneratorUtils::singularPascalCase($value->constrain).'::all() as $item2 )';
-                                                $template .= '<option @selected( isset($item->'.$value->attribute.') ? $item->'.$value->attribute.' == "$item2->'.$value->attribute . '" : 0 )  value="{{ $item2->'.$value->attribute . '}}" >{{ $item2->'.$value->attribute . '}}</option>';
+                                    $template .= '@foreach( \\App\\Models\\Admin\\' . GeneratorUtils::singularPascalCase($value->constrain) . '::all() as $item2 )';
+                                    $template .= '<option @selected( isset($item->' . $value->attribute . ') ? $item->' . $value->attribute . ' == "$item2->' . $value->attribute . '" : 0 )  value="{{ $item2->' . $value->attribute . '}}" >{{ $item2->' . $value->attribute . '}}</option>';
 
-                                            $template.= '@endforeach';
-                                            $template .= '</select>';
-                                            $template .= '</div></td>';
-                                            break;
+                                    $template .= '@endforeach';
+                                    $template .= '</select>';
+                                    $template .= '</div></td>';
+                                    break;
 
-                                    default:
-                                        # code...
-                                        break;
-                                }
-
+                                default:
+                                    # code...
+                                    break;
                             }
-                            $template .= '
+
+                        }
+                        $template .= '
                             <td>
                                 <div class="input-box">
 
@@ -1299,27 +1327,27 @@ class FormViewGenerator
                                     GeneratorUtils::getTemplate('views/forms/textarea')
                                 );
                                 break;
-                                case 'texteditor':
-                                    // texteditor
-                                    $template .= str_replace(
-                                        [
-                                            '{{fieldKebabCase}}',
-                                            '{{fieldUppercase}}',
-                                            '{{modelName}}',
-                                            '{{nullable}}',
-                                            '{{fieldSnakeCase}}',
+                            case 'texteditor':
+                                // texteditor
+                                $template .= str_replace(
+                                    [
+                                        '{{fieldKebabCase}}',
+                                        '{{fieldUppercase}}',
+                                        '{{modelName}}',
+                                        '{{nullable}}',
+                                        '{{fieldSnakeCase}}',
 
-                                        ],
-                                        [
-                                            GeneratorUtils::kebabCase($field->name),
-                                            $fieldUcWords,
-                                            $modelNameSingularCamelCase,
-                                            $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
-                                            $fieldSnakeCase,
-                                        ],
-                                        GeneratorUtils::getTemplate('views/forms/texteditor')
-                                    );
-                                    break;
+                                    ],
+                                    [
+                                        GeneratorUtils::kebabCase($field->name),
+                                        $fieldUcWords,
+                                        $modelNameSingularCamelCase,
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                        $fieldSnakeCase,
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/texteditor')
+                                );
+                                break;
                             case 'file':
                             case 'image':
 
@@ -1376,27 +1404,27 @@ class FormViewGenerator
                                     GeneratorUtils::getTemplate('views/forms/range')
                                 );
                                 break;
-                                case 'decimal':
-                                    $template .= str_replace(
-                                        [
-                                            '{{fieldSnakeCase}}',
-                                            '{{fieldUcWords}}',
-                                            '{{fieldKebabCase}}',
-                                            '{{nullable}}',
-                                            '{{value}}'
+                            case 'decimal':
+                                $template .= str_replace(
+                                    [
+                                        '{{fieldSnakeCase}}',
+                                        '{{fieldUcWords}}',
+                                        '{{fieldKebabCase}}',
+                                        '{{nullable}}',
+                                        '{{value}}'
 
-                                        ],
-                                        [
-                                            GeneratorUtils::singularSnakeCase($field->code),
-                                            $fieldUcWords,
-                                            GeneratorUtils::singularKebabCase($field->name),
-                                            $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
-                                            $formatValue
+                                    ],
+                                    [
+                                        GeneratorUtils::singularSnakeCase($field->code),
+                                        $fieldUcWords,
+                                        GeneratorUtils::singularKebabCase($field->name),
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                        $formatValue
 
-                                        ],
-                                        GeneratorUtils::getTemplate('views/forms/input-decimal')
-                                    );
-                                    break;
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/input-decimal')
+                                );
+                                break;
                             case 'hidden':
                                 $template .= '<input type="hidden" name="' . $fieldSnakeCase . '" value="' . $field->default_value . '">';
                                 break;
@@ -1466,7 +1494,7 @@ class FormViewGenerator
         $options = "<option>-- Select --</option>";
 
         foreach ($module->childs as $model) {
-            $options .= "<option data-id=\"{{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase"."->data_id  ? \$$modelNameSingularCamelCase"."->data_id : '' }}\"  {{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase"."->sub_id == '$model->id' ? 'selected' : '' }} data-value=\"". GeneratorUtils::pluralKebabCase($model->code)  ."\" value=\"". $model->id ."\" >". $model->name ."</option>";
+            $options .= "<option data-id=\"{{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase" . "->data_id  ? \$$modelNameSingularCamelCase" . "->data_id : '' }}\"  {{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase" . "->sub_id == '$model->id' ? 'selected' : '' }} data-value=\"" . GeneratorUtils::pluralKebabCase($model->code) . "\" value=\"" . $model->id . "\" >" . $model->name . "</option>";
         }
 
         $template = str_replace(
@@ -1504,7 +1532,7 @@ class FormViewGenerator
      * @param string $formatValue
      * @return string
      */
-    public function setInputTypeTemplate(string $field, array $request, string $model, string $formatValue, $date = 0,string $label = '', ): string
+    public function setInputTypeTemplate(string $field, array $request, string $model, string $formatValue, $date = 0, string $label = '', ): string
     {
         if ($date == 1) {
             return str_replace(

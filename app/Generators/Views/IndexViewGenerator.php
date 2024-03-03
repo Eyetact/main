@@ -198,8 +198,8 @@ class IndexViewGenerator
         foreach ($module->fields()->where('is_enable',1)->get() as $i => $field) {
             $field->name = GeneratorUtils::singularSnakeCase($field->name);
             $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
-
-            if ($field->input != 'password') {
+            // dd($field->type);
+            if ($field->input != 'password' && $field->type != 'assign') {
                 /**
                  * will generate something like:
                  * <th>{{ __('Price') }}</th>

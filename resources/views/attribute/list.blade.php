@@ -893,6 +893,9 @@
                 case 'foreignId':
                     $('#type').val('foreignId').trigger('change')
                     break;
+                case 'assign':
+                    $('#type').val('assign').trigger('change')
+                    break;
 
 
                 default:

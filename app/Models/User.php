@@ -251,12 +251,20 @@ class User extends Authenticatable
             return $limit;
 
         }
+        
+        if($this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()){
+            $current_plan = $this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan;
 
-        $current_plan = $this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan;
+            $limit = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first();
 
-        $limit = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first()->data_limit;
+            if($limit){
 
-        return $limit;
+                return $limit?->data_limit;;
+            }
+        }
+        
+        return 0;
+
 
     }
 
