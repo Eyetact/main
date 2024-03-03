@@ -50,7 +50,7 @@ class ActionViewGenerator
     public function reGenerate($id)
     {
         $module = Module::find($id);
-        $model = GeneratorUtils::setModelName($module->name, 'default');
+        $model = GeneratorUtils::setModelName($module->code, 'default');
         $path = GeneratorUtils::getModelLocation($module->name);
         $code = GeneratorUtils::setModelName($module->code, 'default');
 
