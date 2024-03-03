@@ -1,5 +1,5 @@
 if(Schema::hasTable('{{constrainsPluralLowecase}}')){
-    if (Schema::hasColumn('{{constrainsPluralCamelCase}}', '{{fieldfirst}}')){
+    if (Schema::hasColumn('{{constrainsPluralLowecase}}', '{{fieldfirst}}')){
     View::composer(['admin.*', 'admin.*'], function ($view) {
             return $view->with(
                 '{{constrainsPluralCamelCase}}',
