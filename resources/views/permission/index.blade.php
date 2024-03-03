@@ -56,7 +56,7 @@
 
                 <a id="add_new" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="Add new"><i
                         class="fe fe-plus mr-1"></i> Add new </a>
-                        @endif
+                        {{-- @endif --}}
             </div>
         </div>
     </div>

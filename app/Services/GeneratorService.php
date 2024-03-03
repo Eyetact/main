@@ -95,6 +95,8 @@ class GeneratorService
         (new IndexViewGenerator)->reGenerate($id);
         (new CreateViewGenerator)->reGenerate($id);
         (new FormViewGenerator)->reGenerate($id);
+        (new ActionViewGenerator)->reGenerate($id);
+
 
         (new ShowViewGenerator)->reGenerate($id);
         (new EditViewGenerator)->reGenerate($id);

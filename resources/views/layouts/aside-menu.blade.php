@@ -144,13 +144,13 @@
                     @foreach ($item->childrens() as $item)
                         @can('view.' . str($item->module->code)->singular()->lower())
                             <li class="sub-slide">
-                                <a class="sub-side-menu__item" data-toggle="sub-slide" href="{{ url('/' . $item->path) }}"><span
+                                <a class="sub-side-menu__item" @if(count($item->childrens())) data-toggle="sub-slide" @endif href="{{ url('/' . $item->path) }}"><span
                                         class="sub-side-menu__label">{{ $item->name }}</span>
 
                                         @if(count($item->children) > 0 )<i class="sub-angle fe fe-chevron-down"></i>@endif
                                     </a>
 
-
+                                @if(count($item->childrens()))
                                 <ul class="sub-slide-menu">
                                     <li><a class="sub-slide-item" href="{{ url('/' . $item->path) }}">{{ $item->name }}</a></li>
 
@@ -160,6 +160,7 @@
                                         @endcan
                                     @endforeach
                                 </ul>
+                                @endif
                             </li>
                         @endcan
 

@@ -9,6 +9,7 @@ use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\Role;
+use App\Repositories\FlashRepository;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -16,6 +17,14 @@ use DB;
 
 class UserController extends Controller
 {
+
+    private $flashRepository;
+
+    public function __construct()
+    {
+        $this->flashRepository = new FlashRepository;
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -296,6 +305,27 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+
+        $u = User::where('email',$request->email)->orWhere('username',$request->username)->first();
+
+        if ($u) {
+            $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
+            switch ($request->role) {
+                case 'admin':
+                    return redirect()->route('users.admins');
+                    break;
+    
+                case 'vendor':
+                    return redirect()->route('users.vendors');
+                    break;
+                case 'user':
+                    return redirect()->route('users.users');
+                    break;
+    
+    
+            }
+            return redirect()->route('module_manager.index');
+        }
         // dd( $request->all() );
         $user = User::create([
             'name' => $request->name,
