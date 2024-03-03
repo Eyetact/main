@@ -331,7 +331,7 @@ class IndexViewGenerator
 
                                 $totalOptions = count($arrOption);
                                 $trhtml .= '<td><div class="input-box">';
-                                $trhtml .= ' <select name="' . $field->code . '[${no}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
+                                $trhtml .= ' <select name="' . $field->code . '[${no}][\'' . $value->name . '\']" class="form-select  google-input multi-type" required="">';
 
                                 foreach ($arrOption as $arrOptionIndex => $value) {
                                     $trhtml .= '<option value="'.$value.'" >'.$value.'</option>';

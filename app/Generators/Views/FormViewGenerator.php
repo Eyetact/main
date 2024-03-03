@@ -1115,7 +1115,7 @@ class FormViewGenerator
 
                                         $totalOptions = count($arrOption);
                                         $template .= '<td><div class="input-box">';
-                                        $template .= ' <select name="' . $field->code . '[{{ $index }}][' . $value->name . ']" class="form-select  google-input multi-type" required="">';
+                                        $template .= ' <select name="' . $field->code . '[{{ $index }}][\'' . $value->name . '\']" class="form-select  google-input multi-type" required="">';
 
                                         foreach ($arrOption as $arrOptionIndex => $value2) {
                                             $template .= '<option @selected( isset($item->'.$value->name.') ? $item->'.$value->name.' == "'.$value2.'" : 0 ) value="' . $value2 . '" >' . $value2 . '</option>';
