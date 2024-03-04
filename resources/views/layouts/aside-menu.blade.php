@@ -55,8 +55,7 @@
                 </svg>
                 <span class="side-menu__label">Attributes</span></a>
         </li>
-        @if (auth()->user()->can('mail.settings') ||
-                auth()->user()->hasRole('super'))
+        @if (auth()->user()->can('mail.settings') || auth()->user()->hasRole('super'))
             <li class="slide">
                 <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}">
                     <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24"
@@ -118,62 +117,83 @@
     </ul>
     <ul class="side-menu app-sidebar3">
         <li class="side-item side-item-category mt-4">Module Manger</li>
-        @foreach ($side_menus as $item)
-        {{-- @php
+
+
+            @foreach ($side_menus as $item)
+                {{-- @php
             echo json_encode($item->childrens(),true)
         @endphp --}}
-            <li class="slide">
-                <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . $item->path) }}">
-                    <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height="24"
-                        viewBox="0 0 24 24" width="24">
-                        <path d="M0 0h24v24H0V0z" fill="none" />
-                        <path
-                            d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z" />
-                    </svg>
-                    <span class="side-menu__label">{{ $item->sidebar_name }}</span>
-                   <i class="angle fe fe-chevron-right"></i>
-                </a>
-                <ul class="slide-menu ">
-                    @can('view.' . str($item->module->code)->singular()->lower())
-                        <li class="sub-slide">
-                            <a class="sub-side-menu__item" href="{{ url('/' . $item->path) }}"><span
-                                    class="sub-side-menu__label">{{ $item->name }}</span></a>
-                        </li>
-                    @endcan
+        @php
+            $pers = array();
+        @endphp
+        @foreach ($item->childrens() as $item2)
+        @php
+            array_push($pers,'view.' .str($item2->module->code)->singular()->lower());
+        @endphp
+        @endforeach
+        @if (Auth::user()->hasAnyPermission($pers) || Auth::user()->hasRole('super'))
 
-                    @foreach ($item->childrens() as $item)
-                        @can('view.' . str($item->module->code)->singular()->lower())
+                <li class="slide">
+                    <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . $item->path) }}">
+                        <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height="24"
+                            viewBox="0 0 24 24" width="24">
+                            <path d="M0 0h24v24H0V0z" fill="none" />
+                            <path
+                                d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z" />
+                        </svg>
+                        <span class="side-menu__label">{{ $item->sidebar_name }}</span>
+                        <i class="angle fe fe-chevron-right"></i>
+                    </a>
+                    <ul class="slide-menu ">
+                        @can('view.' .
+                            str($item->module->code)->singular()->lower())
                             <li class="sub-slide">
-                                <a class="sub-side-menu__item" @if(count($item->childrens())) data-toggle="sub-slide" @endif href="{{ url('/' . $item->path) }}"><span
-                                        class="sub-side-menu__label">{{ $item->name }}</span>
-
-                                        @if(count($item->children) > 0 )<i class="sub-angle fe fe-chevron-down"></i>@endif
-                                    </a>
-
-                                @if(count($item->childrens()))
-                                <ul class="sub-slide-menu">
-                                    <li><a class="sub-slide-item" href="{{ url('/' . $item->path) }}">{{ $item->name }}</a></li>
-
-                                    @foreach ($item->childrens() as $item)
-                                        @can('view.' . str($item->module->code)->singular()->lower())
-                                            <li><a class="sub-slide-item" href="{{ url('/' . $item->path) }}">{{ $item->name }}</a></li>
-                                        @endcan
-                                    @endforeach
-                                </ul>
-                                @endif
+                                <a class="sub-side-menu__item" href="{{ url('/' . $item->path) }}"><span
+                                        class="sub-side-menu__label">{{ $item->name }}</span></a>
                             </li>
                         @endcan
 
-                    @endforeach
-                    {{-- <li class="sub-slide is-expanded">
+                        @foreach ($item->childrens() as $item)
+                            @can('view.' .
+                                str($item->module->code)->singular()->lower())
+                                <li class="sub-slide">
+                                    <a class="sub-side-menu__item"
+                                        @if (count($item->childrens())) data-toggle="sub-slide" @endif
+                                        href="{{ url('/' . $item->path) }}"><span
+                                            class="sub-side-menu__label">{{ $item->name }}</span>
+
+                                        @if (count($item->children) > 0)
+                                            <i class="sub-angle fe fe-chevron-down"></i>
+                                        @endif
+                                    </a>
+
+                                    @if (count($item->childrens()))
+                                        <ul class="sub-slide-menu">
+                                            <li><a class="sub-slide-item"
+                                                    href="{{ url('/' . $item->path) }}">{{ $item->name }}</a></li>
+
+                                            @foreach ($item->childrens() as $item)
+                                                @can('view.' .
+                                                    str($item->module->code)->singular()->lower())
+                                                    <li><a class="sub-slide-item"
+                                                            href="{{ url('/' . $item->path) }}">{{ $item->name }}</a></li>
+                                                @endcan
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                </li>
+                            @endcan
+                        @endforeach
+                        {{-- <li class="sub-slide is-expanded">
                         <a class="sub-side-menu__item" data-toggle="sub-slide" href="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/#"><span class="sub-side-menu__label">File Manager</span><i class="sub-angle fe fe-chevron-down"></i></a>
 
                     </li> --}}
-                </ul>
+                    </ul>
 
 
-            </li>
-        @endforeach
+                </li>
+                @endif
+            @endforeach
     </ul>
 
     <ul class="side-menu app-sidebar3">
@@ -217,7 +237,6 @@
                 @endrole
 
                 @hasanyrole('super|admin')
-
                     <li class="sub-slide">
                         {{-- {{ url('module')}} --}}
                         <a class="sub-side-menu__item" href="{{ route('users.vendors') }}"><span
@@ -270,16 +289,16 @@
                     </li>
                 @endif
                 @if (Auth::user()->hasAnyPermission(['view.user']))
-                <li class="sub-slide">
-                    {{-- {{ url('module')}} --}}
-                    <a class="sub-side-menu__item" href="{{ route('ugroups.index') }}"><span
-                            class="sub-side-menu__label">Groups</span></a>
-                </li>
-                <li class="sub-slide">
-                    {{-- {{ url('module')}} --}}
-                    <a class="sub-side-menu__item" href="{{ route('users.users') }}"><span
-                            class="sub-side-menu__label">Users</span></a>
-                </li>
+                    <li class="sub-slide">
+                        {{-- {{ url('module')}} --}}
+                        <a class="sub-side-menu__item" href="{{ route('ugroups.index') }}"><span
+                                class="sub-side-menu__label">Groups</span></a>
+                    </li>
+                    <li class="sub-slide">
+                        {{-- {{ url('module')}} --}}
+                        <a class="sub-side-menu__item" href="{{ route('users.users') }}"><span
+                                class="sub-side-menu__label">Users</span></a>
+                    </li>
                 @endif
 
 

@@ -256,12 +256,12 @@ class ShowViewGenerator
                         foreach ($field->multis as $key => $value) {
 
                             if($value->type=="texteditor"){
-                                $trs .= "<td>{!! \$item->" . $value->name . " !!}</td>";
+                                $trs .= "<td>{!! \$item->" . $value->code . " !!}</td>";
 
                             }
                             else{
 
-                            $trs .= "<td>{{ \$item->" . $value->name . " }}</td>";
+                            $trs .= "<td>{{ \$item->" . $value->code . " }}</td>";
                             }
 
 

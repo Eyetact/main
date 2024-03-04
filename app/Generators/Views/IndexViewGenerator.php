@@ -245,7 +245,7 @@ class IndexViewGenerator
                             case 'time':
                                 $trhtml .= ' <td>
                                         <div class="input-box">
-                                            <input type="' . $value->type . '" name="' . $field->code . '[${no}][' . $value->name . ']"
+                                            <input type="' . $value->type . '" name="' . $field->code . '[${no}][' . $value->code . ']"
                                                 class="form-control google-input"
                                                 placeholder="' . $value->name . '" required>
                                         </div>
@@ -255,7 +255,7 @@ class IndexViewGenerator
                                 case 'decimal':
                                     $trhtml .= ' <td>
                                             <div class="input-box">
-                                                <input type="number" step="0.000000000000000001" name="' . $field->code . '[${no}][' . $value->name . ']"
+                                                <input type="number" step="0.000000000000000001" name="' . $field->code . '[${no}][' . $value->code . ']"
                                                     class="form-control google-input"
                                                     placeholder="' . $value->name . '" required>
                                             </div>
@@ -265,7 +265,7 @@ class IndexViewGenerator
                             case 'image':
                                 $trhtml .= ' <td>
                                             <div class="input-box">
-                                                <input type="file" name="' . $field->code . '[${no}][' . $value->name . ']"
+                                                <input type="file" name="' . $field->code . '[${no}][' . $value->code . ']"
                                                     class="form-control google-input"
                                                     placeholder="' . $value->name . '" required>
                                             </div>
@@ -277,7 +277,7 @@ class IndexViewGenerator
                                 $trhtml .= ' <td>
                                             <div class="input-box">
 
-                                            <textarea name="' . $field->code . '[${no}][' . $value->name . ']"  class="google-input"  placeholder="' . $value->name . '"></textarea>
+                                            <textarea name="' . $field->code . '[${no}][' . $value->code . ']"  class="google-input"  placeholder="' . $value->name . '"></textarea>
 
                                             </div>
                                         </td>
@@ -288,7 +288,7 @@ class IndexViewGenerator
                                     $trhtml .= ' <td>
                                                 <div class="input-box">
 
-                                                <textarea name="' . $field->code . '[${no}][' . $value->name . ']"  class="content"  placeholder="' . $value->name . '"></textarea>
+                                                <textarea name="' . $field->code . '[${no}][' . $value->code . ']"  class="content"  placeholder="' . $value->name . '"></textarea>
 
                                                 </div>
                                             </td>
@@ -300,7 +300,7 @@ class IndexViewGenerator
                                                     <div class="row">
                                                         <div class="col-md-11">
                                                             <div class="input-box">
-                                                                <input onmousemove="' . $value->name . '1.value=value" type="range" name="' . $field->code . '[' . $value->name . ']" class="range " min="1" max="1000" >
+                                                                <input onmousemove="' . $value->name . '1.value=value" type="range" name="' . $field->code . '[' . $value->code . ']" class="range " min="1" max="1000" >
 
                                                             </div>
                                                         </div>
@@ -313,12 +313,12 @@ class IndexViewGenerator
                                 $trhtml .= '<td>
                                     <div class="custom-controls-stacked">
                                     <label class="custom-control custom-radio" for="' . $value->name . '-1">
-                                        <input class="custom-control-input" type="radio" name="' . $field->code . '[${no}][' . $value->name . ']" id="' . $value->name . '-1" value="1">
+                                        <input class="custom-control-input" type="radio" name="' . $field->code . '[${no}][' . $value->code . ']" id="' . $value->name . '-1" value="1">
                                         <span class="custom-control-label">True</span>
                                     </label>
 
                                     <label class="custom-control custom-radio" for="' . $value->name . '-0">
-                                        <input class="custom-control-input" type="radio" name="' . $field->code . '[${no}][' . $value->name . ']" id="' . $value->name . '-0" value="0">
+                                        <input class="custom-control-input" type="radio" name="' . $field->code . '[${no}][' . $value->code . ']" id="' . $value->name . '-0" value="0">
                                         <span class="custom-control-label">False</span>
                                     </label>
                                 </div>
@@ -331,7 +331,7 @@ class IndexViewGenerator
 
                                 $totalOptions = count($arrOption);
                                 $trhtml .= '<td><div class="input-box">';
-                                $trhtml .= ' <select name="' . $field->code . '[${no}][\'' . $value->name . '\']" class="form-select  google-input multi-type" required="">';
+                                $trhtml .= ' <select name="' . $field->code . '[${no}][' . $value->code . ']" class="form-select  google-input multi-type" required="">';
 
                                 foreach ($arrOption as $arrOptionIndex => $value) {
                                     $trhtml .= '<option value="'.$value.'" >'.$value.'</option>';
@@ -344,7 +344,7 @@ class IndexViewGenerator
                                 case 'foreignId':
 
                                     $trhtml .= '<td><div class="input-box">';
-                                    $trhtml .= ' <select name="' . $field->code . '[${no}][\'' . $value->code . '\']" class="form-select  google-input multi-type" required="">';
+                                    $trhtml .= ' <select name="' . $field->code . '[${no}][' . $value->code . ']" class="form-select  google-input multi-type" required="">';
                                     $trhtml .= '${list_'.$field->id.'}';
                                     $trhtml .= '</select>';
                                     $trhtml .= '</div></td>';

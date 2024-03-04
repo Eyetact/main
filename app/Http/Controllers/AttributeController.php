@@ -275,12 +275,14 @@ class AttributeController extends Controller
 
             foreach ($requestData['multi'] as $key => $value) {
                 $m = new Multi();
-                $m->name = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($value['name'])->lower()));
+                $m->name =$value['name'];
                 $m->type = $value['type'];
                 $m->select_options = isset($value['select_options']) ? $value['select_options'] : '';
                 $m->attribute_id = $attribute->id;
                 $m->constrain = isset($value['constrain']) ? $value['constrain'] : '';
                 $m->attribute = isset($value['attribute']) ? $value['attribute'] : '';
+                $m->code = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($value['name'])->lower()));
+
                 $m->save();
             }
         }
@@ -360,6 +362,7 @@ class AttributeController extends Controller
         $attribute->is_system = isset($request['is_system']) ? 1 : 0;
         $attribute->is_multi = isset($request['is_multi']) ? 1 : 0; //for multi select
 
+
         $attribute->min_length = $request['min_lengths'];
         $attribute->max_length = $request['max_lengths'];
 
@@ -397,6 +400,7 @@ class AttributeController extends Controller
                 $m = new Multi();
                 $m->name = str()->snake(str_replace('.', '', str($value['name'])->lower()));
                 $m->type = $value['type'];
+                $m->code = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($value['name'])->lower()));
                 $m->select_options = isset($value['select_options']) ? $value['select_options'] : '';
                 $m->attribute_id = $attribute->id;
                 if(isset($value['constrain'])){
@@ -419,7 +423,7 @@ class AttributeController extends Controller
         $this->generatorService->reGenerateModel($attribute->module);
         $this->generatorService->reGenerateRequest($attribute->module);
         $this->generatorService->reGenerateViews($attribute->module);
-        
+
         Artisan::call("optimize:clear");
 
 
