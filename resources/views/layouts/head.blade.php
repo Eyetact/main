@@ -39,4 +39,11 @@
   text-align: left;
   font-weight: normal;
   }
+
+  input[name=m_serial] {
+    display: none;
+}
+label[for=serial-number] {
+    display: none;
+}
   </style>
