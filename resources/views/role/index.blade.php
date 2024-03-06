@@ -101,12 +101,11 @@
             </ol>
         </div>
         <div class="page-rightheader">
-            @if(auth()->user()->getDataLimitByModel(2) > count($roles))
-
-            <div class="btn btn-list">
-                <a href="javascript:void(0)" id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
-                    data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
-            </div>
+            @if (auth()->user()->getDataLimitByModel(2) > count($roles))
+                <div class="btn btn-list">
+                    <a href="javascript:void(0)" id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
+                        data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
+                </div>
             @endif
 
         </div>
@@ -115,8 +114,6 @@
 @endsection
 
 @section('content')
-
-
     <div class="row">
         <!-- Zero Configuration  Starts-->
         <div class="col-sm-12">
@@ -257,8 +254,8 @@
         table.buttons().container()
             .appendTo('#role_table_wrapper .col-md-6:eq(0)');
 
-
-
+        // Handle form submission event
+        
         $(function() {
             checkInput();
         });
@@ -269,11 +266,11 @@
                 var check = this.checked;
                 $(this).parents('.role-group').find('.check-one').prop("checked", check);
                 $('.permission .check-all').each(function() {
-                var parentItem = $(this).parents('.role-group');
-                var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
-                    '.check-one').length;
-                $(parentItem).find('.check-all').prop("checked", check)
-            });
+                    var parentItem = $(this).parents('.role-group');
+                    var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
+                        '.check-one').length;
+                    $(parentItem).find('.check-all').prop("checked", check)
+                });
             });
             $('.permission .check-one').click(function() {
                 var parentItem = $(this).parents('.nav-treeview').parents('.nav-item');
@@ -281,11 +278,11 @@
                     '.check-one').length;
                 $(parentItem).find('.check-all').prop("checked", check)
                 $('.permission .check-all').each(function() {
-                var parentItem = $(this).parents('.role-group');
-                var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
-                    '.check-one').length;
-                $(parentItem).find('.check-all').prop("checked", check)
-            });
+                    var parentItem = $(this).parents('.role-group');
+                    var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
+                        '.check-one').length;
+                    $(parentItem).find('.check-all').prop("checked", check)
+                });
             });
             $('.permission .check-all').each(function() {
                 var parentItem = $(this).parents('.role-group');

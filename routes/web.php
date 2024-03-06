@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\Helper;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\CustomerGroupController;

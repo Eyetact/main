@@ -47,10 +47,12 @@ class ModelGenerator
                 break;
         }
 
+        $fields .= "'customer_id', 'customer_group_id'  ";
         if (!empty($request['fields'][0])) {
 
 
             foreach ($request['fields'] as $i => $field) {
+
                 switch ($i + 1 != $totalFields) {
                     case true:
                         $fields .= "'" . str()->snake($field) . "', ";
@@ -131,6 +133,8 @@ class ModelGenerator
                         break;
                 }
 
+                
+
                 switch ($request['input_types'][$i]) {
                     case 'month':
                         $castFormat = config('generator.format.month') ? config('generator.format.month') : 'm/Y';
@@ -156,6 +160,9 @@ class ModelGenerator
                 }
             }
         }
+        $relations .= "\n\tpublic function customer()\n\t{\n\t\treturn \$this->belongsTo(\\App\\Models\User::class , \"customer_id\");\n\t}";
+            $relations .= "\n\tpublic function group()\n\t{\n\t\treturn \$this->belongsTo(\\App\\Models\CustomerGroup::class , \"customer_group_id\");\n\t}";
+
 
         $fields .= "]";
 
@@ -244,10 +251,13 @@ class ModelGenerator
         }
 
 
+        $fields = "[ 'customer_id', 'customer_group_id' ";
 
         foreach ($module->fields()->where('is_enable', 1)->get() as $i => $field) {
             $field->code = !empty($field->code) ? GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
-            if ($field->type == 'assign') {
+        $fields = "[ 'customer_id', 'customer_group_id', ";
+
+            if ($field->type == 'lknlknlnlk') {
                 switch ($i + 1 != $totalFields) {
                     case true:
                         $fields .= "'customer_id', 'customer_group_id' , ";
@@ -350,12 +360,12 @@ class ModelGenerator
 
                     break;
                 case 'assign':
-                    $relations .= "\n\tpublic function customer()\n\t{\n\t\treturn \$this->belongsTo(\\App\\Models\User::class , \"customer_id\");\n\t}";
-                    $relations .= "\n\tpublic function group()\n\t{\n\t\treturn \$this->belongsTo(\\App\\Models\CustomerGroup::class , \"customer_group_id\");\n\t}";
-
+                    
                     break;
 
             }
+
+            
 
             switch ($field->input) {
                 case 'month':
@@ -384,6 +394,10 @@ class ModelGenerator
 
 
         $fields .= "]";
+
+        $relations .= "\n\tpublic function customer()\n\t{\n\t\treturn \$this->belongsTo(\\App\\Models\User::class , \"customer_id\");\n\t}";
+            $relations .= "\n\tpublic function group()\n\t{\n\t\treturn \$this->belongsTo(\\App\\Models\CustomerGroup::class , \"customer_group_id\");\n\t}";
+
 
 
         if ($protectedHidden != "") {
