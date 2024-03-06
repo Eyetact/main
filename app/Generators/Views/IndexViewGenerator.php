@@ -167,6 +167,7 @@ class IndexViewGenerator
             case '':
                 GeneratorUtils::checkFolder(resource_path("/views/admin/$modelName"));
                 file_put_contents(resource_path("/views/admin/$modelName/index.blade.php"), $template);
+                file_put_contents(resource_path("/views/admin/$modelName/include/custom.blade.php"), "");
                 break;
             default:
                 $fullPath = resource_path("/views/admin/" . strtolower($path) . "/$modelName");
@@ -485,6 +486,10 @@ class IndexViewGenerator
             case '':
                 GeneratorUtils::checkFolder(resource_path("/views/admin/$modelName"));
                 file_put_contents(resource_path("/views/admin/$modelName/index.blade.php"), $template);
+                if (!File::exists(resource_path("/views/admin/$modelName/include/custom.blade.php"))){
+                file_put_contents(resource_path("/views/admin/$modelName/include/custom.blade.php"), "");
+
+                }
                 break;
             default:
                 $fullPath = resource_path("/views/admin/" . strtolower($path) . "/$modelName");

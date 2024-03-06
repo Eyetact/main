@@ -2,6 +2,8 @@
 
 namespace App\Generators;
 use App\Models\Module;
+use Illuminate\Support\Facades\File;
+
 
 class WebControllerGenerator
 {
@@ -135,6 +137,41 @@ class WebControllerGenerator
             ],
             GeneratorUtils::getTemplate('controllers/controller')
         );
+        $templatetrait = str_replace(
+            [
+                '{{modelNameSingularPascalCase}}',
+                '{{modelNameSingularCamelCase}}',
+                '{{modelNamePluralCamelCase}}',
+                '{{modelNamePluralKebabCase}}',
+                '{{modelNameSpaceLowercase}}',
+                '{{loadRelation}}',
+                '{{addColumns}}',
+                '{{query}}',
+                '{{namespace}}',
+                '{{requestPath}}',
+                '{{modelPath}}',
+                '{{viewPath}}',
+                '{{insertDataAction}}',
+                '{{updateDataAction}}',
+            ],
+            [
+                $modelNameSingularPascalCase,
+                $modelNameSingularCamelCase,
+                $modelNamePluralCamelCase,
+                $modelNamePluralKebabCase,
+                $modelNameSpaceLowercase,
+                $relations,
+                $addColumns,
+                $query,
+                $namespace,
+                $requestPath,
+                $path != '' ? "App\Models\Admin\\$path\\$modelNameSingularPascalCase" : "App\Models\Admin\\$modelNameSingularPascalCase",
+                $path != '' ? str_replace('\\', '.', strtolower($path)) . "." : '',
+                $insertDataAction,
+                $updateDataAction,
+            ],
+            GeneratorUtils::getTemplate('controllers/trait')
+        );
 
         /**
          * Create a controller file.
@@ -142,11 +179,13 @@ class WebControllerGenerator
         switch ($path) {
             case '':
                 file_put_contents(app_path("/Http/Controllers/Admin/{$modelNameSingularPascalCase}Controller.php"), $template);
+                file_put_contents(app_path("/Http/Controllers/Admin/{$modelNameSingularPascalCase}Trait.php"), $templatetrait);
                 break;
             default:
                 $fullPath = app_path("/Http/Controllers/Admin/$path/");
                 GeneratorUtils::checkFolder($fullPath);
                 file_put_contents("$fullPath" . $modelNameSingularPascalCase . "Controller.php", $template);
+                file_put_contents("$fullPath" . $modelNameSingularPascalCase . "Trait.php", $templatetrait);
                 break;
         }
     }
@@ -283,6 +322,43 @@ class WebControllerGenerator
             ],
             GeneratorUtils::getTemplate('controllers/controller')
         );
+        $templatetrait = str_replace(
+            [
+                '{{modelNameSingularPascalCase}}',
+                '{{modelNameSingularCamelCase}}',
+                '{{modelNamePluralCamelCase}}',
+                '{{modelNamePluralKebabCase}}',
+                '{{modelNameSpaceLowercase}}',
+                '{{loadRelation}}',
+                '{{addColumns}}',
+                '{{query}}',
+                '{{namespace}}',
+                '{{requestPath}}',
+                '{{modelPath}}',
+                '{{viewPath}}',
+                '{{insertDataAction}}',
+                '{{updateDataAction}}',
+                '{{ID}}'
+            ],
+            [
+                $modelNameSingularPascalCase,
+                $modelNameSingularCamelCase,
+                $modelNamePluralCamelCase,
+                $modelNamePluralKebabCase,
+                $modelNameSpaceLowercase,
+                $relations,
+                $addColumns,
+                $query,
+                $namespace,
+                $requestPath,
+                $path != '' ? "App\Models\Admin\\$path\\$modelNameSingularPascalCase" : "App\Models\Admin\\$modelNameSingularPascalCase",
+                $path != '' ? str_replace('\\', '.', strtolower($path)) . "." : '',
+                $insertDataAction,
+                $updateDataAction,
+                $id
+            ],
+            GeneratorUtils::getTemplate('controllers/trait')
+        );
 
         /**
          * Create a controller file.
@@ -290,11 +366,18 @@ class WebControllerGenerator
         switch ($path) {
             case '':
                 file_put_contents(app_path("/Http/Controllers/Admin/{$modelNameSingularPascalCase}Controller.php"), $template);
+                if (!File::exists(app_path("/Http/Controllers/Admin/{$modelNameSingularPascalCase}Trait.php"))){
+                    file_put_contents(app_path("/Http/Controllers/Admin/{$modelNameSingularPascalCase}Trait.php"), $templatetrait);
+                }
                 break;
             default:
                 $fullPath = app_path("/Http/Controllers/Admin/$path/");
                 GeneratorUtils::checkFolder($fullPath);
                 file_put_contents("$fullPath" . $modelNameSingularPascalCase . "Controller.php", $template);
+                if (!File::exists("$fullPath" . $modelNameSingularPascalCase . "Trait.php")){
+                    file_put_contents("$fullPath" . $modelNameSingularPascalCase . "Trait.php", $templatetrait);
+
+                }
                 break;
         }
     }

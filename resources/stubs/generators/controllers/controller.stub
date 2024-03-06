@@ -18,6 +18,7 @@ use App\Models\Limit;
 
 class {{modelNameSingularPascalCase}}Controller extends Controller
 {
+    use {{modelNameSingularPascalCase}}Trait;
     private $generatorService;
 
     public function __construct()
@@ -141,6 +142,8 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
 
         $insert = {{insertDataAction}}
 
+        $this->customStore($request,$insert);
+
         if( !empty($request->module) ){
 
             $module = Module::find($request->module);
@@ -240,6 +243,8 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
     public function update(Update{{modelNameSingularPascalCase}}Request $request, {{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
     {
         {{updateDataAction}}
+
+        $this->custocustomUpdatemStore($request,${{modelNameSingularCamelCase}});
 
 
         if( !empty($request->module) ){
