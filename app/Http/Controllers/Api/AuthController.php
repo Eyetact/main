@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Mail\SendOTP;
 use Exception;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Models\Admin\MList;
 use Illuminate\Http\Request;
@@ -96,14 +98,14 @@ class AuthController extends Controller
 
                 $vendor = User::find($serial->customer_id);
                 $user = User::where('email', $request->email)
-                 ->first();
+                    ->first();
 
-                 if ($user) {
+                if ($user) {
 
                     if ($vendor->id == $user->id) {
-                        if(Hash::check($request->password, $user->password)) {
+                        if (Hash::check($request->password, $user->password)) {
 
-                        // dd($user);
+                            // dd($user);
 
 
                             Auth::login($vendor);
@@ -115,9 +117,9 @@ class AuthController extends Controller
                                 'code' => 200,
                                 'msg' => __('Log in success'),
                                 'data' => [
-                                        'token' => $accessToken,
-                                        'user' => UserResource::make(Auth::user()),
-                                    ]
+                                    'token' => $accessToken,
+                                    'user' => UserResource::make(Auth::user()),
+                                ]
                             ]);
                         }
                     }
@@ -128,6 +130,43 @@ class AuthController extends Controller
             }
 
             if ($serial->customer_id == NULL) {
+
+                if ($serial->customer_group_id != NULL) {
+
+
+                    $user = User::where('email', $request->email)
+                        ->first();
+
+                    if ($user) {
+
+
+                        if (Hash::check($request->password, $user->password)) {
+
+                            // dd($user);
+
+                            $serial->customer_id = $user->id;
+                            $serial->save();
+
+                            Auth::login($user);
+
+                            $accessToken = Auth::user()->createToken('authToken')->accessToken;
+
+                            return response([
+                                'status' => true,
+                                'code' => 200,
+                                'msg' => __('Log in success'),
+                                'data' => [
+                                    'token' => $accessToken,
+                                    'user' => UserResource::make(Auth::user()),
+                                ]
+                            ]);
+
+                        }
+                    }
+                    return $this->returnError('The data not valid!');
+
+
+                }
 
 
                 if (isset($request->email)) {
@@ -159,9 +198,9 @@ class AuthController extends Controller
                         'code' => 200,
                         'msg' => __('User created succesfully'),
                         'data' => [
-                                'token' => $accessToken,
-                                'user' => UserResource::make(Auth::user()),
-                            ]
+                            'token' => $accessToken,
+                            'user' => UserResource::make(Auth::user()),
+                        ]
                     ]);
                 }
 
@@ -171,6 +210,68 @@ class AuthController extends Controller
             DB::rollback();
             return $this->returnError('Sorry! Failed in creating user');
         }
+    }
+
+
+    public function sendOtp(Request $request)
+    {
+        $user = User::where('username', $request->user)
+                     ->orWhere('email', $request->user)
+                     ->first();
+
+
+        if ($user) {
+            $otp = rand(100000, 999999);
+            Mail::to($user->email)->send(new SendOTP($otp));
+
+            $user->otp = $otp;
+            $user->save();
+
+
+
+            return $this->returnSuccessMessage('Code was sent');
+        }
+
+        return $this->returnError('Code not sent. User not found');
+    }
+
+
+    public function checkOTP(Request $request)
+    {
+        $user = User::find($request->id);
+
+        if ((string)$user->otp == (string)$request->otp) {
+
+
+
+
+            return $this->returnSuccessMessage('Code Correct');
+
+
+        }
+
+        return $this->returnError('Code not correct');
+
+    }
+
+    public function changePassword(Request $request)
+    {
+        $user = User::find($request->id);
+
+        if ($user) {
+
+
+                $user->update([
+                    'password' => Hash::make($request->password),
+                ]);
+
+                $user->otp = "";
+                $user->save();
+
+            return $this->returnSuccessMessage('Password has been changed');
+        }
+
+        return $this->returnError('User not found!');
     }
 
 

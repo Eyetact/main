@@ -25,3 +25,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('login', [AuthController::class, 'login']);
 
 Route::post('user-reg', [AuthController::class, 'store']);
+
+Route::post('check-user', [AuthController::class, 'sendOtp']);
+
+Route::post('check-otp', [AuthController::class, 'checkOTP']);
+
+Route::post('update-password', [AuthController::class, 'changePassword']);
