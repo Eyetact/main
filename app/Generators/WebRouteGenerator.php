@@ -26,6 +26,8 @@ class WebRouteGenerator
         $controllerClass .= "\n" . "Route::get('create-less/" . $modelNamePluralLowercase . "', [ App\Http\Controllers\Admin\\" . $modelNameSingularPascalCase . "Controller::class, 'createLess' ])->middleware('auth');\n";
         $controllerClass .= "\n" . "Route::get('edit-less/" . $modelNamePluralLowercase . "/{id}', [ App\Http\Controllers\Admin\\" . $modelNameSingularPascalCase . "Controller::class, 'editLess' ])->middleware('auth');\n";
         $controllerClass .= "\n" . "Route::resource('" . $modelNamePluralLowercase . "', App\Http\Controllers\Admin\\" . $modelNameSingularPascalCase . "Controller::class)->middleware('auth');";
+        $controllerClass .= "\n" . "Route::post('assign/" . $modelNamePluralLowercase . "', [ App\Http\Controllers\Admin\\" . $modelNameSingularPascalCase . "Controller::class, 'assign' ])->middleware('auth');\n";
+
 
 
         File::append(base_path('routes/generator/generator.php'), $controllerClass);
