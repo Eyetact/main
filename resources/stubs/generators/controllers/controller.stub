@@ -11,6 +11,8 @@ use App\Models\Module;
 use App\Generators\GeneratorUtils;
 use App\Models\User;
 use App\Models\Limit;
+use Illuminate\Http\Request;
+
 
 
 
@@ -363,5 +365,23 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
         } catch (\Throwable $th) {
             return response()->json(['msg' => 'Not deleted'], 500);
         }
+    }
+
+    public function assign(Request $request){
+        // dd($request);
+        $selected_row = $request->rows_selected;
+        $g_id = $request->g_id;
+        $c_id = $request->c_id;
+        if(count($selected_row)){
+            foreach ($selected_row as $key => $value) {
+                $item = {{modelNameSingularPascalCase}}::find($value['id']);
+                $item->customer_id = (int)$c_id > 0 ? $c_id : null;
+                $item->customer_group_id = (int)$g_id > 0 ? $g_id : null;
+                $item->save();
+            }
+            return response()->json(['msg' => 'Items assigned successfully!'], 200);
+
+        }
+        return response()->json(['msg' => 'no items selected'], 500);   
     }
 }

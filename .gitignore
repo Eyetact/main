@@ -25,6 +25,7 @@ Homestead.json
 resources/views/admin
 routes/generator
 database/migrations/admin
+database/migrations/Admin
 app/Providers/Generator
 app/Models/Admin
 app/Http/Controllers/Admin
