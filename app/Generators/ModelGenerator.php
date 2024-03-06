@@ -252,10 +252,14 @@ class ModelGenerator
 
 
         $fields = "[ 'customer_id', 'customer_group_id' ";
+        if(count($module->fields()->where('is_enable', 1)->get())){
+            $fields = "[ 'customer_id', 'customer_group_id' ,";
+
+        }
 
         foreach ($module->fields()->where('is_enable', 1)->get() as $i => $field) {
             $field->code = !empty($field->code) ? GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
-        $fields = "[ 'customer_id', 'customer_group_id', ";
+        // $fields = "[ 'customer_id', 'customer_group_id', ";
 
             if ($field->type == 'lknlknlnlk') {
                 switch ($i + 1 != $totalFields) {
