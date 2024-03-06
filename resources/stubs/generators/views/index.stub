@@ -45,6 +45,36 @@
 
                 </div>
                 <div class="card-body">
+                <div class="row">
+                        <div class="col-sm-5">
+                            <div class="input-box" style="margin:0 !important">
+                                <select class="google-input assign_g" name="group_id" tabindex="null">
+                                    <option selected disabled>Select Group</option>
+                                    @foreach ($customer_groups as $group)
+                                        <option value="{{ $group->id }}">{{ $group->id }} - {{ $group->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <span style="text-align: center;display: block;line-height: 50px">OR</span>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="input-box" style="margin:0 !important">
+                                <select class="google-input assign_c" name="user_id" tabindex="null">
+                                    <option selected disabled>Select Customer</option>
+                                    @foreach ($customers as $user)
+                                        <option value="{{ $user->id }}">{{ $user->id }} - {{ $user->username }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <button class="btn btn-info assign" type="button" style="height: 50px;">Assign</button>
+                        </div>
+                    </div>
                     <div class="table-responsive p-1">
                         <table class="table align-items-center mb-0" id="data_table" width="100%">
                             <thead>
@@ -331,6 +361,51 @@ output {
 
         table.buttons().container()
             .appendTo('#data_table_wrapper .col-md-6:eq(0)');
+
+            $('body').on('click', '.assign', function(e) {
+            var form = this;
+
+            var rows_selected = table.rows({
+                selected: true
+            }).data().toArray();
+            console.log(rows_selected)
+
+            var g_id = $('.assign_g').find(":selected").val();
+            var c_id = $('.assign_c').find(":selected").val();
+            console.log(c_id)
+
+            console.log(JSON.stringify(rows_selected))
+
+            $.ajax({
+                url: "/assign/{{modelNamePluralKebabCase}}",
+                type: "POST", // First change type to method here    
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    rows_selected: rows_selected,
+                    g_id: g_id,
+                    c_id: c_id
+                },
+                dataType: 'text',
+                success: function(response) {
+                    console.log(response);
+                    response= JSON.parse(response)
+                    swal({
+                        title: response.msg
+                    }, function(result) {
+                        location.reload();
+                    });
+
+                },
+                error: function(error) {
+                    alert("error" + error);
+                }
+            });
+            e.preventDefault();
+
+        });
+
 
 
                 $(document).on('click', '.model-delete', function() {

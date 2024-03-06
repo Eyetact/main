@@ -106,7 +106,7 @@
                                 <option value="datetime-local">Date And Time</option>
                                 <option value="select">Select</option>
                                 <option value="foreignId">Lookup</option>
-                                <option value="assign">Assign</option>
+                                {{-- <option value="assign">Assign</option> --}}
                             </select>
                             <label id="field_type-error" class="error text-red hide" for="field_type"></label>
                             @error('field_type')
