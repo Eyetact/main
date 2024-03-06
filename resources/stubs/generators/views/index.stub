@@ -501,6 +501,7 @@ output {
 
     </script>
     @include('admin.{{modelNamePluralKebabCase}}.include.multi')
+    @include('admin.{{modelNamePluralKebabCase}}.include.custom')
 @endsection
 
 
