@@ -165,6 +165,8 @@ class IndexViewGenerator
 
         switch ($path) {
             case '':
+                GeneratorUtils::checkFolder(resource_path("/views/admin/$modelName/include"));
+
                 GeneratorUtils::checkFolder(resource_path("/views/admin/$modelName"));
                 file_put_contents(resource_path("/views/admin/$modelName/index.blade.php"), $template);
                 file_put_contents(resource_path("/views/admin/$modelName/include/custom.blade.php"), "");
