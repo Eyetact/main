@@ -122,6 +122,9 @@ class SubscriptionController extends Controller
 
         if ($request->group_id) {
             $group = CustomerGroup::find($request->group_id);
+            $group->plan_id = $request->plan_id;
+            $group->save();
+
             foreach ($group->customers as $customer) {
 
                 $sub = new Subscription();
@@ -135,6 +138,7 @@ class SubscriptionController extends Controller
                 $sub->start_date = Carbon::today();
                 $sub->end_date = $sub->start_date->copy()->addDays($plan->period);
                 $sub->save();
+
 
                 $user = User::find($customer->id);
                 if ($sub->status == 'active') {
