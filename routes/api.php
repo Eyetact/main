@@ -31,3 +31,15 @@ Route::post('check-user', [AuthController::class, 'sendOtp']);
 Route::post('check-otp', [AuthController::class, 'checkOTP']);
 
 Route::post('update-password', [AuthController::class, 'changePassword']);
+
+Route::post('update-user', [AuthController::class, 'updateById']);
+
+
+
+Route::middleware(['auth:api'])->group(function () {
+
+    Route::get('my-config', [AuthController::class, 'config']);
+
+});
+
+
