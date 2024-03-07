@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\ConfigResource;
 use App\Mail\SendOTP;
+use App\Models\CustomerGroup;
+use App\Models\Plan;
+use App\Models\Subscription;
 use Exception;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
@@ -20,6 +24,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use PhpParser\Node\NullableType;
+use Carbon\Carbon;
+
 
 
 
@@ -162,11 +168,13 @@ class AuthController extends Controller
                             ]);
 
                         }
-                    }
                     return $this->returnError('The data not valid!');
 
+                    }
 
-                }
+
+
+
 
 
                 if (isset($request->email)) {
@@ -181,6 +189,16 @@ class AuthController extends Controller
 
                 $user = $this->userRepositry->save($request);
                 $user->assignRole('vendor');
+
+                $plan_id=CustomerGroup::find($serial->customer_group_id)->plan_id;
+                $plan = Plan::find($plan_id);
+
+                $sub = new Subscription();
+                $sub->user_id = $user->id;
+                $sub->plan_id = $plan_id;
+                $sub->start_date = Carbon::today();
+                $sub->end_date = $sub->start_date->copy()->addDays($plan->period);
+                $sub->save();
 
 
                 DB::commit();
@@ -203,6 +221,8 @@ class AuthController extends Controller
                         ]
                     ]);
                 }
+
+            }
 
             }
         } catch (\Exception $e) {
@@ -274,7 +294,82 @@ class AuthController extends Controller
         return $this->returnError('User not found!');
     }
 
+    public function updateById(Request $request)
+    {
+        try {
 
+            $user = User::find($request->user_id);
+            if ($user) {
+
+                if (isset($request->email)) {
+                    $check = User::where('email', $request->email)
+                        ->first();
+
+                    if ($check) {
+
+                        return $this->returnError('The email address is already used!');
+                    }
+                }
+
+                if (isset($request->username)) {
+                    $check = User::where('username', $request->username)
+                        ->first();
+
+                    if ($check) {
+
+                        return $this->returnError('The user name is already used!');
+                    }
+                }
+
+
+
+
+
+                $this->userRepositry->edit($request, $user);
+
+                if ($request->password) {
+
+                    $user->update([
+                            'password' => Hash::make($request->password),
+                        ]);
+
+                }
+
+
+
+
+
+
+
+
+                return $this->returnData('user', new UserResource($user), 'User updated successfully');
+
+
+            }
+
+
+
+
+            // unset($user->image);
+
+            return $this->returnError('Sorry! Failed to find user');
+        } catch (\Exception $e) {
+
+            // return $e;
+
+            return $this->returnError('Sorry! Failed in updating user');
+        }
+    }
+
+
+    public function config(){
+
+
+        $user=auth()->user();
+        return $this->returnData('user', new ConfigResource($user), 'User updated successfully');
+
+
+    }
 
 
 }
