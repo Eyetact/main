@@ -45,36 +45,7 @@
 
                 </div>
                 <div class="card-body">
-                <div class="row">
-                        <div class="col-sm-5">
-                            <div class="input-box" style="margin:0 !important">
-                                <select class="google-input assign_g" name="group_id" tabindex="null">
-                                    <option selected disabled>Select Group</option>
-                                    @foreach ($customer_groups as $group)
-                                        <option value="{{ $group->id }}">{{ $group->id }} - {{ $group->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-1">
-                            <span style="text-align: center;display: block;line-height: 50px">OR</span>
-                        </div>
-                        <div class="col-sm-5">
-                            <div class="input-box" style="margin:0 !important">
-                                <select class="google-input assign_c" name="user_id" tabindex="null">
-                                    <option selected disabled>Select Customer</option>
-                                    @foreach ($customers as $user)
-                                        <option value="{{ $user->id }}">{{ $user->id }} - {{ $user->username }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-1">
-                            <button class="btn btn-info assign" type="button" style="height: 50px;">Assign</button>
-                        </div>
-                    </div>
+                
                     <div class="table-responsive p-1">
                         <table class="table align-items-center mb-0" id="data_table" width="100%">
                             <thead>
@@ -103,6 +74,52 @@
                             aria-hidden="true">×</span> </button>
                 </div>
                 <div class="modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="assign_modal" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Assign Selected</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="input-box" style="margin:0 !important">
+                                <select class="google-input assign_g" name="group_id" tabindex="null">
+                                    <option selected disabled>Select Group</option>
+                                    @foreach ($customer_groups as $group)
+                                        <option value="{{ $group->id }}">{{ $group->id }} - {{ $group->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <span style="text-align: center;display: block;line-height: 50px">OR</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="input-box" style="margin:0 !important">
+                                <select class="google-input assign_c" name="user_id" tabindex="null">
+                                    <option selected disabled>Select Customer</option>
+                                    @foreach ($customers as $user)
+                                        <option value="{{ $user->id }}">{{ $user->roles->pluck('name')[0] }} - {{ $user->id }} - {{ $user->username }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <button class="btn btn-info assign" type="button" style="height: 50px;">Assign</button>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -277,6 +294,8 @@ output {
     <script src="{{ URL::asset('assets/js/datatables.js') }}"></script>
     <script src="{{ URL::asset('assets/js/popover.js') }}"></script>
     <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.0/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.dataTables.js"></script>
     <script src="{{ asset('assets/plugins/fileupload/js/dropify.js') }}"></script>
 
 
@@ -357,6 +376,13 @@ output {
                     searchable: false
                 }
             ],
+        });
+
+        table.button().add(0, {
+            action: function(e, dt, button, config) {
+                $("#assign_modal").modal('show');
+            },
+            text: 'Assign'
         });
 
         table.buttons().container()
