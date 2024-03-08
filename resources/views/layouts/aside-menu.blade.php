@@ -125,6 +125,7 @@
         @endphp --}}
         @php
             $pers = array();
+            array_push($pers,'view.' .str($item->module->code)->singular()->lower());
         @endphp
         @foreach ($item->childrens() as $item2)
         @php
