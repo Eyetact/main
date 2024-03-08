@@ -1163,7 +1163,11 @@ class FormViewGenerator
                                     $dataIds = '';
                                     if ($value->condition == "based") {
 
-                                        $current_model = Module::where("code", $value->constrain)->first();
+                                        $current_model = Module::wwhere(
+                                            'code',
+                                            GeneratorUtils::singularSnakeCase($value->constrain)
+                                        )->orWhere('code',GeneratorUtils::pluralSnakeCase($value->constrain))
+                                        ->orWhere('code',$value->constrain)->first();
                                         $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->get();
 
                                         foreach ($lookatrrs as $sa) {
