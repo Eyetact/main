@@ -246,7 +246,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
     {
         {{updateDataAction}}
 
-        $this->custocustomUpdatemStore($request,${{modelNameSingularCamelCase}});
+        $this->customUpdate($request,${{modelNameSingularCamelCase}});
 
 
         if( !empty($request->module) ){
@@ -387,6 +387,6 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
             return response()->json(['msg' => 'Items assigned successfully!'], 200);
 
         }
-        return response()->json(['msg' => 'no items selected'], 500);   
+        return response()->json(['msg' => 'no items selected'], 500);
     }
 }

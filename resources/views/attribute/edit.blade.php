@@ -72,6 +72,7 @@
                                 <option @selected($attribute->input == 'image') value="image">Image (all format: png,jpg,,,etc)
                                 </option>
                                 <option @selected($attribute->input == 'file') value="file">File</option>
+                                <option @selected($attribute->input == 'number') value="number">Number</option>
                                 <option @selected($attribute->input == 'number') value="number">Integer Number</option>
                                 <option @selected($attribute->input == 'decimal') value="number">Decimal Number</option>
                                 <option @selected($attribute->input == 'range') value="range">Range</option>
@@ -217,7 +218,8 @@
                                                                         value="text">Text</option>
                                                                     <option @selected($multi->type == 'text')
                                                                         value="text">Letters (a-z, A-Z) or Numbers
-                                                                        (0-9)</option>
+                                                                        (0-9)
+                                                                    </option>
                                                                     <option @selected($multi->type == 'textarea')
                                                                         value="textarea">Text Area</option>
                                                                     <option @selected($multi->type == 'texteditor')
@@ -230,6 +232,8 @@
                                                                         value="url">Url</option>
                                                                     <option @selected($multi->type == 'search')
                                                                         value="search">Search</option>
+                                                                        <option @selected($multi->type == 'number')
+                                                                            value="number">Number</option>
                                                                     <option @selected($multi->type == 'number')
                                                                         value="number">Integer Number</option>
                                                                     <option @selected($multi->type == 'decimal')
@@ -271,7 +275,7 @@
                                                                                     <option
                                                                                         data-id="{{ $value->id }}"
                                                                                         value="{{ $value->code }}"
-                                                                                        @selected($value->code == $multi->constrain)>
+                                                                                        @selected(App\Generators\GeneratorUtils::singularSnakeCase((string)$value->code) == App\Generators\GeneratorUtils::singularSnakeCase($multi->constrain))>
                                                                                         {{ $value->name }}</option>;
                                                                                 @endforeach
                                                                             </select>
@@ -288,8 +292,8 @@
                                                                         @php
                                                                             $module = \App\Models\Module::where(
                                                                                 'code',
-                                                                                $multi->constrain,
-                                                                            )?->first();
+                                                                                App\Generators\GeneratorUtils::singularSnakeCase($multi->constrain)
+                                                                            )->orWhere('code',App\Generators\GeneratorUtils::pluralSnakeCase($multi->constrain))?->first();
                                                                         @endphp
 
                                                                         <div
@@ -312,6 +316,33 @@
                                                                                 @endif
                                                                             </div>
                                                                         </div>
+
+
+                                                                        @if ($multi->condition != 'disabled' && !empty($multi->condition))
+                                                                            <div
+                                                                                class="input-box child-drop form-constrain mt-2">
+                                                                                <div
+                                                                                    class="input-box form-on-update mt-2 form-on-update-foreign">
+
+                                                                                    <select class="google-input "
+                                                                                        name="multi[{{ $index }}][condition]"
+                                                                                        required>
+
+
+                                                                                        <option value="disabled"  @selected($multi->condition == "disabled")>
+                                                                                            disabled
+
+                                                                                       </option>
+                                                                                        <option value="based"  @selected($multi->condition == "based")>
+                                                                                            based on
+                                                                                            selection
+                                                                                        </option>
+
+                                                                                    </select>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        @endif
                                                                     </div>
                                                                 @endif
 

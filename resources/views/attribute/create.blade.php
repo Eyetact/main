@@ -95,6 +95,7 @@
                                 <option value="search">Search</option>
                                 <option value="image">Image (all format: png,jpg,,,etc)</option>
                                 <option value="file">File</option>
+                                <option value="number">Number</option>
                                 <option value="number">Integer Number</option>
                                 <option value="decimal">Decimal Number</option>
                                 <option value="range">Range</option>

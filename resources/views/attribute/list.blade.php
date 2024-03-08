@@ -362,6 +362,7 @@
                                                         <option value="tel">Telepon</option>
                                                         <option value="url">Url</option>
                                                         <option value="search">Search</option>
+                                                        <option value="number">Number</option>
                                                         <option value="number">Integer Number</option>
                                                         <option value="decimal">Decimal Number</option>
                                                         <option value="radio">Radio ( True, False )</option>
@@ -415,6 +416,18 @@
                            ${response}
                         </select>
                     </div></div>`);
+
+                    if(index > 1)
+                    {
+
+                    parent.append(` <div class="input-box child-drop form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input " name="multi[${index}][condition]" required>
+                            <option value="disabled">disabled</option>
+                            <option value="based">based on selection</option>
+                        </select>
+                    </div></div>`);
+                }
                 }
             });
         })
@@ -597,6 +610,7 @@
                                                         <option value="tel">Telepon</option>
                                                         <option value="url">Url</option>
                                                         <option value="search">Search</option>
+                                                        <option value="number">Number</option>
                                                         <option value="number">Integer Number</option>
                                                         <option value="decimal">Decimal Number</option>
                                                         <option value="radio">Radio ( True, False )</option>
