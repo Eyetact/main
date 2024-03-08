@@ -82,7 +82,7 @@ class SubscriptionController extends Controller
 
         if (auth()->user()->hasRole('super')) {
 
-            $users = User::role('admin')->get();
+            $users = User::role($roleNames)->get();
             $plans = Plan::all();
 
             $groups = CustomerGroup::all();
