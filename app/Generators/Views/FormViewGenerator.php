@@ -1163,7 +1163,7 @@ class FormViewGenerator
                                     $dataIds = '';
                                     if ($value->condition == "based") {
 
-                                        $current_model = Module::wwhere(
+                                        $current_model = Module::where(
                                             'code',
                                             GeneratorUtils::singularSnakeCase($value->constrain)
                                         )->orWhere('code',GeneratorUtils::pluralSnakeCase($value->constrain))
