@@ -3,6 +3,7 @@
 namespace App\Generators\Views;
 
 use App\Generators\GeneratorUtils;
+use App\Models\Attribute;
 use App\Models\Module;
 
 class FormViewGenerator
@@ -1154,14 +1155,30 @@ class FormViewGenerator
                                     break;
                                 case 'foreignId':
 
+                                    $class = "select-base";
+                                    if ($value->condition != 'based') {
+                                        $class = 'select-cond';
+                                    }
+
+                                    $dataIds = '';
+                                    if ($value->condition == "based") {
+
+                                        $current_model = Module::where("code", $value->constrain)->first();
+                                        $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->get();
+
+                                        foreach ($lookatrrs as $sa) {
+                                            $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "={{ \$item2->" . $sa->code . "}}";
+                                        }
+                                    }
+
                                     $arrOption = explode('|', $value->select_options);
 
                                     $totalOptions = count($arrOption);
                                     $template .= '<td><div class="input-box">';
-                                    $template .= ' <select name="' . $field->code . '[{{ $index }}][' . $value->code . ']" class="form-select  google-input multi-type" required="">';
+                                    $template .= ' <select data-constrain="' . GeneratorUtils::singularSnakeCase($value->constrain) . '" name="' . $field->code . '[{{ $index }}][' . $value->code . ']" class="form-select ' . $class . '  google-input multi-type" required="">';
 
                                     $template .= '@foreach( \\App\\Models\\Admin\\' . GeneratorUtils::singularPascalCase($value->constrain) . '::all() as $item2 )';
-                                    $template .= '<option @selected( isset($item->' . $value->code . ') ? $item->' . $value->code . ' == "$item2->' . $value->attribute . '" : 0 )  value="{{ $item2->' . $value->attribute . '}}" >{{ $item2->' . $value->attribute . '}}</option>';
+                                    $template .= '<option '. $dataIds .' data-id="{{$item2->id}}" @selected( isset($item->' . $value->code . ') ? $item->' . $value->code . ' == "$item2->' . $value->attribute . '" : 0 )  value="{{ $item2->' . $value->attribute . '}}" >{{ $item2->' . $value->attribute . '}}</option>';
 
                                     $template .= '@endforeach';
                                     $template .= '</select>';

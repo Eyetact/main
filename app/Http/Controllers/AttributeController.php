@@ -277,6 +277,7 @@ class AttributeController extends Controller
                 $m = new Multi();
                 $m->name =$value['name'];
                 $m->type = $value['type'];
+                $m->condition =isset($value['condition']) ? $value['condition'] : 'disabled';
                 $m->select_options = isset($value['select_options']) ? $value['select_options'] : '';
                 $m->attribute_id = $attribute->id;
                 $m->constrain = isset($value['constrain']) ? $value['constrain'] : '';
@@ -400,6 +401,7 @@ class AttributeController extends Controller
                 $m = new Multi();
                 $m->name = str()->snake(str_replace('.', '', str($value['name'])->lower()));
                 $m->type = $value['type'];
+                $m->condition = isset($value['condition']) ? $value['condition'] : '';
                 $m->code = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($value['name'])->lower()));
                 $m->select_options = isset($value['select_options']) ? $value['select_options'] : '';
                 $m->attribute_id = $attribute->id;
