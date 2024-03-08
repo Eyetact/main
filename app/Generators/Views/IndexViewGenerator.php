@@ -241,7 +241,9 @@ class IndexViewGenerator
                                     $current_model = Module::where(
                                         'code',
                                         GeneratorUtils::singularSnakeCase($value->constrain)
-                                    )->orWhere('code',GeneratorUtils::pluralSnakeCase($value->constrain))->first();
+                                    )->orWhere('code',GeneratorUtils::pluralSnakeCase($value->constrain))
+                                    ->orWhere('code',$value->constrain)->first();
+                                    dd($current_model);
                                     $lookatrrs = Attribute::where("module", $current_model->id)->where('type','foreignId')->get();
 
                                     foreach ($lookatrrs as  $sa) {
