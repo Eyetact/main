@@ -113,7 +113,7 @@ class MailboxController extends Controller
             'created_by' => auth()->user()->id,
             'smtp' => $request->smtp,
             'imap' => $request->imap,
-//            'role_id'=>$request->role_id,
+           'role_id'=>1,
 //            'group_id'=>$request->group_id
         ]);
         return redirect()->route('main_mailbox.index');
