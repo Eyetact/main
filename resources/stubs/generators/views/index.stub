@@ -308,6 +308,61 @@ output {
 
     <script>
 
+    function changeEvents() {
+            $(document).on('change', 'select', function() {
+                var main_model = $(this).attr('id'); //element
+
+                if ($('[data-source=' + main_model + ']').attr('id') == undefined) {
+                    return;
+                }
+
+                console.log('main_model:' + main_model)
+                var main_model_id = $(this).find('option:selected').val(); // 1
+                console.log('main_model_id:' + main_model_id)
+
+                var attr = $(this).data('attrs');
+                var jsonStringWithDoubleQuotes = attr.replace(/'/g, '"');
+                var obj = JSON.parse(jsonStringWithDoubleQuotes);
+
+                console.log(obj)
+
+                $.each(obj, function(key, value) {
+                    $e_string = value.code;
+                    $e_id = $e_string.split('_')
+                    console.log('id : ' + '#' + $e_string)
+                    console.log('source : ' + $('[name=' + $e_string + ']').data('source'))
+                    if ($('[name=' + $e_string + ']').data('source') == main_model) {
+
+                        console.log(key + ": " + $e_id[0]);
+
+                        path = "{{ url('/') }}/searchtargetfromsource/" + main_model + '/' +
+                            main_model_id + '/' + value
+                            .code + '/' + value.attribute
+
+                        // alert(path)
+                        console.log(path);
+                        $.ajax({
+                            url: path,
+                            success: function(response) {
+                                console.log(response);
+
+                                $('select[name=' + response.id + ']').find('option[value=' + response
+                                        .data_id + ']')
+                                    .prop('selected', true);
+                                $('input[name=' + response.id + ']').val(response.data)
+
+                                $('[name=' + response.id + ']').prop('readOnly', true);
+
+                            }
+                        });
+                    }
+                });
+
+
+
+            });
+        }
+
         $(document).on('click', '#add_new', function() {
             // window.addEventListener('load', function() {
 
@@ -324,6 +379,9 @@ output {
                         //test
                         $(this).richText();
                     });
+                    changeEvents();
+                                            $('#role_form_modal').find('select[multiple]').select2();
+
 
                 }
             });
@@ -492,6 +550,9 @@ output {
                         console.log('option[data-'+constrain+'='+id+']')
                         $(this).closest('tr').find('.select-base').find('option[data-'+constrain+'='+id+']').show();
                     });
+                    changeEvents()
+                                            $('#role_form_modal').find('select[multiple]').select2();
+
                 }
             });
         });

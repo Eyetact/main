@@ -1,6 +1,11 @@
 <?php
 
+use App\Generators\GeneratorUtils;
 use App\Helpers\Helper;
+use App\Models\Admin\Element;
+use App\Models\Admin\Unit;
+use App\Models\Attribute;
+use App\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\AttributeController;
@@ -251,23 +256,23 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/file/delete/{id}', [FileManagerController::class, 'destroyFile'])->name('file.destroy');
 
-    Route::get('/file/download/{id}', [FileManagerController::class,'downloadFile'])->name('downloadfile');
+    Route::get('/file/download/{id}', [FileManagerController::class, 'downloadFile'])->name('downloadfile');
 
-    Route::get('/file/share/{id}', [FileManagerController::class,'shareFile'])->name('sharefile');
+    Route::get('/file/share/{id}', [FileManagerController::class, 'shareFile'])->name('sharefile');
 
 
-    Route::get('/file/images/{id}', [FileManagerController::class,'images'])->name('images');
-    Route::get('/file/videos/{id}', [FileManagerController::class,'videos'])->name('videos');
-    Route::get('/file/docs/{id}', [FileManagerController::class,'docs'])->name('docs');
-    Route::get('/file/music/{id}', [FileManagerController::class,'music'])->name('music');
-    Route::get('/file/search/{key}', [FileManagerController::class,'search'])->name('search');
-
-    Route::get('/file/open/{id}', [FileManagerController::class, 'openFile'])->name('open.file');
+    Route::get('/file/images/{id}', [FileManagerController::class, 'images'])->name('images');
+    Route::get('/file/videos/{id}', [FileManagerController::class, 'videos'])->name('videos');
+    Route::get('/file/docs/{id}', [FileManagerController::class, 'docs'])->name('docs');
+    Route::get('/file/music/{id}', [FileManagerController::class, 'music'])->name('music');
+    Route::get('/file/search/{key}', [FileManagerController::class, 'search'])->name('search');
 
     Route::get('/file/open/{id}', [FileManagerController::class, 'openFile'])->name('open.file');
 
+    Route::get('/file/open/{id}', [FileManagerController::class, 'openFile'])->name('open.file');
 
-    Route::get('testview', function(){
+
+    Route::get('testview', function () {
         return view('test');
     });
 
@@ -275,13 +280,67 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 include_once(base_path('routes/generator/generator.php'));
 
-Route::get('clear', function(){
+Route::get('clear', function () {
     Artisan::call('optimize:clear');
     echo "done";
 });
 
 
 
-Route::get('reg-perm',function(){
+Route::get('reg-perm', function () {
 
 });
+
+
+Route::get(
+    'searchtargetfromsource/{main_model}/{main_model_id}/{for_key_attr_name}/{target_result_attr}',
+    function ($main_model, $main_model_id, $for_key_attr_name, $target_result_attr) {
+        //main model
+        $main_model = "App\Models\Admin\\" . GeneratorUtils::setModelName($main_model);
+        $element = $main_model::find($main_model_id);
+
+        $target_model = explode('_', $for_key_attr_name);
+        $id = $for_key_attr_name;
+        $target_model = "App\Models\Admin\\" . GeneratorUtils::setModelName($target_model[0]);
+        // dd($target_model);
+    
+        $target_data = $target_model::find($element->$for_key_attr_name);
+        $target_data->$target_result_attr;
+        return response()->json([
+            'data' => $target_data->$target_result_attr,
+            'data_id' => $target_data->id,
+            'id' => $id
+        ], 200);
+
+    }
+);
+
+Route::get('getsource/{id}', function ($id) {
+
+    $attributes = Attribute::where('module', $id)->where('type', 'foreignId')->get();
+
+    $options = '<option>-- select --</option>';
+
+    foreach ($attributes as $key => $value) {
+        $options .= '<option value="' . explode('_', $value->code)[0] . '" >' . $value->name . '</option>';
+    }
+    return $options;
+
+});
+Route::get('gettarget/{code}', function ($code) {
+
+
+    $main_model = Module::where('code', $code)->first();
+
+    $attributes = Attribute::where('module', $main_model->id)->where('type', 'foreignId')->get();
+
+    $options = '<option>-- select --</option>';
+
+    foreach ($attributes as $key => $value) {
+        $options .= '<option  value="' . $value->code . '" >' . $value->name . '</option>';
+    }
+
+    return $options;
+});
+
+

@@ -64,6 +64,7 @@ class FormViewGenerator
                                             '{{fieldSpaceLowercase}}',
                                             '{{options}}',
                                             '{{nullable}}',
+                                            '{{source}}'
                                         ],
                                         [
                                             $fieldUcWords,
@@ -72,6 +73,7 @@ class FormViewGenerator
                                             GeneratorUtils::cleanLowerCase($field),
                                             $options,
                                             $request['requireds'][$i] == 'yes' ? ' required' : '',
+                                            $request['source']
                                         ],
                                         GeneratorUtils::getTemplate('views/forms/select')
                                     );
@@ -190,6 +192,7 @@ class FormViewGenerator
                                             '{{options}}',
                                             '{{nullable}}',
                                             '{{fieldSnakeCase}}',
+                                            '{{source}}'
                                         ],
                                         [
                                             GeneratorUtils::singularKebabCase($field),
@@ -198,6 +201,7 @@ class FormViewGenerator
                                             $options,
                                             $request['requireds'][$i] == 'yes' ? ' required' : '',
                                             $fieldSnakeCase,
+                                            $request['source']
                                         ],
                                         GeneratorUtils::getTemplate('views/forms/select')
                                     );
@@ -562,6 +566,7 @@ class FormViewGenerator
                                         model: $model,
                                         field: $field->code,
                                         formatValue: $formatValue
+                                       
                                     );
                                     break;
                             }
@@ -694,7 +699,8 @@ class FormViewGenerator
                                         '{{fieldSpaceLowercase}}',
                                         '{{options}}',
                                         '{{nullable}}',
-                                        '{{multiple}}'
+                                        '{{multiple}}',
+                                        '{{source}}'
                                     ],
                                     [
                                         $fieldUcWords,
@@ -703,7 +709,8 @@ class FormViewGenerator
                                         GeneratorUtils::cleanLowerCase($field->name),
                                         $options,
                                         $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
-                                        $multiple
+                                        $multiple,
+                                        $field->source
                                     ],
                                     GeneratorUtils::getTemplate('views/forms/select')
                                 );
@@ -833,7 +840,8 @@ class FormViewGenerator
                                         '{{options}}',
                                         '{{nullable}}',
                                         '{{fieldSnakeCase}}',
-                                        '{{multiple}}'
+                                        '{{multiple}}',
+                                        '{{source}}'
                                     ],
                                     [
                                         GeneratorUtils::singularKebabCase($field->name),
@@ -842,7 +850,9 @@ class FormViewGenerator
                                         $options,
                                         $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
                                         $fieldSnakeCase,
-                                        ''
+                                        '',
+                                        $field->source
+
                                     ],
                                     GeneratorUtils::getTemplate('views/forms/select')
                                 );
@@ -1475,7 +1485,8 @@ class FormViewGenerator
                                     model: $model,
                                     field: $field->code,
                                     formatValue: $formatValue,
-                                    label: $field->name
+                                    label: $field->name,
+                                    source:$field->source
                                 );
                                 break;
                         }
@@ -1553,7 +1564,7 @@ class FormViewGenerator
      * @param string $formatValue
      * @return string
      */
-    public function setInputTypeTemplate(string $field, array $request, string $model, string $formatValue, $date = 0, string $label = '', ): string
+    public function setInputTypeTemplate(string $field, array $request, string $model, string $formatValue, $date = 0, string $label = '',$source = null ): string
     {
         if ($date == 1) {
             return str_replace(
@@ -1584,6 +1595,7 @@ class FormViewGenerator
                 '{{type}}',
                 '{{value}}',
                 '{{nullable}}',
+                '{{source}}'
             ],
             [
                 GeneratorUtils::singularKebabCase($label),
@@ -1592,6 +1604,8 @@ class FormViewGenerator
                 $request['input_types'],
                 $formatValue,
                 $request['requireds'] == 'yes' ? ' required' : '',
+                $source,
+
             ],
             GeneratorUtils::getTemplate('views/forms/input')
         );

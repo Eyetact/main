@@ -232,8 +232,8 @@
                                                                         value="url">Url</option>
                                                                     <option @selected($multi->type == 'search')
                                                                         value="search">Search</option>
-                                                                        <option @selected($multi->type == 'number')
-                                                                            value="number">Number</option>
+                                                                    <option @selected($multi->type == 'number')
+                                                                        value="number">Number</option>
                                                                     <option @selected($multi->type == 'number')
                                                                         value="number">Integer Number</option>
                                                                     <option @selected($multi->type == 'decimal')
@@ -275,7 +275,7 @@
                                                                                     <option
                                                                                         data-id="{{ $value->id }}"
                                                                                         value="{{ $value->code }}"
-                                                                                        @selected(App\Generators\GeneratorUtils::singularSnakeCase((string)$value->code) == App\Generators\GeneratorUtils::singularSnakeCase($multi->constrain))>
+                                                                                        @selected(App\Generators\GeneratorUtils::singularSnakeCase((string) $value->code) == App\Generators\GeneratorUtils::singularSnakeCase($multi->constrain))>
                                                                                         {{ $value->name }}</option>;
                                                                                 @endforeach
                                                                             </select>
@@ -292,8 +292,17 @@
                                                                         @php
                                                                             $module = \App\Models\Module::where(
                                                                                 'code',
-                                                                                App\Generators\GeneratorUtils::singularSnakeCase($multi->constrain)
-                                                                            )->orWhere('code',App\Generators\GeneratorUtils::pluralSnakeCase($multi->constrain))?->first();
+                                                                                App\Generators\GeneratorUtils::singularSnakeCase(
+                                                                                    $multi->constrain,
+                                                                                ),
+                                                                            )
+                                                                                ->orWhere(
+                                                                                    'code',
+                                                                                    App\Generators\GeneratorUtils::pluralSnakeCase(
+                                                                                        $multi->constrain,
+                                                                                    ),
+                                                                                )
+                                                                                ?->first();
                                                                         @endphp
 
                                                                         <div
@@ -329,11 +338,13 @@
                                                                                         required>
 
 
-                                                                                        <option value="disabled"  @selected($multi->condition == "disabled")>
+                                                                                        <option value="disabled"
+                                                                                            @selected($multi->condition == 'disabled')>
                                                                                             disabled
 
-                                                                                       </option>
-                                                                                        <option value="based"  @selected($multi->condition == "based")>
+                                                                                        </option>
+                                                                                        <option value="based"
+                                                                                            @selected($multi->condition == 'based')>
                                                                                             based on
                                                                                             selection
                                                                                         </option>
@@ -446,6 +457,31 @@
             </div>
         </div>
     </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Source</h3>
+        </div>
+        <div class="card-body pb-2">
+            <div class="row">
+                <div class="col-sm-6 input-box">
+                    <label class="form-label" for="source">source<span class="text-red">*</span></label>
+                    <select class="google-input " name="source" required readonly disabled>
+                        <option  value="{{ $attribute->source }}">{{ $attribute->source }}</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-6 input-box">
+                    <label class="form-label" for="target">Target<span class="text-red">*</span></label>
+                    <select class="google-input " name="target" required readonly disabled>
+                        <option value="{{ $attribute->target }}">{{ $attribute->target }}</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Admin</h3>

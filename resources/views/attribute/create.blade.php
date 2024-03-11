@@ -44,11 +44,11 @@
                             <input type="text" name="code"
                                 class="google-input input-code @error('code') is-invalid @enderror"
                                 value="{{ old('code', $attribute->code) }}">
-                                <small class="text-secondary">
-                                    <ul class="my-1 mx-2 p-0">
-                                        <li>is not allowed to use numbers or ( ID word ) or symbols</li>
-                                    </ul>
-                                </small>
+                            <small class="text-secondary">
+                                <ul class="my-1 mx-2 p-0">
+                                    <li>is not allowed to use numbers or ( ID word ) or symbols</li>
+                                </ul>
+                            </small>
                             @error('code')
                                 <span class="error code-error">{{ $message }}</span>
                             @enderror
@@ -164,6 +164,44 @@
             </div>
         </div>
     </div>
+
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Source</h3>
+        </div>
+        <div class="card-body pb-2">
+            <div class="row">
+                <div class="col-sm-6 input-box">
+                    <label class="form-label" for="source">source<span class="text-red">*</span></label>
+                    <select class="google-input " name="source"  id="source">
+                    </select>
+                </div>
+
+                <div class="col-sm-6 input-box">
+                    <label class="form-label" for="target">Target<span class="text-red">*</span></label>
+                    <select class="google-input " name="target"  id="target">
+                        {{-- <option value="unit">unit</option> --}}
+                        {{-- <option  @selected($attribute->source == null)>Disable</option>
+
+                        @foreach ($module->fields()->where('type', 'foreignId')->get() as $item)
+                            <option value="{{ explode('_',$item->code)[0] }}"  @selected($attribute->source == explode('_',$item->code)[0])>{{ $item->name }}</option>
+                        @endforeach --}}
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Admin</h3>

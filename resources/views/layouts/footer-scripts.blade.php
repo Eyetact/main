@@ -30,6 +30,7 @@
 		<script src="{{URL::asset('assets/js/switcher.js')}}"></script>
         <!-- Toastr JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
             toastr.options = {
                 "closeButton": true,
@@ -58,6 +59,10 @@
 		<script src="{{URL::asset('assets/js/custom.js')}}"></script>
 
         <script type="text/javascript">
+        /* multiple select */
+        $('select').select2({
+            dir: "ltr"
+        });
             @if(Session::get('success'))
                 toastr.success("{{ Session::get('success') }}");
             @endif

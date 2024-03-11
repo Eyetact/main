@@ -417,7 +417,8 @@
                         </select>
                     </div></div>`);
 
-                    if(index > 1)
+                    // if(index > 1)
+                    if(1)
                     {
 
                     parent.append(` <div class="input-box child-drop form-constrain mt-2">
@@ -431,6 +432,40 @@
                 }
             });
         })
+
+        $(document).on('change', '#module', function() {
+            var id = $(this).find(':selected').val();
+            // alert(index)
+            $.ajax({
+                url: '{{ url('/') }}/getsource/' + id,
+                success: function(response) {
+                    console.log(response);
+                    $('#source').find('option').remove()
+                    $('#source').append(`${response}`);
+                }
+            });
+        })
+
+        $(document).on('change', '#source', function() {
+            var id = $(this).find(':selected').val();
+            // alert(index)
+            $.ajax({
+                url: '{{ url('/') }}/gettarget/' + id,
+                success: function(response) {
+                    console.log(response);
+                    $('#target').find('option').remove()
+                    $('#target').append(`${response}`);
+                }
+            });
+        })
+
+        $(document).on('change', '#target', function() {
+            var id = $(this).find(':selected').val();
+            // alert(index)
+            $('input[name=code]').val(id);
+        })
+
+        
 
         $(document).on('change', '.lookup-drop', function() {
             var id = $(this).find(':selected').data('id');

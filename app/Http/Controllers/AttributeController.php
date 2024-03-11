@@ -260,11 +260,12 @@ class AttributeController extends Controller
             'is_multi' => isset($request['is_multi']) ? 1 : 0, //for multi select
             'max_size' => $request['files_sizes'],
             'file_type' => $request['file_types'],
+            'source' => $request['source'],
+            'target' => $request['target'],
             'code' => str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower())),
             'attribute' => isset($request['attribute']) ? $request['attribute'] : ' ',
             'user_id' => auth()->user()->id,
         ];
-
         // dd($createArr);
         $attribute = Attribute::create($createArr);
 
@@ -362,6 +363,9 @@ class AttributeController extends Controller
         $attribute->is_enable = isset($request['is_enable']) ? 1 : 0;
         $attribute->is_system = isset($request['is_system']) ? 1 : 0;
         $attribute->is_multi = isset($request['is_multi']) ? 1 : 0; //for multi select
+        // $attribute->source = isset($request['source']) ? $request['source'] : NULL;
+        // $attribute->target = isset($request['target']) ? $request['target'] : NULL;
+
 
 
         $attribute->min_length = $request['min_lengths'];

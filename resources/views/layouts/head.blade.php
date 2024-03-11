@@ -33,7 +33,12 @@
   <link id="theme" href="{{ URL::asset('assets/colors/color1.css') }}" rel="stylesheet" type="text/css" />
   <link id="theme" href="{{ URL::asset('assets/switcher.css') }}" rel="stylesheet" type="text/css" />
   <link id="theme" href="{{ URL::asset('assets/demo.css') }}" rel="stylesheet" type="text/css" />
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
   <style>
+    .select2-container {
+    display: block;
+    width: 100% !important;
+}
   table#data_table tbody * {
   font-size: 14px;
   text-align: left;
