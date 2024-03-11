@@ -282,6 +282,7 @@
                                         @if (
                                             (auth()->user()->hasRole('super') ||
                                                 auth()->user()->id == $user->user_id))
+                                                @if($user->role('user'))
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="input-box">
                                                     <select class=" google-input" name="ugroup_id" tabindex="null">
@@ -298,6 +299,7 @@
                                                         for="ugroup_id">{{ $message }}</label>
                                                 @enderror
                                             </div>
+                                            @endif
                                             {{-- @endrole --}}
                                         @endif
 
