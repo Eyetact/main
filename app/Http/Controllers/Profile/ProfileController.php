@@ -23,9 +23,9 @@ class ProfileController extends Controller
     {
         $user_id = $id == null ? Auth::id() : $id;
         // dd( $user_id );
-        $user = User::find( $user_id );
+        $user = User::find($user_id);
         $subscriptions = $user->subscriptions;
-        $last_used = json_encode( $user->last_used );
+        $last_used = json_encode($user->last_used);
         $groups = CustomerGroup::all();
         $ugroups = UserGroup::all();
 
@@ -71,13 +71,13 @@ class ProfileController extends Controller
                 ->make(true);
         }
 
-        return view('profile.index', compact('user','groups','ugroups','last_used'));
+        return view('profile.index', compact('user', 'groups', 'ugroups', 'last_used'));
     }
 
     public function update(Request $request, $id = null)
     {
         // dd($request->all());
-                // dd($request->last_used);
+        // dd($request->last_used);
         $user_id = $id == null ? Auth::id() : $id;
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -102,31 +102,38 @@ class ProfileController extends Controller
 
 
         $user->group_id = $request->group_id;
-        if( !$user->last_used ){
+        if (!$user->last_used) {
 
             // $user->last_used =json_encode($request->last_used,true);
-            $user->last_used =$request->last_used;
-        }else{
-            $ar = json_decode($user->last_used,true);
+            $user->last_used = $request->last_used;
+        } else {
+            $ar = json_decode($user->last_used, true);
             // $aa =array();
             // // dd($ar);
             // foreach( $ar as $a ){
             // array_push( $aa, (array)$a );
 
             // }
-            array_push( $ar, (array)$request->last_used[0] );
+            array_push($ar, (array) $request->last_used[0]);
             $user->last_used = $ar;
 
         }
 
         // if( $user->group_id != $request->group_id){
 
-            if(isset($request->ugroup_id)){
+        if (isset($request->ugroup_id)) {
+            if (
+                DB::table('model_has_roles')
+                    ->where('model_type', "App\Models\UserGroup")
+                    ->where('model_id', $request->ugroup_id)
+                    ->first()
+            ) {
+
                 $role_id = DB::table('model_has_roles')
-                          ->where('model_type',"App\Models\UserGroup")
-                          ->where('model_id', $request->ugroup_id)
-                          ->first()
-                          ->role_id;
+                    ->where('model_type', "App\Models\UserGroup")
+                    ->where('model_id', $request->ugroup_id)
+                    ->first()
+                    ->role_id;
 
                 $role = Role::find($role_id)->name;
                 $user->assignRole($role);
@@ -134,6 +141,8 @@ class ProfileController extends Controller
                     $user->givePermissionTo($p);
                 }
             }
+
+        }
 
 
 
@@ -153,7 +162,7 @@ class ProfileController extends Controller
     {
         $user_id = $id == null ? Auth::id() : $id;
         $validator = Validator::make($request->all(), [
-            'old_password'=>'required|current_password',
+            'old_password' => 'required|current_password',
             'password' => 'required|confirmed|min:8',
         ]);
         if (count($validator->errors()) > 0) {
