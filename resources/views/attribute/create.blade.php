@@ -172,23 +172,18 @@
         </div>
         <div class="card-body pb-2">
             <div class="row">
-                <div class="col-sm-6 input-box">
+                <div class="col-sm-12 input-box">
                     <label class="form-label" for="source">source<span class="text-red">*</span></label>
                     <select class="google-input " name="source"  id="source">
                     </select>
                 </div>
 
-                <div class="col-sm-6 input-box">
+                {{-- <div class="col-sm-6 input-box">
                     <label class="form-label" for="target">Target<span class="text-red">*</span></label>
                     <select class="google-input " name="target"  id="target">
-                        {{-- <option value="unit">unit</option> --}}
-                        {{-- <option  @selected($attribute->source == null)>Disable</option>
 
-                        @foreach ($module->fields()->where('type', 'foreignId')->get() as $item)
-                            <option value="{{ explode('_',$item->code)[0] }}"  @selected($attribute->source == explode('_',$item->code)[0])>{{ $item->name }}</option>
-                        @endforeach --}}
                     </select>
-                </div>
+                </div> --}}
 
             </div>
         </div>

@@ -345,10 +345,8 @@ output {
                             url: path,
                             success: function(response) {
                                 console.log(response);
-
-                                $('select[name=' + response.id + ']').find('option[value=' + response
-                                        .data_id + ']')
-                                    .prop('selected', true);
+                                $('select[name=' + response.id + ']').find('option').hide();
+                                $('select[name=' + response.id + ']').find('option[value=' + response.data_id + ']').prop('selected', true).show();
                                 $('input[name=' + response.id + ']').val(response.data)
 
                                 $('[name=' + response.id + ']').prop('readOnly', true);
