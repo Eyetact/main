@@ -321,6 +321,22 @@ output {
                 console.log('main_model_id:' + main_model_id)
 
                 var attr = $(this).data('attrs');
+
+                console.log(attr)
+                if (attr == '[]' || attr == [] || attr.length === 0) {
+
+
+                    var constrain = $(this).data('constrain')
+                    var id = $(this).find('option:selected').val()
+                    // $('[data-source='+constrain+']').hide();
+                    $('[data-source='+constrain+']').find('option').hide();
+                    console.log('option[data-' + constrain + '=' + id + ']')
+                    $('[data-source='+constrain+']').find('option[data-' + constrain + '=' + id + ']')
+                        .show();
+
+                    return
+                }
+                
                 var jsonStringWithDoubleQuotes = attr.replace(/'/g, '"');
                 var obj = JSON.parse(jsonStringWithDoubleQuotes);
 

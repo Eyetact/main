@@ -464,19 +464,22 @@
         </div>
         <div class="card-body pb-2">
             <div class="row">
-                <div class="col-sm-6 input-box">
+                <div class="col-sm-12 input-box">
                     <label class="form-label" for="source">source<span class="text-red">*</span></label>
-                    <select class="google-input " name="source" required readonly disabled>
-                        <option  value="{{ $attribute->source }}">{{ $attribute->source }}</option>
+                    <select class="google-input " name="source" required  >
+                        @foreach ($module->fields()->where('type','foreignId')->get() as $item)
+                        <option @selected($attribute->source == explode('_', $item->code)[0]) value="{{ explode('_', $item->code)[0] }}">{{ $item->name }}</option>
+                            
+                        @endforeach
                     </select>
                 </div>
 
-                <div class="col-sm-6 input-box">
+                {{-- <div class="col-sm-6 input-box">
                     <label class="form-label" for="target">Target<span class="text-red">*</span></label>
                     <select class="google-input " name="target" required readonly disabled>
                         <option value="{{ $attribute->target }}">{{ $attribute->target }}</option>
                     </select>
-                </div>
+                </div> --}}
 
             </div>
         </div>

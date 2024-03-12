@@ -363,7 +363,7 @@ class AttributeController extends Controller
         $attribute->is_enable = isset($request['is_enable']) ? 1 : 0;
         $attribute->is_system = isset($request['is_system']) ? 1 : 0;
         $attribute->is_multi = isset($request['is_multi']) ? 1 : 0; //for multi select
-        // $attribute->source = isset($request['source']) ? $request['source'] : NULL;
+        $attribute->source = isset($request['source']) ? $request['source'] : NULL;
         // $attribute->target = isset($request['target']) ? $request['target'] : NULL;
 
 
