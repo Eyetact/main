@@ -151,6 +151,8 @@ class FormViewGenerator
 
                             $columnAfterId = GeneratorUtils::getColumnAfterId($constrainModel);
 
+
+
                             $options = "
                         @foreach ($" . GeneratorUtils::pluralCamelCase($constrainModel) . " as $$constrainSingularCamelCase)
                             <option value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == $" . $constrainSingularCamelCase . "->id ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
@@ -566,7 +568,7 @@ class FormViewGenerator
                                         model: $model,
                                         field: $field->code,
                                         formatValue: $formatValue
-                                       
+
                                     );
                                     break;
                             }
@@ -798,10 +800,27 @@ class FormViewGenerator
                         $constrainSingularCamelCase = GeneratorUtils::singularCamelCase($constrainModel);
 
                         $columnAfterId = $field->attribute;
+                        $dataIds  ='';
+
+                        if ($field->source != null) {
+
+                            $current_model = Module::where(
+                                'code',
+                                GeneratorUtils::singularSnakeCase($field->constrain)
+                            )->orWhere('code',GeneratorUtils::pluralSnakeCase($field->constrain))
+                            ->orWhere('code',$field->constrain)->first();
+
+                            $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->get();
+
+                            foreach ($lookatrrs as $sa) {
+                                $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$".$constrainSingularCamelCase."->" . $sa->code . "}}\"";
+
+                            }
+                        }
 
                         $options = "
                         @foreach ($" . GeneratorUtils::pluralCamelCase($constrainModel) . " as $$constrainSingularCamelCase)
-                            <option value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == $" . $constrainSingularCamelCase . "->id ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
+                            <option  '  .$dataIds. ' value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == $" . $constrainSingularCamelCase . "->id ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
                                 {{ $" . $constrainSingularCamelCase . "->$columnAfterId }}
                             </option>
                         @endforeach";

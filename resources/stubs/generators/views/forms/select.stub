@@ -6,6 +6,7 @@
                 $model = \App\Models\Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase('{{fieldKebabCase}}'))
                     ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase('{{fieldKebabCase}}'))
                     ?->first();
+                    $constrain_name = App\Generators\GeneratorUtils::singularSnakeCase('{{fieldKebabCase}}');
                 if($model){
                     $for_attr = json_encode($model->fields()->select('code','attribute')->where('type', 'foreignId')->get());
                     $for_attr = str_replace('"','\'',$for_attr);
@@ -13,7 +14,7 @@
 
 
             @endphp
-            <select data-source="{{source}}" data-attrs={!! isset($for_attr) ? $for_attr : '' !!} class="google-input @error('{{fieldSnakeCase}}') is-invalid @enderror" name="{{fieldSnakeCase}}" id="{{fieldKebabCase}}" class="form-control"{{nullable}} {{multiple}}>
+            <select data-constrain="{{ $constrain_name }}" data-source="{{source}}" data-attrs={!! isset($for_attr) ? $for_attr : '' !!} class="google-input @error('{{fieldSnakeCase}}') is-invalid @enderror" name="{{fieldSnakeCase}}" id="{{fieldKebabCase}}" class="form-control"{{nullable}} {{multiple}}>
                 <option value="" selected disabled>-- {{ __('Select {{fieldSpaceLowercase}}') }} --</option>
                 {{options}}
             </select>
