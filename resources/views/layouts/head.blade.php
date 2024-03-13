@@ -45,7 +45,7 @@
   font-weight: normal;
   }
 
-  input[name=m_serial] {
+  input[name=serial_number] {
     display: none;
 }
 label[for=serial-number] {

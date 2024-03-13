@@ -225,7 +225,7 @@ class IndexViewGenerator
                     });
 
                     $(document).on('click', '#add_new_tr_".$field->id."', function() {
-                        let table = $('#tbl-field-".$field->id." tbody')
+                        let table = $(this).closest('.multi-options').find('#tbl-field-".$field->id." tbody')
                         var list_".$field->id." = ''
                         let no = table.find('tr').length + 1\n";
 

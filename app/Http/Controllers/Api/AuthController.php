@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\ConfigResource;
 use App\Mail\SendOTP;
+use App\Models\Admin\Software;
 use App\Models\CustomerGroup;
 use App\Models\Plan;
 use App\Models\Subscription;
@@ -91,7 +92,7 @@ class AuthController extends Controller
             DB::beginTransaction();
 
 
-            $serial = MList::where('m_serial', $request->serial_number)
+            $serial = Software::where('serial_number', $request->serial_number)
                 ->first();
 
 
