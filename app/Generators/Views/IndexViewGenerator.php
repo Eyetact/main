@@ -224,9 +224,11 @@ class IndexViewGenerator
                         $(this).closest('tr').find('.select-base').find('option[data-'+constrain+'='+id+']').show();
                     });
 
+
                     $(document).on('click', '#add_new_tr_" . $field->id . "', function() {
                         let table = $('#tbl-field-" . $field->id . " tbody')
                         var list_" . $field->id . " = ''
+
                         let no = table.find('tr').length + 1\n";
 
                     foreach ($field->multis as $key => $value) {

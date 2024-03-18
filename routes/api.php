@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -39,6 +40,10 @@ Route::post('update-user', [AuthController::class, 'updateById']);
 Route::middleware(['auth:api'])->group(function () {
 
     Route::get('my-config', [AuthController::class, 'config']);
+
+
+    //Category
+   Route::get('categories/{id}', [CategoryController::class, 'listCategories']);
 
 });
 
