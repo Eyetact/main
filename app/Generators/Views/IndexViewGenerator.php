@@ -35,7 +35,7 @@ class IndexViewGenerator
 
         $thColums = '';
         $tdColumns = '';
-        $totalFields = !empty($request['fields']) ?count($request['fields']) : 0;
+        $totalFields = !empty($request['fields']) ? count($request['fields']) : 0;
 
         if (!empty($request['fields'][0])) {
             foreach ($request['fields'] as $i => $field) {
@@ -196,12 +196,12 @@ class IndexViewGenerator
 
         $thColums = '';
         $tdColumns = '';
-        $trhtml='';
-        $totalFields = count($module->fields()->where('is_enable',1)->get());
+        $trhtml = '';
+        $totalFields = count($module->fields()->where('is_enable', 1)->get());
 
-        foreach ($module->fields()->where('is_enable',1)->get() as $i => $field) {
+        foreach ($module->fields()->where('is_enable', 1)->get() as $i => $field) {
             $field->name = GeneratorUtils::singularSnakeCase($field->name);
-            $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
+            $field->code = !empty($field->code) ? GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
             // dd($field->type);
             if ($field->input != 'password' && $field->type != 'assign') {
                 /**
@@ -224,47 +224,69 @@ class IndexViewGenerator
                         $(this).closest('tr').find('.select-base').find('option[data-'+constrain+'='+id+']').show();
                     });
 
-                    $(document).on('click', '#add_new_tr_".$field->id."', function() {
-                        let table = $('#tbl-field-".$field->id." tbody')
-                        var list_".$field->id." = ''
+                    $(document).on('click', '#add_new_tr_" . $field->id . "', function() {
+                        let table = $('#tbl-field-" . $field->id . " tbody')
+                        var list_" . $field->id . " = ''
                         let no = table.find('tr').length + 1\n";
 
-                        foreach ($field->multis as $key => $value) {
-                            switch ($value->type) {
+                    foreach ($field->multis as $key => $value) {
+                        switch ($value->type) {
                             case 'foreignId':
 
-                                $trhtml .= "var list_".$field->id. $key ." = '<option selected disabled>-- select ". $value->constrain ." -- </option>'
+                                $trhtml .= "var list_" . $field->id . $key . " = '<option selected disabled>-- select " . $value->constrain . " -- </option>'
                                 \n";
                                 $dataIds = '';
-                                if($value->condition == "based") {
+                                if (!empty($value->source)) {
 
                                     $current_model = Module::where(
                                         'code',
                                         GeneratorUtils::singularSnakeCase($value->constrain)
-                                    )->orWhere('code',GeneratorUtils::pluralSnakeCase($value->constrain))
-                                    ->orWhere('code',$value->constrain)->first();
+                                    )->orWhere('code', GeneratorUtils::pluralSnakeCase($value->constrain))
+                                        ->orWhere('code', $value->constrain)->first();
                                     // dd($current_model);
-                                    $lookatrrs = Attribute::where("module", $current_model->id)->where('type','foreignId')->get();
+                                    $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->get();
 
-                                    foreach ($lookatrrs as  $sa) {
-                                        $dataIds .= "data-".GeneratorUtils::singularSnakeCase($sa->constrain) ."={{ \$item2->". $sa->code ."}}";
+                                    foreach ($lookatrrs as $sa) {
+                                        $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "={{ \$item2->" . $sa->code . "}}";
                                     }
 
                                 }
-                                $trhtml .= '@foreach( \\App\\Models\\Admin\\'. GeneratorUtils::singularPascalCase($value->constrain).'::all() as $item2 )
+
+                                $trhtml .= '@php
                                 ';
-                                $trhtml .= 'list_'.$field->id. $key.' += \'<option '. $dataIds .' data-id="{{ $item2->id }}"   value="{{ $item2->'.$value->attribute . '}}" >{{ $item2->'.$value->attribute . '}}</option>\'
+
+                                $trhtml .= '$model = \App\Models\Module::where(\'code\', App\Generators\GeneratorUtils::singularSnakeCase(\'' . $value->constrain . '\'))->orWhere(\'code\', App\Generators\GeneratorUtils::pluralSnakeCase(\'' . $value->constrain . '\'))?->first();
+                                ';
+                                $trhtml .= 'if ($model) {
+                                    ';
+                                $trhtml .= '$for_attr = json_encode($model->fields()->select(\'code\', \'attribute\')->where(\'type\', \'foreignId\')->get());
+                                ';
+                                $trhtml .= '$for_attr = str_replace(\'"\', \'\\\'\', $for_attr);
+                                ';
+                                $trhtml .= '}
+                                ';
+
+                                $trhtml .= '@endphp
+                                ';
+
+                                $trhtml .= 'var attr_' . $field->id . $key . ' = "{{ $for_attr }}"
+                                ';
+
+
+                                $trhtml .= '@foreach( \\App\\Models\\Admin\\' . GeneratorUtils::singularPascalCase($value->constrain) . '::all() as $item2 )
+                                ';
+                                $trhtml .= 'list_' . $field->id . $key . ' += \'<option ' . $dataIds . ' data-id="{{ $item2->id }}"   value="{{ $item2->' . $value->attribute . '}}" >{{ $item2->' . $value->attribute . '}}</option>\'
                                 ';
                                 $trhtml .= '@endforeach
 
-                                console.log(list_'.$field->id. $key.')
+                                console.log(list_' . $field->id . $key . ')
                                 ';
 
                                 break;
-                             }
                         }
+                    }
 
-                        $trhtml .= "let tr = `";
+                    $trhtml .= "let tr = `";
 
                     $trhtml .= '<tr draggable="true" containment="tbody" ondragstart="dragStart()" ondragover="dragOver()" style="cursor: move;">';
                     foreach ($field->multis as $key => $value) {
@@ -288,8 +310,8 @@ class IndexViewGenerator
                                     </td>
                                     ';
                                 break;
-                                case 'decimal':
-                                    $trhtml .= ' <td>
+                            case 'decimal':
+                                $trhtml .= ' <td>
                                             <div class="input-box">
                                                 <input type="number" step="0.000000000000000001" name="' . $field->code . '[${no}][' . $value->code . ']"
                                                     class="form-control google-input"
@@ -297,7 +319,7 @@ class IndexViewGenerator
                                             </div>
                                         </td>
                                         ';
-                                    break;
+                                break;
                             case 'image':
                                 $trhtml .= ' <td>
                                             <div class="input-box">
@@ -320,8 +342,8 @@ class IndexViewGenerator
                                         ';
                                 break;
 
-                                case 'texteditor':
-                                    $trhtml .= ' <td>
+                            case 'texteditor':
+                                $trhtml .= ' <td>
                                                 <div class="input-box">
 
                                                 <textarea name="' . $field->code . '[${no}][' . $value->code . ']"  class="content"  placeholder="' . $value->name . '"></textarea>
@@ -329,7 +351,7 @@ class IndexViewGenerator
                                                 </div>
                                             </td>
                                             ';
-                                    break;
+                                break;
 
                             case 'range':
                                 $trhtml .= '<td>
@@ -370,25 +392,29 @@ class IndexViewGenerator
                                 $trhtml .= ' <select name="' . $field->code . '[${no}][' . $value->code . ']" class="form-select  google-input multi-type" required="">';
                                 $trhtml .= '<option selected disabled > -- select --</option>';
                                 foreach ($arrOption as $arrOptionIndex => $value) {
-                                    $trhtml .= '<option value="'.$value.'" >'.$value.'</option>';
+                                    $trhtml .= '<option value="' . $value . '" >' . $value . '</option>';
 
                                 }
                                 $trhtml .= '</select>';
                                 $trhtml .= '</div></td>';
                                 break;
 
-                                case 'foreignId':
-                                    $class = "select-base";
-                                    if($value->condition !='based') {
-                                        $class = 'select-cond';
-                                    }
+                            case 'foreignId':
+                                $class = "select-base";
+                              
 
-                                    $trhtml .= '<td><div class="input-box">';
-                                    $trhtml .= ' <select data-constrain="'. GeneratorUtils::singularSnakeCase($value->constrain) .'" name="' . $field->code . '[${no}][' . $value->code . ']" class="form-select '.$class.'  google-input multi-type " required="">';
-                                    $trhtml .= '${list_'.$field->id. $key.'}';
-                                    $trhtml .= '</select>';
-                                    $trhtml .= '</div></td>';
-                                    break;
+                                if (empty($value->source) || $value->source == 'disabled' ) {
+                                    $class = 'select-cond';
+                                }
+
+
+
+                                $trhtml .= '<td><div class="input-box">';
+                                $trhtml .= ' <select data-source="'.$value->source.'" data-attr="${attr_' . $field->id . $key . '}" data-constrain="' . GeneratorUtils::singularSnakeCase($value->constrain) . '" name="' . $field->code . '[${no}][' . $value->code . ']" class="form-select ' . $class . '  google-input multi-type " required="">';
+                                $trhtml .= '${list_' . $field->id . $key . '}';
+                                $trhtml .= '</select>';
+                                $trhtml .= '</div></td>';
+                                break;
 
                             default:
                                 # code...
@@ -414,21 +440,21 @@ class IndexViewGenerator
                             table.find('.content:last').richText();
 
                         });\n";
-                        }
+                }
 
 
-                    $subMulti = "<script>". $trhtml ."</script>";
+                $subMulti = "<script>" . $trhtml . "</script>";
 
 
 
-                    if($module->parent_id > 0){
-                        $parentModule = Module::find($module->parent_id);
-                        $parentCode = GeneratorUtils::setModelName($parentModule->code, 'default');
-                        $parentModelName = GeneratorUtils::pluralKebabCase($parentCode);
+                if ($module->parent_id > 0) {
+                    $parentModule = Module::find($module->parent_id);
+                    $parentCode = GeneratorUtils::setModelName($parentModule->code, 'default');
+                    $parentModelName = GeneratorUtils::pluralKebabCase($parentCode);
 
-                        File::append(resource_path("/views/admin/$parentModelName/include/multi.blade.php"), $subMulti);
+                    File::append(resource_path("/views/admin/$parentModelName/include/multi.blade.php"), $subMulti);
 
-                    }
+                }
 
 
 
@@ -525,8 +551,8 @@ class IndexViewGenerator
             case '':
                 GeneratorUtils::checkFolder(resource_path("/views/admin/$modelName"));
                 file_put_contents(resource_path("/views/admin/$modelName/index.blade.php"), $template);
-                if (!File::exists(resource_path("/views/admin/$modelName/include/custom.blade.php"))){
-                file_put_contents(resource_path("/views/admin/$modelName/include/custom.blade.php"), "");
+                if (!File::exists(resource_path("/views/admin/$modelName/include/custom.blade.php"))) {
+                    file_put_contents(resource_path("/views/admin/$modelName/include/custom.blade.php"), "");
 
                 }
                 break;
