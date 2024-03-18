@@ -44,12 +44,13 @@ class AuthController extends Controller
         $this->userRepositry = new UserRepository(app(User::class));
     }
 
-    public function login(AuthRequest $request)
+    public function login(Request $request)
     {
 
         if (
             !Auth::attempt(
                 $request->only([
+                    'email',
                     'username',
                     'password',
                 ])
@@ -62,8 +63,9 @@ class AuthController extends Controller
             ], 500);
         }
 
-        $check = User::where('username', $request->username)
-            ->first();
+        $check = User::where('email', $request->user)
+                       ->orWhere('username', $request->user)
+                       ->first();
 
         if (!($check->hasRole('vendor'))) {
 
@@ -259,7 +261,8 @@ class AuthController extends Controller
 
     public function checkOTP(Request $request)
     {
-        $user = User::find($request->id);
+        $user = User::where('otp',$request->otp)->first();
+        if ($user) {
 
         if ((string)$user->otp == (string)$request->otp) {
 
@@ -272,12 +275,16 @@ class AuthController extends Controller
         }
 
         return $this->returnError('Code not correct');
+    }
+
+    return $this->returnError('User not found');
+
 
     }
 
     public function changePassword(Request $request)
     {
-        $user = User::find($request->id);
+        $user = User::where('email',$request->email)->first();
 
         if ($user) {
 

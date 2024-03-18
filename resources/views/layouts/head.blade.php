@@ -51,4 +51,10 @@
 label[for=serial-number] {
     display: none;
 }
+input[name=main_code] {
+    display: none;
+}
+label[for=code] {
+    display: none;
+}
   </style>

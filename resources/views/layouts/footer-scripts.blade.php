@@ -60,7 +60,7 @@
 
         <script type="text/javascript">
         /* multiple select */
-        $('select').select2({
+        $('select[multiple]').select2({
             dir: "ltr"
         });
             @if(Session::get('success'))
