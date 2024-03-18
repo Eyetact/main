@@ -22,7 +22,17 @@ class CategoryController extends ApiController
     }
 
     public function save( Request $request ){
-        return $this->store( $request->all() );
+
+        $model = $this->repositry->save($request->all());
+        $model->user_id = auth()->user()->id;
+        $model->save();
+
+
+        if ($model) {
+            return $this->returnData( 'data' , new $this->resource( $model ), __('Succesfully'));
+        }
+
+        return $this->returnError(__('Sorry! Failed to create !'));
     }
 
     public function edit($id,Request $request){
@@ -32,7 +42,7 @@ class CategoryController extends ApiController
 
     }
 
-    public function listCategories($id)
+    public function categories($id)
     {
         $machine=Software::find($id);
         $categories = Category::where('customer_id',auth()->user()->id)

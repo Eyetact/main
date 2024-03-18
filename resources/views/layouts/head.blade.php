@@ -51,6 +51,12 @@
 label[for=serial-number] {
     display: none;
 }
+input[name=main_code] {
+    display: none;
+}
+label[for=code] {
+    display: none;
+}
 
 .custom-control.custom-checkbox.ms-3.row.input-box {
     height: 0px !important;

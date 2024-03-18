@@ -63,8 +63,13 @@ class AuthController extends Controller
             ], 500);
         }
 
+<<<<<<< HEAD
         $check = User::where('email', $request->email)
                        ->orWhere('username', $request->username)
+=======
+        $check = User::where('email', $request->user)
+                       ->orWhere('username', $request->user)
+>>>>>>> 7cc4caf02c1dcdd4f40beaaa61185dd2cbee8ef8
                        ->first();
 
         if (!($check->hasRole('vendor'))) {

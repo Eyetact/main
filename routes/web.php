@@ -25,6 +25,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\MailsController;
+use App\Http\Controllers\Admin\SoftwareController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -125,7 +126,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/mails/{id}', 'mails')->name('inbox');
         Route::get('/fetch/{id}/{mail_id}', 'getDataByUID')->name('fetch');
         Route::post('/sendReply/{id?}', 'sendReply')->name('sendReply');
-    }); 
+    });
 
     Route::post('theme-setting/update', [Helper::class, 'update'])->name('update.theme');
 
@@ -300,6 +301,19 @@ Route::get('reg-perm', function () {
 });
 
 
+Route::get('/get-mixtures/{id}',  function ($id)
+{
+    $componentSetId = $id;
+
+    if ($componentSetId) {
+        $mixtures =  App\Models\Admin\Mixture::where('components_set_id', $componentSetId)->get();
+    } else {
+        $mixtures = [];
+    }
+
+    return response()->json($mixtures);
+})->name('get-mixtures');
+
 Route::get(
     'searchtargetfromsource/{main_model}/{main_model_id}/{for_key_attr_name}/{target_result_attr}',
     function ($main_model, $main_model_id, $for_key_attr_name, $target_result_attr) {
@@ -311,7 +325,7 @@ Route::get(
         $id = $for_key_attr_name;
         $target_model = "App\Models\Admin\\" . GeneratorUtils::setModelName($target_model[0]);
         // dd($target_model);
-    
+
         $target_data = $target_model::find($element->$for_key_attr_name);
         $target_data->$target_result_attr;
         return response()->json([
