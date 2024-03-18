@@ -110,7 +110,8 @@
                                 <select class="google-input assign_c" name="user_id" tabindex="null">
                                     <option selected disabled>Select Customer</option>
                                     @foreach ($customers as $user)
-                                        <option value="{{ $user->id }}">{{ $user->roles->pluck('name')[0] }} - {{ $user->id }} - {{ $user->username }}
+                                        <option value="{{ $user->id }}">{{ $user->roles->pluck('name')[0] }} -
+                                            {{ $user->id }} - {{ $user->username }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -118,6 +119,65 @@
                         </div>
                         <div class="col-sm-1">
                             <button class="btn btn-info assign" type="button" style="height: 50px;">Assign</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="custom-controls-stacked">
+                                <label class="custom-control custom-radio" for="aaaa-1">
+                                    <input class="custom-control-input" type="radio" name="aaaa" id="aaaa-1"
+                                        value="1">
+                                    <span class="custom-control-label">Assign Selected Items</span></label>
+
+                                <label class="custom-control custom-radio" for="aaaa-0">
+                                    <input class="custom-control-input" type="radio" name="aaaa" id="aaaa-0"
+                                        value="0">
+                                    <span class="custom-control-label">Assigne Selected Items with Selected
+                                        Optons</span></label>
+
+                                <label class="custom-control custom-radio" for="aaaa-0">
+                                    <input class="custom-control-input" type="radio" name="aaaa" id="aaaa-0"
+                                        value="0">
+                                    <span class="custom-control-label">Assign All Items with Selected
+                                        Options</span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            @php
+                                $module = \App\Models\Module::where(
+                                    'code',
+                                    App\Generators\GeneratorUtils::singularSnakeCase('{{modelNameSingularLowercase}}'),
+                                )
+                                    ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase('{{modelNameSingularLowercase}}'))
+                                    ?->first();
+                            @endphp
+                            <div class="row">
+                                @foreach ($module->fields as $field)
+                                    <div class="col-4">
+                                        <div class="per-box">
+                                            <h5>{{ $field->name }}</h5>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <input id="1" type="checkbox" class="check-one"
+                                                        name="permission_data[]" value="View.{{ $field->code }}">
+                                                    <input id="1" type="hidden" name="permission_module[1]"
+                                                        value="1">
+                                                    <label for="1">View.{{ $field->name }}</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input id="1" type="checkbox" class="check-one"
+                                                        name="permission_data[]" value="Edit.{{ $field->code }}">
+                                                    <input id="1" type="hidden" name="permission_module[1]"
+                                                        value="1">
+                                                    <label for="1">Edit.{{ $field->name }}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
 
@@ -323,7 +383,7 @@ output {
                 var attr = $(this).data('attrs');
 
                 console.log(attr)
-                if (attr == '[]' || attr == [] || attr.length === 0) {
+                if (true) {
 
 
                     var constrain = $(this).data('constrain')
@@ -377,6 +437,82 @@ output {
             });
         }
 
+        function changeMulti() {
+            $(document).on('change', '.select-cond', function() {
+
+                var $this = $(this);
+                var main_model = $(this).data('constrain'); //city
+
+                console.log("un: " + $('[data-source=' + main_model + ']').length)
+
+
+                if ($('[data-source=' + main_model + ']').length == 0) {
+                    return;
+                }
+
+                console.log('main_model:' + main_model)
+                var main_model_id = $(this).find('option:selected').data('id'); // 1
+                console.log('main_model_id:' + main_model_id)
+
+                var attr = $(this).data('attr');
+
+                console.log(attr)
+                if (attr == '[]' || attr == [] || attr.length === 0) {
+
+
+                    var constrain = $(this).data('constrain')
+                    var id = $(this).find('option:selected').data('id')
+                    $(this).closest('tr').find('.select-base').find('option').hide();
+                    console.log('option[data-' + constrain + '=' + id + ']')
+                    $(this).closest('tr').find('.select-base').find('option[data-' + constrain + '=' + id + ']')
+                        .show();
+
+                    return
+                }
+
+                var jsonStringWithDoubleQuotes = attr.replace(/'/g, '"');
+                var obj = JSON.parse(jsonStringWithDoubleQuotes);
+
+                console.log(obj)
+
+                $.each(obj, function(key, value) {
+                    $e_string = value.code;
+                    $e_id = $e_string.split('_')
+                    console.log('id : ' + '#' + $e_string)
+                    console.log('source : ' + $('select[data-source=' + main_model + ']').length)
+                    if ($('select[data-source=' + main_model + ']').length > 0) {
+
+                        console.log(key + ": " + $e_id[0]);
+
+                        path = "{{ url('/') }}/searchtargetfromsource/" + main_model + '/' +
+                            main_model_id + '/' + value
+                            .code + '/' + value.attribute
+
+                        // alert(path)
+                        console.log(path);
+                        $.ajax({
+                            url: path,
+                            success: function(response) {
+                                console.log(response);
+                                $this.closest('tr').find('select[data-source=' + main_model +
+                                    ']').find('option').hide();
+                                $this.closest('tr').find('select[data-source=' + main_model +
+                                    ']').find('option[data-id=' +
+                                    response.data_id + ']').prop('selected', true).show();
+
+                            }
+                        });
+                    }
+                });
+
+
+
+
+
+
+            });
+        }
+
         $(document).on('click', '#add_new', function() {
             // window.addEventListener('load', function() {
 
@@ -394,6 +530,8 @@ output {
                         $(this).richText();
                     });
                     changeEvents();
+                    changeMulti();
+
                                             $('#role_form_modal').find('select[multiple]').select2();
 
 

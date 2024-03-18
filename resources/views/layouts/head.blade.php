@@ -57,4 +57,25 @@ input[name=main_code] {
 label[for=code] {
     display: none;
 }
+
+.custom-control.custom-checkbox.ms-3.row.input-box {
+    height: 0px !important;
+    min-height: 0;
+    overflow: hidden;
+}
+.per-box {
+    border: 1px solid #ddd;
+    margin-top: 20px;
+}
+
+.per-box h5 {
+    padding: 10px;
+    text-transform: capitalize;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.per-box .row {
+    padding: 0px 15px;
+}
   </style>

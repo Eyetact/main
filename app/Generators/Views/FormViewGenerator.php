@@ -197,7 +197,7 @@ class FormViewGenerator
                                             '{{source}}'
                                         ],
                                         [
-                                            GeneratorUtils::singularKebabCase($field),
+                                            str_replace('-','_',GeneratorUtils::singularKebabCase($field)),
                                             GeneratorUtils::cleanSingularUcWords($constrainModel),
                                             GeneratorUtils::cleanSingularLowerCase($constrainModel),
                                             $options,
@@ -863,7 +863,7 @@ class FormViewGenerator
                                         '{{source}}'
                                     ],
                                     [
-                                        GeneratorUtils::singularKebabCase($field->name),
+                                        str_replace('-','_',GeneratorUtils::singularKebabCase($field->name)),
                                         GeneratorUtils::cleanSingularUcWords($field->name),
                                         GeneratorUtils::cleanSingularLowerCase($constrainModel),
                                         $options,
@@ -914,7 +914,7 @@ class FormViewGenerator
                                         '{{value}}',
                                     ],
                                     [
-                                        GeneratorUtils::singularKebabCase($field->name),
+                                        str_replace('-','_',GeneratorUtils::singularKebabCase($field->name)),
                                         GeneratorUtils::singularCamelCase($field->name),
                                         $fieldUcWords,
                                         $fieldSnakeCase,
@@ -937,7 +937,8 @@ class FormViewGenerator
                                     ],
                                     [
                                         GeneratorUtils::cleanUcWords($field->name),
-                                        GeneratorUtils::kebabCase($field->name),
+                                        str_replace('-','_',GeneratorUtils::kebabCase($field->name)),
+                                        
                                         $fieldSnakeCase,
                                         GeneratorUtils::cleanLowerCase($field->name),
                                         $options,
