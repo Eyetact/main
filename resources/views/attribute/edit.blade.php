@@ -327,33 +327,31 @@
                                                                         </div>
 
 
-                                                                        @if ($multi->condition != 'disabled' && !empty($multi->condition))
+                                                                        {{-- @if ($multi->condition != 'disabled' && !empty($multi->condition)) --}}
                                                                             <div
                                                                                 class="input-box child-drop form-constrain mt-2">
                                                                                 <div
                                                                                     class="input-box form-on-update mt-2 form-on-update-foreign">
 
                                                                                     <select class="google-input "
-                                                                                        name="multi[{{ $index }}][condition]"
+                                                                                        name="multi[{{ $index }}][source]"
                                                                                         required>
 
 
                                                                                         <option value="disabled"
-                                                                                            @selected($multi->condition == 'disabled')>
+                                                                                            @selected($multi->source == 'disabled')>
                                                                                             disabled
 
                                                                                         </option>
-                                                                                        <option value="based"
-                                                                                            @selected($multi->condition == 'based')>
-                                                                                            based on
-                                                                                            selection
-                                                                                        </option>
+                                                                                        @foreach( App\Models\Attribute::where('type','foreignId')->get() as $it )
+                                                                                            <option value="{{explode('_id', $it->code)[0]}}" @selected($multi->source == explode('_id', $it->code)[0])>{{$it->name}}</option>
+                                                                                        @endforeach
 
                                                                                     </select>
 
                                                                                 </div>
                                                                             </div>
-                                                                        @endif
+                                                                        {{-- @endif --}}
                                                                     </div>
                                                                 @endif
 
@@ -466,9 +464,10 @@
             <div class="row">
                 <div class="col-sm-12 input-box">
                     <label class="form-label" for="source">source<span class="text-red">*</span></label>
-                    <select class="google-input " name="source" required  >
+                    <select class="google-input " name="source">
+                        <option >Disable</option>
                         @foreach ($module->fields()->where('type','foreignId')->get() as $item)
-                        <option @selected($attribute->source == explode('_', $item->code)[0]) value="{{ explode('_', $item->code)[0] }}">{{ $item->name }}</option>
+                        <option @selected($attribute->source == explode('_', $item->code)[0]) value="{{ explode('_id', $item->code)[0] }}">{{ $item->name }}</option>
                             
                         @endforeach
                     </select>

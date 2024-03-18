@@ -67,12 +67,11 @@
             </ol>
         </div>
         <div class="page-rightheader">
-            @if(auth()->user()->getDataLimitByModel(6) > count($attributes))
-
-            <div class="btn btn-list">
-                <a id="add_new" href="#" class="btn btn-info" data-toggle="tooltip" title=""
-                    data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
-            </div>
+            @if (auth()->user()->getDataLimitByModel(6) > count($attributes))
+                <div class="btn btn-list">
+                    <a id="add_new" href="#" class="btn btn-info" data-toggle="tooltip" title=""
+                        data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
+                </div>
             @endif
         </div>
     </div>
@@ -418,17 +417,23 @@
                     </div></div>`);
 
                     // if(index > 1)
-                    if(1)
-                    {
+                    if (1) {
+
+                        var listd = '' ;
+                        @foreach( App\Models\Attribute::where('type','foreignId')->get() as $it )
+
+                            listd += '<option value="{{explode('_id', $it->code)[0]}}" >{{ $it->name }}</option>'
+
+                        @endforeach
 
                     parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
-                        <select class="google-input " name="multi[${index}][condition]" required>
+                        <select class="google-input " name="multi[${index}][source]" required>
                             <option value="disabled">disabled</option>
-                            <option value="based">based on selection</option>
+                            ${listd}
                         </select>
                     </div></div>`);
-                }
+                    }
                 }
             });
         })
@@ -465,7 +470,7 @@
             $('input[name=code]').val(id);
         })
 
-        
+
 
         $(document).on('change', '.lookup-drop', function() {
             var id = $(this).find(':selected').data('id');
