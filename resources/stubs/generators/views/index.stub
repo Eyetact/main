@@ -383,7 +383,7 @@ output {
                 var attr = $(this).data('attrs');
 
                 console.log(attr)
-                if (attr == '[]' || attr == [] || attr.length === 0) {
+                if (true) {
 
 
                     var constrain = $(this).data('constrain')
