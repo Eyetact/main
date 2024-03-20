@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ComponentController;
 use App\Http\Controllers\Api\ComponentSetController;
 use App\Http\Controllers\Api\MixtureController;
 use Illuminate\Http\Request;
@@ -56,12 +57,12 @@ Route::middleware(['auth:api'])->group(function () {
 
 
     //Components
-    Route::get('components/{id}', [ComponentSetController::class, 'components']);
+    Route::get('components/{id}', [ComponentController::class, 'components']);
 
-    Route::post('component-create', [ComponentSetController::class, 'save']);
-    Route::get('component/{id}', [ComponentSetController::class, 'view']);
-    Route::get('component/delete/{id}', [ComponentSetController::class, 'delete']);
-    Route::post('component/edit/{id}', [ComponentSetController::class, 'edit']);
+    Route::post('component-create', [ComponentController::class, 'save']);
+    Route::get('component/{id}', [ComponentController::class, 'view']);
+    Route::get('component/delete/{id}', [ComponentController::class, 'delete']);
+    Route::post('component/edit/{id}', [ComponentController::class, 'edit']);
 
 
     //mixtures
