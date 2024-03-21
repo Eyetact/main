@@ -156,6 +156,7 @@ class ComponentController extends ApiController
 
 
         $model = Component::find($id);
+        $machine = Software::find($request->machine_id);
 
 
         if ($model) {
@@ -164,6 +165,8 @@ class ComponentController extends ApiController
             $model->compo_name = $request->name;
             $model->element_id = $request->element_id;
             $model->compo_concentration = $request->concentration;
+            $model->main_part_id = $machine->main_part_id;
+
             // $model->unit_id = $request->unit_id;
             $unit_id = Element::find($request->element_id)->unit_id;
             $model->unit_id = $unit_id;
