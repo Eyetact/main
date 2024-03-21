@@ -401,7 +401,7 @@ output {
                     $('[data-source='+constrain+']').find('option[data-' + constrain + '=' + id + ']')
                         .show();
 
-                    return
+                    
                 }
                 
                 var jsonStringWithDoubleQuotes = attr.replace(/'/g, '"');
