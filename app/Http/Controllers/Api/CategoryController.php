@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Admin\Category;
+use App\Models\Admin\Classification;
 use App\Models\Admin\Software;
 use Illuminate\Http\Request;
 use App\Repositories\Repository;
@@ -18,31 +19,69 @@ class CategoryController extends ApiController
     {
         $this->resource = CategoryResource::class;
         $this->model = app(Category::class);
-        $this->repositry =  new Repository($this->model);
+        $this->repositry = new Repository($this->model);
     }
 
-    public function save( Request $request ){
-        return $this->store( $request->all() );
-    }
-
-    public function edit($id,Request $request){
-
-
-        return $this->update($id,$request->all());
-
-    }
-
-    public function listCategories($id)
+    public function save(Request $request)
     {
-        $machine=Software::find($id);
-        $categories = Category::where('customer_id',auth()->user()->id)
-                              ->orWhere('customer_group_id',$machine->customer_group_id)
-                              ->orWhere('user_id',auth()->user()->id)
-                              ->get();
+
+        $classification = new Classification();
+        $classification->class_child = $request->name;
+        $classification->save();
+
+        $model = $this->repositry->save( $request->all() );
+        $model->classification_id = $classification->id;
+        $model->user_id = auth()->user()->id;
+
+        $model->save();
 
 
 
-        return $this->returnData('data',  CategoryResource::collection($categories), __('Get successfully'));
+        if ($model) {
+            return $this->returnData('data', new $this->resource($model), __('Succesfully'));
+        }
+
+        return $this->returnError(__('Sorry! Failed to create !'));
+    }
+
+    public function edit($id, Request $request)
+    {
+
+
+        $model= Category::find($id);
+
+
+        if ($model) {
+
+            $classification=Classification::find($model->classification_id);
+            $classification->class_child = $request->name;
+            $classification->save();
+
+            return $this->returnData('data', new $this->resource($model), __('Succesfully'));
+        }
+
+        return $this->returnError(__('Sorry! Category Not Found !'));
+    }
+
+
+
+    public function categories($id)
+    {
+        $machine = Software::find($id);
+
+        $categories = Category::where(function ($query) use ($machine) {
+            $query->where('customer_id', auth()->user()->id)
+                ->orWhere('user_id', auth()->user()->id);
+                // ->orWhere('global', 1);
+
+            if ($machine->customer_group_id !== null) {
+                $query->orWhere('customer_group_id', $machine->customer_group_id);
+            }
+        })
+            ->get();
+
+
+        return $this->returnData('data', CategoryResource::collection($categories), __('Get successfully'));
 
     }
 

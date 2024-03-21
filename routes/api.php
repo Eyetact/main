@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ComponentController;
+use App\Http\Controllers\Api\ComponentSetController;
+use App\Http\Controllers\Api\MixtureController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -37,13 +40,39 @@ Route::post('update-user', [AuthController::class, 'updateById']);
 
 
 
+
+
 Route::middleware(['auth:api'])->group(function () {
 
     Route::get('my-config', [AuthController::class, 'config']);
 
 
     //Category
-   Route::get('categories/{id}', [CategoryController::class, 'listCategories']);
+    Route::get('categories/{id}', [CategoryController::class, 'categories']);
+
+    Route::post('category-create', [CategoryController::class, 'save']);
+    Route::get('category/{id}', [CategoryController::class, 'view']);
+    Route::get('category/delete/{id}', [CategoryController::class, 'delete']);
+    Route::post('category/edit/{id}', [CategoryController::class, 'edit']);
+
+
+    //Components
+    Route::get('components/{id}', [ComponentController::class, 'components']);
+
+    Route::post('component-create', [ComponentController::class, 'save']);
+    Route::get('component/{id}', [ComponentController::class, 'view']);
+    Route::get('component/delete/{id}', [ComponentController::class, 'delete']);
+    Route::post('component/edit/{id}', [ComponentController::class, 'edit']);
+
+
+    //mixtures
+    Route::get('mixtures/{id}', [MixtureController::class, 'mixtures']);
+
+
+    //elements
+    Route::get('elements', [ComponentController::class, 'elements']);
+
+
 
 });
 
