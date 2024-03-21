@@ -23,7 +23,19 @@ class MixtureController extends ApiController
 
     public function save(Request $request)
     {
-        return $this->store($request->all());
+
+        $model = new Mixture();
+
+
+        if ($model) {
+            return $this->returnData( 'data' , new $this->resource( $model ), __('Succesfully'));
+        }
+
+        return $this->returnError(__('Sorry! Failed to create !'));
+
+
+
+
     }
 
     public function edit($id, Request $request)

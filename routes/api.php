@@ -69,6 +69,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('mixtures/{id}', [MixtureController::class, 'mixtures']);
 
 
+    //elements
+    Route::get('elements', [ComponentController::class, 'elements']);
+
+
+
 });
 
 
