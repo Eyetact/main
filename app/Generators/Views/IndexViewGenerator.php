@@ -412,6 +412,8 @@ class IndexViewGenerator
 
 
                                 $trhtml .= '<td><div class="input-box">';
+                                $trhtml .= '<input type="hidden"  name="' . $field->code . '[${no}][id]" />';
+
                                 $trhtml .= ' <select data-source="'.$value->source.'" data-attr="${attr_' . $field->id . $key . '}" data-constrain="' . GeneratorUtils::singularSnakeCase($value->constrain) . '" name="' . $field->code . '[${no}][' . $value->code . ']" class="form-select ' . $class . '  google-input multi-type " required="">';
                                 $trhtml .= '${list_' . $field->id . $key . '}';
                                 $trhtml .= '</select>';

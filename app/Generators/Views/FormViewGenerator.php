@@ -794,6 +794,7 @@ class FormViewGenerator
                         }
                         break;
                     case 'foreignId':
+                        
                         // remove '/' or sub folders
                         $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
 
@@ -819,8 +820,8 @@ class FormViewGenerator
                         }
 
                         $options = "
-                        @foreach ($" . GeneratorUtils::pluralCamelCase($constrainModel) . " as $$constrainSingularCamelCase)
-                            <option  '  $dataIds ' value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == $" . $constrainSingularCamelCase . "->id ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
+                        @foreach (\$look_" . GeneratorUtils::pluralCamelCase($constrainModel) . " as $$constrainSingularCamelCase)
+                            <option    $dataIds  value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == $" . $constrainSingularCamelCase . "->id ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
                                 {{ $" . $constrainSingularCamelCase . "->$columnAfterId }}
                             </option>
                         @endforeach";
@@ -1209,6 +1210,7 @@ class FormViewGenerator
 
                                     $totalOptions = count($arrOption);
                                     $template .= '<td><div class="input-box">';
+                                    $template .= '<input type="hidden" value="{{ isset($item->id) ? $item->id : \'\' }}"  name="' . $field->code . '[{{ $index }}][id]" />';
                                     $template .= ' <select data-constrain="' . GeneratorUtils::singularSnakeCase($value->constrain) . '" name="' . $field->code . '[{{ $index }}][' . $value->code . ']" class="form-select ' . $class . '  google-input multi-type" required="">';
 
                                     $template .= '@foreach( \\App\\Models\\Admin\\' . GeneratorUtils::singularPascalCase($value->constrain) . '::all() as $item2 )';
