@@ -372,6 +372,13 @@ output {
             $(document).on('change', 'select', function() {
                 var main_model = $(this).attr('id'); //element
 
+                try {
+                var prev = $(this).closest('td').find('input').val( $(this).find('option:selected').data('id') );
+                // alert($(this).data('id'))
+                } catch (error) {
+                    console.log(error)
+                }
+
                 if ($('[data-source=' + main_model + ']').attr('id') == undefined) {
                     return;
                 }
@@ -394,7 +401,7 @@ output {
                     $('[data-source='+constrain+']').find('option[data-' + constrain + '=' + id + ']')
                         .show();
 
-                    return
+                    
                 }
                 
                 var jsonStringWithDoubleQuotes = attr.replace(/'/g, '"');
@@ -592,7 +599,7 @@ output {
             action: function(e, dt, button, config) {
                 $("#assign_modal").modal('show');
             },
-            text: 'Assign'
+            text: 'Share'
         });
 
         table.buttons().container()
