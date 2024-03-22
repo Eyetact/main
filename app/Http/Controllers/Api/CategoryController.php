@@ -100,7 +100,11 @@ class CategoryController extends ApiController
         if ($request->name == "categories") {
 
             $machine = Software::find($request->machine_id);
+
             $components_set = ComponentsSet::find($machine->components_set_id);
+
+            if( $components_set){
+
             $set_component = json_decode($components_set->set_component);
             $categoryIds = collect($set_component)->pluck('id');
             // dd($categoryIds);
@@ -120,6 +124,7 @@ class CategoryController extends ApiController
 
             }
 
+        }
                 // dd($categories);
 
 
@@ -130,6 +135,9 @@ class CategoryController extends ApiController
 
             $machine = Software::find($request->machine_id);
             $components_set = ComponentsSet::find($machine->components_set_id);
+
+
+            if( $components_set){
             $set_component = json_decode($components_set->set_component);
             $componentIds = collect($set_component)->pluck("id");
 
@@ -143,6 +151,7 @@ class CategoryController extends ApiController
             }
 
 
+        }
 
             return $this->returnData('data', ComponentResource::collection($components), __('Get successfully'));
         }
