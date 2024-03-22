@@ -6,6 +6,7 @@ use App\Http\Resources\MixtureDataResource;
 use App\Models\Admin\ComponentsSet;
 use App\Models\Admin\Mixture;
 use App\Models\Admin\Software;
+use App\Models\SoftMixture;
 use Illuminate\Http\Request;
 use App\Repositories\Repository;
 use App\Http\Controllers\Controller;
@@ -22,52 +23,101 @@ class MixtureController extends ApiController
         $this->repositry = new Repository($this->model);
     }
 
-    // public function save(Request $request)
-    // {
+    public function save(Request $request)
+    {
 
-    //     $machine = Software::find($request->machine_id);
-    //     $model = new Mixture();
-    //     $model->components_set_id = $machine->components_set_id;
-    //     $model->mix_name = $request->name;
-    //     $model->category_id = $request->category_id ?? NULL;
+        $machine = Software::find($request->machine_id);
+        $model = new Mixture();
+        $model->components_set_id = $machine->components_set_id;
+        $model->mix_name = $request->name;
+        $model->category_id = $request->category_id ?? NULL;
 
-    //     $mixComponenets = [];
-    //     $index = 1;
-    //     foreach ($request->mix_component as $item) {
-    //         if (!isset ($item['name'])) {
-    //             return $this->returnError(__('Invalid component name.'));
-    //         }
+        $mixComponenets = [];
+        $index = 1;
+        foreach ($request->mix_component as $item) {
+            if (!isset ($item['name'])) {
+                return $this->returnError(__('Invalid component name.'));
+            }
 
-    //         $mixComponenets[$index] = [
-    //             'id'=> $item['id'],
-    //             'name' => $item['name'],
-    //             'value' => $item['value'],
+            $mixComponenets[$index] = [
+                'id'=> $item['id'],
+                'name' => $item['name'],
+                'value' => $item['value'],
 
-    //         ];
-    //         $index++;
-    //     }
-
-
-    //     $model->mix_component = $mixComponenets;
-    //     $model->user_id = auth()->user()->id;
-    //     $model->save();
-
-    //     if ($model) {
-    //         return $this->returnData('data', new MixtureDataResource($model), __('Succesfully'));
-    //     }
-
-    //     return $this->returnError(__('Sorry! Failed to create !'));
+            ];
+            $index++;
+        }
 
 
+        $model->mix_component = $mixComponenets;
+        $model->user_id = auth()->user()->id;
+        $model->save();
+
+        if ($model) {
 
 
-    // }
+            $softMix= new SoftMixture();
+            $softMix->software_id =  $machine->id;
+            $softMix->mixture_id = $model->id;
+            $softMix->save();
+
+
+
+            return $this->returnData('data', new MixtureDataResource($model), __('Succesfully'));
+        }
+
+        return $this->returnError(__('Sorry! Failed to create !'));
+
+
+
+
+    }
 
     public function edit($id, Request $request)
     {
 
 
-        return $this->update($id, $request->all());
+        $machine = Software::find($request->machine_id);
+        $model = Mixture::find($id);
+        $model->components_set_id = $machine->components_set_id;
+        $model->mix_name = $request->name;
+        $model->category_id = $request->category_id ?? NULL;
+
+
+        if (isset ($request->mix_component)) {
+
+            $mixComponenets = [];
+            $index = 1;
+            foreach ($request->mix_component as $item) {
+                if (!isset ($item['name'])) {
+                    return $this->returnError(__('Invalid component name.'));
+                }
+
+                $mixComponenets[$index] = [
+                    'id' => $item['id'],
+                    'name' => $item['name'],
+                    'value' => $item['value'],
+
+                ];
+                $index++;
+            }
+
+
+
+            $model->mix_component = $mixComponenets;
+
+        }
+
+
+        $model->user_id = auth()->user()->id;
+        $model->save();
+
+        if ($model) {
+            return $this->returnData('data', new MixtureDataResource($model), __('Succesfully'));
+        }
+
+        return $this->returnError(__('Sorry! Failed to create !'));
+
 
     }
 
@@ -99,4 +149,18 @@ class MixtureController extends ApiController
         return $this->returnData('data', MixtureResource::collection($mixtures), __('Get successfully'));
 
     }
+
+
+    public function view($id)
+    {
+        $model = $this->repositry->getByID($id);
+
+        if ($model) {
+            return $this->returnData('data', new MixtureDataResource( $model ), __('Get  succesfully'));
+        }
+
+        return $this->returnError(__('Sorry! Failed to get !'));
+    }
+
+
 }

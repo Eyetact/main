@@ -136,6 +136,9 @@ class ComponentController extends ApiController
                 $set->user_id = auth()->user()->id;
                 $set->save();
 
+                $machine->components_set_id =  $set->id;
+                $machine->save();
+
 
             }
 

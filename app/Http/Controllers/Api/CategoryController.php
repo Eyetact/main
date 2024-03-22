@@ -108,7 +108,6 @@ class CategoryController extends ApiController
 
             foreach ($categoryIds as $categoryId) {
                 $component = Component::find($categoryId);
-                // dd($component);
                 $compo_category = json_decode($component->compo_category, true);
                 $compo_category_collection = collect($compo_category)->pluck('id');
 
