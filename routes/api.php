@@ -56,6 +56,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('category/edit/{id}', [CategoryController::class, 'edit']);
 
 
+
+    //my lists
+    Route::post('my-lists', [CategoryController::class, 'myLists']);
+
+
+
     //Components
     Route::get('components/{id}', [ComponentController::class, 'components']);
 

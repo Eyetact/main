@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\ComponentResource;
+use App\Http\Resources\MixtureResource;
 use App\Models\Admin\Category;
 use App\Models\Admin\Classification;
+use App\Models\Admin\Component;
+use App\Models\Admin\ComponentsSet;
+use App\Models\Admin\Mixture;
 use App\Models\Admin\Software;
 use Illuminate\Http\Request;
 use App\Repositories\Repository;
@@ -29,7 +34,7 @@ class CategoryController extends ApiController
         $classification->class_child = $request->name;
         $classification->save();
 
-        $model = $this->repositry->save( $request->all() );
+        $model = $this->repositry->save($request->all());
         $model->classification_id = $classification->id;
         $model->user_id = auth()->user()->id;
 
@@ -48,12 +53,12 @@ class CategoryController extends ApiController
     {
 
 
-        $model= Category::find($id);
+        $model = Category::find($id);
 
 
         if ($model) {
 
-            $classification=Classification::find($model->classification_id);
+            $classification = Classification::find($model->classification_id);
             $classification->class_child = $request->name;
             $classification->save();
 
@@ -72,16 +77,88 @@ class CategoryController extends ApiController
         $categories = Category::where(function ($query) use ($machine) {
             $query->where('customer_id', auth()->user()->id)
                 ->orWhere('user_id', auth()->user()->id);
-                // ->orWhere('global', 1);
+            // ->orWhere('global', 1);
 
             if ($machine->customer_group_id !== null) {
                 $query->orWhere('customer_group_id', $machine->customer_group_id);
             }
         })
             ->get();
+            // dd($categories);
 
 
         return $this->returnData('data', CategoryResource::collection($categories), __('Get successfully'));
+
+    }
+
+
+
+    public function myLists(Request $request)
+    {
+
+        if ($request->name == "categories") {
+
+            $machine = Software::find($request->machine_id);
+            $components_set = ComponentsSet::find($machine->components_set_id);
+            $set_component = json_decode($components_set->set_component);
+            $categoryIds = collect($set_component)->pluck('id');
+            // dd($categoryIds);
+            $categories = collect([]);
+
+            foreach ($categoryIds as $categoryId) {
+                $component = Component::find($categoryId);
+                // dd($component);
+                $compo_category = json_decode($component->compo_category, true);
+                $compo_category_collection = collect($compo_category)->pluck('id');
+
+                foreach ($compo_category_collection as $categoryId) {
+                    $category = Category::find($categoryId);
+                    if ($category && !$categories->contains('id', $category->id)) {
+                        $categories->push($category);
+                    }
+                }
+
+            }
+
+                // dd($categories);
+
+
+            return $this->returnData('data',  CategoryResource::collection($categories), __('Get successfully'));
+        }
+        if ($request->name == "components") {
+
+
+            $machine = Software::find($request->machine_id);
+            $components_set = ComponentsSet::find($machine->components_set_id);
+            $set_component = json_decode($components_set->set_component);
+            $componentIds = collect($set_component)->pluck("id");
+
+            $components = collect([]);
+
+            foreach ($componentIds as $componentId) {
+                $component = Component::find($componentId);
+                if ($component) {
+                    $components->push($component);
+                }
+            }
+
+
+
+            return $this->returnData('data', ComponentResource::collection($components), __('Get successfully'));
+        }
+
+        if ($request->name == "mixtures") {
+
+
+            $machine = Software::find($request->machine_id);
+            $mixtures = $machine->mixtures;
+
+
+            return $this->returnData('data', MixtureResource::collection($mixtures), __('Get successfully'));
+
+
+
+        }
 
     }
 
