@@ -74,6 +74,11 @@ Route::middleware(['auth:api'])->group(function () {
     //mixtures
     Route::get('mixtures/{id}', [MixtureController::class, 'mixtures']);
 
+    Route::post('mixture-create', [MixtureController::class, 'save']);
+    Route::get('mixture/{id}', [MixtureController::class, 'view']);
+    Route::get('mixture/delete/{id}', [MixtureController::class, 'delete']);
+    Route::post('mixture/edit/{id}', [MixtureController::class, 'edit']);
+
 
     //elements
     Route::get('elements', [ComponentController::class, 'elements']);

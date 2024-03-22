@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\MixtureDataResource;
 use App\Models\Admin\ComponentsSet;
 use App\Models\Admin\Mixture;
 use App\Models\Admin\Software;
@@ -21,22 +22,46 @@ class MixtureController extends ApiController
         $this->repositry = new Repository($this->model);
     }
 
-    public function save(Request $request)
-    {
+    // public function save(Request $request)
+    // {
 
-        $model = new Mixture();
+    //     $machine = Software::find($request->machine_id);
+    //     $model = new Mixture();
+    //     $model->components_set_id = $machine->components_set_id;
+    //     $model->mix_name = $request->name;
+    //     $model->category_id = $request->category_id ?? NULL;
+
+    //     $mixComponenets = [];
+    //     $index = 1;
+    //     foreach ($request->mix_component as $item) {
+    //         if (!isset ($item['name'])) {
+    //             return $this->returnError(__('Invalid component name.'));
+    //         }
+
+    //         $mixComponenets[$index] = [
+    //             'id'=> $item['id'],
+    //             'name' => $item['name'],
+    //             'value' => $item['value'],
+
+    //         ];
+    //         $index++;
+    //     }
 
 
-        if ($model) {
-            return $this->returnData('data', new $this->resource($model), __('Succesfully'));
-        }
+    //     $model->mix_component = $mixComponenets;
+    //     $model->user_id = auth()->user()->id;
+    //     $model->save();
 
-        return $this->returnError(__('Sorry! Failed to create !'));
+    //     if ($model) {
+    //         return $this->returnData('data', new MixtureDataResource($model), __('Succesfully'));
+    //     }
+
+    //     return $this->returnError(__('Sorry! Failed to create !'));
 
 
 
 
-    }
+    // }
 
     public function edit($id, Request $request)
     {

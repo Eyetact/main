@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\ComponentResource;
+use App\Http\Resources\MixtureDataResource;
 use App\Http\Resources\MixtureResource;
 use App\Models\Admin\Category;
 use App\Models\Admin\Classification;
@@ -154,7 +155,7 @@ class CategoryController extends ApiController
             $mixtures = $machine->mixtures;
 
 
-            return $this->returnData('data', MixtureResource::collection($mixtures), __('Get successfully'));
+            return $this->returnData('data', MixtureDataResource::collection($mixtures), __('Get successfully'));
 
 
 
