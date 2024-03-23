@@ -56,6 +56,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('category/edit/{id}', [CategoryController::class, 'edit']);
 
 
+
+    //my lists
+    Route::post('my-lists', [CategoryController::class, 'myLists']);
+
+
+
     //Components
     Route::get('components/{id}', [ComponentController::class, 'components']);
 
@@ -67,6 +73,11 @@ Route::middleware(['auth:api'])->group(function () {
 
     //mixtures
     Route::get('mixtures/{id}', [MixtureController::class, 'mixtures']);
+
+    Route::post('mixture-create', [MixtureController::class, 'save']);
+    Route::get('mixture/{id}', [MixtureController::class, 'view']);
+    Route::get('mixture/delete/{id}', [MixtureController::class, 'delete']);
+    Route::post('mixture/edit/{id}', [MixtureController::class, 'edit']);
 
 
     //elements

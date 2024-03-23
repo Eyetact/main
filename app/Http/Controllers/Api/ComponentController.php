@@ -56,7 +56,7 @@ class ComponentController extends ApiController
             }
 
             $setCategories[$index] = [
-                // 'id'=> $item['id'],
+                'id'=> $item['id'],
                 'name' => $item['name'],
                 'minimum' => $item['minimum'],
                 'maximum' => $item['maximum'],
@@ -136,6 +136,9 @@ class ComponentController extends ApiController
                 $set->user_id = auth()->user()->id;
                 $set->save();
 
+                $machine->components_set_id =  $set->id;
+                $machine->save();
+
 
             }
 
@@ -167,6 +170,7 @@ class ComponentController extends ApiController
             $model->compo_concentration = $request->concentration;
             $model->main_part_id = $machine->main_part_id;
 
+
             // $model->unit_id = $request->unit_id;
             $unit_id = Element::find($request->element_id)->unit_id;
             $model->unit_id = $unit_id;
@@ -183,7 +187,7 @@ class ComponentController extends ApiController
                     }
 
                     $setCategories[$index] = [
-                        // 'id' => $item['id'],
+                        'id' => $item['id'],
                         'name' => $item['name'],
                         'minimum' => $item['minimum'],
                         'maximum' => $item['maximum'],

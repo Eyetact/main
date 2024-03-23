@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MixtureResource extends JsonResource
+class MixtureDataResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,8 +21,8 @@ class MixtureResource extends JsonResource
 
             'id' => $this->id,
             'name' => $this->mix_name,
-            // 'category_id' => $this->category_id,
-            // 'components' => $components,
+            'category_id' => $this->category_id,
+            'components' => json_decode($this->mix_component, true),
             // 'component_set_id' => $this->components_set_id,
 
 
