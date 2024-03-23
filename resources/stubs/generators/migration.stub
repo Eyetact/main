@@ -26,6 +26,10 @@ return new class extends Migration
             if (!Schema::hasColumn('{{tableNamePluralLowecase}}', 'customer_id')){
                 $table->integer('customer_id')->nullable();
             }
+
+            if (!Schema::hasColumn('{{tableNamePluralLowecase}}', 'assign_id')){
+                $table->integer('assign_id')->nullable();
+            }
             $table->timestamps();
         });
     }

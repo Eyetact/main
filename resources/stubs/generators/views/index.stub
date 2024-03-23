@@ -185,6 +185,46 @@
             </div>
         </div>
     </div>
+
+    
+
+    <div class="modal fade bd-example-modal-lg" id="assign_modal2" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Assign Selected</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
+
+                    <form  action="{{route('assign-record', '{{modelNameSingularUcWords}}')}}" method="post">
+                    @csrf
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <div class="input-box" style="margin:0 !important">
+                                <select class="google-input assign_g" name="ids[]" tabindex="null" multiple>
+                                    @foreach (\App\Models\Admin\{{modelNameSingularUcWords}}::where('user_id',1)->where('assign_id',null)->get() as $item)
+                                        <option value="{{ $item->id }}">{{ $item->id }} - {{ $item->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <button class="btn btn-info " type="submit" style="height: 50px;">Assign</button>
+                        </div>
+                    </div>
+                    </form>
+
+                    
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('css')
     <!-- Data table css -->
@@ -595,12 +635,24 @@ output {
             ],
         });
 
+        
         table.button().add(0, {
             action: function(e, dt, button, config) {
                 $("#assign_modal").modal('show');
             },
             text: 'Share'
         });
+        @php 
+            $model = \App\Models\Module::where('code','{{code}}')->first();
+        @endphp
+        @if($model->is_system && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('vendor')))
+        table.button().add(0, {
+            action: function(e, dt, button, config) {
+                $("#assign_modal2").modal('show');
+            },
+            text: 'Assign'
+        });
+        @endif
 
         table.buttons().container()
             .appendTo('#data_table_wrapper .col-md-6:eq(0)');

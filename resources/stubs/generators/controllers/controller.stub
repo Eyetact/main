@@ -50,7 +50,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
 
 
 
-                ${{modelNamePluralCamelCase}} = {{modelNameSingularPascalCase}}::whereIn('user_id', $userids)->orWhere('customer_id',auth()->user()->id)->get();
+                ${{modelNamePluralCamelCase}} = {{modelNameSingularPascalCase}}::whereIn('user_id', $userids)->orWhere('customer_id',auth()->user()->id)->orWhere('assign_id',auth()->user()->id)->get();
             }
 
             if (auth()->user()->access_table == "Individual") {
@@ -59,7 +59,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
 
 
 
-                ${{modelNamePluralCamelCase}} = {{modelNameSingularPascalCase}}::where('user_id', auth()->user()->id)->orWhereIn('user_id', $empl_ids)->orWhere('customer_id',auth()->user()->id)->get();
+                ${{modelNamePluralCamelCase}} = {{modelNameSingularPascalCase}}::where('user_id', auth()->user()->id)->orWhereIn('user_id', $empl_ids)->orWhere('customer_id',auth()->user()->id)->orWhere('assign_id',auth()->user()->id)->get();
 
             }
 

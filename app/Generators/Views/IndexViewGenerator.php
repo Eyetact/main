@@ -142,6 +142,9 @@ class IndexViewGenerator
             }
         }
 
+        $modelNameSingularUcWords= GeneratorUtils::cleanSingularUcWords($code);
+
+
         $template = str_replace(
             [
                 '{{modelNamePluralUcWords}}',
@@ -150,7 +153,9 @@ class IndexViewGenerator
                 '{{modelNamePluralLowerCase}}',
                 '{{thColumns}}',
                 '{{tdColumns}}',
-                '{{trHtml}}'
+                '{{trHtml}}',
+                '{{modelNameSingularUcWords}}',
+                '{{code}}'
             ],
             [
                 $modelNamePluralUcWords,
@@ -159,7 +164,9 @@ class IndexViewGenerator
                 $modelNamePluralLowerCase,
                 $thColums,
                 $tdColumns,
-                ''
+                '',
+                $modelNameSingularUcWords,
+                $code
             ],
             GeneratorUtils::getTemplate('views/index')
         );
@@ -193,6 +200,7 @@ class IndexViewGenerator
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNamePluralLowerCase = GeneratorUtils::cleanPluralLowerCase($model);
         $modelNameSingularLowercase = GeneratorUtils::cleanSingularLowerCase($code);
+        $modelNameSingularUcWords= GeneratorUtils::cleanSingularUcWords($code);
 
         $thColums = '';
         $tdColumns = '';
@@ -537,7 +545,10 @@ class IndexViewGenerator
                 '{{modelNamePluralLowerCase}}',
                 '{{thColumns}}',
                 '{{tdColumns}}',
-                '{{trHtml}}'
+                '{{trHtml}}',
+                '{{modelNameSingularUcWords}}',
+                '{{code}}'
+
             ],
             [
                 $modelNamePluralUcWords,
@@ -546,7 +557,9 @@ class IndexViewGenerator
                 $modelNamePluralLowerCase,
                 $thColums,
                 $tdColumns,
-                $trhtml
+                $trhtml,
+                $modelNameSingularUcWords,
+                $code
             ],
             GeneratorUtils::getTemplate('views/index')
         );

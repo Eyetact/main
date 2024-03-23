@@ -62,13 +62,13 @@ class ModuleManagerController extends Controller
         //     DB::beginTransaction();
         $module = Module::create([
             'name' => $request->name,
-            'is_system' => isset($request->is_system) ? 1 : 0,
-            'code' => str()->snake(str_replace(['.','/','\\','-',' ','!','@','#','$','%','^','&','*','(',')','+','=','<','>',',','{','}','[',']',':',';','"','\''], '', str($request['code'])->lower())),
+            'is_system' => isset ($request->is_system) ? 1 : 0,
+            'code' => str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower())),
             'user_id' => auth()->user()->id,
 
         ]);
 
-        $request->code = str()->snake(str_replace(['.','/','\\','-',' ','!','@','#','$','%','^','&','*','(',')','+','=','<','>',',','{','}','[',']',':',';','"','\''], '', str($request['code'])->lower()));
+        $request->code = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
 
         $requestData = $request->all();
         $request->validated();
@@ -82,7 +82,7 @@ class ModuleManagerController extends Controller
         $this->generatorService->generatePermission($request->all(), $module->id);
 
 
-        if (!empty($request->fields[0])) {
+        if (!empty ($request->fields[0])) {
             foreach ($request->fields as $i => $attr) {
                 $createArr = [
 
@@ -99,8 +99,8 @@ class ModuleManagerController extends Controller
                     'constrain' => $request['constrains'][$i],
                     'on_update_foreign' => $request['on_update_foreign'][$i],
                     'on_delete_foreign' => $request['on_delete_foreign'][$i],
-                    'is_enable' => isset($request['is_enable'][$i]) ? 1 : 0,
-                    'is_system' => isset($request['is_system'][$i]) ? 1 : 0,
+                    'is_enable' => isset ($request['is_enable'][$i]) ? 1 : 0,
+                    'is_system' => isset ($request['is_system'][$i]) ? 1 : 0,
                     'max_size' => $request['files_sizes'][$i],
                     'file_type' => $request['file_types'][$i],
 
@@ -124,7 +124,7 @@ class ModuleManagerController extends Controller
             $createData = array(
                 'name' => $requestData['name'],
                 'module_id' => $module->id,
-                'include_in_menu' => (isset($requestData['include_in_menu']) ?? 0),
+                'include_in_menu' => (isset ($requestData['include_in_menu']) ?? 0),
                 'menu_type' => $requestData['menu_type'],
                 'path' => str_replace(' ', '', $requestData['path']),
                 'sequence' => $sequence,
@@ -157,7 +157,7 @@ class ModuleManagerController extends Controller
         //     DB::beginTransaction();
         $module = Module::create([
             'name' => $request->name,
-            'is_system' => isset($request->is_system) ? 1 : 0,
+            'is_system' => isset ($request->is_system) ? 1 : 0,
             'code' => $request->name,
             'user_id' => auth()->user()->id,
 
@@ -227,7 +227,7 @@ class ModuleManagerController extends Controller
             $data->parent = $item['parent'];
             $data->save();
             // Check if there are children and recursively process them
-            if (isset($item['children']) && is_array($item['children']) && count($item['children']) > 0) {
+            if (isset ($item['children']) && is_array($item['children']) && count($item['children']) > 0) {
                 $this->processArray($item['children']);
             }
         }
@@ -238,9 +238,10 @@ class ModuleManagerController extends Controller
 
         $module = Module::find($id);
 
-        if (!empty($request->name)):
+        if (!empty ($request->name)):
             $module->update(
                 [
+                    'is_system' => isset ($request->is_system) ? 1 : 0,
                     'name' => $request->name,
                 ]
             );
@@ -250,7 +251,7 @@ class ModuleManagerController extends Controller
                 [
                     'name' => $request->name,
                     'sidebar_name' => $request->sidebar_name,
-                    'include_in_menu' => isset($request->include_in_menu) ? 1 : 0,
+                    'include_in_menu' => isset ($request->include_in_menu) ? 1 : 0,
                 ]
             );
         endif;
@@ -327,18 +328,17 @@ class ModuleManagerController extends Controller
     public function deleteORRestore(Request $request)
     {
 
-        $model=Module::find($request->model_id);
-        $model->is_delete = $request->is_delete ;
+        $model = Module::find($request->model_id);
+        $model->is_delete = $request->is_delete;
         $model->save();
 
-        $menu=MenuManager::where('module_id',$model->id)->first();
-        $menu->is_delete = $request->is_delete ;
+        $menu = MenuManager::where('module_id', $model->id)->first();
+        $menu->is_delete = $request->is_delete;
         $menu->save();
 
         if ($model) {
-            if($request->is_delete == 1)
-            {
-            return response()->json(['msg' => 'Module deleted successfully!'], 200);
+            if ($request->is_delete == 1) {
+                return response()->json(['msg' => 'Module deleted successfully!'], 200);
             }
             return response()->json(['msg' => 'Module restored successfully!'], 200);
         } else {
@@ -379,12 +379,13 @@ class ModuleManagerController extends Controller
         return view('module_manager.menu-edit', compact('module'));
     }
 
-    public function addSub( $id ){
-        return view('module_manager.subform',compact('id'));
+    public function addSub($id)
+    {
+        return view('module_manager.subform', compact('id'));
     }
 
 
-    public function storeSub(Request $request,$id)
+    public function storeSub(Request $request, $id)
     {
 
         // try {
@@ -415,9 +416,9 @@ class ModuleManagerController extends Controller
 
         if ($module) {
 
-            $menuParent= MenuManager::where('module_id',$id)->first()->id;
+            $menuParent = MenuManager::where('module_id', $id)->first()->id;
 
-            $requestData=$request->all();
+            $requestData = $request->all();
 
             $lastSequenceData = MenuManager::where('parent', $menuParent)->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->orderBy('id', 'desc')->first();
             $sequence = 0;
@@ -437,7 +438,7 @@ class ModuleManagerController extends Controller
                 'path' => $modelNamePluralLowercase,
                 'sequence' => $sequence,
                 'parent' => $menuParent,
-                'sidebar_name' =>$request->name,
+                'sidebar_name' => $request->name,
             );
             $menuManager = MenuManager::create($createData);
         }
@@ -454,7 +455,8 @@ class ModuleManagerController extends Controller
 
     }
 
-    public function forceDelete($id){
+    public function forceDelete($id)
+    {
 
         $model = Module::find($id);
         foreach ($model->fields as $attribute) {
@@ -464,15 +466,15 @@ class ModuleManagerController extends Controller
             }
         }
 
-        
-        $model->delete();
-        $menu = MenuManager::where('module_id',$id)->first();
 
-        $menus = MenuManager::where('parent',$menu->id)->update(['parent'=>0]);
+        $model->delete();
+        $menu = MenuManager::where('module_id', $id)->first();
+
+        $menus = MenuManager::where('parent', $menu->id)->update(['parent' => 0]);
 
         $menu->delete();
 
-        
+
 
         $this->flashRepository->setFlashSession('alert-success', 'Module Was Deleted successfully.');
         return redirect()->route('module_manager.index');

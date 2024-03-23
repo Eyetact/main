@@ -287,7 +287,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 });
 
-include_once(base_path('routes/generator/generator.php'));
+include_once (base_path('routes/generator/generator.php'));
 
 Route::get('clear', function () {
     Artisan::call('optimize:clear');
@@ -301,12 +301,11 @@ Route::get('reg-perm', function () {
 });
 
 
-Route::get('/get-mixtures/{id}',  function ($id)
-{
+Route::get('/get-mixtures/{id}', function ($id) {
     $componentSetId = $id;
 
     if ($componentSetId) {
-        $mixtures =  App\Models\Admin\Mixture::where('components_set_id', $componentSetId)->get();
+        $mixtures = App\Models\Admin\Mixture::where('components_set_id', $componentSetId)->get();
     } else {
         $mixtures = [];
     }
@@ -325,7 +324,7 @@ Route::get(
         $id = $for_key_attr_name;
         $target_model = "App\Models\Admin\\" . GeneratorUtils::setModelName($target_model[0]);
         // dd($target_model);
-
+    
         $target_data = $target_model::find($element->$for_key_attr_name);
         $target_data->$target_result_attr;
         return response()->json([
@@ -364,5 +363,19 @@ Route::get('gettarget/{code}', function ($code) {
 
     return $options;
 });
+
+Route::post('assign-record/{model}', function (Request $request, $model) {
+
+    foreach ($request->ids as $id) {
+        $fullClass = "App\Models\Admin\\" . GeneratorUtils::setModelName($model); 
+        $record = $fullClass::find($id);
+
+        $newRecord = $record->replicate();
+        $newRecord->assign_id = auth()->user()->id;
+        $newRecord->user_id = null;
+        $newRecord->save();
+    }
+    return redirect()->back();
+})->name('assign-record');
 
 
