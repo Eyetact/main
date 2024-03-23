@@ -231,8 +231,13 @@ class GeneratorUtils
         $table = GeneratorUtils::pluralSnakeCase($table);
         $allColums = Schema::getColumnListing($table);
 
-        if (sizeof($allColums) > 0) {
-            $column = $allColums[1];
+        if (sizeof($allColums) > 5) {
+
+            foreach ($allColums as $key => $value) {
+                if($value == 'updated_at'){
+                    $column = $allColums[$key + 1];
+                }
+            }
         } else {
             $column = "id";
         }

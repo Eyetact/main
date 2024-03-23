@@ -206,7 +206,11 @@
                             <div class="input-box" style="margin:0 !important">
                                 <select class="google-input assign_g" name="ids[]" tabindex="null" multiple>
                                     @foreach (\App\Models\Admin\{{modelNameSingularUcWords}}::where('user_id',1)->where('assign_id',null)->get() as $item)
-                                        <option value="{{ $item->id }}">{{ $item->id }} - {{ $item->name }}
+
+                                    @php 
+                                        $column = \App\Generators\GeneratorUtils::getColumnAfterId('{{modelNameSingularUcWords}}');
+                                    @endphp
+                                        <option value="{{ $item->id }}">{{ $item->id }} - {{ $item->$column }}
                                         </option>
                                     @endforeach
                                 </select>
