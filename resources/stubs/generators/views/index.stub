@@ -12,15 +12,18 @@
         </div>
         <div class="page-rightheader">
         @can('create.{{modelNameSingularLowercase}}')
-        @if(auth()->user()->data_limit > auth()->user()->count)
+       @php
+                    $model_id = App\Models\Permission::where('name', 'create.{{modelNameSingularLowercase}}')?->first()?->module;
+                    $model = App\Models\Module::find($model_id)
+                    // dd($model_id);
+                @endphp
+                     @if (auth()->user()->checkAllowdByModelID($model_id))
+                    <div class="btn btn-list">
+                        <a id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
+                            data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
+                    </div>
 
-
-            <div class="btn btn-list">
-                <a id="add_new" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="Add new"><i
-                        class="fe fe-plus mr-1"></i> Add new </a>
-            </div>
-
-           @endif
+                @endif
             @endcan
         </div>
     </div>
@@ -45,7 +48,7 @@
 
                 </div>
                 <div class="card-body">
-                
+
                     <div class="table-responsive p-1">
                         <table class="table align-items-center mb-0" id="data_table" width="100%">
                             <thead>
@@ -445,9 +448,9 @@ output {
                     $('[data-source='+constrain+']').find('option[data-' + constrain + '=' + id + ']')
                         .show();
 
-                    
+
                 }
-                
+
                 var jsonStringWithDoubleQuotes = attr.replace(/'/g, '"');
                 var obj = JSON.parse(jsonStringWithDoubleQuotes);
 

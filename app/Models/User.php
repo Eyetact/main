@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Generators\GeneratorUtils;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -121,7 +122,7 @@ class User extends Authenticatable
 
     public function setAccessTableAttribute($value)
     {
-        if (empty($value)) {
+        if (empty ($value)) {
             $this->attributes['access_table'] = "Individual";
         }
         $this->attributes['access_table'] = $value;
@@ -143,30 +144,49 @@ class User extends Authenticatable
         $super = $this->hasRole('super');
         if ($super) {
 
-            return 1000;
+            return 10000;
 
         }
         //employee case
         if (count($this->subscriptions) == 0) {
 
             if (auth()->user()->user_id == 1) {
-                return 1000;
+                return 10000;
 
             }
         }
 
-        if ($this->hasRole('vendor') || $this->hasRole('admin')) {
+
+        if ($this->hasRole('admin')) {
 
             $sub_id = $this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->id;
 
-            $sum=Limit::where('subscription_id',$sub_id)->sum('data_limit');
+            $sum = Limit::where('subscription_id', $sub_id)->sum('data_limit');
 
-        }
-        else{
+            $users = User::role('vendor')->where('user_id', $this->id)->get();
+        
+
+            foreach ($users as $user) {
+
+                $sub_id = $user->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->id;
+                if($sub_id){
+                    $sum += Limit::where('subscription_id', $sub_id)->sum('data_limit');
+                }
+
+            }
+            // dd($sum);
+
+        } else if ($this->hasRole('vendor')) {
+
+            $sub_id = $this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->id;
+
+            $sum = Limit::where('subscription_id', $sub_id)->sum('data_limit');
+
+        } else {
 
             $customer = User::find($this->user_id);
             $sub_id = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->id;
-            $sum=Limit::where('subscription_id',$sub_id)->sum('data_limit');
+            $sum = Limit::where('subscription_id', $sub_id)->sum('data_limit');
 
         }
 
@@ -235,7 +255,7 @@ class User extends Authenticatable
     {
         $super = $this->hasRole('super');
         if ($super) {
-            return 1000;
+            return 10000;
         }
         //employee case
         if (count($this->subscriptions) == 0) {
@@ -254,14 +274,15 @@ class User extends Authenticatable
 
         }
 
-        if($this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()){
+        if ($this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()) {
             $current_plan = $this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan;
 
             $limit = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first();
 
-            if($limit){
+            if ($limit) {
 
-                return $limit?->data_limit;;
+                return $limit?->data_limit;
+                ;
             }
         }
 
@@ -279,5 +300,104 @@ class User extends Authenticatable
 
     //$user->data_limit < count(unit::all())
 
+    public function getCountByModelID($model_id)
+    {
+        $model = Module::find($model_id);
+        $sum = 0;
+
+        $super = $this->hasRole('super');
+        if ($super) {
+
+            return 10000;
+
+        }
+        //employee case
+        if (count($this->subscriptions) == 0) {
+
+            if (auth()->user()->user_id == 1) {
+                return 10000;
+
+            }
+        }
+
+        if ($model->user_id == 1) {
+
+            $modelName = "App\Models\Admin\\" . GeneratorUtils::setModelName($model->code);
+
+            $users = User::where('user_id', auth()->user()->id)->pluck('id');
+            $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
+            return $sum;
+            
+
+        } else {
+
+
+            if ($this->hasRole('admin')) {
+
+                $sub_id = $this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->id;
+                $sum = Limit::where('subscription_id', $sub_id)->where('module_id', $model_id)->sum('data_limit');
+
+                $users = User::role('vendor')->where('user_id', $this->user_id)->get();
+                foreach ($users as $user) {
+
+                    $sub_id = $user->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->id;
+
+                    $sum += Limit::where('subscription_id', $sub_id)->sum('data_limit');
+
+                }
+
+            } else if ($this->hasRole('vendor')) {
+
+                $sub_id = $this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->id;
+                $sum = Limit::where('subscription_id', $sub_id)->where('module_id', $model_id)->sum('data_limit');
+                return $sum;
+
+            } else {
+
+                $customer = User::find($this->user_id);
+                $sub_id = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->id;
+                $sum = Limit::where('subscription_id', $sub_id)->where('module_id', $model_id)->sum('data_limit');
+                return $sum;
+
+            }
+
+            return $sum;
+        }
+    }
+
+
+    public function checkAllowdByModelID($model_id)
+    {
+        $model = Module::find($model_id);
+        // dd($model);
+        $sum = 0;
+
+        $super = $this->hasRole('super');
+        if ($super) {
+
+            return true;
+
+        }
+        //admin employee case
+        if (count($this->subscriptions) == 0) {
+
+            if (auth()->user()->user_id == 1) {
+                return true;
+
+            }
+        }
+        if ($model->user_id == 1) {
+            if ($this->getDataLimitByModel($model_id) >= 10000) {
+                return true;
+            }
+            return $this->getDataLimitByModel($model_id) > $this->getCountByModelID($model_id);
+        }
+        // dd($this->count);
+
+        return $this->data_limit > $this->count;
+
+    }
 
 }
+// $this->getDataLimitByModel => get max allowd data limit
+// $this->getCountByModelID($model_id) get inserted data from models by admin

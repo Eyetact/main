@@ -52,6 +52,12 @@ class Permission extends Model
     }
 
 
+
+    public function model(){
+        return $this->belongsTo(Module::class, 'module');
+    }
+
+
     public function getCountByRole($role,$type =0){
         if($type){
             return isset($this->permissionCount()?->where('role_id',$role)?->first()?->type) ? $this->permissionCount()?->where('role_id',$role)?->first()?->type : 'day';
@@ -59,6 +65,6 @@ class Permission extends Model
         return (int)$this->permissionCount()?->where('role_id',$role)?->first()?->count;
     }
 
-    
+
 
 }
