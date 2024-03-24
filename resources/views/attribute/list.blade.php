@@ -67,12 +67,10 @@
             </ol>
         </div>
         <div class="page-rightheader">
-            @if (auth()->user()->getDataLimitByModel(58) > count($attributes))
                 <div class="btn btn-list">
                     <a id="add_new" href="#" class="btn btn-info" data-toggle="tooltip" title=""
                         data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
                 </div>
-            @endif
         </div>
     </div>
     <!--End Page header-->

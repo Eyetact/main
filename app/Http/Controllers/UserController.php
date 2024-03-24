@@ -326,6 +326,19 @@ class UserController extends Controller
             }
             return redirect()->route('module_manager.index');
         }
+        $c_group = 1;
+        switch ($request->role) {
+            case 'admin':
+                $c_group = 2;
+                break;
+
+            case 'vendor':
+                $c_group = 3;
+                break;
+
+
+
+        }
         // dd( $request->all() );
         $user = User::create([
             'name' => $request->name,
@@ -338,7 +351,7 @@ class UserController extends Controller
             'access_table' => $request->access_table ? $request->access_table : "Individual",
             'password' => bcrypt($request->password),
             'user_id' => Auth::user()->id,
-            'group_id' => 1,
+            'group_id' => $c_group,
             'ugroup_id' => 1,
         ]);
         if ($request->group_id):

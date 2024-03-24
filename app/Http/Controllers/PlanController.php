@@ -102,7 +102,7 @@ class PlanController extends Controller
                 $modelName = "App\Models\Admin\\" . GeneratorUtils::setModelName($module->code);
 
                 $users = User::where('user_id', auth()->user()->id)->pluck('id');
-                $total += $modelName::whereIn('user_id', $users)->orWhere('user_id',auth()->user()->id)->count();
+                $total += $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
 
                 // foreach ($users as $user) {
                 //     $totalCustomer += $modelName::whereIn('user_id', [$user->id])->count();
@@ -135,7 +135,7 @@ class PlanController extends Controller
 
 
         foreach ($request->checkAll as $key => $check) {
-            if(isset($limits[$key])){
+            if (isset ($limits[$key])) {
 
                 $limit = new Limit();
                 $limit->plan_id = $plan->id;
@@ -184,7 +184,39 @@ class PlanController extends Controller
         $plan = Plan::findOrFail($id);
         $allPermission = Permission::all();
         $groupPermission = $allPermission->groupBy('module');
-        return view('plans.show', compact('plan', 'permissions', 'user_permissions', 'customer_permissions', 'allPermission', 'groupPermission'));
+
+        if (auth()->user()->hasRole('super')) {
+
+            $availableModel = 1000000;
+            $availableData = 1000000;
+
+        }
+
+        if (auth()->user()->hasRole('admin')) {
+
+            $availableModel = auth()->user()->model_limit - auth()->user()->current_model_limit;
+
+            $modules = Module::where('user_id', auth()->user()->id)->get();
+
+            $total = 0;
+
+            foreach ($modules as $module) {
+                $modelName = "App\Models\Admin\\" . GeneratorUtils::setModelName($module->code);
+
+                $users = User::where('user_id', auth()->user()->id)->pluck('id');
+                $total += $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
+
+                // foreach ($users as $user) {
+                //     $totalCustomer += $modelName::whereIn('user_id', [$user->id])->count();
+                // }
+
+                // $totalAdmin += $modelName::whereIn('user_id', [auth()->user()->id])->count();
+            }
+
+            // $total = $totalCustomer + $totalAdmin;
+            $availableData = auth()->user()->data_limit - $total;
+        }
+        return view('plans.show', compact('plan', 'permissions', 'user_permissions', 'customer_permissions', 'allPermission', 'groupPermission', 'availableModel', 'availableData'));
     }
 
 
@@ -209,8 +241,11 @@ class PlanController extends Controller
 
         foreach ($request->limit as $key => $value) {
             $limit = Limit::where('module_id', $key)->where('plan_id', $id)->first();
-            $limit->data_limit = $value;
-            $limit->save();
+            if ($limit) {
+                $limit->data_limit = $value;
+                $limit->save();
+            }
+
         }
 
         $plan->permissions()->detach();

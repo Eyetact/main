@@ -165,7 +165,7 @@
         </div>
         <div class="page-rightheader">
             @can('create.plan')
-            @if(auth()->user()->getDataLimitByModel(4) == 0)
+            @if(auth()->user()->getDataLimitByModel(4) == 10000)
 
             <div class="btn btn-list">
                 <a id="add_new" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="Add new"><i
