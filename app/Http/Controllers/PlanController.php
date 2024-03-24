@@ -104,6 +104,11 @@ class PlanController extends Controller
                 $users = User::where('user_id', auth()->user()->id)->pluck('id');
                 $total += $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
 
+
+
+
+
+
                 // foreach ($users as $user) {
                 //     $totalCustomer += $modelName::whereIn('user_id', [$user->id])->count();
                 // }
