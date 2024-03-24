@@ -52,6 +52,14 @@
         <div class="page-rightheader">
             @can('create.subscription')
 
+            @if(auth()->user()->getDataLimitByModel(5) == 0)
+
+            <div class="btn btn-list">
+                <a id="add_new" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="Add new"><i
+                        class="fe fe-plus mr-1"></i> Add new </a>
+            </div>
+            @endif
+
             @if(auth()->user()->getDataLimitByModel(5) > count($subscriptions))
 
             <div class="btn btn-list">

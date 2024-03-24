@@ -45,6 +45,13 @@ class UserGroupController extends Controller
             })
 
                 ->addColumn('action', function ($row) {
+                    $d_btn = ' <li class="dropdown-item">
+                        <a  href="#" data-id="' . $row->id . '" class="group-delete">Delete</a>
+                        </li>';
+
+                        if(in_array($row->id, [1])){
+                            $d_btn = '';
+                        }
                     $btn = '<div class="dropdown">
                     <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
@@ -61,9 +68,7 @@ class UserGroupController extends Controller
                         <a href="' . route('ugroups.sub', $row->id) . '" href="#">View sub Groups</a>
                         </li>
 
-                        <li class="dropdown-item">
-                        <a  href="#" data-id="' . $row->id . '" class="group-delete">Delete</a>
-                        </li>
+                        '.$d_btn.'
                     </ul>
                 </div>';
 

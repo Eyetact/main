@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Generators\GeneratorUtils;
+use App\Models\Module;
 use Illuminate\Http\Request;
 use App\Models\Plan;
 use App\Models\User;
@@ -18,44 +20,38 @@ class PlanController extends Controller
     public function index()
     {
 
-        if(auth()->user()->hasRole('super'))
-        {
+        if (auth()->user()->hasRole('super')) {
 
             $plans = Plan::all();
 
 
+        } else {
+            if (auth()->user()->hasRole('vendor') || auth()->user()->hasRole('admin')) {
+
+                $userId = auth()->user()->id;
+
+
+                $ids = User::where('user_id', $userId)->pluck('id');
+
+
+                $plans = Plan::where('user_id', $userId)
+                    ->orWhereIn('user_id', $ids)
+                    ->get();
+
+            } else {
+
+                $userId = auth()->user()->user_id;
+
+
+                $ids = User::where('user_id', $userId)->pluck('id');
+
+
+                $plans = Plan::where('user_id', $userId)
+                    ->orWhereIn('user_id', $ids)
+                    ->get();
+
+            }
         }
-
-
-        else{
-            if(auth()->user()->hasRole('vendor') || auth()->user()->hasRole('admin') ){
-
-        $userId = auth()->user()->id;
-
-
-        $ids = User::where('user_id', $userId)->pluck('id');
-
-
-        $plans = Plan::where('user_id', $userId)
-        ->orWhereIn('user_id',$ids)
-        ->get();
-
-        }
-
-        else{
-
-            $userId = auth()->user()->user_id;
-
-
-            $ids = User::where('user_id', $userId)->pluck('id');
-
-
-            $plans = Plan::where('user_id', $userId)
-            ->orWhereIn('user_id',$ids)
-            ->get();
-
-        }
-    }
 
         if (request()->ajax()) {
 
@@ -70,7 +66,7 @@ class PlanController extends Controller
                 ->addIndexColumn()
                 ->make(true);
         }
-        return view('plans.list',compact('plans'));
+        return view('plans.list', compact('plans'));
     }
 
 
@@ -83,29 +79,79 @@ class PlanController extends Controller
         $allPermission = Permission::all();
         $groupPermission = $allPermission->groupBy('module');
 
-        $availableModel= (auth()->user()->model_limit) - (auth()->user()->current_model_limit);
-        $availableData= auth()->user()->data_limit;
+        // $availableModel= (auth()->user()->model_limit) - (auth()->user()->current_model_limit);
+        // $availableData= auth()->user()->data_limit;
 
 
-        return view('plans.create', compact('permissions','user_permissions','customer_permissions','allPermission','groupPermission','availableModel','availableData'));
+        if (auth()->user()->hasRole('super')) {
+
+            $availableModel = 1000000;
+            $availableData = 1000000;
+
+        }
+
+        if (auth()->user()->hasRole('admin')) {
+
+            $availableModel = auth()->user()->model_limit - auth()->user()->current_model_limit;
+
+            $modules = Module::where('user_id', auth()->user()->id)->get();
+
+            $total = 0;
+
+            foreach ($modules as $module) {
+                $modelName = "App\Models\Admin\\" . GeneratorUtils::setModelName($module->code);
+
+                $users = User::where('user_id', auth()->user()->id)->pluck('id');
+                $total += $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
+
+                // foreach ($users as $user) {
+                //     $totalCustomer += $modelName::whereIn('user_id', [$user->id])->count();
+                // }
+
+                // $totalAdmin += $modelName::whereIn('user_id', [auth()->user()->id])->count();
+            }
+
+            // $total = $totalCustomer + $totalAdmin;
+            $availableData = auth()->user()->data_limit - $total;
+        }
+
+
+
+
+
+        return view('plans.create', compact('permissions', 'user_permissions', 'customer_permissions', 'allPermission', 'groupPermission', 'availableModel', 'availableData'));
     }
 
     public function store(Request $request)
     {
 
-        // dd($request->limit);
+        // dd($request->permissions);
 
-        $plan = Plan::create($request->except('permissions','checkAll','limit'));
+        $plan = Plan::create($request->except('permissions', 'checkAll', 'limit'));
         $plan->user_id = auth()->user()->id;
         $plan->save();
 
-        foreach ($request->limit as $key => $value) {
-            $limit = new Limit();
-            $limit->plan_id = $plan->id;
-            $limit->module_id = $key;
-            $limit->data_limit= $value;
-            $limit->save();
+        $limits = $request->limit;
+
+
+        foreach ($request->checkAll as $key => $check) {
+            if (isset ($limits[$key])) {
+
+                $limit = new Limit();
+                $limit->plan_id = $plan->id;
+                $limit->module_id = $key;
+
+                $value = $limits[$key];
+                // echo $value . '\n';
+                if ($value == 0) {
+                    $limit->data_limit = 100000;
+                } else {
+                    $limit->data_limit = $value;
+                }
+                $limit->save();
+            }
         }
+        // return;
 
 
 
@@ -138,7 +184,39 @@ class PlanController extends Controller
         $plan = Plan::findOrFail($id);
         $allPermission = Permission::all();
         $groupPermission = $allPermission->groupBy('module');
-        return view('plans.show', compact('plan', 'permissions','user_permissions','customer_permissions','allPermission','groupPermission'));
+
+        if (auth()->user()->hasRole('super')) {
+
+            $availableModel = 1000000;
+            $availableData = 1000000;
+
+        }
+
+        if (auth()->user()->hasRole('admin')) {
+
+            $availableModel = auth()->user()->model_limit - auth()->user()->current_model_limit;
+
+            $modules = Module::where('user_id', auth()->user()->id)->get();
+
+            $total = 0;
+
+            foreach ($modules as $module) {
+                $modelName = "App\Models\Admin\\" . GeneratorUtils::setModelName($module->code);
+
+                $users = User::where('user_id', auth()->user()->id)->pluck('id');
+                $total += $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
+
+                // foreach ($users as $user) {
+                //     $totalCustomer += $modelName::whereIn('user_id', [$user->id])->count();
+                // }
+
+                // $totalAdmin += $modelName::whereIn('user_id', [auth()->user()->id])->count();
+            }
+
+            // $total = $totalCustomer + $totalAdmin;
+            $availableData = auth()->user()->data_limit - $total;
+        }
+        return view('plans.show', compact('plan', 'permissions', 'user_permissions', 'customer_permissions', 'allPermission', 'groupPermission', 'availableModel', 'availableData'));
     }
 
 
@@ -159,36 +237,39 @@ class PlanController extends Controller
             unlink($plan->image);
         }
 
-        $plan->update($request->except('permissions','checkAll','limit'));
+        $plan->update($request->except('permissions', 'checkAll', 'limit'));
 
         foreach ($request->limit as $key => $value) {
-            $limit = Limit::where('module_id',$key)->where('plan_id',$id)->first();
-            $limit->data_limit= $value;
-            $limit->save();
+            $limit = Limit::where('module_id', $key)->where('plan_id', $id)->first();
+            if ($limit) {
+                $limit->data_limit = $value;
+                $limit->save();
+            }
+
         }
 
         $plan->permissions()->detach();
 
         if ($request->permissions) {
-        foreach ($request->permissions as $p) {
+            foreach ($request->permissions as $p) {
 
-            $per = Permission::find($p);
+                $per = Permission::find($p);
 
-            $plan->permissions()->save($per);
-        }
-
-        $subs = $plan->subscriptions;
-        foreach ($subs as $sub) {
-            $user = $sub->user;
-            foreach($plan->permissions as $p) {
-                $user->givePermissionTo($p);
+                $plan->permissions()->save($per);
             }
 
+            $subs = $plan->subscriptions;
+            foreach ($subs as $sub) {
+                $user = $sub->user;
+                foreach ($plan->permissions as $p) {
+                    $user->givePermissionTo($p);
+                }
+
+            }
+
+
+
         }
-
-
-
-    }
         return redirect()->route('plans.index')
             ->with('success', 'Plan has been updated successfully');
     }

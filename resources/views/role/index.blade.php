@@ -101,6 +101,14 @@
             </ol>
         </div>
         <div class="page-rightheader">
+
+            @if (auth()->user()->getDataLimitByModel(2) == 0)
+            <div class="btn btn-list">
+                <a href="javascript:void(0)" id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
+                    data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
+            </div>
+        @endif
+
             @if (auth()->user()->getDataLimitByModel(2) > count($roles))
                 <div class="btn btn-list">
                     <a href="javascript:void(0)" id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
@@ -255,7 +263,7 @@
             .appendTo('#role_table_wrapper .col-md-6:eq(0)');
 
         // Handle form submission event
-        
+
         $(function() {
             checkInput();
         });
