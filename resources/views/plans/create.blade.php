@@ -170,7 +170,8 @@
                                                 <div class="col-9">
                                                     <div class="custom-checkbox permission  input-box">
                                                         <input id="{{ $key }}" type="checkbox"
-                                                            class=" check-all" name="checkAll">
+                                                            class=" check-all"
+                                                            name="checkAll[{{ $permissions[0]->module }}]">
                                                         <label for="{{ $key }}">
                                                             <b>{{ Str::ucfirst(explode('.', $permissions[0]->name)[1]) }}</b></label>
                                                     </div>
@@ -180,6 +181,61 @@
 
                                                     @php
                                                         $user_id = $model->user_id;
+                                                        if ($model->user_id == 1) {
+                                                            if (auth()->user()->hasRole('super')) {
+                                                                $max = 1000000;
+                                                            }
+
+                                                            if (auth()->user()->hasRole('admin')) {
+                                                                if (
+                                                                    auth()
+                                                                        ->user()
+                                                                        ->getDataLimitByModel($model->id) == 100000
+                                                                ) {
+                                                                    $max = 100000;
+                                                                }
+
+                                                                if (
+                                                                    auth()
+                                                                        ->user()
+                                                                        ->getDataLimitByModel($model->id) > 0 &&
+                                                                    auth()
+                                                                        ->user()
+                                                                        ->getDataLimitByModel($model->id) != 100000
+                                                                ) {
+                                                                    $modelName =
+                                                                        'App\Models\Admin\\' .
+                                                                        App\Generators\GeneratorUtils::setModelName(
+                                                                            $model->code,
+                                                                        );
+
+                                                                    $users = App\Models\User::where(
+                                                                        'user_id',
+                                                                        auth()->user()->id,
+                                                                    )->get();
+
+                                                                    $totalCustomer = 0;
+                                                                    $totalAdmin = 0;
+
+                                                                    foreach ($users as $user) {
+                                                                        $totalCustomer += $modelName
+                                                                            ::whereIn('user_id', [$user->id])
+                                                                            ->count();
+                                                                    }
+
+                                                                    $totalAdmin += $modelName
+                                                                        ::whereIn('user_id', [auth()->user()->id])
+                                                                        ->count();
+
+                                                                    $total = $totalCustomer + $totalAdmin;
+
+                                                                    $max =
+                                                                        auth()
+                                                                            ->user()
+                                                                            ->getDataLimitByModel($model->id) - $total;
+                                                                }
+                                                            }
+                                                        }
 
                                                     @endphp
                                                     @if ($user_id == 1)
@@ -187,7 +243,8 @@
                                                             <input type="number" value="0"
                                                                 class="google-input custom-limit"
                                                                 name="limit[{{ $permissions[0]->module }}]"
-                                                                id="price" min="0" />
+                                                                id="price" min="0"
+                                                                max="{{ $max }}" />
                                                         </div>
                                                     @endif
                                                 </div>

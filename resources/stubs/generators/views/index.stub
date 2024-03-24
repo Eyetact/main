@@ -17,8 +17,7 @@
                     $model = App\Models\Module::find($model_id)
                     // dd($model_id);
                 @endphp
-                @if ((auth()->user()->getDataLimitByModel($model_id) == 0 || auth()->user()->getDataLimitByModel($model_id) > auth()->user()->count) && $model->user_id == 1
-                ||( auth()->user()->data_limit > auth()->user()->count && $model->user_id != 1))
+                     @if (auth()->user()->checkAllowdByModelID($model_id))
                     <div class="btn btn-list">
                         <a id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
                             data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
