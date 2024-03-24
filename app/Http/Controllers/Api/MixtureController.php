@@ -146,7 +146,7 @@ class MixtureController extends ApiController
 
 
 
-        return $this->returnData('data', MixtureResource::collection($mixtures), __('Get successfully'));
+        return $this->returnData('data', MixtureDataResource::collection($mixtures), __('Get successfully'));
 
     }
 
