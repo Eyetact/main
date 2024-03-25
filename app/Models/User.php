@@ -486,6 +486,8 @@ class User extends Authenticatable
                 if ($customer->checkAllowdByModelID($model_id)) {
                     return $this->data_limit > $this->count;
     
+                }else{
+                    return false;
                 }
             }  
         }
