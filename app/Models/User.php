@@ -269,7 +269,7 @@ class User extends Authenticatable
             $current_plan = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan;
 
             $limit = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first()->data_limit;
-            echo 'limt':$limit;
+            echo 'limt'.$limit;
             return $limit;
 
         }
