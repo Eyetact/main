@@ -90,7 +90,7 @@ class PlanController extends Controller
 
         }
 
-        if (auth()->user()->hasRole('admin')) {
+        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('vendor') ) {
 
             $availableModel = auth()->user()->model_limit - auth()->user()->current_model_limit;
 
@@ -197,7 +197,7 @@ class PlanController extends Controller
 
         }
 
-        if (auth()->user()->hasRole('admin')) {
+        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('vendor')) {
 
             $availableModel = auth()->user()->model_limit - auth()->user()->current_model_limit;
 
