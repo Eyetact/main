@@ -164,12 +164,12 @@ class User extends Authenticatable
             $sum = Limit::where('subscription_id', $sub_id)->sum('data_limit');
 
             $users = User::role('vendor')->where('user_id', $this->id)->get();
-        
+
 
             foreach ($users as $user) {
 
                 $sub_id = $user->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->id;
-                if($sub_id){
+                if ($sub_id) {
                     $sum += Limit::where('subscription_id', $sub_id)->sum('data_limit');
                 }
 
@@ -321,13 +321,26 @@ class User extends Authenticatable
         }
 
         if ($model->user_id == 1) {
+            if (in_array($model->id, [1, 2, 3, 4, 5])) {
 
-            $modelName = "App\Models\Admin\\" . GeneratorUtils::setModelName($model->code);
+                $modelName = "App\Models\\" . GeneratorUtils::setModelName($model->code);
+            } else {
+                $modelName = "App\Models\Admin\\" . GeneratorUtils::setModelName($model->code);
+
+            }
+
 
             $users = User::where('user_id', auth()->user()->id)->pluck('id');
-            $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
-            return $sum;
-            
+            if ($model->id == 5) {
+                $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)->count();
+                return $sum;
+
+            } else {
+                $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
+                return $sum;
+            }
+
+
 
         } else {
 
