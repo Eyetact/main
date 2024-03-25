@@ -386,7 +386,7 @@ class User extends Authenticatable
                     } else {
                         $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)
                         ->orWhere('user_id', $customer->id)->count();
-
+                        dd('here');
                         return $sum;
                     }
                 }
