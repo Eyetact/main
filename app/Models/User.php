@@ -284,6 +284,7 @@ class User extends Authenticatable
             $limit2 = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first();
             if ($limit) {
 
+                echo $limit?->data_limit + $limit2?->data_limit;
                 return $limit?->data_limit + $limit2?->data_limit;
             }
             }
