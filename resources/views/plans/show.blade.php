@@ -359,14 +359,14 @@
                                                                                                 if ($model->id == 5) {
                                                                                                     $totalCustomer += $modelName
                                                                                                         ::whereIn(
-                                                                                                            'user_id',
+                                                                                                            'created_by',
                                                                                                             [$user->id],
                                                                                                         )
                                                                                                         ->count();
                                                                                                 } else {
                                                                                                     $totalCustomer += $modelName
                                                                                                         ::whereIn(
-                                                                                                            'created_by',
+                                                                                                            'user_id',
                                                                                                             [$user->id],
                                                                                                         )
                                                                                                         ->count();
