@@ -328,7 +328,8 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
     {
         try {
 
-     $module_id = (int) Module::where('code','LIKE', '%' . '{{modelNameSingularPascalCase}}' . '%')->first()?->id;
+     $module =  Module::where('code', GeneratorUtils::singularSnakeCase('{{modelNameSingularPascalCase}}'))->orWhere('code', GeneratorUtils::pluralSnakeCase('{{modelNameSingularPascalCase}}'))->first();
+            $module_id = (int)$module?->id;
 
 
             if (auth()->user()->id != 1) {
