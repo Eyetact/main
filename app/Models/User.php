@@ -358,6 +358,7 @@ class User extends Authenticatable
             if (!$this->hasRole('admin') && !$this->hasRole('vendor')) {
                 $customer = User::find($this->user_id);
                 $users = User::where('user_id', $customer->id)->pluck('id');
+                dd('first');
                 if ($model->id == 5) {
                     $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', $customer->id)->count();
                     return $sum;
@@ -366,9 +367,11 @@ class User extends Authenticatable
                     $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', $customer->id)->count();
                     return $sum;
                 }
-                dd('first');
+
             } else {
                 if($this->hasRole('admin')){
+                    dd('admin');
+
                     if ($model->id == 5) {
                         $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)->count();
                         return $sum;
@@ -378,13 +381,15 @@ class User extends Authenticatable
 
                         return $sum;
                     }
-                    dd('admin');
                 }
                 if($this->hasRole('vendor')){
+
                     $customer = User::find($this->user_id);
                     if ($model->id == 5) {
                         $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)
                         ->orWhere('created_by', $customer->id)->count();
+                        dd('here 2');
+
                         return $sum;
 
                     } else {
@@ -393,6 +398,8 @@ class User extends Authenticatable
                         dd('here');
                         return $sum;
                     }
+                    dd('here parent');
+
                 }
             }
 
