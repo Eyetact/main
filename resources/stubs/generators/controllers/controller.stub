@@ -106,7 +106,7 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
         if (auth()->user()->id != 1) {
 
             $sub = auth()->user()?->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first();
-               if ((!(auth()->user()->hasRole('vendor')) || !(auth()->user()->hasRole('admin'))) && auth()->user()->user_id != 1) {
+            if ((!(auth()->user()->hasRole('vendor')) || !(auth()->user()->hasRole('admin'))) && auth()->user()->user_id != 1) {
                 $customer = User::find(auth()->user()->user_id);
                 $sub = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first();
             }
@@ -334,29 +334,34 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
             if (auth()->user()->id != 1) {
 
                 $sub = auth()->user()?->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first();
+                if ((!(auth()->user()->hasRole('vendor')) || !(auth()->user()->hasRole('admin'))) && auth()->user()->user_id != 1) {
+                    $customer = User::find(auth()->user()->user_id);
+                    $sub = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first();
+                }
+                if($module->user_id != 1){
+                    $limit = Limit::where('module_id', $module_id)
+                        ->where('subscription_id', $sub?->id)
+                        ->first();
 
-                $limit = Limit::where('module_id', $module_id)
-                    ->where('subscription_id', $sub?->id)
-                    ->first();
+                    if ($limit) {
+                        $do = true;
 
-                if ($limit) {
-                    $do = true;
+                        if ((!(auth()->user()->hasRole('vendor')) || !(auth()->user()->hasRole('admin')) )&& auth()->user()->user_id != 1) {
+                            $customer = User::find(auth()->user()->user_id);
+                            $sub = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first();
+                        } elseif ((!(auth()->user()->hasRole('vendor')) && !(auth()->user()->hasRole('admin'))) && auth()->user()->user_id == 1) {
+                            $do = false;
+                        }
+                        if ($do) {
 
-                    if ((!(auth()->user()->hasRole('vendor')) || !(auth()->user()->hasRole('admin')) )&& auth()->user()->user_id != 1) {
-                        $customer = User::find(auth()->user()->user_id);
-                        $sub = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first();
-                    } elseif ((!(auth()->user()->hasRole('vendor')) && !(auth()->user()->hasRole('admin'))) && auth()->user()->user_id == 1) {
-                        $do = false;
+
+
+
+                            $limit->data_limit=(int)$limit->data_limit - 1;
+                            $limit->save();
+                        }
+
                     }
-                    if ($do) {
-
-
-
-
-                        $limit->data_limit=(int)$limit->data_limit - 1;
-                        $limit->save();
-                    }
-
                 }
             }
 
