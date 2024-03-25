@@ -366,14 +366,29 @@ class User extends Authenticatable
                     return $sum;
                 }
             } else {
-                if ($model->id == 5) {
-                    $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)->count();
-                    return $sum;
+                if($this->hasRole('admin')){
+                    if ($model->id == 5) {
+                        $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)->count();
+                        return $sum;
 
-                } else {
-                    $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
+                    } else {
+                        $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
 
-                    return $sum;
+                        return $sum;
+                    }
+                }else{
+                    $customer = User::find($this->user_id);
+                    if ($model->id == 5) {
+                        $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)
+                        ->orWhere('created_by', $customer->id)->count();
+                        return $sum;
+
+                    } else {
+                        $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)
+                        ->orWhere('created_by', $customer->id)->count();
+
+                        return $sum;
+                    }
                 }
             }
 
