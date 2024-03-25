@@ -292,7 +292,30 @@ class User extends Authenticatable
 
     public function getCurrentModelLimitAttribute()
     {
-        return count($this->modules);
+        $super = $this->hasRole('super');
+        if ($super) {
+
+            return 10000;
+
+        }
+        //employee case
+        if (count($this->subscriptions) == 0) {
+
+            if (auth()->user()->user_id == 1) {
+                return 10000;
+
+            }
+        }
+
+        $users = User::where('user_id', auth()->user()->id)->pluck('id');
+        $customer = auth()->user();
+        if ($this->hasRole('vendor')) {
+            $customer = User::find($this->user_id);
+            $users = User::where('user_id', $customer->id)->pluck('id');
+        }
+
+        return count(Module::whereIn('user_id',$users)->orWhere('user_id', $customer->id)->get());
+
     }
 
     //$user->model_limit < $user->current_model_limit
@@ -331,7 +354,7 @@ class User extends Authenticatable
 
             $users = User::where('user_id', auth()->user()->id)->pluck('id');
 
-            if(!$this->hasRole('admin') && !$this->hasRole('vendor') ) {
+            if (!$this->hasRole('admin') && !$this->hasRole('vendor')) {
                 $customer = User::find($this->user_id);
                 $users = User::where('user_id', $customer->id)->pluck('id');
                 if ($model->id == 5) {
@@ -342,7 +365,7 @@ class User extends Authenticatable
                     $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', $customer->id)->count();
                     return $sum;
                 }
-            }else{
+            } else {
                 if ($model->id == 5) {
                     $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)->count();
                     return $sum;
