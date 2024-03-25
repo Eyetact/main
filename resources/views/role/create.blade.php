@@ -24,7 +24,7 @@
                         data-accordion="false">
                         <div class="row">
                             @foreach ($groupPermission as $key => $permissions)
-                            @canany([$permissions[0]->name,$permissions[1]->name,$permissions[2]->name,$permissions[3]->name])
+                            @canany([$permissions[0]->name,$permissions[1]->name,$permissions[2]->name])
                                 <div class="col-sm-6 role-group">
                                     <div class="custom-checkbox permission  input-box">
                                         <input id="{{ $key }}" type="checkbox" class=" check-all"
