@@ -98,26 +98,24 @@ class PlanController extends Controller
 
             $total = 0;
 
-            foreach ($modules as $module) {
-                $modelName = "App\Models\Admin\\" . GeneratorUtils::setModelName($module->code);
+            // foreach ($modules as $module) {
+            //     $modelName = "App\Models\Admin\\" . GeneratorUtils::setModelName($module->code);
 
-                $users = User::where('user_id', auth()->user()->id)->pluck('id');
-                $total += $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
-
-
-
+            //     $users = User::where('user_id', auth()->user()->id)->pluck('id');
+            //     $total += $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
+                
 
 
 
-                // foreach ($users as $user) {
-                //     $totalCustomer += $modelName::whereIn('user_id', [$user->id])->count();
-                // }
+            //     // foreach ($users as $user) {
+            //     //     $totalCustomer += $modelName::whereIn('user_id', [$user->id])->count();
+            //     // }
 
-                // $totalAdmin += $modelName::whereIn('user_id', [auth()->user()->id])->count();
-            }
+            //     // $totalAdmin += $modelName::whereIn('user_id', [auth()->user()->id])->count();
+            // }
 
             // $total = $totalCustomer + $totalAdmin;
-            $availableData = auth()->user()->data_limit - $total;
+            $availableData = auth()->user()->data_limit - auth()->user()->count;
         }
 
 
@@ -203,21 +201,21 @@ class PlanController extends Controller
 
             $total = 0;
 
-            foreach ($modules as $module) {
-                $modelName = "App\Models\Admin\\" . GeneratorUtils::setModelName($module->code);
+            // foreach ($modules as $module) {
+            //     $modelName = "App\Models\Admin\\" . GeneratorUtils::setModelName($module->code);
 
-                $users = User::where('user_id', auth()->user()->id)->pluck('id');
-                $total += $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
+            //     $users = User::where('user_id', auth()->user()->id)->pluck('id');
+            //     $total += $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
 
-                // foreach ($users as $user) {
-                //     $totalCustomer += $modelName::whereIn('user_id', [$user->id])->count();
-                // }
+            //     // foreach ($users as $user) {
+            //     //     $totalCustomer += $modelName::whereIn('user_id', [$user->id])->count();
+            //     // }
 
-                // $totalAdmin += $modelName::whereIn('user_id', [auth()->user()->id])->count();
-            }
+            //     // $totalAdmin += $modelName::whereIn('user_id', [auth()->user()->id])->count();
+            // }
 
             // $total = $totalCustomer + $totalAdmin;
-            $availableData = auth()->user()->data_limit - $total;
+            $availableData = auth()->user()->data_limit - auth()->user()->count;
         }
         return view('plans.show', compact('plan', 'permissions', 'user_permissions', 'customer_permissions', 'allPermission', 'groupPermission', 'availableModel', 'availableData'));
     }

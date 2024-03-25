@@ -246,6 +246,7 @@ class User extends Authenticatable
             return $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan?->data_limit;
         }
 
+        
         return $this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan?->data_limit;
 
     }
