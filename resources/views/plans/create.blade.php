@@ -198,6 +198,8 @@
                                                                         $model->code,
                                                                     );
 
+
+
                                                                 $users = App\Models\User::where(
                                                                     'user_id',
                                                                     auth()->user()->id,
@@ -212,9 +214,17 @@
                                                                         ->count();
                                                                 }
 
-                                                                $totalAdmin += $modelName
+                                                                if($model->id == 5 ){
+                                                                    $totalAdmin += $modelName
+                                                                    ::whereIn('created_by', [auth()->user()->id])
+                                                                    ->count();
+                                                                }else{
+                                                                    $totalAdmin += $modelName
                                                                     ::whereIn('user_id', [auth()->user()->id])
                                                                     ->count();
+                                                                }
+
+
 
                                                                 $total = $totalCustomer + $totalAdmin;
 
