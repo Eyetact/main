@@ -278,10 +278,11 @@ class User extends Authenticatable
 
             $limit = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first();
 
+
+
             if ($limit) {
 
                 return $limit?->data_limit;
-                ;
             }
         }
 
@@ -376,7 +377,8 @@ class User extends Authenticatable
 
                         return $sum;
                     }
-                }else{
+                }
+                if($this->hasRole('vendor')){
                     $customer = User::find($this->user_id);
                     if ($model->id == 5) {
                         $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)
