@@ -411,8 +411,11 @@
                                                                                         name="checkAll[{{ $permissions[0]->module }}]">
                                                                                     <label for="{{ $key }}">
                                                                                         <b>{{ Str::ucfirst(explode('.', $permissions[0]->name)[1]) }}</b>
+                                                                                        @if ($model->user_id == 1)
                                                                                         <small>max :
-                                                                                            {{ $max > 10000 ? 'unlimted' : $max }}</small></label>
+                                                                                            {{ $max > 10000 ? 'unlimted' : $max }}</small>
+                                                                                            @endif
+                                                                                        </label>
                                                                                 </div>
                                                                             </div>
 
