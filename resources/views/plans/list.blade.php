@@ -165,22 +165,15 @@
         </div>
         <div class="page-rightheader">
             @can('create.plan')
-            @if(auth()->user()->getDataLimitByModel(4) == 10000)
+            @if (auth()->user()->checkAllowdByModelID(4))
 
             <div class="btn btn-list">
                 <a id="add_new" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="Add new"><i
                         class="fe fe-plus mr-1"></i> Add new </a>
 
             </div>
-            @elseif(auth()->user()->getDataLimitByModel(4) > count($plans))
 
-                <div class="btn btn-list">
-                    <a id="add_new" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="Add new"><i
-                            class="fe fe-plus mr-1"></i> Add new </a>
-
-                </div>
-                @endif
-
+@endif
             @endcan
         </div>
     </div>
