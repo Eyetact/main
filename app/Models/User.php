@@ -269,7 +269,6 @@ class User extends Authenticatable
             $current_plan = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan;
 
             $limit = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first()->data_limit;
-            echo 'limt'.$limit;
             return $limit;
 
         }
@@ -331,22 +330,30 @@ class User extends Authenticatable
 
 
             $users = User::where('user_id', auth()->user()->id)->pluck('id');
+
             if(!$this->hasRole('admin') || !$this->hasRole('vendor') ) {
                 $customer = User::find($this->user_id);
                 $users = User::where('user_id', $customer->id)->pluck('id');
+                if ($model->id == 5) {
+                    $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', $customer->id)->count();
+                    return $sum;
 
+                } else {
+                    $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', $customer->id)->count();
+                    return $sum;
+                }
+            }else{
+                if ($model->id == 5) {
+                    $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)->count();
+                    return $sum;
 
+                } else {
+                    $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
+                    return $sum;
+                }
             }
 
-            if ($model->id == 5) {
-                $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)->count();
-                return $sum;
 
-            } else {
-                $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
-                echo 'sum'. $sum;
-                return $sum;
-            }
 
 
 
