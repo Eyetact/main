@@ -246,7 +246,7 @@ class User extends Authenticatable
             return $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan?->data_limit;
         }
 
-        
+
         return $this->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan?->data_limit;
 
     }
@@ -478,6 +478,13 @@ class User extends Authenticatable
         }
         // dd($this->count);
 
+        if ($this->hasRole('vendor')) {
+            $customer = User::find($this->user_id);
+            if ($customer->checkAllowdByModelID($model_id)) {
+                return $this->data_limit > $this->count;
+
+            }
+        }
         return $this->data_limit > $this->count;
 
     }
