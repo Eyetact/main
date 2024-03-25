@@ -428,7 +428,7 @@
                                                                                         <input type="number"
                                                                                             class="google-input custom-limit"
                                                                                             name="limit[{{ $permissions[0]->module }}]"
-                                                                                            id="price" min="0"
+                                                                                            id="price" min="-1"
                                                                                             max="{{ $max }}"
                                                                                             value="{{ $plan->limits($permissions[0]->module) }}" />
                                                                                     </div>

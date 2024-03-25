@@ -278,15 +278,14 @@ class User extends Authenticatable
 
             $limit = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first();
 
-            if($this->hasRole('vendor')){
-            $customer = User::find($this->user_id);
-            $current_plan = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan;
-            $limit2 = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first();
-            if ($limit) {
+            if ($this->hasRole('vendor')) {
+                $customer = User::find($this->user_id);
+                $current_plan = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan;
+                $limit2 = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first();
+                if ($limit) {
 
-                echo $limit?->data_limit + $limit2?->data_limit;
-                return $limit?->data_limit + $limit2?->data_limit;
-            }
+                    return $limit?->data_limit + $limit2?->data_limit;
+                }
             }
 
 
@@ -326,7 +325,7 @@ class User extends Authenticatable
             $users = User::where('user_id', $customer->id)->pluck('id');
         }
 
-        return count(Module::whereIn('user_id',$users)->orWhere('user_id', $customer->id)->get());
+        return count(Module::whereIn('user_id', $users)->orWhere('user_id', $customer->id)->get());
 
     }
 
@@ -369,7 +368,6 @@ class User extends Authenticatable
             if (!$this->hasRole('admin') && !$this->hasRole('vendor')) {
                 $customer = User::find($this->user_id);
                 $users = User::where('user_id', $customer->id)->pluck('id');
-                dd('first');
                 if ($model->id == 5) {
                     $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', $customer->id)->count();
                     return $sum;
@@ -380,8 +378,7 @@ class User extends Authenticatable
                 }
 
             } else {
-                if($this->hasRole('admin')){
-                    dd('admin');
+                if ($this->hasRole('admin')) {
 
                     if ($model->id == 5) {
                         $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)->count();
@@ -393,23 +390,20 @@ class User extends Authenticatable
                         return $sum;
                     }
                 }
-                if($this->hasRole('vendor')){
+                if ($this->hasRole('vendor')) {
 
                     $customer = User::find($this->user_id);
                     if ($model->id == 5) {
                         $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)
-                        ->orWhere('created_by', $customer->id)->count();
-                        dd('here 2');
+                            ->orWhere('created_by', $customer->id)->count();
 
                         return $sum;
 
                     } else {
                         $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)
-                        ->orWhere('user_id', $customer->id)->count();
-                        dd('here');
+                            ->orWhere('user_id', $customer->id)->count();
                         return $sum;
                     }
-                    dd('here parent');
 
                 }
             }

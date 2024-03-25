@@ -137,8 +137,6 @@ class PlanController extends Controller
         $plan->save();
 
         $limits = $request->limit;
-
-
         foreach ($request->checkAll as $key => $check) {
             if (isset ($limits[$key])) {
 
@@ -148,7 +146,7 @@ class PlanController extends Controller
 
                 $value = $limits[$key];
                 // echo $value . '\n';
-                if ($value == 0) {
+                if ($value == -1) {
                     $limit->data_limit = 100000;
                 } else {
                     $limit->data_limit = $value;
@@ -244,13 +242,23 @@ class PlanController extends Controller
 
         $plan->update($request->except('permissions', 'checkAll', 'limit'));
 
-        foreach ($request->limit as $key => $value) {
-            $limit = Limit::where('module_id', $key)->where('plan_id', $id)->first();
-            if ($limit) {
-                $limit->data_limit = $value;
+        $limits = $request->limit;
+        foreach ($request->checkAll as $key => $check) {
+            if (isset ($limits[$key])) {
+
+                $limit = new Limit();
+                $limit->plan_id = $plan->id;
+                $limit->module_id = $key;
+
+                $value = $limits[$key];
+                // echo $value . '\n';
+                if ($value == -1) {
+                    $limit->data_limit = 100000;
+                } else {
+                    $limit->data_limit = $value;
+                }
                 $limit->save();
             }
-
         }
 
         $plan->permissions()->detach();
