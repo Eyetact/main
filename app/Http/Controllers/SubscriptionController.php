@@ -154,8 +154,10 @@ class SubscriptionController extends Controller
 
         $sub = Subscription::create($request->all());
 
+
         $plan = Plan::find($sub->plan_id);
 
+        $sub->created_by = auth()->user()->id;
         $sub->start_date = Carbon::today();
         $sub->end_date = $sub->start_date->copy()->addDays($plan->period);
         $sub->save();
