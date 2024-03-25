@@ -481,7 +481,8 @@ class User extends Authenticatable
         if (count($this->subscriptions) == 0) {
             $vendor = User::find($this->user_id);
             if ($vendor->hasRole('vendor')) {
-                $customer = User::find($this->user_id);
+                
+                $customer = User::find($vendor->user_id);
                 if ($customer->checkAllowdByModelID($model_id)) {
                     return $this->data_limit > $this->count;
     
