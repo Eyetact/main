@@ -278,6 +278,16 @@ class User extends Authenticatable
 
             $limit = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first();
 
+            if($this->hasRole('vendor')){
+            $customer = User::find($this->user_id);
+            $current_plan = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan;
+            $limit2 = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first();
+            if ($limit) {
+
+                return $limit?->data_limit + $limit2?->data_limit;
+            }
+            }
+
 
 
             if ($limit) {
