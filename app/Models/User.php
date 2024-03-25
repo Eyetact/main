@@ -331,7 +331,7 @@ class User extends Authenticatable
 
             $users = User::where('user_id', auth()->user()->id)->pluck('id');
 
-            if(!$this->hasRole('admin') || !$this->hasRole('vendor') ) {
+            if(!$this->hasRole('admin') && !$this->hasRole('vendor') ) {
                 $customer = User::find($this->user_id);
                 $users = User::where('user_id', $customer->id)->pluck('id');
                 if ($model->id == 5) {
@@ -349,7 +349,7 @@ class User extends Authenticatable
 
                 } else {
                     $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
-                    echo 'sum' . $sum;
+
                     return $sum;
                 }
             }
