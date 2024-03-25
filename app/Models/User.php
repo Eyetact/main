@@ -269,7 +269,7 @@ class User extends Authenticatable
             $current_plan = $customer->subscriptions()->where('status', 'active')->orderBy('created_at', 'desc')->first()?->plan;
 
             $limit = Limit::where('plan_id', $current_plan->id)->where('module_id', $module_id)->first()->data_limit;
-
+            echo 'limt':$limit;
             return $limit;
 
         }
@@ -334,7 +334,7 @@ class User extends Authenticatable
             if(!$this->hasRole('admin') || !$this->hasRole('vendor') ) {
                 $customer = User::find($this->user_id);
                 $users = User::where('user_id', $customer->id)->pluck('id');
-                dd('im here');
+
 
             }
 
@@ -344,6 +344,7 @@ class User extends Authenticatable
 
             } else {
                 $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
+                echo 'sum'. $sum;
                 return $sum;
             }
 
