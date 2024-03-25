@@ -174,7 +174,7 @@
                                                         $max = 1000000;
                                                     }
 
-                                                    if (auth()->user()->hasRole('admin')) {
+                                                    if (auth()->user()->hasRole('admin')  || auth()->user()->hasRole('vendor') ) {
                                                         if (
                                                             auth()
                                                                 ->user()
