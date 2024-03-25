@@ -174,7 +174,10 @@
                                                         $max = 1000000;
                                                     }
 
-                                                    if (auth()->user()->hasRole('admin')  || auth()->user()->hasRole('vendor') ) {
+                                                    if (
+                                                        auth()->user()->hasRole('admin') ||
+                                                        auth()->user()->hasRole('vendor')
+                                                    ) {
                                                         if (
                                                             auth()
                                                                 ->user()
@@ -198,8 +201,6 @@
                                                                         $model->code,
                                                                     );
 
-
-
                                                                 $users = App\Models\User::where(
                                                                     'user_id',
                                                                     auth()->user()->id,
@@ -209,22 +210,26 @@
                                                                 $totalAdmin = 0;
 
                                                                 foreach ($users as $user) {
-                                                                    $totalCustomer += $modelName
-                                                                        ::whereIn('user_id', [$user->id])
+                                                                    if ($model->id == 5) {
+                                                                        $totalCustomer += $modelName
+                                                                            ::whereIn('user_id', [$user->id])
+                                                                            ->count();
+                                                                    } else {
+                                                                        $totalCustomer += $modelName
+                                                                            ::whereIn('created_by', [$user->id])
+                                                                            ->count();
+                                                                    }
+                                                                }
+
+                                                                if ($model->id == 5) {
+                                                                    $totalAdmin += $modelName
+                                                                        ::whereIn('created_by', [auth()->user()->id])
+                                                                        ->count();
+                                                                } else {
+                                                                    $totalAdmin += $modelName
+                                                                        ::whereIn('user_id', [auth()->user()->id])
                                                                         ->count();
                                                                 }
-
-                                                                if($model->id == 5 ){
-                                                                    $totalAdmin += $modelName
-                                                                    ::whereIn('created_by', [auth()->user()->id])
-                                                                    ->count();
-                                                                }else{
-                                                                    $totalAdmin += $modelName
-                                                                    ::whereIn('user_id', [auth()->user()->id])
-                                                                    ->count();
-                                                                }
-
-
 
                                                                 $total = $totalCustomer + $totalAdmin;
 
@@ -280,7 +285,7 @@
                                                         <label for="{{ $key }}">
                                                             <b>{{ Str::ucfirst(explode('.', $permissions[0]->name)[1]) }}</b>
                                                             @if ($model->user_id == 1)
-                                                            <small>max : {{ $max > 10000 ? 'unlimted' : $max }}</small>
+                                                                <small>max : {{ $max > 10000 ? 'unlimted' : $max }}</small>
                                                             @endif
                                                         </label>
                                                     </div>
