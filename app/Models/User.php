@@ -471,8 +471,10 @@ class User extends Authenticatable
         }
         if ($model->user_id == 1) {
             if ($this->getDataLimitByModel($model_id) >= 10000) {
+                echo 'un';
                 return true;
             }
+            echo 'def';
             return $this->getDataLimitByModel($model_id) > $this->getCountByModelID($model_id);
         }
         // dd($this->count);
