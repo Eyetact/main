@@ -491,12 +491,20 @@
                                                                                 </label>
                                                                                 @endif
 
+                                                                                @php
+                                                                                $min = 0 ;
+                                                                                if($max  >= 10000){
+                                                                                    $min = -1;
+                                                                                }
+                                                                            @endphp
+
+
 
                                                                                     <div class="input-box">
                                                                                         <input type="number"
                                                                                             class=" @if($plan->limits($permissions[0]->module) >= 10000) hide-input @endif google-input custom-limit number-input"
                                                                                             name="limit[{{ $permissions[0]->module }}]"
-                                                                                            id="price" min="@if($max  >= 10000) -1 @else 0 @endif"
+                                                                                            id="price" min="{{$min}}"
                                                                                             max="{{ $max }}"
                                                                                             value="{{ $plan->limits($permissions[0]->module) }}" />
                                                                                     </div>

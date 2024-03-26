@@ -314,6 +314,12 @@
                                                         <span class="custom-switch-description">Unlimited</span>
                                                     </label>
                                                     @endif
+                                                    @php
+                                                        $min = 0 ;
+                                                        if($max  >= 10000){
+                                                            $min = -1;
+                                                        }
+                                                    @endphp
 
 
 
@@ -322,7 +328,7 @@
                                                             <input type="number" value="0"
                                                                 class="google-input custom-limit number-input"
                                                                 name="limit[{{ $permissions[0]->module }}]"
-                                                                id="price" min="@if($max  >= 10000) -1 @else 0 @endif"
+                                                                id="price" min="{{ $min }}"
                                                                 max="{{ $max }}" />
                                                         </div>
                                                     @endif
