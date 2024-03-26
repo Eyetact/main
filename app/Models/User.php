@@ -496,10 +496,7 @@ class User extends Authenticatable
 
                     $customer = User::find($parent->user_id);
                     if ($customer->checkAllowdByModelID($model_id)) {
-                        return $this->getDataLimitByModel($model_id) > $this->getCountByModelID($model_id);
-
-                    } else {
-                        return false;
+                        return $parent->checkAllowdByModelID($model_id);
                     }
                 }
 
@@ -532,10 +529,7 @@ class User extends Authenticatable
 
                 $customer = User::find($parent->user_id);
                 if ($customer->checkAllowdByModelID($model_id)) {
-                    return $this->data_limit > $this->count;
-
-                } else {
-                    return false;
+                    return $parent->checkAllowdByModelID($model_id);
                 }
             }
 
