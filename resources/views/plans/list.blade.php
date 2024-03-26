@@ -40,6 +40,7 @@
             max-width: 99% !important;
             width: 99% !important;
         }
+
         .dropdown-toggle:after {
             content: none !important;
         }
@@ -119,28 +120,29 @@
         .modal-lg {
             max-width: 1024px;
         }
+
         .custom-limit {
-    height: 30px !important;
-    width: 70px !important;
-    /* float: right !important; */
-}
+            height: 30px !important;
+            width: 70px !important;
+            /* float: right !important; */
+        }
 
-.custom-checkbox.permission.input-box:after {
-    content: no-close-quote;
-    top: 0px;
-    bottom: 0px;
-    left: 100%;
-    right: -27px;
-    background: #f1f1f1;
-    position: absolute;
-    width: auto;
-    height: auto;
-    z-index: 0;
-}
+        .custom-checkbox.permission.input-box:after {
+            content: no-close-quote;
+            top: 0px;
+            bottom: 0px;
+            left: 100%;
+            right: -27px;
+            background: #f1f1f1;
+            position: absolute;
+            width: auto;
+            height: auto;
+            z-index: 0;
+        }
 
-.custom-checkbox.permission.input-box {
-    position: relative;
-}
+        .custom-checkbox.permission.input-box {
+            position: relative;
+        }
     </style>
 @endsection
 @push('styles')
@@ -165,15 +167,13 @@
         </div>
         <div class="page-rightheader">
             @can('create.plan')
-            @if (auth()->user()->checkAllowdByModelID(4))
+                @if (auth()->user()->checkAllowdByModelID(4))
+                    <div class="btn btn-list">
+                        <a id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
+                            data-original-title="Add new"><i class="fe fe-plus mr-1"></i> Add new </a>
 
-            <div class="btn btn-list">
-                <a id="add_new" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="Add new"><i
-                        class="fe fe-plus mr-1"></i> Add new </a>
-
-            </div>
-
-@endif
+                    </div>
+                @endif
             @endcan
         </div>
     </div>
@@ -298,6 +298,43 @@
                     $("#role_form_modal").modal('show');
                     $('.dropify').dropify();
                     checkInput();
+
+
+                    // $('.custom-limit-checkbox').each(function() {
+                    //     var checkbox = $(this);
+                    //     var numberInput = checkbox.closest('.input-box').find('.number-input');
+
+
+                    //     checkbox.change(function() {
+                    //         if (checkbox.is(':checked')) {
+                    //             numberInput.val(-1).prop('disabled', true);
+                    //             alert(numberInput.value)
+
+                    //         } else {
+                    //             numberInput.prop('disabled', false);
+                    //         }
+                    //     });
+                    // });
+
+                    // $('.number-input').each(function() {
+                    //     var numberInput = $(this);
+
+                    //     numberInput.change(function() {
+                    //         var value = parseInt(numberInput.val());
+
+                    //         if (isNaN(value)) {
+                    //             numberInput.val(0);
+                    //         } else {
+                    //             numberInput.val(Math.max(-1, Math.min(value, parseInt(
+                    //                 numberInput.attr('max')))));
+                    //         }
+                    //     });
+                    // });
+
+
+
+
+
                 }
             });
         });
@@ -447,11 +484,11 @@
                 var check = this.checked;
                 $(this).parents('.role-group').find('.check-one').prop("checked", check);
                 $('.permission .check-all').each(function() {
-                var parentItem = $(this).parents('.role-group');
-                var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
-                    '.check-one').length;
-                $(parentItem).find('.check-all').prop("checked", check)
-            });
+                    var parentItem = $(this).parents('.role-group');
+                    var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
+                        '.check-one').length;
+                    $(parentItem).find('.check-all').prop("checked", check)
+                });
             });
             $('.permission .check-one').click(function() {
                 var parentItem = $(this).parents('.nav-treeview').parents('.nav-item');
@@ -459,11 +496,11 @@
                     '.check-one').length;
                 $(parentItem).find('.check-all').prop("checked", check)
                 $('.permission .check-all').each(function() {
-                var parentItem = $(this).parents('.role-group');
-                var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
-                    '.check-one').length;
-                $(parentItem).find('.check-all').prop("checked", check)
-            });
+                    var parentItem = $(this).parents('.role-group');
+                    var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
+                        '.check-one').length;
+                    $(parentItem).find('.check-all').prop("checked", check)
+                });
             });
             $('.permission .check-all').each(function() {
                 var parentItem = $(this).parents('.role-group');
@@ -472,7 +509,6 @@
                 $(parentItem).find('.check-all').prop("checked", check)
             });
         }
-
     </script>
     <script src="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/plugins/wysiwyag/jquery.richtext.js">
     </script>

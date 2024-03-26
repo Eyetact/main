@@ -50,7 +50,7 @@
             <div class="input-box">
                 <label for="period" class="input-label">period/days</label>
                 <input type="number" class="google-input" name="period" id="period" value=""
-                    min="0" />
+                    min="0" required/>
             </div>
             @error('period')
                 <label id="period-error" class="error" for="period">{{ $message }}</label>
@@ -60,7 +60,7 @@
         <div class="col-sm-6 col-md-6">
             <div class="input-box">
                 <label for="price" class="input-label">price</label>
-                <input type="text" class="google-input" name="price" id="price" value="" />
+                <input type="text" class="google-input" name="price" id="price" value="" required />
             </div>
             @error('price')
                 <label id="price-error" class="error" for="price">{{ $message }}</label>
@@ -88,7 +88,7 @@
                 <div class="col-3">
                     <div class="input-box">
                         <input type="number" max="{{ $availableModel }}" class="google-input custom-limit valid"
-                            name="model_limit" id="model_limit" min="0" value="0">
+                            name="model_limit" id="model_limit" min="0" value="0" required>
                     </div>
 
                 </div>
@@ -114,7 +114,7 @@
                 <div class="col-3">
                     <div class="input-box">
                         <input type="number" max="{{ $availableData }}" class="google-input custom-limit valid"
-                            name="data_limit" id="data_limit" min="0" value="0" />
+                            name="data_limit" id="data_limit" min="0" value="0" required />
                     </div>
 
                 </div>
@@ -288,6 +288,14 @@
                                                                 <small>max : {{ $max > 10000 ? 'unlimted' : $max }}</small>
                                                             @endif
                                                         </label>
+
+
+
+{{--
+                                                        <input id="unlimited-checkbox{{$model->id}}" type="checkbox" class="custom-limit-checkbox" />
+                                                        <label for="unlimited-checkbox">Unlimited</label> --}}
+
+
                                                     </div>
                                                 </div>
                                                 <div class="col-3">
@@ -295,9 +303,13 @@
 
 
                                                     @if ($user_id == 1)
+
+
+
+
                                                         <div class="input-box">
                                                             <input type="number" value="0"
-                                                                class="google-input custom-limit"
+                                                                class="google-input custom-limit number-input"
                                                                 name="limit[{{ $permissions[0]->module }}]"
                                                                 id="price" min="-1"
                                                                 max="{{ $max }}" />
@@ -523,5 +535,10 @@
                 @endforeach
             }
         }
+
+
+
     });
+
+
 </script>

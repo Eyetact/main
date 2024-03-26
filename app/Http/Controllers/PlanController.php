@@ -103,7 +103,7 @@ class PlanController extends Controller
 
             //     $users = User::where('user_id', auth()->user()->id)->pluck('id');
             //     $total += $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
-                
+
 
 
 
@@ -135,6 +135,8 @@ class PlanController extends Controller
         $plan->save();
 
         $limits = $request->limit;
+        if(isset($request->checkAll ))
+        {
         foreach ($request->checkAll as $key => $check) {
             if (isset ($limits[$key])) {
 
@@ -152,12 +154,15 @@ class PlanController extends Controller
                 $limit->save();
             }
         }
+    }
         // return;
 
 
 
 
 
+        if(isset($request->permissions ))
+        {
         if ($request->permissions) {
             foreach ($request->permissions as $p) {
 
@@ -166,6 +171,7 @@ class PlanController extends Controller
                 $plan->permissions()->save($per);
             }
         }
+    }
 
 
         return redirect()->route('plans.index')
@@ -241,6 +247,8 @@ class PlanController extends Controller
         $plan->update($request->except('permissions', 'checkAll', 'limit'));
 
         $limits = $request->limit;
+        if(isset($request->checkAll ))
+        {
         foreach ($request->checkAll as $key => $check) {
             if (isset ($limits[$key])) {
 
@@ -258,9 +266,15 @@ class PlanController extends Controller
                 $limit->save();
             }
         }
+    }
 
-        $plan->permissions()->detach();
 
+
+
+
+        if(isset($request->permissions ))
+        {
+            $plan->permissions()->detach();
         if ($request->permissions) {
             foreach ($request->permissions as $p) {
 
@@ -268,6 +282,7 @@ class PlanController extends Controller
 
                 $plan->permissions()->save($per);
             }
+
 
             $subs = $plan->subscriptions;
             foreach ($subs as $sub) {
@@ -281,6 +296,7 @@ class PlanController extends Controller
 
 
         }
+    }
         return redirect()->route('plans.index')
             ->with('success', 'Plan has been updated successfully');
     }
