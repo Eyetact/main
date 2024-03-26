@@ -530,6 +530,8 @@ class User extends Authenticatable
                 $customer = User::find($parent->user_id);
                 if ($customer->checkAllowdByModelID($model_id)) {
                     return $parent->checkAllowdByModelID($model_id);
+                }else{
+                    return false;
                 }
             }
 
