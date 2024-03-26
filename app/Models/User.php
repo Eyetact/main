@@ -489,23 +489,25 @@ class User extends Authenticatable
 
             }
         }
-        if (count($this->subscriptions) == 0) {
-            $parent = User::find($this->user_id);
-            if ($parent->hasRole('vendor')) {
 
-                $customer = User::find($parent->user_id);
-                if ($customer->checkAllowdByModelID($model_id)) {
+        if ($model->user_id == 1) {
+
+            if (count($this->subscriptions) == 0) {
+                $parent = User::find($this->user_id);
+                if ($parent->hasRole('vendor')) {
+
+                    $customer = User::find($parent->user_id);
+                    if ($customer->checkAllowdByModelID($model_id)) {
+                        return $parent->checkAllowdByModelID($model_id);
+                    }
+                }
+
+
+                if ($parent->hasRole('admin')) {
+
                     return $parent->checkAllowdByModelID($model_id);
                 }
             }
-
-
-            if ($parent->hasRole('admin')) {
-
-                return $parent->checkAllowdByModelID($model_id);
-            }
-        }
-        if ($model->user_id == 1) {
 
             if ($this->getDataLimitByModel($model_id) >= 10000) {
                 return true;
