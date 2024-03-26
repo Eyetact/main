@@ -380,7 +380,7 @@ class User extends Authenticatable
 
             } else {
                 if ($this->hasRole('admin')) {
-                    $vendors = User::role('vendor')->where('user_id',auth()->user()->id)->pluck('id');
+                    $vendors = User::role('vendor')->where('user_id', auth()->user()->id)->pluck('id');
                     $users = User::whereIn('user_id', $vendors)->orWhere('user_id', auth()->user()->id)->pluck('id');
 
                     if ($model->id == 5) {
@@ -451,7 +451,8 @@ class User extends Authenticatable
         }
     }
 
-    public function checkAllowdMode(){
+    public function checkAllowdMode()
+    {
 
         if ($this->hasRole('vendor')) {
 
@@ -459,7 +460,7 @@ class User extends Authenticatable
             if ($customer->checkAllowdMode()) {
                 return auth()->user()->model_limit > auth()->user()->current_model_limit;
 
-            }else{
+            } else {
                 return false;
             }
         }
@@ -489,6 +490,25 @@ class User extends Authenticatable
             }
         }
         if ($model->user_id == 1) {
+            if (count($this->subscriptions) == 0) {
+                $parent = User::find($this->user_id);
+                if ($parent->hasRole('vendor')) {
+
+                    $customer = User::find($parent->user_id);
+                    if ($customer->checkAllowdByModelID($model_id)) {
+                        return $this->getDataLimitByModel($model_id) > $this->getCountByModelID($model_id);
+
+                    } else {
+                        return false;
+                    }
+                }
+
+
+                if ($parent->hasRole('admin')) {
+
+                    return $parent->checkASllowdByModelID($model_id);
+                }
+            }
             if ($this->getDataLimitByModel($model_id) >= 10000) {
                 return true;
             }
@@ -501,7 +521,7 @@ class User extends Authenticatable
             if ($customer->checkAllowdByModelID($model_id)) {
                 return $this->data_limit > $this->count;
 
-            }else{
+            } else {
                 return false;
             }
         }
@@ -514,7 +534,7 @@ class User extends Authenticatable
                 if ($customer->checkAllowdByModelID($model_id)) {
                     return $this->data_limit > $this->count;
 
-                }else{
+                } else {
                     return false;
                 }
             }
