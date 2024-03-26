@@ -307,14 +307,14 @@ class User extends Authenticatable
         $super = $this->hasRole('super');
         if ($super) {
 
-            return 10000;
+            return 0;
 
         }
         //employee case
         if (count($this->subscriptions) == 0) {
 
             if (auth()->user()->user_id == 1) {
-                return 10000;
+                return 0;
 
             }
         }

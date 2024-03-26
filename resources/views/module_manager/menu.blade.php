@@ -259,12 +259,8 @@ li.dd-item.no-pad .dd-handle {
                     echo auth()->user()->current_model_limit
 
                 @endphp --}}
-                @if (auth()->user()->hasRole('super'))
-                <div class="col-2"><button type="button" data-target="#addMenuModal" data-toggle="modal"
-                    class="btn btn-primary">Add</button></div>
 
-
-                    @elseif (auth()->user()->model_limit > auth()->user()->current_model_limit && !auth()->user()->hasRole('super'))
+     @if (auth()->user()->model_limit > auth()->user()->current_model_limit)
                 <div class="col-2"><button type="button" data-target="#addMenuModal" data-toggle="modal"
                         class="btn btn-primary">Add</button></div>
             @endif
