@@ -321,10 +321,10 @@ class User extends Authenticatable
 
         $users = User::where('user_id', auth()->user()->id)->pluck('id');
         $customer = auth()->user();
-        if ($this->hasRole('vendor')) {
-            $customer = User::find($this->user_id);
-            $users = User::where('user_id', $customer->id)->pluck('id');
-        }
+        // if ($this->hasRole('vendor')) {
+        //     $customer = User::find($this->user_id);
+        //     $users = User::where('user_id', $customer->id)->pluck('id');
+        // }
 
         return count(Module::whereIn('user_id', $users)->orWhere('user_id', $customer->id)->get());
 
@@ -447,6 +447,22 @@ class User extends Authenticatable
 
             return $sum;
         }
+    }
+
+    public function checkAllowdMode(){
+
+        if ($this->hasRole('vendor')) {
+
+            $customer = User::find($this->user_id);
+            if ($customer->checkAllowdMode()) {
+                return auth()->user()->model_limit > auth()->user()->current_model_limit;
+
+            }else{
+                return false;
+            }
+        }
+
+        return auth()->user()->model_limit > auth()->user()->current_model_limit;
     }
 
 
