@@ -304,12 +304,16 @@
 
                                                     @if ($user_id == 1)
 
+
+                                                    @if($max >= 10000)
+
                                                     <label class="custom-switch form-label">
                                                         <input type="checkbox" class="custom-switch-input custom-limit-checkbox" id="unlimited-checkbox{{$model->id}}"
                                                             >
                                                         <span class="custom-switch-indicator"></span>
                                                         <span class="custom-switch-description">Unlimited</span>
                                                     </label>
+                                                    @endif
 
 
 

@@ -482,12 +482,16 @@
                                                                             <div class="col-3">
 
                                                                                 @if ($user_id == 1)
+                                                                                @if($max >= 10000)
                                                                                 <label class="custom-switch form-label">
                                                                                     <input @checked($plan->limits($permissions[0]->module) >= 10000) type="checkbox" class=" custom-switch-input custom-limit-checkbox" id="unlimited-checkbox{{$model->id}}"
                                                                                         >
                                                                                     <span class="custom-switch-indicator"></span>
                                                                                     <span class="custom-switch-description">Unlimited</span>
                                                                                 </label>
+                                                                                @endif
+
+
                                                                                     <div class="input-box">
                                                                                         <input type="number"
                                                                                             class=" @if($plan->limits($permissions[0]->module) >= 10000) hide-input @endif google-input custom-limit number-input"
