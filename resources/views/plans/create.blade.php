@@ -291,18 +291,25 @@
 
 
 
-{{--
-                                                        <input id="unlimited-checkbox{{$model->id}}" type="checkbox" class="custom-limit-checkbox" />
-                                                        <label for="unlimited-checkbox">Unlimited</label> --}}
+
+
 
 
                                                     </div>
                                                 </div>
+
                                                 <div class="col-3">
 
 
 
                                                     @if ($user_id == 1)
+
+                                                    <label class="custom-switch form-label">
+                                                        <input type="checkbox" class="custom-switch-input custom-limit-checkbox" id="unlimited-checkbox{{$model->id}}"
+                                                            >
+                                                        <span class="custom-switch-indicator"></span>
+                                                        <span class="custom-switch-description">Unlimited</span>
+                                                    </label>
 
 
 

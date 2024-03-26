@@ -90,7 +90,7 @@ class PlanController extends Controller
 
         }
 
-        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('vendor') ) {
+        if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('vendor')) {
 
             $availableModel = auth()->user()->model_limit - auth()->user()->current_model_limit;
 
@@ -135,43 +135,41 @@ class PlanController extends Controller
         $plan->save();
 
         $limits = $request->limit;
-        if(isset($request->checkAll ))
-        {
-        foreach ($request->checkAll as $key => $check) {
-            if (isset ($limits[$key])) {
+        if (isset ($request->checkAll)) {
+            foreach ($request->checkAll as $key => $check) {
+                if (isset ($limits[$key])) {
 
-                $limit = new Limit();
-                $limit->plan_id = $plan->id;
-                $limit->module_id = $key;
+                    $limit = new Limit();
+                    $limit->plan_id = $plan->id;
+                    $limit->module_id = $key;
 
-                $value = $limits[$key];
-                // echo $value . '\n';
-                if ($value == -1) {
-                    $limit->data_limit = 100000;
-                } else {
-                    $limit->data_limit = $value;
+                    $value = $limits[$key];
+                    // echo $value . '\n';
+                    if ($value == -1) {
+                        $limit->data_limit = 100000;
+                    } else {
+                        $limit->data_limit = $value;
+                    }
+                    $limit->save();
                 }
-                $limit->save();
             }
         }
-    }
         // return;
 
 
 
 
 
-        if(isset($request->permissions ))
-        {
-        if ($request->permissions) {
-            foreach ($request->permissions as $p) {
+        if (isset ($request->permissions)) {
+            if ($request->permissions) {
+                foreach ($request->permissions as $p) {
 
-                $per = Permission::find($p);
+                    $per = Permission::find($p);
 
-                $plan->permissions()->save($per);
+                    $plan->permissions()->save($per);
+                }
             }
         }
-    }
 
 
         return redirect()->route('plans.index')
@@ -247,56 +245,56 @@ class PlanController extends Controller
         $plan->update($request->except('permissions', 'checkAll', 'limit'));
 
         $limits = $request->limit;
-        if(isset($request->checkAll ))
-        {
-        foreach ($request->checkAll as $key => $check) {
-            if (isset ($limits[$key])) {
+        if (isset ($request->checkAll)) {
 
-                $limit = new Limit();
-                $limit->plan_id = $plan->id;
-                $limit->module_id = $key;
+            $limts = Limit::where('plan_id', $plan->id)->where('subscription_id',null)->delete();
+            foreach ($request->checkAll as $key => $check) {
+                if (isset ($limits[$key])) {
 
-                $value = $limits[$key];
-                // echo $value . '\n';
-                if ($value == -1) {
-                    $limit->data_limit = 100000;
-                } else {
-                    $limit->data_limit = $value;
+                    $limit = new Limit();
+                    $limit->plan_id = $plan->id;
+                    $limit->module_id = $key;
+
+                    $value = $limits[$key];
+                    // echo $value . '\n';
+                    if ($value == -1) {
+                        $limit->data_limit = 100000;
+                    } else {
+                        $limit->data_limit = $value;
+                    }
+                    $limit->save();
                 }
-                $limit->save();
             }
         }
-    }
 
 
 
 
 
-        if(isset($request->permissions ))
-        {
+        if (isset ($request->permissions)) {
             $plan->permissions()->detach();
-        if ($request->permissions) {
-            foreach ($request->permissions as $p) {
+            if ($request->permissions) {
+                foreach ($request->permissions as $p) {
 
-                $per = Permission::find($p);
+                    $per = Permission::find($p);
 
-                $plan->permissions()->save($per);
-            }
-
-
-            $subs = $plan->subscriptions;
-            foreach ($subs as $sub) {
-                $user = $sub->user;
-                foreach ($plan->permissions as $p) {
-                    $user->givePermissionTo($p);
+                    $plan->permissions()->save($per);
                 }
 
+
+                $subs = $plan->subscriptions;
+                foreach ($subs as $sub) {
+                    $user = $sub->user;
+                    foreach ($plan->permissions as $p) {
+                        $user->givePermissionTo($p);
+                    }
+
+                }
+
+
+
             }
-
-
-
         }
-    }
         return redirect()->route('plans.index')
             ->with('success', 'Plan has been updated successfully');
     }

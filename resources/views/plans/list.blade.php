@@ -143,6 +143,16 @@
         .custom-checkbox.permission.input-box {
             position: relative;
         }
+
+        label.custom-switch.form-label {
+            margin-left: -106px;
+            position: absolute;
+            top: 12px;
+        }
+        .hide-input{
+            opacity: 0;
+        }
+
     </style>
 @endsection
 @push('styles')
@@ -300,36 +310,25 @@
                     checkInput();
 
 
-                    // $('.custom-limit-checkbox').each(function() {
-                    //     var checkbox = $(this);
-                    //     var numberInput = checkbox.closest('.input-box').find('.number-input');
 
 
-                    //     checkbox.change(function() {
-                    //         if (checkbox.is(':checked')) {
-                    //             numberInput.val(-1).prop('disabled', true);
-                    //             alert(numberInput.value)
+                    $('.custom-limit-checkbox').on('change', function() {
 
-                    //         } else {
-                    //             numberInput.prop('disabled', false);
-                    //         }
-                    //     });
-                    // });
+                        var checkbox = $(this);
 
-                    // $('.number-input').each(function() {
-                    //     var numberInput = $(this);
+                        var numberInput = checkbox.closest('.role-group').find('.number-input');
+                        numberInput.toggleClass('hide-input')
 
-                    //     numberInput.change(function() {
-                    //         var value = parseInt(numberInput.val());
+                        if (checkbox.is(':checked')) {
+                            numberInput.val(-1).prop('readonly', true);
 
-                    //         if (isNaN(value)) {
-                    //             numberInput.val(0);
-                    //         } else {
-                    //             numberInput.val(Math.max(-1, Math.min(value, parseInt(
-                    //                 numberInput.attr('max')))));
-                    //         }
-                    //     });
-                    // });
+
+                        } else {
+                            numberInput.val(0).prop('readonly', false);
+
+                        }
+                    });
+
 
 
 
@@ -354,6 +353,21 @@
                     $("#role_form_modal").modal('show');
                     $('.dropify').dropify();
                     checkInput();
+                    $('.custom-limit-checkbox').on('change', function() {
+
+                        var checkbox = $(this);
+
+                        var numberInput = checkbox.closest('.role-group').find('.number-input');
+                        numberInput.toggleClass('hide-input')
+
+                        if (checkbox.is(':checked')) {
+                            numberInput.val(-1).prop('readonly', true);
+
+                        } else {
+                            numberInput.val(0).prop('readonly', false);
+
+                        }
+                    });
                 }
             });
         });
