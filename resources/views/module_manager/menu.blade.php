@@ -265,7 +265,7 @@ li.dd-item.no-pad .dd-handle {
             @endif
 
 
-                @if(auth()->user()->model_limit > auth()->user()->current_model_limit)
+                @if( !(auth()->user()->hasRole('super')) &&(auth()->user()->model_limit > auth()->user()->current_model_limit))
                 <div class="col-2"><button type="button" data-target="#addMenuModal" data-toggle="modal"
                         class="btn btn-primary">Add</button></div>
             @endif
