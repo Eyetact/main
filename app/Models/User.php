@@ -506,7 +506,7 @@ class User extends Authenticatable
 
                 if ($parent->hasRole('admin')) {
 
-                    return $parent->checkASllowdByModelID($model_id);
+                    return $parent->checkAllowdByModelID($model_id);
                 }
             }
             if ($this->getDataLimitByModel($model_id) >= 10000) {
