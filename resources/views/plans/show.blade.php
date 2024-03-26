@@ -496,7 +496,7 @@
                                                                                         <input type="number"
                                                                                             class=" @if($plan->limits($permissions[0]->module) >= 10000) hide-input @endif google-input custom-limit number-input"
                                                                                             name="limit[{{ $permissions[0]->module }}]"
-                                                                                            id="price" min="-1"
+                                                                                            id="price" min="@if($max  >= 10000) -1 @else 0 @endif"
                                                                                             max="{{ $max }}"
                                                                                             value="{{ $plan->limits($permissions[0]->module) }}" />
                                                                                     </div>
