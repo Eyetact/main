@@ -207,14 +207,14 @@ class User extends Authenticatable
         $super = $this->hasRole('super');
         if ($super) {
 
-            return 1000;
+            return 10000;
 
         }
         //employee case
         if (count($this->subscriptions) == 0) {
 
             if (auth()->user()->user_id == 1) {
-                return 1000;
+                return 10000;
 
             }
 
@@ -481,17 +481,17 @@ class User extends Authenticatable
         if (count($this->subscriptions) == 0) {
             $vendor = User::find($this->user_id);
             if ($vendor->hasRole('vendor')) {
-                
+
                 $customer = User::find($vendor->user_id);
                 if ($customer->checkAllowdByModelID($model_id)) {
                     return $this->data_limit > $this->count;
-    
+
                 }else{
                     return false;
                 }
-            }  
+            }
         }
-        
+
         return $this->data_limit > $this->count;
 
     }

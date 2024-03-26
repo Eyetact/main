@@ -82,17 +82,38 @@ class SubscriptionController extends Controller
 
         if (auth()->user()->hasRole('super')) {
 
-            $users = User::role($roleNames)->get();
-            $plans = Plan::all();
+            // $users = User::role('admin')->get();
+            // $plans = Plan::all();
 
-            $groups = CustomerGroup::all();
+            // $groups = CustomerGroup::all();
+
+            $userId = auth()->user()->id;
+            $usersOfCustomers = User::role('admin')
+                ->where('user_id', $userId)
+                ->pluck('id');
+
+            $users = User::whereIn('id', $usersOfCustomers)
+
+                ->get();
+
+            $ids = User::where('user_id', $userId)->pluck('id');
+
+
+            $plans = Plan::where('user_id', $userId)
+                ->orWhereIn('user_id', $ids)
+                ->get();
+
+
+            $groups = CustomerGroup::where('created_by', $userId)
+                ->orWhereIn('created_by', $ids)
+                ->get();
 
 
 
         } else {
 
             $userId = auth()->user()->id;
-            $usersOfCustomers = User::role($roleNames)
+            $usersOfCustomers = User::role('vendor')
                 ->where('user_id', $userId)
                 ->pluck('id');
 
@@ -184,17 +205,38 @@ class SubscriptionController extends Controller
 
         if (auth()->user()->hasRole('super')) {
 
-            $users = User::role('admin')->get();
-            $plans = Plan::all();
+            // $users = User::role('admin')->get();
+            // $plans = Plan::all();
 
-            $groups = CustomerGroup::all();
+            // $groups = CustomerGroup::all();
+
+            $userId = auth()->user()->id;
+            $usersOfCustomers = User::role('admin')
+                ->where('user_id', $userId)
+                ->pluck('id');
+
+            $users = User::whereIn('id', $usersOfCustomers)
+
+                ->get();
+
+            $ids = User::where('user_id', $userId)->pluck('id');
+
+
+            $plans = Plan::where('user_id', $userId)
+                ->orWhereIn('user_id', $ids)
+                ->get();
+
+
+            $groups = CustomerGroup::where('created_by', $userId)
+                ->orWhereIn('created_by', $ids)
+                ->get();
 
 
 
         } else {
 
             $userId = auth()->user()->id;
-            $usersOfCustomers = User::role($roleNames)
+            $usersOfCustomers = User::role('vendor')
                 ->where('user_id', $userId)
                 ->pluck('id');
 
@@ -214,7 +256,7 @@ class SubscriptionController extends Controller
                 ->orWhereIn('created_by', $ids)
                 ->get();
         }
-        $plans = Plan::all();
+
         return view('subscriptions.show', compact('subscription', 'users', 'plans'));
 
     }
