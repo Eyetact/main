@@ -380,6 +380,8 @@ class User extends Authenticatable
 
             } else {
                 if ($this->hasRole('admin')) {
+                    $vendors = User::role('vendor')->where('user_id',auth()->user()->id)->pluck('id');
+                    $users = User::whereIn('user_id', $vendors)->orWhere('user_id', auth()->user()->id)->pluck('id');
 
                     if ($model->id == 5) {
                         $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)->count();
