@@ -150,7 +150,7 @@ class User extends Authenticatable
         //employee case
         if (count($this->subscriptions) == 0) {
 
-            if (auth()->user()->user_id == 1) {
+            if ($this->user_id == 1) {
                 return 10000;
 
             }
@@ -213,7 +213,7 @@ class User extends Authenticatable
         //employee case
         if (count($this->subscriptions) == 0) {
 
-            if (auth()->user()->user_id == 1) {
+            if ($this->user_id == 1) {
                 return 10000;
 
             }
@@ -237,7 +237,7 @@ class User extends Authenticatable
         //employee case
         if (count($this->subscriptions) == 0) {
 
-            if (auth()->user()->user_id == 1) {
+            if ($this->user_id == 1) {
                 return 2000;
 
             }
@@ -261,7 +261,7 @@ class User extends Authenticatable
         //employee case
         if (count($this->subscriptions) == 0) {
 
-            if (auth()->user()->user_id == 1) {
+            if ($this->user_id == 1) {
                 return 1000;
 
             }
@@ -313,14 +313,14 @@ class User extends Authenticatable
         //employee case
         if (count($this->subscriptions) == 0) {
 
-            if (auth()->user()->user_id == 1) {
+            if ($this->user_id == 1) {
                 return 0;
 
             }
         }
 
-        $users = User::where('user_id', auth()->user()->id)->pluck('id');
-        $customer = auth()->user();
+        $users = User::where('user_id', $this->id)->pluck('id');
+        $customer = $this;
         // if ($this->hasRole('vendor')) {
         //     $customer = User::find($this->user_id);
         //     $users = User::where('user_id', $customer->id)->pluck('id');
@@ -348,7 +348,7 @@ class User extends Authenticatable
         //employee case
         if (count($this->subscriptions) == 0) {
 
-            if (auth()->user()->user_id == 1) {
+            if ($this->user_id == 1) {
                 return 10000;
 
             }
@@ -364,7 +364,7 @@ class User extends Authenticatable
             }
 
 
-            $users = User::where('user_id', auth()->user()->id)->pluck('id');
+            $users = User::where('user_id', $this->id)->pluck('id');
 
             if (!$this->hasRole('admin') && !$this->hasRole('vendor')) {
                 $customer = User::find($this->user_id);
@@ -380,15 +380,15 @@ class User extends Authenticatable
 
             } else {
                 if ($this->hasRole('admin')) {
-                    $vendors = User::role('vendor')->where('user_id', auth()->user()->id)->pluck('id');
-                    $users = User::whereIn('user_id', $vendors)->orWhere('user_id', auth()->user()->id)->pluck('id');
+                    $vendors = User::role('vendor')->where('user_id', $this->id)->pluck('id');
+                    $users = User::whereIn('user_id', $vendors)->orWhere('user_id', $this->id)->pluck('id');
 
                     if ($model->id == 5) {
-                        $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)->count();
+                        $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', $this->id)->count();
                         return $sum;
 
                     } else {
-                        $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)->count();
+                        $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', $this->id)->count();
 
                         return $sum;
                     }
@@ -397,13 +397,13 @@ class User extends Authenticatable
 
                     $customer = User::find($this->user_id);
                     if ($model->id == 5) {
-                        $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', auth()->user()->id)
+                        $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', $this->id)
                             ->orWhere('created_by', $customer->id)->count();
 
                         return $sum;
 
                     } else {
-                        $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', auth()->user()->id)
+                        $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', $this->id)
                             ->orWhere('user_id', $customer->id)->count();
                         return $sum;
                     }
@@ -458,14 +458,14 @@ class User extends Authenticatable
 
             $customer = User::find($this->user_id);
             if ($customer->checkAllowdMode()) {
-                return auth()->user()->model_limit > auth()->user()->current_model_limit;
+                return $this->model_limit > $this->current_model_limit;
 
             } else {
                 return false;
             }
         }
 
-        return auth()->user()->model_limit > auth()->user()->current_model_limit;
+        return $this->model_limit > $this->current_model_limit;
     }
 
 
@@ -484,28 +484,29 @@ class User extends Authenticatable
         //admin employee case
         if (count($this->subscriptions) == 0) {
 
-            if (auth()->user()->user_id == 1) {
+            if ($this->user_id == 1) {
                 return true;
 
             }
         }
-        if ($model->user_id == 1) {
-            if (count($this->subscriptions) == 0) {
-                $parent = User::find($this->user_id);
-                if ($parent->hasRole('vendor')) {
+        if (count($this->subscriptions) == 0) {
+            $parent = User::find($this->user_id);
+            if ($parent->hasRole('vendor')) {
 
-                    $customer = User::find($parent->user_id);
-                    if ($customer->checkAllowdByModelID($model_id)) {
-                        return $parent->checkAllowdByModelID($model_id);
-                    }
-                }
-
-
-                if ($parent->hasRole('admin')) {
-
+                $customer = User::find($parent->user_id);
+                if ($customer->checkAllowdByModelID($model_id)) {
                     return $parent->checkAllowdByModelID($model_id);
                 }
             }
+
+
+            if ($parent->hasRole('admin')) {
+
+                return $parent->checkAllowdByModelID($model_id);
+            }
+        }
+        if ($model->user_id == 1) {
+
             if ($this->getDataLimitByModel($model_id) >= 10000) {
                 return true;
             }
