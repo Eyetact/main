@@ -219,59 +219,7 @@
                                         @enderror
                                     </div> --}}
 
-                                    <div class="col-sm-6 role-group">
 
-                                        <div class="row">
-                                            <div class="col-9">
-                                                <div class="custom-checkbox permission  input-box">
-
-                                                    <label for="">
-                                                        <b>Models Limit</b> <small>max :
-                                                            {{ $availableModel > 10000 ? 'unlimted' : $availableModel }}</small></label>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="input-box">
-                                                    <input type="number" max="{{ $availableModel }}"
-                                                        class="google-input custom-limit valid" name="model_limit"
-                                                        id="model_limit" min="0"
-                                                        value="{{ $plan->model_limit }}">
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-
-
-
-                                    </div>
-
-
-                                    <div class="col-sm-6 role-group">
-
-                                        <div class="row">
-                                            <div class="col-9">
-                                                <div class="custom-checkbox permission  input-box">
-
-                                                    <label for="">
-                                                        <b>Data Limit</b> <small>max :
-                                                            {{ $availableData > 10000 ? 'unlimted' : $availableData }}</small></label>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="input-box">
-                                                    <input type="number" max="{{ $availableData }}"
-                                                        class="google-input custom-limit valid" name="data_limit"
-                                                        id="data_limit" min="0"
-                                                        value="{{ $plan->data_limit }}" />
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-
-
-                                    </div>
 
 
                                     <div class="col-sm-12 col-md-12">
@@ -639,7 +587,62 @@
                                         </div>
                                     </div>
 
+                                    <div class="col-sm-6 role-group">
+
+                                        <div class="row">
+                                            <div class="col-9">
+                                                <div class="custom-checkbox permission  input-box">
+
+                                                    <label for="">
+                                                        <b>Models Limit</b> <small>max :
+                                                            {{ $availableModel > 10000 ? 'unlimted' : $availableModel }}</small></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="input-box">
+                                                    <input type="number" max="{{ $availableModel }}"
+                                                        class="google-input custom-limit valid" name="model_limit"
+                                                        id="model_limit" min="0"
+                                                        value="{{ $plan->model_limit }}">
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </div>
+
+
+                                    <div class="col-sm-6 role-group">
+
+                                        <div class="row">
+                                            <div class="col-9">
+                                                <div class="custom-checkbox permission  input-box">
+
+                                                    <label for="">
+                                                        <b>Data Limit</b> <small>max :
+                                                            {{ $availableData > 10000 ? 'unlimted' : $availableData }}</small></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="input-box">
+                                                    <input type="number" max="{{ $availableData }}"
+                                                        class="google-input custom-limit valid" name="data_limit"
+                                                        id="data_limit" min="0"
+                                                        value="{{ $plan->data_limit }}" />
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+
                                 </div>
+
                             </div>
                             <div class="card-footer text-right">
                                 <button type="submit" class="btn btn-primary">Save</button>
@@ -651,6 +654,10 @@
             </div>
         </div>
     </div>
+
+
+
+
 </div>
 
 <script src="https://laravel.spruko.com/admitro/Vertical-IconSidedar-Light/assets/plugins/wysiwyag/jquery.richtext.js">

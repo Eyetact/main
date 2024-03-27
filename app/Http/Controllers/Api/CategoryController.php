@@ -100,31 +100,37 @@ class CategoryController extends ApiController
         if ($request->name == "categories") {
 
             $machine = Software::find($request->machine_id);
-
-            $components_set = ComponentsSet::find($machine->components_set_id);
-
-            if( $components_set){
-
-            $set_component = json_decode($components_set->set_component);
-            $categoryIds = collect($set_component)->pluck('id');
-            // dd($categoryIds);
             $categories = collect([]);
 
-            foreach ($categoryIds as $categoryId) {
-                $component = Component::find($categoryId);
-                $compo_category = json_decode($component->compo_category, true);
-                $compo_category_collection = collect($compo_category)->pluck('id');
 
-                foreach ($compo_category_collection as $categoryId) {
-                    $category = Category::find($categoryId);
-                    if ($category && !$categories->contains('id', $category->id)) {
-                        $categories->push($category);
+            if( $machine->components_set_id != NULL){
+
+            $components_set = ComponentsSet::find($machine->components_set_id);
+            if( $components_set){
+
+                $set_component = json_decode($components_set->set_component);
+                $categoryIds = collect($set_component)->pluck('id');
+                // dd($categoryIds);
+
+                foreach ($categoryIds as $categoryId) {
+                    $component = Component::find($categoryId);
+                    $compo_category = json_decode($component->compo_category, true);
+                    $compo_category_collection = collect($compo_category)->pluck('id');
+
+                    foreach ($compo_category_collection as $categoryId) {
+                        $category = Category::find($categoryId);
+                        if ($category && !$categories->contains('id', $category->id)) {
+                            $categories->push($category);
+                        }
                     }
+
                 }
 
             }
 
-        }
+            }
+
+
                 // dd($categories);
 
 
@@ -136,12 +142,12 @@ class CategoryController extends ApiController
             $machine = Software::find($request->machine_id);
             $components_set = ComponentsSet::find($machine->components_set_id);
 
+            $components = collect([]);
 
             if( $components_set){
             $set_component = json_decode($components_set->set_component);
             $componentIds = collect($set_component)->pluck("id");
 
-            $components = collect([]);
 
             foreach ($componentIds as $componentId) {
                 $component = Component::find($componentId);
@@ -160,7 +166,10 @@ class CategoryController extends ApiController
 
 
             $machine = Software::find($request->machine_id);
-            $mixtures = $machine->mixtures;
+
+
+            $mixtures =$machine->mixtures;
+
 
 
             return $this->returnData('data', MixtureDataResource::collection($mixtures), __('Get successfully'));

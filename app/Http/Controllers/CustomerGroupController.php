@@ -10,17 +10,52 @@ class CustomerGroupController extends Controller
 {
     public function index()
     {
+
+
         if (request()->ajax()) {
             if(auth()->user()->hasRole('super')){
-                $groups = CustomerGroup::all();
-            }else{
-                $userId = auth()->user()->id;
+                // $groups = CustomerGroup::all();
 
-                $ids = User::where('user_id', $userId)->pluck('id');
-                $groups = CustomerGroup::where('created_by', $userId)
-                ->orWhereIn('created_by',$ids)
-                ->get();
+                $userId = auth()->user()->id;
+                // $usersOfCustomers = User::role('admin')
+                //     ->where('user_id', $userId)
+                //     ->pluck('id');
+
+                // $ids = User::where('user_id', $userId)->pluck('id');
+
+
+                $groups = CustomerGroup::where('id',2)
+                ->orWhere('created_by', auth()->user()->id)
+                // ->orWhereIn('created_by', $ids)
+                    ->get();
+
+
             }
+            if(auth()->user()->hasRole('admin'))
+            {
+
+                $userId = auth()->user()->id;
+                // $usersOfCustomers = User::role('vendor')
+                //     ->where('user_id', $userId)
+                //     ->pluck('id');
+
+                // $ids = User::where('user_id', $userId)->pluck('id');
+
+
+                $groups = CustomerGroup::where('id',3)
+                    ->orWhere('created_by', $userId)
+                    // ->orWhereIn('created_by', $ids)
+                    ->get();
+            }
+            // else{
+
+            //     $userId = auth()->user()->id;
+
+            //     $ids = User::where('user_id', $userId)->pluck('id');
+            //     $groups = CustomerGroup::where('created_by', $userId)
+            //     ->orWhereIn('created_by',$ids)
+            //     ->get();
+            // }
 
             return datatables()->of($groups)
                 ->addColumn('name', function ($row) {
@@ -33,7 +68,7 @@ class CustomerGroupController extends Controller
                     if ($row->group_id == null) {
                         return $row->name;
                     }
-                    return $row->parent->name;
+                    return $row->parent?->name;
                 })
 
                 ->addColumn('action', function ($row) {
@@ -114,17 +149,48 @@ class CustomerGroupController extends Controller
     public function create()
     {
         if(auth()->user()->hasRole('super')){
-            $parents_group = CustomerGroup::where('group_id', null)->get();
+            // $parents_group = CustomerGroup::where('group_id', null)->get();
 
-        }else{
             $userId = auth()->user()->id;
+            // $usersOfCustomers = User::role('admin')
+            //     ->where('user_id', $userId)
+            //     ->pluck('id');
 
-            $ids = User::where('user_id', $userId)->pluck('id');
-            $parents_group = CustomerGroup::where('created_by', $userId)
-            ->orWhereIn('created_by',$ids)
-            ->where('group_id', null)
-            ->get();
+            // $ids = User::where('user_id', $userId)->pluck('id');
+
+
+            $parents_group = CustomerGroup::where('group_id', null)
+                ->where('created_by', $userId)
+                // ->orWhereIn('created_by', $ids)
+                ->get();
+
         }
+        if(auth()->user()->hasRole('admin'))
+        {
+
+            $userId = auth()->user()->id;
+            // $usersOfCustomers = User::role('vendor')
+            //     ->where('user_id', $userId)
+            //     ->pluck('id');
+
+            // $ids = User::where('user_id', $userId)->pluck('id');
+
+
+            $parents_group = CustomerGroup::where('group_id', null)
+                ->where('created_by', $userId)
+                // ->orWhereIn('created_by', $ids)
+                ->get();
+        }
+
+        // else{
+        //     $userId = auth()->user()->id;
+
+        //     $ids = User::where('user_id', $userId)->pluck('id');
+        //     $parents_group = CustomerGroup::where('created_by', $userId)
+        //     ->orWhereIn('created_by',$ids)
+        //     ->where('group_id', null)
+        //     ->get();
+        // }
         return view('groups.create', compact('parents_group'));
     }
 
