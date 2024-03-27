@@ -219,6 +219,8 @@ class CustomerGroupController extends Controller
         return view('groups.show', compact('group'));
     }
 
+
+
     public function showCustomer($id)
     {
         $group = CustomerGroup::findOrFail($id);
