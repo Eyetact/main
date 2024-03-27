@@ -122,7 +122,7 @@ class User extends Authenticatable
 
     public function setAccessTableAttribute($value)
     {
-        if (empty ($value)) {
+        if (empty($value)) {
             $this->attributes['access_table'] = "Individual";
         }
         $this->attributes['access_table'] = $value;
@@ -334,7 +334,7 @@ class User extends Authenticatable
 
     //$user->data_limit < count(unit::all())
 
-    public function getCountByModelID($model_id)
+    public function getCountByModelID($model_id, $only_me = false)
     {
         $model = Module::find($model_id);
         $sum = 0;
@@ -394,6 +394,21 @@ class User extends Authenticatable
                     }
                 }
                 if ($this->hasRole('vendor')) {
+
+                    if ($only_me) {
+                        $customer = User::find($this->user_id);
+                        if ($model->id == 5) {
+                            $sum = $modelName::whereIn('created_by', $users)->orWhere('created_by', $this->id)
+                                ->count();
+
+                            return $sum;
+
+                        } else {
+                            $sum = $modelName::whereIn('user_id', $users)->orWhere('user_id', $this->id)
+                                ->count();
+                            return $sum;
+                        }
+                    }
 
                     $customer = User::find($this->user_id);
                     if ($model->id == 5) {
@@ -499,7 +514,7 @@ class User extends Authenticatable
                     $customer = User::find($parent->user_id);
                     if ($customer->checkAllowdByModelID($model_id)) {
                         return $this->getDataLimitByModel($model_id) > $this->getCountByModelID($model_id);
-                    }else{
+                    } else {
                         return false;
                     }
                 }
@@ -508,6 +523,16 @@ class User extends Authenticatable
                 if ($parent->hasRole('admin')) {
 
                     return $parent->checkAllowdByModelID($model_id);
+                }
+            }
+            if ($this->hasRole('vendor')) {
+
+                $customer = User::find($this->user_id);
+                if ($customer->checkAllowdByModelID($model_id)) {
+                    return $this->getDataLimitByModel($model_id) > $this->getCountByModelID($model_id,true);
+
+                } else {
+                    return false;
                 }
             }
 
@@ -535,7 +560,7 @@ class User extends Authenticatable
                 $customer = User::find($parent->user_id);
                 if ($customer->checkAllowdByModelID($model_id)) {
                     return $parent->checkAllowdByModelID($model_id);
-                }else{
+                } else {
                     return false;
                 }
             }

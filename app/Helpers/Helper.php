@@ -97,13 +97,13 @@ class Helper
     public static function getMenu($type)
     {
 
-        $super= Auth::user()->hasRole('super');
-        if($super)
-        {
+        // $super= Auth::user()->hasRole('super');
+        // if($super)
+        // {
 
-           $data = MenuManager::with('children.children.children')->where('parent', '0')->where('menu_type', $type)->orderBy('sequence', 'asc')->get();
-           return $data;
-        }
+        //    $data = MenuManager::with('children.children.children')->where('parent', '0')->where('menu_type', $type)->orderBy('sequence', 'asc')->get();
+        //    return $data;
+        // }
 
 
         $module_ids = Module::where('user_id', auth()->user()->id)

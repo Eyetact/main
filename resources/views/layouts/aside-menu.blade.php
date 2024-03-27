@@ -119,21 +119,32 @@
         <li class="side-item side-item-category mt-4">Module Manger</li>
 
 
-            @foreach ($side_menus as $item)
-                {{-- @php
+        @foreach ($side_menus as $item)
+            {{-- @php
             echo json_encode($item->childrens(),true)
         @endphp --}}
-        @php
-            $pers = array();
-            array_push($pers,'view.' .str($item->module->code)->singular()->lower());
-        @endphp
-        @foreach ($item->childrens() as $item2)
-        @php
-            array_push($pers,'view.' .str($item2->module->code)->singular()->lower());
-        @endphp
-        @endforeach
-        @if (Auth::user()->hasAnyPermission($pers) || Auth::user()->hasRole('super'))
-
+            @php
+                $pers = [];
+                array_push(
+                    $pers,
+                    'view.' .
+                        str($item->module->code)
+                            ->singular()
+                            ->lower(),
+                );
+            @endphp
+            @foreach ($item->childrens() as $item2)
+                @php
+                    array_push(
+                        $pers,
+                        'view.' .
+                            str($item2->module->code)
+                                ->singular()
+                                ->lower(),
+                    );
+                @endphp
+            @endforeach
+            @if (Auth::user()->hasAnyPermission($pers) || Auth::user()->hasRole('super'))
                 <li class="slide">
                     <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . $item->path) }}">
                         <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height="24"
@@ -193,8 +204,8 @@
 
 
                 </li>
-                @endif
-            @endforeach
+            @endif
+        @endforeach
     </ul>
 
     <ul class="side-menu app-sidebar3">
