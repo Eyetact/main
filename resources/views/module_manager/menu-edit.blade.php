@@ -58,8 +58,25 @@
                                         <input type="checkbox" @checked($module->is_system) name="is_system"
                                             id="is_system" class="custom-switch-input" id="is_system">
                                         <span class="custom-switch-indicator"></span>
-                                        <span class="custom-switch-description">System(Master)</span>
+                                        <span class="custom-switch-description">Global</span>
                                     </label>
+                                </div>
+                                <div class="col-sm-12 input-box">
+                                    <label class="form-label"
+                                        for="module">Type<span
+                                            class="text-red">*</span></label>
+
+                                    
+                                    <select name="mtype"
+                                        class="google-input module" id="mtype"
+                                        required>
+                                        <option disabled value="" selected>Select</option>
+                                        <option @selected($module->type == 'stander')  value="stander" >Stander</option>
+                                        <option @selected($module->type == 'sortable') value="sortable" >Sortable</option>
+                                       
+                                    </select>
+                                   
+
                                 </div>
                                 {{-- <div class="col-sm-12 form-group">
                             <label class="form-label" for="meta_title">Meta Title</label>

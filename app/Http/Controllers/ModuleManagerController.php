@@ -65,6 +65,8 @@ class ModuleManagerController extends Controller
             'is_system' => isset ($request->is_system) ? 1 : 0,
             'code' => str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower())),
             'user_id' => auth()->user()->id,
+            'type' => isset ($request->mtype) ? $request->mtype : null,
+
 
         ]);
 
@@ -243,6 +245,7 @@ class ModuleManagerController extends Controller
                 [
                     'is_system' => isset ($request->is_system) ? 1 : 0,
                     'name' => $request->name,
+                    'type' => isset ($request->mtype) ? $request->mtype : null,
                 ]
             );
 
@@ -417,6 +420,76 @@ class ModuleManagerController extends Controller
         if ($module) {
 
             $menuParent = MenuManager::where('module_id', $id)->first()->id;
+
+            $requestData = $request->all();
+
+            $lastSequenceData = MenuManager::where('parent', $menuParent)->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->orderBy('id', 'desc')->first();
+            $sequence = 0;
+            if ($lastSequenceData) {
+                $sequence = $lastSequenceData->sequence + 1;
+            }
+
+            $model = GeneratorUtils::setModelName($request['code']);
+
+            $modelNamePluralLowercase = GeneratorUtils::pluralKebabCase($model);
+
+            $createData = array(
+                'name' => $requestData['name'],
+                'module_id' => $module->id,
+                'include_in_menu' => 1,
+                'menu_type' => $requestData['menu_type'],
+                'path' => $modelNamePluralLowercase,
+                'sequence' => $sequence,
+                'parent' => $menuParent,
+                'sidebar_name' => $request->name,
+            );
+            $menuManager = MenuManager::create($createData);
+        }
+
+
+        $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
+        return redirect()->route('module_manager.index');
+
+        //     DB::commit();
+        // } catch (Exception $ex) {
+        //     DB::rollback();
+        //     dd($ex);
+        // }
+
+    }
+
+    public function storeSubPost(Request $request)
+    {
+
+        // try {
+        //     DB::beginTransaction();
+        $module = Module::create([
+            'name' => $request->name,
+            'is_system' => 0,
+            'code' => $request->code,
+            'user_id' => auth()->user()->id,
+            'parent_id' => $request->parent_id,
+            'migration' => $request->parent_id,
+
+        ]);
+
+        $this->generatorService->reGenerateFormWithSub($request->parent_id); // sub
+
+
+        $this->generatorService->generateModel($request->all()); // model
+        $this->generatorService->generateMigration($request->all(), $module->id); // migration
+        Artisan::call('migrate'); // run php artisan mnigrate in background
+        $this->generatorService->generateController($request->all()); // migration
+        $this->generatorService->generateRequest($request->all()); // req
+        $this->generatorService->generateRoute($request->all()); // route
+        $this->generatorService->generateViews($request->all()); // views
+        $this->generatorService->generatePermission($request->all(), $module->id);
+
+
+
+        if ($module) {
+
+            $menuParent = MenuManager::where('module_id', $request->parent_id)->first()->id;
 
             $requestData = $request->all();
 

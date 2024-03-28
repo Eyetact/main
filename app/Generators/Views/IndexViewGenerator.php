@@ -155,7 +155,9 @@ class IndexViewGenerator
                 '{{tdColumns}}',
                 '{{trHtml}}',
                 '{{modelNameSingularUcWords}}',
-                '{{code}}'
+                '{{code}}',
+                '{{code2}}'
+
             ],
             [
                 $modelNamePluralUcWords,
@@ -166,7 +168,8 @@ class IndexViewGenerator
                 $tdColumns,
                 '',
                 $modelNameSingularUcWords,
-                $code
+                $code,
+                ''
             ],
             GeneratorUtils::getTemplate('views/index')
         );

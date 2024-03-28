@@ -31,22 +31,24 @@
         position: relative;
         z-index: 999;
     }
+
     div#role_form_modal {
-    z-index: 9999999;
-}
+        z-index: 9999999;
+    }
 
     .dd-handle {
         width: 80% !important;
         float: left;
     }
+
     .dd-handle .dd-handle {}
 
 
     li.dd-item:after {
-    content: no-close-quote;
-    display: table;
-    clear: both;
-}
+        content: no-close-quote;
+        display: table;
+        clear: both;
+    }
 
     #tbl-field>tbody>tr>td {
         min-height: 97px;
@@ -70,7 +72,7 @@
         margin: 0;
     }
 
-    li.dd-item.is_delete > .dd-handle {
+    li.dd-item.is_delete>.dd-handle {
         background: #f41919 !important;
         color: wheat;
         color: white !important;
@@ -114,94 +116,91 @@
 
 
         li.dd-item {
-    max-width: 100%;
-    position: relative;
-}
+            max-width: 100%;
+            position: relative;
+        }
 
-div#admin_nestable {
-    max-width: 100%;
-    width: 100%;
-}
-
-
-button.sub-add {
-    float: none !important;
-}
-
-.dd-handle {
-    float: none !important;
-    width: 100% !important;
-    padding: 0 50px;
-    height: 40px;
-    line-height: 40px;
-    border-radius: 3px;
-    background: #ebeef1;
-    margin-bottom: 5px;
-    border-color: #00000012;
-}
-
-.dd-item > button {
-    float: none !important;
-    position: absolute;
-    left: 0;
-    height: 40px;
-    width: 40px;
-    background: #38cb89;
-    top: 0;
-}
-
-button.sub-add {
-    left: auto;
-    right: 0;
-    background: #705ec8;
-}
-
-ol.dd-list {
-    /* width: 100% !important; */
-}
-
-.dd-list {
-    /* padding: 0 15px; */
-}
-
-.admin_nested_form {
-    padding: 0 20px 0 0;
-}
-
-.selected-item {
-    background: #705ec838 !important;
-    color: #333 !important;
-}
-
-li.dd-item.is_delete > .dd-handle {
-    background: #ef4b4b6b !important;
-    color: #333 !important;
-}
-
-li.dd-item.no-pad .dd-handle {
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-.dd-list .dd-list{
-    padding-left: 40px;
-}
+        div#admin_nestable {
+            max-width: 100%;
+            width: 100%;
+        }
 
 
+        button.sub-add {
+            float: none !important;
+        }
 
+        .dd-handle {
+            float: none !important;
+            width: 100% !important;
+            padding: 0 50px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 3px;
+            background: #ebeef1;
+            margin-bottom: 5px;
+            border-color: #00000012;
+        }
 
-.dd-handle {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    /* padding-top: 3px; */
-    /* padding-bottom: 7px; */
-    line-height: 0;
-}
+        .dd-item>button {
+            float: none !important;
+            position: absolute;
+            left: 0;
+            height: 40px;
+            width: 40px;
+            background: #38cb89;
+            top: 0;
+        }
+
+        button.sub-add {
+            left: auto;
+            right: 0;
+            background: #705ec8;
+        }
+
+        ol.dd-list {
+            /* width: 100% !important; */
+        }
+
+        .dd-list {
+            /* padding: 0 15px; */
+        }
+
+        .admin_nested_form {
+            padding: 0 20px 0 0;
+        }
+
+        .selected-item {
+            background: #705ec838 !important;
+            color: #333 !important;
+        }
+
+        li.dd-item.is_delete>.dd-handle {
+            background: #ef4b4b6b !important;
+            color: #333 !important;
+        }
+
+        li.dd-item.no-pad .dd-handle {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .dd-list .dd-list {
+            padding-left: 40px;
+        }
 
 
 
+
+        .dd-handle {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            /* padding-top: 3px; */
+            /* padding-bottom: 7px; */
+            line-height: 0;
+        }
     </style>
 @endsection
 
@@ -238,9 +237,14 @@ li.dd-item.no-pad .dd-handle {
                 <div class="card-header">
                     <h4 class="card-title" style="width: 100%">
                         <div class="row">
-                            <div class="col-9" style="padding-top: 10px">Admin - ( {{ count(App\Models\MenuManager::where('menu_type','admin')->get()) }} )</div>
-                            <div class="col-3"><button type="button" data-target="#addMenuLabel" data-toggle="modal"
-                                    class="btn btn-primary">Add Label</button></div>
+                            <div class="col-10" style="padding-top: 10px">Admin - (
+                                {{ count(App\Models\MenuManager::where('menu_type', 'admin')->get()) }} )</div>
+                            <div class="col-1">
+                                @if (auth()->user()->checkAllowdMode())
+                                    <button type="button" data-target="#addMenuLabel" data-toggle="modal"
+                                        class="btn btn-primary">Add</button>
+                                @endif
+                            </div>
                         </div>
                     </h4>
 
@@ -260,10 +264,10 @@ li.dd-item.no-pad .dd-handle {
 
                 @endphp --}}
 
-     @if (auth()->user()->checkAllowdMode())
-                <div class="col-2"><button type="button" data-target="#addMenuModal" data-toggle="modal"
-                        class="btn btn-primary">Add</button></div>
-            @endif
+                {{-- @if (auth()->user()->checkAllowdMode())
+                    <div class="col-2"><button type="button" data-target="#addMenuModal" data-toggle="modal"
+                            class="btn btn-primary">Add</button></div>
+                @endif --}}
 
             </div>
             <div class="editc"></div>
@@ -289,62 +293,282 @@ li.dd-item.no-pad .dd-handle {
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myLargeModalLabel">Add Label</h4>
+                    <h4 class="modal-title" id="myLargeModalLabel">Add</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
                             aria-hidden="true">×</span> </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('module_manager.storelabel') }}" id="moduleCreate" method="POST"
-                        autocomplete="off">
-                        @csrf
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Basics</h3>
-                                    </div>
-                                    <div class="card-body pb-2">
-                                        <input type="hidden" name="menu_type" value="admin">
-                                        <div class="row">
-                                            <div class="col-lg-12 col-md-12">
+
+                    <div class="row">
+                        <div class="form-group col-sm-4 label-con">
+                            <label class="custom-switch form-label">
+                                <input type="checkbox" class="custom-switch-input" id="label">
+                                <span class="custom-switch-indicator"></span>
+                                <span class="custom-switch-description">Label</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group col-sm-4 sub-con">
+                            <label class="custom-switch form-label ">
+                                <input type="checkbox" class="custom-switch-input" id="sub">
+                                <span class="custom-switch-indicator"></span>
+                                <span class="custom-switch-description">Sub</span>
+                            </label>
+                        </div>
+
+
+                        <div class="col-12">
+                            <div class="main-form">
+
+                                <form
+                                    action="{{ $menu->id == null ? route('module_manager.store') : route('module_manager.update', ['menu' => $menu->id]) }}"
+                                    id="admin_form" method="POST" autocomplete="off" novalidate="novalidate">
+                                    @csrf
+                                    <input type="hidden" name="menu_type" value="admin">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="">
+
                                                 <div class="">
-                                                    <div class="card-header">
-                                                        <h3 class="card-title">Admin </h3>
-                                                        &nbsp; &nbsp;
-                                                        <span id="currentEditName"></span>
-                                                    </div>
-                                                    <div class="card-body pb-2">
-                                                        <div class="row">
-                                                            <div class="col-sm-12 form-group">
-                                                                <label class="form-label" for="name">Name <span
-                                                                        class="text-red">*</span></label>
-                                                                <input type="text" name="name" id="aname"
-                                                                    class="form-control" value="">
-                                                                <input type="hidden" name="id" id="aid"
-                                                                    value="">
-                                                            </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="form-label" for="name">Name <span
+                                                                    class="text-red">*</span></label>
+                                                            <input type="text" name="name" id="aname"
+                                                                class="form-control" value="">
+                                                            <input type="hidden" name="id" id="aid"
+                                                                value="">
+                                                        </div>
 
-
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="form-label" for="code2">Code <span
+                                                                    class="text-red">*</span></label>
+                                                            <input type="text" name="code" id="code"
+                                                                class="form-control" value="">
 
                                                         </div>
-                                                    </div>
-                                                    <div class="card-footer text-right">
-                                                        <input title="Reset form" class="btn btn-danger d-none"
-                                                            id="remove-admin-menu" type="button" value="Delete">
-                                                        <input title="Reset form" class="btn btn-success d-none"
-                                                            id="restore-admin-menu" type="button" value="Restore">
-                                                        <input title="Save module" class="btn btn-primary"
-                                                            id="submit-admin-menu" type="submit" value="Save">
 
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="form-label" for="path">Path <span
+                                                                    class="text-red">*</span></label>
+                                                            <input type="text" name="path" id="apath"
+                                                                class="form-control" value="">
+                                                        </div>
+
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="form-label" for="path">Sidebar Name <span
+                                                                    class="text-red">*</span></label>
+                                                            <input type="text" name="sidebar_name" id="sidebar_name"
+                                                                class="form-control" value="">
+                                                        </div>
+
+                                                        <div class="form-group col-sm-6">
+                                                            <label class="custom-switch form-label">
+                                                                <input type="checkbox" name="include_in_menu"
+                                                                    id="ainclude_in_menu" class="custom-switch-input"
+                                                                    id="is_enable">
+                                                                <span class="custom-switch-indicator"></span>
+                                                                <span class="custom-switch-description">Include in
+                                                                    menu</span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-6">
+                                                            <label class="custom-switch form-label">
+                                                                <input type="checkbox" name="is_system" id="is_system"
+                                                                    class="custom-switch-input" id="is_system">
+                                                                <span class="custom-switch-indicator"></span>
+                                                                <span
+                                                                    class="custom-switch-description">Global</span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="col-sm-12 input-box">
+                                                            <label class="form-label"
+                                                                for="module">Type<span
+                                                                    class="text-red">*</span></label>
+
+                                                            
+                                                            <select name="mtype"
+                                                                class="google-input module" id="mtype"
+                                                                required>
+                                                                <option disabled value="" selected>Select</option>
+                                                                <option  value="stander" >Stander</option>
+                                                                <option  value="sortable" >Sortable</option>
+                                                               
+                                                            </select>
+                                                           
+
+                                                        </div>
+
+
+
+
+
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer text-right">
+                                                    <input title="Reset form" class="btn btn-danger d-none"
+                                                        id="remove-admin-menu" type="button" value="Delete">
+                                                    <input title="Reset form" class="btn btn-success d-none"
+                                                        id="restore-admin-menu" type="button" value="Restore">
+                                                    <input title="Save module" class="btn btn-primary"
+                                                        id="submit-admin-menu" type="submit" value="Save">
+                                                    {{-- <input title="Reset form" class="btn btn-warning" type="reset" value="Reset"> --}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+
+                            </div>
+
+                            <div class="label-form" style="display: none">
+                                <form action="{{ route('module_manager.storelabel') }}" id="moduleCreate" method="POST"
+                                    autocomplete="off">
+                                    @csrf
+                                    <input type="hidden" name="menu_type" value="admin">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="">
+
+                                                <div class="">
+                                                    <div class="row">
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="form-label" for="name">Name <span
+                                                                    class="text-red">*</span></label>
+                                                            <input type="text" name="name" id="aname"
+                                                                class="form-control" value="">
+                                                            <input type="hidden" name="id" id="aid"
+                                                                value="">
+                                                        </div>
+
+
+
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer text-right">
+                                                    <input title="Reset form" class="btn btn-danger d-none"
+                                                        id="remove-admin-menu" type="button" value="Delete">
+                                                    <input title="Reset form" class="btn btn-success d-none"
+                                                        id="restore-admin-menu" type="button" value="Restore">
+                                                    <input title="Save module" class="btn btn-primary"
+                                                        id="submit-admin-menu" type="submit" value="Save">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="sub-form" style="display: none">
+                                <form action="{{ route('module_manager.storSubPost') }}" id="moduleCreate" method="POST"
+                                    autocomplete="off">
+                                    @csrf
+
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="">
+
+                                                <div class="">
+                                                    <input type="hidden" name="menu_type" value="admin">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 col-md-12">
+                                                            <div class="">
+
+                                                                <div class="">
+                                                                    <div class="row">
+
+                                                                        <div class="col-sm-12 input-box">
+                                                                            <label class="form-label"
+                                                                                for="module">Parent<span
+                                                                                    class="text-red">*</span></label>
+
+                                                                            @php
+                                                                                $module_ids = \App\Models\Module::where(
+                                                                                    'user_id',
+                                                                                    auth()->user()->id,
+                                                                                )->pluck('id');
+                                                                            @endphp
+                                                                            <select name="parent_id"
+                                                                                class="google-input module" id="module"
+                                                                                required>
+                                                                                <option value="" selected>Select
+                                                                                    Module</option>
+                                                                                @foreach (\App\Models\MenuManager::where('parent', '0')->where('menu_type', 'admin')->whereIn('module_id', $module_ids)->orderBy('sequence', 'asc')->get() as $item)
+                                                                                    <option value="{{ $item->module->id }}">
+                                                                                        {{ $item->name }}
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                            <label id="module-error"
+                                                                                class="error text-red hide"
+                                                                                for="module"></label>
+
+                                                                        </div>
+
+
+                                                                        <div class="col-sm-12 form-group">
+                                                                            <label class="form-label" for="name">Name
+                                                                                <span class="text-red">*</span></label>
+                                                                            <input type="text" name="name"
+                                                                                id="aname" class="form-control"
+                                                                                value="">
+                                                                            <input type="hidden" name="id"
+                                                                                id="aid" value="">
+                                                                        </div>
+
+                                                                        <div class="col-sm-12 form-group">
+                                                                            <label class="form-label" for="code2">Code
+                                                                                <span class="text-red">*</span></label>
+                                                                            <input type="text" name="code"
+                                                                                id="code" class="form-control"
+                                                                                value="">
+
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-footer text-right">
+                                                                    <input title="Reset form"
+                                                                        class="btn btn-danger d-none"
+                                                                        id="remove-admin-menu" type="button"
+                                                                        value="Delete">
+                                                                    <input title="Reset form"
+                                                                        class="btn btn-success d-none"
+                                                                        id="restore-admin-menu" type="button"
+                                                                        value="Restore">
+                                                                    <input title="Save module" class="btn btn-primary"
+                                                                        id="submit-admin-menu" type="submit"
+                                                                        value="Save">
+                                                                    {{-- <input title="Reset form" class="btn btn-warning" type="reset" value="Reset"> --}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </form>
+
                             </div>
                         </div>
-                    </form>
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -367,6 +591,51 @@ li.dd-item.no-pad .dd-handle {
     <script src="//code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script>
         $(document).ready(function() {
+
+
+            $("#addMenuLabel").on('shown.bs.modal', function() {
+                // alert('aaa')
+                $('.label-form').hide();
+                $('.sub-form').hide();
+
+
+                $("#label").on('change', function() {
+                    if ($(this).is(':checked')) {
+                        $('.sub-form').hide();
+                        $('.main-form').hide();
+                        $('.label-form').show();
+                        $('#sub').val(0).prop('checked', false)
+                        $('.sub-con').hide();
+                    } else {
+                        $('.label-form').hide();
+                        $('.sub-form').hide();
+                        $('.main-form').show();
+                        $('.sub-con').show();
+
+                    }
+
+                });
+
+                $("#sub").on('change', function() {
+                    if ($(this).is(':checked')) {
+                        $('.label-form').hide();
+                        $('.main-form').hide();
+                        $('.sub-form').show();
+                        $('#label').val(0).prop('checked', false)
+                        $('.label-con').hide();
+
+                    } else {
+                        $('.sub-form').hide();
+                        $('.label-form').hide();
+                        $('.label-con').show();
+                        $('.main-form').show();
+
+                    }
+
+                });
+            });
+
+
 
             $('.fast').hide();
 

@@ -17,7 +17,8 @@ class Module extends Model
         'user_id',
         'parent_id',
         'migration',
-        'is_delete'
+        'is_delete',
+        'type'
 
     ];
 

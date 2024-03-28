@@ -19,6 +19,31 @@
                                 </div>
                                 <div class="card-body pb-2">
                                     <div class="row">
+
+                                        {{-- <div class="col-sm-12 input-box">
+                                            <label class="form-label" for="module">Module<span
+                                                    class="text-red">*</span></label>
+
+                                            @php
+                                                $module_ids = \App\Models\Module::where(
+                                                    'user_id',
+                                                    auth()->user()->id,
+                                                )->pluck('id');
+                                            @endphp
+                                            <select name="module" class="google-input module" id="module" required>
+                                                <option value="" selected>Select Module</option>
+                                                @foreach (\App\Models\MenuManager::where('parent', '0')->where('menu_type', 'admin')->whereIn('module_id', $module_ids)->orderBy('sequence', 'asc')->get() as $module)
+                                                    <option value="{{ $module->id }}"
+                                                        @if (in_array($module->id, [1, 2, 3])) disabled @endif>
+                                                        {{ $module->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <label id="module-error" class="error text-red hide" for="module"></label>
+
+                                        </div> --}}
+
+
                                         <div class="col-sm-12 form-group">
                                             <label class="form-label" for="name">Name <span
                                                     class="text-red">*</span></label>
