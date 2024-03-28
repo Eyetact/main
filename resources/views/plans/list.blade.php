@@ -149,10 +149,10 @@
             position: absolute;
             top: 12px;
         }
-        .hide-input{
+
+        .hide-input {
             opacity: 0;
         }
-
     </style>
 @endsection
 @push('styles')
@@ -309,22 +309,69 @@
                     $('.dropify').dropify();
                     checkInput();
 
+                    $('.check-all').on('change', function() {
+
+                        var checkbox = $(this);
+
+                        var numberInput = checkbox.closest('.role-group').find('.number-input');
+                        var un = checkbox.closest('.role-group').find('.custom-limit-checkbox');
 
 
+                        if (checkbox.is(':checked')) {
+                            if (numberInput.attr('max') == 0) {
+                                numberInput.val(0)
+
+                            } else {
+                                numberInput.val(1)
+                            }
+
+
+                        } else {
+                            numberInput.val(0)
+                            un.val(0).prop('checked', false).trigger('change')
+                            numberInput.removeClass('hide-input')
+
+
+
+
+                        }
+
+
+                    });
+                    $('.number-input').on('change', function() {
+
+                        var input = $(this);
+                        var checkAll = input.closest('.role-group').find('.check-all');
+                        var un = input.closest('.role-group').find('.custom-limit-checkbox');
+                        checkAll.val(1).prop('checked', true)
+                        if (input.val() < 0) {
+                            un.val(1).prop('checked', true).trigger('change')
+
+
+                        }
+
+
+
+
+                    });
 
                     $('.custom-limit-checkbox').on('change', function() {
 
                         var checkbox = $(this);
 
                         var numberInput = checkbox.closest('.role-group').find('.number-input');
+                        var checkAll = checkbox.closest('.role-group').find('.check-all');
                         numberInput.toggleClass('hide-input')
 
                         if (checkbox.is(':checked')) {
                             numberInput.val(-1).prop('readonly', true);
+                            checkAll.val(1).prop('checked', true)
 
 
                         } else {
                             numberInput.val(0).prop('readonly', false);
+                            checkAll.val(0).prop('checked', false)
+
 
                         }
                     });
@@ -353,18 +400,69 @@
                     $("#role_form_modal").modal('show');
                     $('.dropify').dropify();
                     checkInput();
+                    $('.check-all').on('change', function() {
+
+                        var checkbox = $(this);
+
+                        var numberInput = checkbox.closest('.role-group').find('.number-input');
+                        var un = checkbox.closest('.role-group').find('.custom-limit-checkbox');
+
+
+                        if (checkbox.is(':checked')) {
+                            if (numberInput.attr('max') == 0) {
+                                numberInput.val(0)
+
+                            } else {
+                                numberInput.val(1)
+                            }
+
+
+                        } else {
+                            numberInput.val(0)
+                            un.val(0).prop('checked', false).trigger('change')
+                            numberInput.removeClass('hide-input')
+
+
+
+
+                        }
+
+
+                    });
+                    $('.number-input').on('change', function() {
+
+                        var input = $(this);
+                        var checkAll = input.closest('.role-group').find('.check-all');
+                        var un = input.closest('.role-group').find('.custom-limit-checkbox');
+                        checkAll.val(1).prop('checked', true)
+                        if (input.val() < 0) {
+                            un.val(1).prop('checked', true).trigger('change')
+
+
+                        }
+
+
+
+
+                    });
+
                     $('.custom-limit-checkbox').on('change', function() {
 
                         var checkbox = $(this);
 
                         var numberInput = checkbox.closest('.role-group').find('.number-input');
+                        var checkAll = checkbox.closest('.role-group').find('.check-all');
                         numberInput.toggleClass('hide-input')
 
                         if (checkbox.is(':checked')) {
                             numberInput.val(-1).prop('readonly', true);
+                            checkAll.val(1).prop('checked', true)
+
 
                         } else {
                             numberInput.val(0).prop('readonly', false);
+                            checkAll.val(0).prop('checked', false)
+
 
                         }
                     });
@@ -497,24 +595,24 @@
                 // alert("aaa");
                 var check = this.checked;
                 $(this).parents('.role-group').find('.check-one').prop("checked", check);
-                $('.permission .check-all').each(function() {
-                    var parentItem = $(this).parents('.role-group');
-                    var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
-                        '.check-one').length;
-                    $(parentItem).find('.check-all').prop("checked", check)
-                });
+                // $('.permission .check-all').each(function() {
+                //     var parentItem = $(this).parents('.role-group');
+                //     var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
+                //         '.check-one').length;
+                //     $(parentItem).find('.check-all').prop("checked", check)
+                // });
             });
             $('.permission .check-one').click(function() {
                 var parentItem = $(this).parents('.nav-treeview').parents('.nav-item');
                 var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
                     '.check-one').length;
                 $(parentItem).find('.check-all').prop("checked", check)
-                $('.permission .check-all').each(function() {
-                    var parentItem = $(this).parents('.role-group');
-                    var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
-                        '.check-one').length;
-                    $(parentItem).find('.check-all').prop("checked", check)
-                });
+                // $('.permission .check-all').each(function() {
+                //     var parentItem = $(this).parents('.role-group');
+                //     var check = $(parentItem).find('.check-one:checked').length == $(parentItem).find(
+                //         '.check-one').length;
+                //     $(parentItem).find('.check-all').prop("checked", check)
+                // });
             });
             $('.permission .check-all').each(function() {
                 var parentItem = $(this).parents('.role-group');

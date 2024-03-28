@@ -85,6 +85,14 @@ class PlanController extends Controller
 
         if (auth()->user()->hasRole('super')) {
 
+            $modulesSuper=Module::where('user_id',auth()->user()->id)->pluck('id');
+            $permissions = Permission::whereIn('module',$modulesSuper)->get();
+            $user_permissions = Permission::where('type', 'user')->get();
+            $customer_permissions = Permission::where('type', 'customer')->get();
+            $allPermission = Permission::whereIn('module',$modulesSuper)->get();
+            $groupPermission = $allPermission->groupBy('module');
+
+
             $availableModel = 1000000;
             $availableData = 1000000;
 
@@ -191,6 +199,13 @@ class PlanController extends Controller
         $groupPermission = $allPermission->groupBy('module');
 
         if (auth()->user()->hasRole('super')) {
+            $modulesSuper=Module::where('user_id',auth()->user()->id)->pluck('id');
+            $permissions = Permission::whereIn('module',$modulesSuper)->get();
+            $user_permissions = Permission::where('type', 'user')->get();
+            $customer_permissions = Permission::where('type', 'customer')->get();
+            $allPermission = Permission::whereIn('module',$modulesSuper)->get();
+            $groupPermission = $allPermission->groupBy('module');
+
 
             $availableModel = 1000000;
             $availableData = 1000000;

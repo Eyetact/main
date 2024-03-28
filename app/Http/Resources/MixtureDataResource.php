@@ -22,7 +22,8 @@ class MixtureDataResource extends JsonResource
             'id' => $this->id,
             'name' => $this->mix_name,
             'category_id' => $this->category_id,
-            'components' => json_decode($this->mix_component, true),
+            // 'components' => json_decode($this?->mix_component, true),
+            'components' => $this->mix_component ? json_decode($this->mix_component, true) : null,
             // 'component_set_id' => $this->components_set_id,
 
 

@@ -74,55 +74,6 @@
 
 
 
-        <div class="col-sm-6 role-group">
-
-            <div class="row">
-                <div class="col-9">
-                    <div class="custom-checkbox permission  input-box">
-
-                        <label for="">
-                            <b>Models Limit</b> <small>max :
-                                {{ $availableModel > 10000 ? 'unlimted' : $availableModel }}</small> </label>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="input-box">
-                        <input type="number" max="{{ $availableModel }}" class="google-input custom-limit valid"
-                            name="model_limit" id="model_limit" min="0" value="0" required>
-                    </div>
-
-                </div>
-            </div>
-
-
-
-
-        </div>
-
-
-        <div class="col-sm-6 role-group">
-
-            <div class="row">
-                <div class="col-9">
-                    <div class="custom-checkbox permission  input-box">
-
-                        <label for="">
-                            <b>Data Limit</b>
-                            <small>max : {{ $availableData > 10000 ? 'unlimted' : $availableData }}</small> </label>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="input-box">
-                        <input type="number" max="{{ $availableData }}" class="google-input custom-limit valid"
-                            name="data_limit" id="data_limit" min="0" value="0" required />
-                    </div>
-
-                </div>
-            </div>
-
-
-
-        </div>
 
 
 
@@ -324,6 +275,7 @@
 
 
 
+
                                                         <div class="input-box">
                                                             <input type="number" value="0"
                                                                 class="google-input custom-limit number-input"
@@ -331,6 +283,10 @@
                                                                 id="price" min="{{ $min }}"
                                                                 max="{{ $max }}" />
                                                         </div>
+
+
+
+
                                                     @endif
                                                 </div>
                                             </div>
@@ -453,6 +409,56 @@
         </div>
 
 
+
+        <div class="col-sm-6 role-group">
+
+            <div class="row">
+                <div class="col-9">
+                    <div class="custom-checkbox permission  input-box">
+
+                        <label for="">
+                            <b>Models Limit</b> <small>max :
+                                {{ $availableModel > 10000 ? 'unlimted' : $availableModel }}</small> </label>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="input-box">
+                        <input type="number" max="{{ $availableModel }}" class="google-input custom-limit valid"
+                            name="model_limit" id="model_limit" min="0" value="0" required>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+
+        <div class="col-sm-6 role-group">
+
+            <div class="row">
+                <div class="col-9">
+                    <div class="custom-checkbox permission  input-box">
+
+                        <label for="">
+                            <b>Data Limit</b>
+                            <small>max : {{ $availableData > 10000 ? 'unlimted' : $availableData }}</small> </label>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="input-box">
+                        <input type="number" max="{{ $availableData }}" class="google-input custom-limit valid"
+                            name="data_limit" id="data_limit" min="0" value="0" required />
+                    </div>
+
+                </div>
+            </div>
+
+
+
+        </div>
 
 
     </div>

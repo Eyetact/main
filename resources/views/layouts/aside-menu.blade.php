@@ -118,6 +118,22 @@
     <ul class="side-menu app-sidebar3">
         <li class="side-item side-item-category mt-4">Module Manger</li>
 
+        @php
+                  if (auth()->user()->hasRole('super')) {
+
+                $module_ids = \App\Models\Module::where('user_id', auth()->user()->id)
+                    ->pluck('id');
+
+                    $side_menus  = \App\Models\MenuManager::with('children.children.children')
+                    ->where('parent', '0')
+                    ->where('menu_type', 'admin')
+                    ->where('is_delete', 0)
+                    ->whereIn('module_id', $module_ids) // Filter by module_id
+                    ->orderBy('sequence', 'asc')
+                    ->get();
+            }
+        @endphp
+
 
         @foreach ($side_menus as $item)
             {{-- @php
