@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\CategoryDataResource;
 use App\Http\Resources\ComponentResource;
 use App\Http\Resources\MixtureDataResource;
 use App\Http\Resources\MixtureResource;
@@ -11,12 +12,14 @@ use App\Models\Admin\Component;
 use App\Models\Admin\ComponentsSet;
 use App\Models\Admin\Mixture;
 use App\Models\Admin\Software;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Repositories\Repository;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Controllers\ApiController;
 use App\Http\Resources\CategoryResource;
+
 
 
 class CategoryController extends ApiController
@@ -77,7 +80,8 @@ class CategoryController extends ApiController
 
         $categories = Category::where(function ($query) use ($machine) {
             $query->where('customer_id', auth()->user()->id)
-                ->orWhere('user_id', auth()->user()->id);
+                ->orWhere('user_id', auth()->user()->id)
+                ->orWhere('assign_id', auth()->user()->id);
             // ->orWhere('global', 1);
 
             if ($machine->customer_group_id !== null) {
@@ -97,44 +101,69 @@ class CategoryController extends ApiController
     public function myLists(Request $request)
     {
 
+        // if ($request->name == "categories") {
+
+        //     $machine = Software::find($request->machine_id);
+        //     $categories = collect([]);
+
+
+        //     if( $machine->components_set_id != NULL){
+
+        //     $components_set = ComponentsSet::find($machine->components_set_id);
+        //     if( $components_set){
+
+        //         $set_component = json_decode($components_set->set_component);
+        //         $categoryIds = collect($set_component)->pluck('id');
+        //         // dd($categoryIds);
+
+        //         foreach ($categoryIds as $categoryId) {
+        //             $component = Component::find($categoryId);
+        //             $compo_category = json_decode($component->compo_category, true);
+        //             $compo_category_collection = collect($compo_category)->pluck('id');
+
+        //             foreach ($compo_category_collection as $categoryId) {
+        //                 $category = Category::find($categoryId);
+        //                 if ($category && !$categories->contains('id', $category->id)) {
+        //                     $categories->push($category);
+        //                 }
+        //             }
+
+        //         }
+
+        //     }
+
+        //     }
+
+
+
+
+        //     return $this->returnData('data',  CategoryResource::collection($categories), __('Get successfully'));
+        // }
+
         if ($request->name == "categories") {
-
             $machine = Software::find($request->machine_id);
-            $categories = collect([]);
-
-
-            if( $machine->components_set_id != NULL){
-
             $components_set = ComponentsSet::find($machine->components_set_id);
-            if( $components_set){
 
+            $categories = [];
+
+            if ($components_set) {
                 $set_component = json_decode($components_set->set_component);
-                $categoryIds = collect($set_component)->pluck('id');
-                // dd($categoryIds);
+                $componentIds = collect($set_component)->pluck("id");
 
-                foreach ($categoryIds as $categoryId) {
-                    $component = Component::find($categoryId);
-                    $compo_category = json_decode($component->compo_category, true);
-                    $compo_category_collection = collect($compo_category)->pluck('id');
-
-                    foreach ($compo_category_collection as $categoryId) {
-                        $category = Category::find($categoryId);
-                        if ($category && !$categories->contains('id', $category->id)) {
-                            $categories->push($category);
+                foreach ($componentIds as $componentId) {
+                    $component = Component::find($componentId);
+                    if ($component) {
+                        $category = json_decode($component->compo_category, true);
+                        if (is_array($category)) {
+                            $categories = array_merge($categories, $category);
+                        } elseif ($category) {
+                            $categories[] = $category;
                         }
                     }
-
                 }
-
             }
 
-            }
-
-
-                // dd($categories);
-
-
-            return $this->returnData('data',  CategoryResource::collection($categories), __('Get successfully'));
+            return $this->returnData('data', ['categories' => $categories], __('Get successfully'));
         }
         if ($request->name == "components") {
 

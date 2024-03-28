@@ -132,7 +132,8 @@ class MixtureController extends ApiController
         $mixtures = Mixture::where('components_set_id', $component_id)
             ->where(function ($query) use ($machine) {
                 $query->where('customer_id', auth()->user()->id)
-                    ->orWhere('user_id', auth()->user()->id);
+                    ->orWhere('user_id', auth()->user()->id)
+                    ->orWhere('assign_id', auth()->user()->id);
 
                 if ($machine->customer_group_id !== NULL) {
                     $query->orWhere('customer_group_id', $machine->customer_group_id);

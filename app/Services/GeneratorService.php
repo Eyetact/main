@@ -53,6 +53,11 @@ class GeneratorService
         (new MigrationGenerator)->remove($id, $attr_id);
     }
 
+    public function removeMigrationTable($id): void
+    {
+        (new MigrationGenerator)->removeTable($id,);
+    }
+
     public function generateController(array $request): void
     {
         (new WebControllerGenerator)->generate($request);

@@ -43,6 +43,7 @@ class ComponentController extends ApiController
         $model->main_part_id = $machine->main_part_id;
 
 
+
         // $decodedCategories = is_array($request->compo_category) ? $request->compo_category : json_decode($request->compo_category, true);
         // if (!is_array($decodedCategories)) {
         //     return $this->returnError(__('Invalid compo_category data.'));
@@ -256,7 +257,9 @@ class ComponentController extends ApiController
             ->where(function ($query) use ($machine) {
                 $query->where('customer_id', auth()->user()->id)
                     //   ->orWhere('global', 1)
-                    ->orWhere('user_id', auth()->user()->id);
+                    ->orWhere('user_id', auth()->user()->id)
+                    ->orWhere('assign_id', auth()->user()->id);
+
                 if ($machine->customer_group_id !== null) {
                     $query->orWhere('customer_group_id', $machine->customer_group_id);
                 }
