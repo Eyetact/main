@@ -202,16 +202,16 @@
                 </div>
                 <div class="modal-body">
 
-                    <form  action="{{route('assign-record', '{{modelNameSingularUcWords}}')}}" method="post">
+                    <form  action="{{route('assign-record', '{{code}}')}}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col-sm-10">
                             <div class="input-box" style="margin:0 !important">
                                 <select class="google-input assign_g" name="ids[]" tabindex="null" multiple>
-                                    @foreach (\App\Models\Admin\{{modelNameSingularUcWords}}::where('user_id',1)->where('assign_id',null)->get() as $item)
+                                    @foreach (\App\Models\Admin\{{code}}::where('user_id',1)->where('assign_id',null)->get() as $item)
 
                                     @php 
-                                        $column = \App\Generators\GeneratorUtils::getColumnAfterId('{{modelNameSingularUcWords}}');
+                                        $column = \App\Generators\GeneratorUtils::getColumnAfterId('{{code}}');
                                     @endphp
                                         <option value="{{ $item->id }}">{{ $item->id }} - {{ $item->$column }}
                                         </option>
