@@ -559,7 +559,7 @@ class IndexViewGenerator
                 $tdColumns,
                 $trhtml,
                 $modelNameSingularUcWords,
-                $code
+                GeneratorUtils::singularPascalCase($code)
             ],
             GeneratorUtils::getTemplate('views/index')
         );
