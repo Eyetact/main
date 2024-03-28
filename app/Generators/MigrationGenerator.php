@@ -183,7 +183,7 @@ class MigrationGenerator
 
         foreach ($module->fields()->orderBy('created_at', 'desc')->take(1)->get() as $i => $field) {
             $field->code = !empty($field->code) ? GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
-            
+
                 if ($field->type == 'date' && $field->input == 'month') {
                     $setFields .= "\$table->text('" . str()->snake($field->code);
                 } elseif ($field->type == 'multi' && $field->input == 'multi') {
@@ -312,7 +312,7 @@ class MigrationGenerator
                         $setFields .= ";";
                     }
                 }
-            
+
         }
 
         if ($field->type == 'assign') {
@@ -346,7 +346,7 @@ class MigrationGenerator
             );
         }
 
-        
+
 
         $migrationName = date('Y') . '_' . date('m') . '_' . date('d') . '_' . date('h') . date('i') . date('s') . '_edit_' . $tableNamePluralLowercase . '_table.php';
         // $module = Module::find($id);
@@ -409,7 +409,37 @@ class MigrationGenerator
                 GeneratorUtils::getTemplate('migration-remove')
             );
         }
-        
+
+
+        $migrationName = date('Y') . '_' . date('m') . '_' . date('d') . '_' . date('h') . date('i') . date('s') . '_remove_' . $tableNamePluralLowercase . '_table.php';
+        // $module = Module::find($id);
+        // $migrationName = $module->migration ;
+
+        file_put_contents(database_path("/migrations/Admin/$migrationName"), $template);
+
+        Artisan::call("migrate");
+
+    }
+
+    public function removeTable($id)
+    {
+        $module = Module::find($id);
+
+        $model = GeneratorUtils::setModelName($module->code);
+        $tableNamePluralLowercase = GeneratorUtils::pluralSnakeCase($model);
+
+
+            $template = str_replace(
+                [
+                    '{{tableNamePluralLowecase}}',
+                ],
+                [
+                    $tableNamePluralLowercase,
+                ],
+                GeneratorUtils::getTemplate('migration-remove-table')
+            );
+
+
 
         $migrationName = date('Y') . '_' . date('m') . '_' . date('d') . '_' . date('h') . date('i') . date('s') . '_remove_' . $tableNamePluralLowercase . '_table.php';
         // $module = Module::find($id);

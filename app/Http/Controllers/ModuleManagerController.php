@@ -465,6 +465,8 @@ class ModuleManagerController extends Controller
                 $attribute->delete();
             }
         }
+        $this->generatorService->removeMigrationTable($id);
+
 
 
         $model->delete();
