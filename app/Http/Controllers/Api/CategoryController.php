@@ -81,8 +81,8 @@ class CategoryController extends ApiController
         $categories = Category::where(function ($query) use ($machine) {
             $query->where('customer_id', auth()->user()->id)
                 ->orWhere('user_id', auth()->user()->id)
-                ->orWhere('assign_id', auth()->user()->id);
-            // ->orWhere('global', 1);
+                ->orWhere('assign_id', auth()->user()->id)
+            ->orWhere('global', 1);
 
             if ($machine->customer_group_id !== null) {
                 $query->orWhere('customer_group_id', $machine->customer_group_id);

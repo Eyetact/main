@@ -256,7 +256,7 @@ class ComponentController extends ApiController
         $components = Component::where('main_part_id', $machine->main_part_id)
             ->where(function ($query) use ($machine) {
                 $query->where('customer_id', auth()->user()->id)
-                    //   ->orWhere('global', 1)
+                      ->orWhere('global', 1)
                     ->orWhere('user_id', auth()->user()->id)
                     ->orWhere('assign_id', auth()->user()->id);
 
