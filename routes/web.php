@@ -317,6 +317,108 @@ Route::get('/get-mixtures/{id}', function ($id) {
     return response()->json($mixtures);
 })->name('get-mixtures');
 
+
+Route::get('/get-categories/{id}', function ($id) {
+    try {
+        $componentSetId = $id;
+
+        if ($componentSetId) {
+            $components_set = App\Models\Admin\ComponentsSet::find($componentSetId);
+            $categories = collect([]);
+
+            if ($components_set) {
+                $set_component = json_decode($components_set->set_component);
+                $categoryIds = collect($set_component)->pluck('id');
+
+                foreach ($categoryIds as $categoryId) {
+                    $component = App\Models\Admin\Component::find($categoryId);
+                    $compo_category = json_decode($component->compo_category, true);
+                    $compo_category_collection = collect($compo_category)->pluck('id');
+
+                    foreach ($compo_category_collection as $categoryId) {
+                        $category = App\Models\Admin\Category::find($categoryId);
+                        if ($category && !$categories->contains('id', $category->id)) {
+                            $categoryName = $category->classification->class_child ?? '';
+                            $category->categoryName = $categoryName;
+                            $categories->push($category);
+                        }
+                    }
+                }
+            }
+        } else {
+            $categories = collect([]);
+        }
+
+        return response()->json($categories);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+})->name('get-categories');
+
+
+Route::get('/get-components/{id}', function ($id) {
+    $componentSetId = $id;
+
+    if ($componentSetId) {
+
+        $components_set = App\Models\Admin\ComponentsSet::find($componentSetId);
+
+        $components = collect([]);
+
+        if( $components_set){
+        $set_component = json_decode($components_set->set_component);
+        $componentIds = collect($set_component)->pluck("id");
+
+
+        foreach ($componentIds as $componentId) {
+            $component = App\Models\Admin\Component::find($componentId);
+            if ($component) {
+                $components->push($component);
+            }
+        }
+
+
+    }
+    } else {
+        $components = [];
+    }
+
+    return response()->json($components);
+})->name('get-components');
+
+Route::get('/get-compononets-by-main/{id}', function ($id) {
+    $mainPartId = $id;
+
+    if ($mainPartId) {
+        $components = App\Models\Admin\Component::where('main_part_id', $mainPartId)
+        ->with('main_part')
+        ->get();
+
+    $components = $components->map(function ($component) {
+        $component->inlet = $component->main_part->main_inlet;
+        $component->type = $component->main_part->main_type;
+
+        return $component;
+    });
+    } else {
+        $components = [];
+    }
+
+    return response()->json($components);
+})->name('get-compos');
+
+// Route::get('/get-compononets-by-main/{id}', function ($id) {
+//     $mainPartId = $id;
+
+//     if ($mainPartId) {
+//         $components = App\Models\Admin\Component::where('main_part_id', $mainPartId)->get();
+//     } else {
+//         $components = [];
+//     }
+
+//     return response()->json($components);
+// })->name('get-compos');
+
 Route::get(
     'searchtargetfromsource/{main_model}/{main_model_id}/{for_key_attr_name}/{target_result_attr}',
     function ($main_model, $main_model_id, $for_key_attr_name, $target_result_attr) {
@@ -328,7 +430,7 @@ Route::get(
         $id = $for_key_attr_name;
         $target_model = "App\Models\Admin\\" . GeneratorUtils::setModelName($target_model[0]);
         // dd($target_model);
-    
+
         $target_data = $target_model::find($element->$for_key_attr_name);
         $target_data->$target_result_attr;
         return response()->json([
@@ -371,7 +473,7 @@ Route::get('gettarget/{code}', function ($code) {
 Route::post('assign-record/{model}', function (Request $request, $model) {
 
     foreach ($request->ids as $id) {
-        $fullClass = "App\Models\Admin\\" . GeneratorUtils::setModelName($model); 
+        $fullClass = "App\Models\Admin\\" . GeneratorUtils::setModelName($model);
         $record = $fullClass::find($id);
 
         $newRecord = $record->replicate();

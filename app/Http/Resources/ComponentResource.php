@@ -19,6 +19,8 @@ class ComponentResource extends JsonResource
             'id' => $this->id,
             'name' => $this->compo_name,
             'categories'=>json_decode($this->compo_category, true),
+            'concentration' => $this->compo_concentration,
+
 
         ];
     }
