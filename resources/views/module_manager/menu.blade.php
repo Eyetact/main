@@ -496,7 +496,8 @@
                                                                             </label>
                                                                         </div>
 
-                                                                        <div class="form-group col-sm-4 added" style="display: none">
+                                                                        <div class="form-group col-sm-4 added"
+                                                                            style="display: none">
                                                                             <label class="custom-switch form-label ">
                                                                                 <input type="checkbox"
                                                                                     class="custom-switch-input"
@@ -517,7 +518,9 @@
                                                                                 $module_ids = \App\Models\Module::where(
                                                                                     'user_id',
                                                                                     auth()->user()->id,
-                                                                                )->pluck('id');
+                                                                                )
+                                                                                    ->where('migration', '!=', null)
+                                                                                    ->pluck('id');
                                                                             @endphp
                                                                             <select name="parent_id"
                                                                                 class="google-input module" id="module"
@@ -537,7 +540,8 @@
                                                                                 for="module"></label>
 
                                                                         </div>
-                                                                        <div class="col-sm-12 input-box subbb" style="display: none">
+                                                                        <div class="col-sm-12 input-box subbb"
+                                                                            style="display: none">
                                                                             <label class="form-label"
                                                                                 for="module">Attribute<span
                                                                                     class="text-red">*</span></label>
@@ -555,11 +559,12 @@
 
                                                                         </div>
 
-                                                                        
 
 
-                                                                        <div class="col-12 row form-subb" style="display: none">
-                                                                            
+
+                                                                        <div class="col-12 row form-subb"
+                                                                            style="display: none">
+
                                                                             <div class="col-sm-12 form-group">
                                                                                 <label class="form-label"
                                                                                     for="name">Name <span
@@ -745,23 +750,23 @@
             $(document).on('change', '#attr_id', function() {
                 var id = $(this).find(':selected').val();
 
-                if(id != undefined){
+                if (id != undefined) {
                     $('.form-subb').show();
 
                 }
-            
+
             })
 
             $(document).on('change', '#shared', function() {
                 var id = $(this).val();
- console.log(id);
-                if($(this).is(':checked')){
+                console.log(id);
+                if ($(this).is(':checked')) {
                     $('.added').show();
-                }else{
+                } else {
                     $('.added').hide();
 
                 }
-            
+
             })
 
 
