@@ -365,20 +365,20 @@ Route::get('/get-components/{id}', function ($id) {
 
         $components = collect([]);
 
-        if( $components_set){
-        $set_component = json_decode($components_set->set_component);
-        $componentIds = collect($set_component)->pluck("id");
+        if ($components_set) {
+            $set_component = json_decode($components_set->set_component);
+            $componentIds = collect($set_component)->pluck("id");
 
 
-        foreach ($componentIds as $componentId) {
-            $component = App\Models\Admin\Component::find($componentId);
-            if ($component) {
-                $components->push($component);
+            foreach ($componentIds as $componentId) {
+                $component = App\Models\Admin\Component::find($componentId);
+                if ($component) {
+                    $components->push($component);
+                }
             }
+
+
         }
-
-
-    }
     } else {
         $components = [];
     }
@@ -391,21 +391,94 @@ Route::get('/get-compononets-by-main/{id}', function ($id) {
 
     if ($mainPartId) {
         $components = App\Models\Admin\Component::where('main_part_id', $mainPartId)
-        ->with('main_part')
-        ->get();
+            ->with('main_part')
+            ->get();
 
-    $components = $components->map(function ($component) {
-        $component->inlet = $component->main_part->main_inlet;
-        $component->type = $component->main_part->main_type;
+        $components = $components->map(function ($component) {
+            $component->inlet = $component->main_part->main_inlet;
+            $component->type = $component->main_part->main_type;
 
-        return $component;
-    });
+            return $component;
+        });
     } else {
         $components = [];
     }
 
     return response()->json($components);
 })->name('get-compos');
+
+
+
+
+Route::get('/get-components-by-category/{category_id}/{cset_id}', function ($category_id, $cset_id) {
+    try {
+        $componentSetId = $cset_id;
+        $catId = $category_id;
+        $components = collect([]);
+
+        if ($componentSetId) {
+            $components_set = App\Models\Admin\ComponentsSet::find($componentSetId);
+
+            if ($components_set) {
+                $set_component = json_decode($components_set->set_component);
+                $componentsId = collect($set_component)->pluck('id');
+
+                foreach ($componentsId as $componentId) {
+                    $component = App\Models\Admin\Component::find($componentId);
+                    $compo_category = json_decode($component->compo_category, true);
+                    $compo_category_collection = collect($compo_category)->pluck('id');
+
+                    if ($compo_category_collection->contains($catId)) {
+                        $components->push($component);
+                    }
+                }
+            }
+        }
+
+        return response()->json($components);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+})->name('get-components-by-category');
+
+// Route::get('/get-components-by-category/{category_id}/{cset_id}', function ($category_id,$cset_id) {
+//     try {
+//         $componentSetId = $cset_id;
+//         $catId = $category_id;
+
+//         if ($componentSetId) {
+//             $components_set = App\Models\Admin\ComponentsSet::find($componentSetId);
+//             $categories = collect([]);
+
+//             if ($components_set) {
+//                 $set_component = json_decode($components_set->set_component);
+//                 $componentsId = collect($set_component)->pluck('id');
+
+//                 foreach ($componentsId as $componentId) {
+//                     $component = App\Models\Admin\Component::find($componentId);
+//                     $compo_category = json_decode($component->compo_category, true);
+//                     $compo_category_collection = collect($compo_category)->pluck('id');
+
+//                     foreach ($compo_category_collection as $categoryId) {
+//                         $category = App\Models\Admin\Category::find($categoryId);
+//                         if ($category && !$categories->contains('id', $category->id)) {
+//                             $categoryName = $category->classification->class_child ?? '';
+//                             $category->categoryName = $categoryName;
+//                             $categories->push($category);
+//                         }
+//                     }
+//                 }
+//             }
+//         } else {
+//             $categories = collect([]);
+//         }
+
+//         return response()->json($categories);
+//     } catch (\Exception $e) {
+//         return response()->json(['error' => $e->getMessage()], 500);
+//     }
+// })->name('get-categories');
+
 
 // Route::get('/get-compononets-by-main/{id}', function ($id) {
 //     $mainPartId = $id;
