@@ -528,7 +528,7 @@
                                                                                 <option disabled value="" selected>
                                                                                     Select
                                                                                     Module</option>
-                                                                                @foreach (\App\Models\MenuManager::where('parent', '0')->where('menu_type', 'admin')->whereIn('module_id', $module_ids)->orderBy('sequence', 'asc')->get() as $item)
+                                                                                @foreach (\App\Models\MenuManager::where('menu_type', 'admin')->whereIn('module_id', $module_ids)->orderBy('sequence', 'asc')->get() as $item)
                                                                                     <option
                                                                                         value="{{ $item->module->id }}">
                                                                                         {{ $item->name }}
