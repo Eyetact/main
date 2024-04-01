@@ -18,7 +18,8 @@ class Module extends Model
         'parent_id',
         'migration',
         'is_delete',
-        'type'
+        'type',
+        'status'
 
     ];
 

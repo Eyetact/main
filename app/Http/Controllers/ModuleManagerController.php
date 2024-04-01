@@ -62,10 +62,11 @@ class ModuleManagerController extends Controller
         //     DB::beginTransaction();
         $module = Module::create([
             'name' => $request->name,
-            'is_system' => isset ($request->is_system) ? 1 : 0,
+            'is_system' => isset($request->is_system) ? 1 : 0,
             'code' => str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower())),
             'user_id' => auth()->user()->id,
-            'type' => isset ($request->mtype) ? $request->mtype : null,
+            'type' => isset($request->mtype) ? $request->mtype : null,
+            'status' => isset($request->status) ? $request->status : null,
 
 
         ]);
@@ -84,7 +85,7 @@ class ModuleManagerController extends Controller
         $this->generatorService->generatePermission($request->all(), $module->id);
 
 
-        if (!empty ($request->fields[0])) {
+        if (!empty($request->fields[0])) {
             foreach ($request->fields as $i => $attr) {
                 $createArr = [
 
@@ -101,8 +102,8 @@ class ModuleManagerController extends Controller
                     'constrain' => $request['constrains'][$i],
                     'on_update_foreign' => $request['on_update_foreign'][$i],
                     'on_delete_foreign' => $request['on_delete_foreign'][$i],
-                    'is_enable' => isset ($request['is_enable'][$i]) ? 1 : 0,
-                    'is_system' => isset ($request['is_system'][$i]) ? 1 : 0,
+                    'is_enable' => isset($request['is_enable'][$i]) ? 1 : 0,
+                    'is_system' => isset($request['is_system'][$i]) ? 1 : 0,
                     'max_size' => $request['files_sizes'][$i],
                     'file_type' => $request['file_types'][$i],
 
@@ -126,7 +127,7 @@ class ModuleManagerController extends Controller
             $createData = array(
                 'name' => $requestData['name'],
                 'module_id' => $module->id,
-                'include_in_menu' => (isset ($requestData['include_in_menu']) ?? 0),
+                'include_in_menu' => (isset($requestData['include_in_menu']) ?? 0),
                 'menu_type' => $requestData['menu_type'],
                 'path' => str_replace(' ', '', $requestData['path']),
                 'sequence' => $sequence,
@@ -159,7 +160,7 @@ class ModuleManagerController extends Controller
         //     DB::beginTransaction();
         $module = Module::create([
             'name' => $request->name,
-            'is_system' => isset ($request->is_system) ? 1 : 0,
+            'is_system' => isset($request->is_system) ? 1 : 0,
             'code' => $request->name,
             'user_id' => auth()->user()->id,
 
@@ -229,7 +230,7 @@ class ModuleManagerController extends Controller
             $data->parent = $item['parent'];
             $data->save();
             // Check if there are children and recursively process them
-            if (isset ($item['children']) && is_array($item['children']) && count($item['children']) > 0) {
+            if (isset($item['children']) && is_array($item['children']) && count($item['children']) > 0) {
                 $this->processArray($item['children']);
             }
         }
@@ -240,12 +241,14 @@ class ModuleManagerController extends Controller
 
         $module = Module::find($id);
 
-        if (!empty ($request->name)):
+        if (!empty($request->name)):
             $module->update(
                 [
-                    'is_system' => isset ($request->is_system) ? 1 : 0,
+                    'is_system' => isset($request->is_system) ? 1 : 0,
                     'name' => $request->name,
-                    'type' => isset ($request->mtype) ? $request->mtype : null,
+                    'type' => isset($request->mtype) ? $request->mtype : null,
+                    'status' => isset($request->status) ? $request->status : null,
+
                 ]
             );
 
@@ -254,7 +257,7 @@ class ModuleManagerController extends Controller
                 [
                     'name' => $request->name,
                     'sidebar_name' => $request->sidebar_name,
-                    'include_in_menu' => isset ($request->include_in_menu) ? 1 : 0,
+                    'include_in_menu' => isset($request->include_in_menu) ? 1 : 0,
                 ]
             );
         endif;

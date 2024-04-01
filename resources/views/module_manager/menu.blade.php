@@ -362,7 +362,7 @@
                                                                 class="form-control" value="">
                                                         </div>
 
-                                                        <div class="form-group col-sm-6">
+                                                        <div class="form-group col-sm-4">
                                                             <label class="custom-switch form-label">
                                                                 <input type="checkbox" name="include_in_menu"
                                                                     id="ainclude_in_menu" class="custom-switch-input"
@@ -373,36 +373,39 @@
                                                             </label>
                                                         </div>
 
-                                                        <div class="form-group col-sm-6">
+                                                        <div class="form-group col-sm-4">
                                                             <label class="custom-switch form-label">
                                                                 <input type="checkbox" name="is_system" id="is_system"
                                                                     class="custom-switch-input" id="is_system">
                                                                 <span class="custom-switch-indicator"></span>
-                                                                <span
-                                                                    class="custom-switch-description">Global</span>
+                                                                <span class="custom-switch-description">Global</span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-4">
+                                                            <label class="custom-switch form-label">
+                                                                <input type="checkbox" name="status" id="status"
+                                                                    class="custom-switch-input" id="status" checked>
+                                                                <span class="custom-switch-indicator"></span>
+                                                                <span class="custom-switch-description">Status</span>
                                                             </label>
                                                         </div>
 
                                                         <div class="col-sm-12 input-box">
-                                                            <label class="form-label"
-                                                                for="module">Type<span
+                                                            <label class="form-label" for="module">Type<span
                                                                     class="text-red">*</span></label>
 
-                                                            
-                                                            <select name="mtype"
-                                                                class="google-input module" id="mtype"
-                                                                required>
+
+                                                            <select name="mtype" class="google-input module"
+                                                                id="mtype" required>
                                                                 <option disabled value="" selected>Select</option>
-                                                                <option  value="stander" >Stander</option>
-                                                                <option  value="sortable" >Sortable</option>
-                                                               
+                                                                <option value="stander">Stander</option>
+                                                                <option value="sortable">Sortable</option>
+
                                                             </select>
-                                                           
+
 
                                                         </div>
-
-
-
 
 
                                                     </div>
@@ -464,8 +467,8 @@
                             </div>
 
                             <div class="sub-form" style="display: none">
-                                <form action="{{ route('module_manager.storSubPost') }}" id="moduleCreate" method="POST"
-                                    autocomplete="off">
+                                <form action="{{ route('module_manager.storSubPost') }}" id="moduleCreateSub"
+                                    method="POST" autocomplete="off">
                                     @csrf
 
                                     <div class="row">
@@ -481,6 +484,30 @@
                                                                 <div class="">
                                                                     <div class="row">
 
+                                                                        <div class="form-group col-sm-4 sub-con">
+                                                                            <label class="custom-switch form-label ">
+                                                                                <input type="checkbox"
+                                                                                    class="custom-switch-input"
+                                                                                    id="shared">
+                                                                                <span
+                                                                                    class="custom-switch-indicator"></span>
+                                                                                <span
+                                                                                    class="custom-switch-description">Shared</span>
+                                                                            </label>
+                                                                        </div>
+
+                                                                        <div class="form-group col-sm-4 added" style="display: none">
+                                                                            <label class="custom-switch form-label ">
+                                                                                <input type="checkbox"
+                                                                                    class="custom-switch-input"
+                                                                                    id="addable">
+                                                                                <span
+                                                                                    class="custom-switch-indicator"></span>
+                                                                                <span
+                                                                                    class="custom-switch-description">Addable</span>
+                                                                            </label>
+                                                                        </div>
+
                                                                         <div class="col-sm-12 input-box">
                                                                             <label class="form-label"
                                                                                 for="module">Parent<span
@@ -495,10 +522,12 @@
                                                                             <select name="parent_id"
                                                                                 class="google-input module" id="module"
                                                                                 required>
-                                                                                <option value="" selected>Select
+                                                                                <option disabled value="" selected>
+                                                                                    Select
                                                                                     Module</option>
                                                                                 @foreach (\App\Models\MenuManager::where('parent', '0')->where('menu_type', 'admin')->whereIn('module_id', $module_ids)->orderBy('sequence', 'asc')->get() as $item)
-                                                                                    <option value="{{ $item->module->id }}">
+                                                                                    <option
+                                                                                        value="{{ $item->module->id }}">
                                                                                         {{ $item->name }}
                                                                                     </option>
                                                                                 @endforeach
@@ -508,25 +537,130 @@
                                                                                 for="module"></label>
 
                                                                         </div>
+                                                                        <div class="col-sm-12 input-box subbb" style="display: none">
+                                                                            <label class="form-label"
+                                                                                for="module">Attribute<span
+                                                                                    class="text-red">*</span></label>
 
 
-                                                                        <div class="col-sm-12 form-group">
-                                                                            <label class="form-label" for="name">Name
-                                                                                <span class="text-red">*</span></label>
-                                                                            <input type="text" name="name"
-                                                                                id="aname" class="form-control"
-                                                                                value="">
-                                                                            <input type="hidden" name="id"
-                                                                                id="aid" value="">
+                                                                            <select name="attr_id" class="google-input "
+                                                                                id="attr_id" required>
+                                                                                <option value="" selected>Select
+                                                                                    Attribute</option>
+
+                                                                            </select>
+                                                                            <label id="module-error"
+                                                                                class="error text-red hide"
+                                                                                for="module"></label>
+
                                                                         </div>
 
-                                                                        <div class="col-sm-12 form-group">
-                                                                            <label class="form-label" for="code2">Code
-                                                                                <span class="text-red">*</span></label>
-                                                                            <input type="text" name="code"
-                                                                                id="code" class="form-control"
-                                                                                value="">
+                                                                        
 
+
+                                                                        <div class="col-12 row form-subb" style="display: none">
+                                                                            
+                                                                            <div class="col-sm-12 form-group">
+                                                                                <label class="form-label"
+                                                                                    for="name">Name <span
+                                                                                        class="text-red">*</span></label>
+                                                                                <input type="text" name="name"
+                                                                                    id="aname" class="form-control"
+                                                                                    value="">
+                                                                                <input type="hidden" name="id"
+                                                                                    id="aid" value="">
+                                                                            </div>
+
+                                                                            <div class="col-sm-12 form-group">
+                                                                                <label class="form-label"
+                                                                                    for="code2">Code <span
+                                                                                        class="text-red">*</span></label>
+                                                                                <input type="text" name="code"
+                                                                                    id="code" class="form-control"
+                                                                                    value="">
+
+                                                                            </div>
+
+                                                                            <div class="col-sm-12 form-group">
+                                                                                <label class="form-label"
+                                                                                    for="path">Path <span
+                                                                                        class="text-red">*</span></label>
+                                                                                <input type="text" name="path"
+                                                                                    id="apath" class="form-control"
+                                                                                    value="">
+                                                                            </div>
+
+                                                                            <div class="col-sm-12 form-group">
+                                                                                <label class="form-label"
+                                                                                    for="path">Sidebar Name <span
+                                                                                        class="text-red">*</span></label>
+                                                                                <input type="text" name="sidebar_name"
+                                                                                    id="sidebar_name" class="form-control"
+                                                                                    value="">
+                                                                            </div>
+
+                                                                            <div class="form-group col-sm-4">
+                                                                                <label class="custom-switch form-label">
+                                                                                    <input type="checkbox"
+                                                                                        name="include_in_menu"
+                                                                                        id="ainclude_in_menu"
+                                                                                        class="custom-switch-input"
+                                                                                        id="is_enable">
+                                                                                    <span
+                                                                                        class="custom-switch-indicator"></span>
+                                                                                    <span
+                                                                                        class="custom-switch-description">Include
+                                                                                        in
+                                                                                        menu</span>
+                                                                                </label>
+                                                                            </div>
+
+                                                                            <div class="form-group col-sm-4">
+                                                                                <label class="custom-switch form-label">
+                                                                                    <input type="checkbox"
+                                                                                        name="is_system" id="is_system"
+                                                                                        class="custom-switch-input"
+                                                                                        id="is_system">
+                                                                                    <span
+                                                                                        class="custom-switch-indicator"></span>
+                                                                                    <span
+                                                                                        class="custom-switch-description">Global</span>
+                                                                                </label>
+                                                                            </div>
+
+                                                                            <div class="form-group col-sm-4">
+                                                                                <label class="custom-switch form-label">
+                                                                                    <input type="checkbox" name="status"
+                                                                                        id="status"
+                                                                                        class="custom-switch-input"
+                                                                                        id="status" checked>
+                                                                                    <span
+                                                                                        class="custom-switch-indicator"></span>
+                                                                                    <span
+                                                                                        class="custom-switch-description">Status</span>
+                                                                                </label>
+                                                                            </div>
+
+                                                                            <div class="col-sm-12 input-box">
+                                                                                <label class="form-label"
+                                                                                    for="module">Type<span
+                                                                                        class="text-red">*</span></label>
+
+
+                                                                                <select name="mtype"
+                                                                                    class="google-input module"
+                                                                                    id="mtype" required>
+                                                                                    <option disabled value=""
+                                                                                        selected>Select</option>
+                                                                                    <option value="stander">Stander
+                                                                                    </option>
+                                                                                    <option value="sortable">Sortable
+                                                                                    </option>
+
+                                                                                </select>
+
+
+                                                                            </div>
                                                                         </div>
 
                                                                     </div>
@@ -591,6 +725,44 @@
     <script src="//code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script>
         $(document).ready(function() {
+
+            $(document).on('change', '.module', function() {
+                var id = $(this).find(':selected').val();
+
+                var parent = $(this).parent().parent().parent().parent().find('#attr_id');
+                $.ajax({
+                    url: '{{ url('/') }}/attribute-by-module/' + id,
+                    success: function(response) {
+                        console.log(response);
+                        // $('.child-drop').remove()
+                        parent.html(`${response}`);
+                        $('.subbb').show();
+                    }
+                });
+            })
+
+
+            $(document).on('change', '#attr_id', function() {
+                var id = $(this).find(':selected').val();
+
+                if(id != undefined){
+                    $('.form-subb').show();
+
+                }
+            
+            })
+
+            $(document).on('change', '#shared', function() {
+                var id = $(this).val();
+ console.log(id);
+                if($(this).is(':checked')){
+                    $('.added').show();
+                }else{
+                    $('.added').hide();
+
+                }
+            
+            })
 
 
             $("#addMenuLabel").on('shown.bs.modal', function() {
@@ -952,6 +1124,33 @@
                         required: true,
                     }
                 }
+            });
+
+            $('#moduleCreateSub').validate({
+                rules: {
+                    module: {
+                        required: true,
+                    },
+                    name: {
+                        required: true,
+                    },
+                    code: {
+                        required: true,
+                    },
+                    path: {
+                        required: true,
+                    },
+                    attr_id: {
+                        required: true,
+
+                    },
+                    messages: {
+
+                        attr_id: "Please enter a valid email address",
+
+                    }
+                },
+
             });
 
             $("#storfront_li").click(function() {

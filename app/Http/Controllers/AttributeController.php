@@ -330,7 +330,7 @@ class AttributeController extends Controller
     public function getAttrByModel(Module $module)
     {
         $attributes = Attribute::where('module', $module->id)->get();
-        $options = '<option>-- select --</option>';
+        $options = '<option disabled selected>-- select --</option>';
 
         foreach ($attributes as $key => $value) {
             $options .= '<option data-id="' . $value->id . '" value="' . $value->code . '" >' . $value->name . '</option>';

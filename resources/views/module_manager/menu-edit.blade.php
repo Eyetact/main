@@ -44,7 +44,7 @@
                                         value="{{ $module->menu->sidebar_name }}">
                                 </div>
 
-                                <div class="form-group col-sm-6">
+                                <div class="form-group col-sm-4">
                                     <label class="custom-switch form-label">
                                         <input type="checkbox" @checked($module->menu->include_in_menu) name="include_in_menu"
                                             id="ainclude_in_menu" class="custom-switch-input" id="is_enable">
@@ -53,12 +53,21 @@
                                     </label>
                                 </div>
 
-                                <div class="form-group col-sm-6">
+                                <div class="form-group col-sm-4">
                                     <label class="custom-switch form-label">
                                         <input type="checkbox" @checked($module->is_system) name="is_system"
                                             id="is_system" class="custom-switch-input" id="is_system">
                                         <span class="custom-switch-indicator"></span>
                                         <span class="custom-switch-description">Global</span>
+                                    </label>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label class="custom-switch form-label">
+                                        <input type="checkbox" @checked($module->status) name="status" id="status"
+                                            class="custom-switch-input" id="status" checked>
+                                        <span class="custom-switch-indicator"></span>
+                                        <span
+                                            class="custom-switch-description">Status</span>
                                     </label>
                                 </div>
                                 <div class="col-sm-12 input-box">
