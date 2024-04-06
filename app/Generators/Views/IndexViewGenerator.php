@@ -570,6 +570,8 @@ class IndexViewGenerator
             GeneratorUtils::getTemplate('views/index')
         );
 
+        $modelName = $module->code;
+
         switch ($path) {
             case '':
                 GeneratorUtils::checkFolder(resource_path("/views/admin/$modelName"));
