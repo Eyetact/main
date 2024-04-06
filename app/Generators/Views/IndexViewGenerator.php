@@ -24,6 +24,8 @@ class IndexViewGenerator
         $model = GeneratorUtils::setModelName($request['name'], 'default');
         $path = GeneratorUtils::getModelLocation($request['name']);
 
+        $request['code'] = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
+
         $code = GeneratorUtils::setModelName($request['code'], 'default');
         $modelName = GeneratorUtils::pluralKebabCase($code);
 
