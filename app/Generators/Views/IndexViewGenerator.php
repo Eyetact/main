@@ -142,7 +142,7 @@ class IndexViewGenerator
             }
         }
 
-        $modelNameSingularUcWords= GeneratorUtils::cleanSingularUcWords($code);
+        $modelNameSingularUcWords = GeneratorUtils::cleanSingularUcWords($code);
 
 
         $template = str_replace(
@@ -169,7 +169,8 @@ class IndexViewGenerator
                 '',
                 $modelNameSingularUcWords,
                 $code,
-                ''
+                GeneratorUtils::singularPascalCase($code)
+
             ],
             GeneratorUtils::getTemplate('views/index')
         );
@@ -203,7 +204,7 @@ class IndexViewGenerator
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNamePluralLowerCase = GeneratorUtils::cleanPluralLowerCase($model);
         $modelNameSingularLowercase = GeneratorUtils::cleanSingularLowerCase($code);
-        $modelNameSingularUcWords= GeneratorUtils::cleanSingularUcWords($code);
+        $modelNameSingularUcWords = GeneratorUtils::cleanSingularUcWords($code);
 
         $thColums = '';
         $tdColumns = '';
@@ -414,9 +415,9 @@ class IndexViewGenerator
 
                             case 'foreignId':
                                 $class = "select-base";
-                              
 
-                                if (empty($value->source) || $value->source == 'disabled' ) {
+
+                                if (empty($value->source) || $value->source == 'disabled') {
                                     $class = 'select-cond';
                                 }
 
@@ -425,7 +426,7 @@ class IndexViewGenerator
                                 $trhtml .= '<td><div class="input-box">';
                                 $trhtml .= '<input type="hidden"  name="' . $field->code . '[${no}][id]" />';
 
-                                $trhtml .= ' <select data-source="'.$value->source.'" data-attr="${attr_' . $field->id . $key . '}" data-constrain="' . GeneratorUtils::singularSnakeCase($value->constrain) . '" name="' . $field->code . '[${no}][' . $value->code . ']" class="form-select ' . $class . '  google-input multi-type " required="">';
+                                $trhtml .= ' <select data-source="' . $value->source . '" data-attr="${attr_' . $field->id . $key . '}" data-constrain="' . GeneratorUtils::singularSnakeCase($value->constrain) . '" name="' . $field->code . '[${no}][' . $value->code . ']" class="form-select ' . $class . '  google-input multi-type " required="">';
                                 $trhtml .= '${list_' . $field->id . $key . '}';
                                 $trhtml .= '</select>';
                                 $trhtml .= '</div></td>';
@@ -574,6 +575,8 @@ class IndexViewGenerator
                 GeneratorUtils::checkFolder(resource_path("/views/admin/$modelName"));
                 file_put_contents(resource_path("/views/admin/$modelName/index.blade.php"), $template);
                 if (!File::exists(resource_path("/views/admin/$modelName/include/custom.blade.php"))) {
+                    GeneratorUtils::checkFolder(resource_path("/views/admin/$modelName/include"));
+
                     file_put_contents(resource_path("/views/admin/$modelName/include/custom.blade.php"), "");
 
                 }
