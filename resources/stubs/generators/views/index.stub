@@ -151,9 +151,9 @@
                             @php
                                 $module = \App\Models\Module::where(
                                     'code',
-                                    App\Generators\GeneratorUtils::singularSnakeCase('{{modelNameSingularLowercase}}'),
+                                    App\Generators\GeneratorUtils::singularSnakeCase('{{code}}'),
                                 )
-                                    ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase('{{modelNameSingularLowercase}}'))
+                                    ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase('{{code}}'))
                                     ?->first();
                             @endphp
                             <div class="row">
