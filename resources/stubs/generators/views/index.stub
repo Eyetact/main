@@ -157,29 +157,31 @@
                                     ?->first();
                             @endphp
                             <div class="row">
-                                @foreach ($module->fields as $field)
-                                    <div class="col-4">
-                                        <div class="per-box">
-                                            <h5>{{ $field->name }}</h5>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <input id="1" type="checkbox" class="check-one"
-                                                        name="permission_data[]" value="View.{{ $field->code }}">
-                                                    <input id="1" type="hidden" name="permission_module[1]"
-                                                        value="1">
-                                                    <label for="1">View.{{ $field->name }}</label>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <input id="1" type="checkbox" class="check-one"
-                                                        name="permission_data[]" value="Edit.{{ $field->code }}">
-                                                    <input id="1" type="hidden" name="permission_module[1]"
-                                                        value="1">
-                                                    <label for="1">Edit.{{ $field->name }}</label>
+                                @if(count($module->fields))
+                                    @foreach ($module->fields as $field)
+                                        <div class="col-4">
+                                            <div class="per-box">
+                                                <h5>{{ $field->name }}</h5>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input id="1" type="checkbox" class="check-one"
+                                                            name="permission_data[]" value="View.{{ $field->code }}">
+                                                        <input id="1" type="hidden" name="permission_module[1]"
+                                                            value="1">
+                                                        <label for="1">View.{{ $field->name }}</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input id="1" type="checkbox" class="check-one"
+                                                            name="permission_data[]" value="Edit.{{ $field->code }}">
+                                                        <input id="1" type="hidden" name="permission_module[1]"
+                                                            value="1">
+                                                        <label for="1">Edit.{{ $field->name }}</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
                     </div>
