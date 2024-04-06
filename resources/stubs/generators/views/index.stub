@@ -154,6 +154,7 @@
                                     App\Generators\GeneratorUtils::singularSnakeCase('{{code}}'),
                                 )
                                     ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase('{{code}}'))
+                                    ->orWhere('code', '{{code}}')
                                     ?->first();
                             @endphp
                             <div class="row">
