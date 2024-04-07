@@ -16,6 +16,8 @@ class RequestGenerator
      */
     public function generate(array $request): void
     {
+        $request['code'] = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
+
         $model = GeneratorUtils::setModelName($request['code']);
         $path = GeneratorUtils::getModelLocation($request['code']);
 

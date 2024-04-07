@@ -18,6 +18,8 @@ class MigrationGenerator
      */
     public function generate(array $request, $id)
     {
+        $request['code'] = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
+
         $model = GeneratorUtils::setModelName($request['code']);
         $tableNamePluralLowercase = GeneratorUtils::pluralSnakeCase($model);
 

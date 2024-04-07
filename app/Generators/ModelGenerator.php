@@ -14,8 +14,11 @@ class ModelGenerator
      */
     public function generate(array $request)
     {
+        $request['code'] = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
+
         $path = GeneratorUtils::getModelLocation($request['name']);
         $model = GeneratorUtils::setModelName($request['name']);
+        
         $modelName = GeneratorUtils::setModelName($request['code']);
 
         $fields = "[";

@@ -15,11 +15,14 @@ class WebControllerGenerator
      */
     public function generate(array $request)
     {
+        $request['code'] = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
+
         $model = GeneratorUtils::setModelName($request['code'], 'default');
         $path = GeneratorUtils::getModelLocation($request['code']);
 
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
         $modelNamePluralCamelCase = GeneratorUtils::pluralCamelCase($model);
+        
         $code = GeneratorUtils::setModelName($request['code'], 'default');
 
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);

@@ -24,12 +24,12 @@ class IndexViewGenerator
         $model = GeneratorUtils::setModelName($request['name'], 'default');
         $path = GeneratorUtils::getModelLocation($request['name']);
 
-        // $request['code'] = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
-        
+        $request['code'] = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
+        // dd($request['code']);
         $code = GeneratorUtils::setModelName($request['code'], 'default');
         $modelName = GeneratorUtils::pluralKebabCase($code);
-
-        dd($code);
+        
+        
 
 
         $modelNamePluralUcWords = GeneratorUtils::cleanPluralUcWords($model);
@@ -568,7 +568,7 @@ class IndexViewGenerator
                 $tdColumns,
                 $trhtml,
                 $modelNameSingularUcWords,
-                $code,
+                $module->code,
                 GeneratorUtils::singularPascalCase($code)
             ],
             GeneratorUtils::getTemplate('views/index')

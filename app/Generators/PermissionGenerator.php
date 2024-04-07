@@ -18,6 +18,8 @@ class PermissionGenerator
      */
     public function generate(array $request,$id)
     {
+        $request['code'] = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
+
         $model = GeneratorUtils::setModelName($request['code'], 'default');
         $modelNameSingular = GeneratorUtils::cleanSingularLowerCase($model);
         try {

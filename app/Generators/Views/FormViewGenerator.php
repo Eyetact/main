@@ -18,7 +18,12 @@ class FormViewGenerator
     {
         $model = GeneratorUtils::setModelName($request['name']);
         $path = GeneratorUtils::getModelLocation($request['name']);
+
+        $request['code'] = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
+
         $code = GeneratorUtils::setModelName($request['code']);
+
+        
 
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
