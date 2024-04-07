@@ -15,7 +15,10 @@ class WebRouteGenerator
      */
     public function generate(array $request)
     {
+        $request['code'] = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
+
         $model = GeneratorUtils::setModelName($request['code']);
+        
         $path = isset($request['path']) ? $request['path'] : $request['code'];
 
         $modelNameSingularPascalCase = GeneratorUtils::singularPascalCase($model);
