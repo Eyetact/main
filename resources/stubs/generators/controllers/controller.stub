@@ -151,6 +151,41 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
 
         $insert = {{insertDataAction}}
 
+        if($module->is_system)
+        {
+
+  if (auth()->user()->hasRole('super')) {
+
+
+            $insert->global = 1;
+            $insert->status = "active";
+            $insert->save();
+
+        }
+
+        if (auth()->user()->hasAnyRole(['vendor', 'admin'])) {
+            if ($request->global == 0) {
+
+
+                $insert->status = "inactive";
+                $insert->save();
+
+
+            }
+
+            if ($request->global == 1) {
+
+
+                $insert->status = "pending";
+                $insert->save();
+
+
+            }
+        }
+
+
+        }
+
         $this->customStore($request,$insert);
 
         if( !empty($request->module) ){
@@ -254,6 +289,27 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
         {{updateDataAction}}
 
         $this->customUpdate($request,${{modelNameSingularCamelCase}});
+
+          if ($request->status == "active") {
+
+
+            ${{modelNameSingularCamelCase}}->global = 1;
+            ${{modelNameSingularCamelCase}}->status = "active";
+            ${{modelNameSingularCamelCase}}->save();
+
+
+        }
+
+
+        if ($request->status == "inactive") {
+
+
+             ${{modelNameSingularCamelCase}}->global = 0;
+             ${{modelNameSingularCamelCase}}->status = "inactive";
+             ${{modelNameSingularCamelCase}}->save();
+
+
+        }
 
 
         if( !empty($request->module) ){

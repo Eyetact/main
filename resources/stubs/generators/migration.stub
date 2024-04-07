@@ -32,7 +32,7 @@ return new class extends Migration
             }
 
               if (!Schema::hasColumn('{{tableNamePluralLowecase}}', 'global')){
-                $table->boolean('assign_id')->default(0);
+                $table->boolean('global')->default(0);
             }
                if (!Schema::hasColumn('{{tableNamePluralLowecase}}', 'status')){
                 $table->text('status')->nullable()->default('inactive');

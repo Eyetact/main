@@ -23,56 +23,58 @@ class FormViewGenerator
 
         $code = GeneratorUtils::setModelName($request['code']);
 
-        
+
 
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
 
-        // $template = "<div class=\"row mb-2\">\n";
-
         $template = "<div class=\"row mb-2\">\n";
-        $template .= "@if($model->is_system && auth()->user()->hasAnyRole(['vendor', 'admin']) && !isset($(\$$modelNameSingularCamelCase)))\n";
-$template .= "<div class=\"form-group col-sm-8\">\n";
-$template .= "<label class=\"custom-switch form-label\">\n";
-$template .= "<input type=\"hidden\" name=\"global\" value=\"0\"> <!-- Hidden input as default value -->\n";
-$template .= "<input type=\"checkbox\" name=\"global\" value=\"1\" class=\"custom-switch-input\" id=\"global-1\"\n";
-$template .= "{{ isset($(\$$modelNameSingularCamelCase)) && $(\$$modelNameSingularCamelCase)->global == '1' ? 'checked' : '' }}";
-$template .= ">\n";
-$template .= "<span class=\"custom-switch-indicator\"></span>\n";
-$template .= "<span class=\"custom-switch-description\">Add to global data</span>\n";
-$template .= "</label>\n";
-$template .= "</div>\n";
-$template .= "@endif\n";
+        $template .= "@php\n";
+
+        $template .= "\$model = \App\Models\Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase('".$code."'))\n";
+        $template .= "->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase('".$code."'))\n";
+        $template .= "->first();\n";
+        $template .= "\$constrain_name = App\Generators\GeneratorUtils::singularSnakeCase('".$code."');\n";
+        $template .= "if (\$model) {\n";
+        $template .= "\$for_attr = json_encode(\$model->fields()->select('code','attribute')->where('type', 'foreignId')->get());\n";
+        $template .= "\$for_attr = str_replace('\"', \"'\", \$for_attr);\n";
+        $template .= "}\n";
+        $template .= "@endphp\n";
+
+        // $template = "<div class=\"row mb-2\">\n";
+        $template .= "@if(\$model->is_system && auth()->user()->hasAnyRole(['vendor', 'admin'])  && !isset($$modelNameSingularCamelCase) )\n";
+        $template .= "<div class=\"form-group col-sm-8\">\n";
+        $template .= "<label class=\"custom-switch form-label\">\n";
+        $template .= "<input type=\"hidden\" name=\"global\" value=\"0\"> <!-- Hidden input as default value -->\n";
+        $template .= "<input type=\"checkbox\" name=\"global\" value=\"1\" class=\"custom-switch-input\" id=\"global-1\"\n";
+        $template .= "{{ isset($$modelNameSingularCamelCase) && $$modelNameSingularCamelCase" . "->global == '1' ? 'checked' : '' }}";
+        $template .= ">\n";
+        $template .= "<span class=\"custom-switch-indicator\"></span>\n";
+        $template .= "<span class=\"custom-switch-description\">Add to global data</span>\n";
+        $template .= "</label>\n";
+        $template .= "</div>\n";
+        $template .= "@endif\n";
 
 
-$template .= "@if($model->is_system && auth()->user()->hasRole('super') && isset($(\$$modelNameSingularCamelCase)))\n";
-$template .= "<div class=\"col-md-12\">\n";
-$template .= "<div class=\"input-box\">\n";
-$template .= "<label for=\"status\">{{ __('Status') }}</label>\n";
-$template .= "@php\n";
-$template .= "$model = \App\Models\Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase('status'))\n";
-$template .= "->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase('status'))\n";
-$template .= "->first();\n";
-$template .= "$constrain_name = App\Generators\GeneratorUtils::singularSnakeCase('status');\n";
-$template .= "if ($model) {\n";
-$template .= "$for_attr = json_encode($model->fields()->select('code','attribute')->where('type', 'foreignId')->get());\n";
-$template .= "$for_attr = str_replace('\"', \"'\", $for_attr);\n";
-$template .= "}\n";
-$template .= "@endphp\n";
-$template .= "<select data-constrain=\"{{ $constrain_name }}\" data-source=\"Disable\" data-attrs={!! isset($for_attr) ? $for_attr : '' !!} class=\"google-input @error('status') is-invalid @enderror\" name=\"status\" id=\"status\" class=\"form-control\">\n";
-$template .= "<option value=\"\" selected disabled>-- {{ __('Select status') }} --</option>\n";
-$template .= "<option value=\"active\" {{ isset($(\$$modelNameSingularCamelCase)) && $(\$$modelNameSingularCamelCase)->status == 'active' ? 'selected' : ('inactive' == 'active' ? 'selected' : '') }}>active</option>\n";
-$template .= "<option value=\"inactive\" {{ isset($(\$$modelNameSingularCamelCase)) && $(\$$modelNameSingularCamelCase)->status == 'inactive' ? 'selected' : ('inactive' == 'inactive' ? 'selected' : '') }}>inactive</option>\n";
-$template .= "<option value=\"pending\" {{ isset($(\$$modelNameSingularCamelCase)) && $(\$$modelNameSingularCamelCase)->status == 'pending' ? 'selected' : ('inactive' == 'pending' ? 'selected' : '') }}>pending</option>\n";
-$template .= "</select>\n";
-$template .= "@error('status')\n";
-$template .= "<span class=\"text-danger\">\n";
-$template .= "{{ $message }}\n";
-$template .= "</span>\n";
-$template .= "@enderror\n";
-$template .= "</div>\n";
-$template .= "</div>\n";
-$template .= "@endif\n";
+        $template .= "@if(\$model->is_system && auth()->user()->hasRole('super') && isset($$modelNameSingularCamelCase) )\n";
+        $template .= "<div class=\"col-md-12\">\n";
+        $template .= "<div class=\"input-box\">\n";
+        $template .= "<label for=\"status\">{{ __('Status') }}</label>\n";
+
+        $template .= "<select data-constrain=\"{{ \$constrain_name }}\" data-source=\"Disable\" data-attrs={!! isset(\$for_attr) ? \$for_attr : '' !!} class=\"google-input @error('status') is-invalid @enderror\" name=\"status\" id=\"status\" class=\"form-control\">\n";
+        $template .= "<option value=\"\" selected disabled>-- {{ __('Select status') }} --</option>\n";
+        $template .= "<option value=\"active\" {{ isset($$modelNameSingularCamelCase) && $$modelNameSingularCamelCase" . "->status == 'active' ? 'selected' : ('inactive' == 'active' ? 'selected' : '') }}>active</option>\n";
+        $template .= "<option value=\"inactive\" {{ isset($$modelNameSingularCamelCase) && $$modelNameSingularCamelCase" . "->status == 'inactive' ? 'selected' : ('inactive' == 'inactive' ? 'selected' : '') }}>inactive</option>\n";
+        $template .= "<option value=\"pending\" {{ isset($$modelNameSingularCamelCase) && $$modelNameSingularCamelCase" . "->status == 'pending' ? 'selected' : ('inactive' == 'pending' ? 'selected' : '') }}>pending</option>\n";
+        $template .= "</select>\n";
+        $template .= "@error('status')\n";
+        $template .= "<span class=\"text-danger\">\n";
+        $template .= "{{ \$message }}\n";
+        $template .= "</span>\n";
+        $template .= "@enderror\n";
+        $template .= "</div>\n";
+        $template .= "</div>\n";
+        $template .= "@endif\n";
 
 
 
@@ -248,7 +250,7 @@ $template .= "@endif\n";
                                             '{{source}}'
                                         ],
                                         [
-                                            str_replace('-','_',GeneratorUtils::singularKebabCase($field)),
+                                            str_replace('-', '_', GeneratorUtils::singularKebabCase($field)),
                                             GeneratorUtils::cleanSingularUcWords($constrainModel),
                                             GeneratorUtils::cleanSingularLowerCase($constrainModel),
                                             $options,
@@ -661,6 +663,57 @@ $template .= "@endif\n";
 
         $template = "<div class=\"row mb-2\">\n";
 
+        // $template = "<div class=\"row mb-2\">\n";
+        $template .= "@php\n";
+
+        $template .= "\$model = \App\Models\Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase('".$code."'))\n";
+        $template .= "->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase('".$code."'))\n";
+        $template .= "->first();\n";
+        $template .= "\$constrain_name = App\Generators\GeneratorUtils::singularSnakeCase('".$code."');\n";
+        $template .= "if (\$model) {\n";
+        $template .= "\$for_attr = json_encode(\$model->fields()->select('code','attribute')->where('type', 'foreignId')->get());\n";
+        $template .= "\$for_attr = str_replace('\"', \"'\", \$for_attr);\n";
+        $template .= "}\n";
+        $template .= "@endphp\n";
+
+
+        $template .= "@if(\$model->is_system && auth()->user()->hasAnyRole(['vendor', 'admin']) && !isset($$modelNameSingularCamelCase) )\n";
+        $template .= "<div class=\"form-group col-sm-8\">\n";
+        $template .= "<label class=\"custom-switch form-label\">\n";
+        $template .= "<input type=\"hidden\" name=\"global\" value=\"0\"> <!-- Hidden input as default value -->\n";
+        $template .= "<input type=\"checkbox\" name=\"global\" value=\"1\" class=\"custom-switch-input\" id=\"global-1\"\n";
+        $template .= "{{ isset($$modelNameSingularCamelCase) && $$modelNameSingularCamelCase" . "->global == '1' ? 'checked' : '' }}";
+        $template .= ">\n";
+        $template .= "<span class=\"custom-switch-indicator\"></span>\n";
+        $template .= "<span class=\"custom-switch-description\">Add to global data</span>\n";
+        $template .= "</label>\n";
+        $template .= "</div>\n";
+        $template .= "@endif\n";
+
+
+        $template .= "@if(\$model->is_system && auth()->user()->hasRole('super') && isset($$modelNameSingularCamelCase) )\n";
+        $template .= "<div class=\"col-md-12\">\n";
+        $template .= "<div class=\"input-box\">\n";
+        $template .= "<label for=\"status\">{{ __('Status') }}</label>\n";
+
+
+
+
+        $template .= "<select data-constrain=\"{{ \$constrain_name }}\" data-source=\"Disable\" data-attrs={!! isset(\$for_attr) ? \$for_attr : '' !!} class=\"google-input @error('status') is-invalid @enderror\" name=\"status\" id=\"status\" class=\"form-control\">\n";
+        $template .= "<option value=\"\" selected disabled>-- {{ __('Select status') }} --</option>\n";
+        $template .= "<option value=\"active\" {{ isset($$modelNameSingularCamelCase) && $$modelNameSingularCamelCase" . "->status == 'active' ? 'selected' :  '' }}>active</option>\n";
+        $template .= "<option value=\"inactive\" {{ isset($$modelNameSingularCamelCase) && $$modelNameSingularCamelCase" . "->status == 'inactive' ? 'selected'  : '' }}>inactive</option>\n";
+        $template .= "<option value=\"pending\" {{ isset($$modelNameSingularCamelCase) && $$modelNameSingularCamelCase" . "->status == 'pending' ? 'selected'  : '' }}>pending</option>\n";
+        $template .= "</select>\n";
+        $template .= "@error('status')\n";
+        $template .= "<span class=\"text-danger\">\n";
+        $template .= "{{ \$message }}\n";
+        $template .= "</span>\n";
+        $template .= "@enderror\n";
+        $template .= "</div>\n";
+        $template .= "</div>\n";
+        $template .= "@endif\n";
+
 
         foreach ($module->fields()->where('is_enable', 1)->get() as $i => $field) {
             $field->name = GeneratorUtils::singularSnakeCase($field->name);
@@ -852,20 +905,20 @@ $template .= "@endif\n";
                         $constrainSingularCamelCase = GeneratorUtils::singularCamelCase($constrainModel);
 
                         $columnAfterId = $field->attribute;
-                        $dataIds  ='';
+                        $dataIds = '';
 
                         if ($field->source != null) {
 
                             $current_model = Module::where(
                                 'code',
                                 GeneratorUtils::singularSnakeCase($field->constrain)
-                            )->orWhere('code',GeneratorUtils::pluralSnakeCase($field->constrain))
-                            ->orWhere('code',$field->constrain)->first();
+                            )->orWhere('code', GeneratorUtils::pluralSnakeCase($field->constrain))
+                                ->orWhere('code', $field->constrain)->first();
 
                             $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->get();
 
                             foreach ($lookatrrs as $sa) {
-                                $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$".$constrainSingularCamelCase."->" . $sa->code . "}}\"";
+                                $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$" . $constrainSingularCamelCase . "->" . $sa->code . "}}\"";
 
                             }
                         }
@@ -915,7 +968,7 @@ $template .= "@endif\n";
                                         '{{source}}'
                                     ],
                                     [
-                                        str_replace('-','_',GeneratorUtils::singularKebabCase($field->name)),
+                                        str_replace('-', '_', GeneratorUtils::singularKebabCase($field->name)),
                                         GeneratorUtils::cleanSingularUcWords($field->name),
                                         GeneratorUtils::cleanSingularLowerCase($constrainModel),
                                         $options,
@@ -966,7 +1019,7 @@ $template .= "@endif\n";
                                         '{{value}}',
                                     ],
                                     [
-                                        str_replace('-','_',GeneratorUtils::singularKebabCase($field->name)),
+                                        str_replace('-', '_', GeneratorUtils::singularKebabCase($field->name)),
                                         GeneratorUtils::singularCamelCase($field->name),
                                         $fieldUcWords,
                                         $fieldSnakeCase,
@@ -989,7 +1042,7 @@ $template .= "@endif\n";
                                     ],
                                     [
                                         GeneratorUtils::cleanUcWords($field->name),
-                                        str_replace('-','_',GeneratorUtils::kebabCase($field->name)),
+                                        str_replace('-', '_', GeneratorUtils::kebabCase($field->name)),
 
                                         $fieldSnakeCase,
                                         GeneratorUtils::cleanLowerCase($field->name),
@@ -1248,8 +1301,8 @@ $template .= "@endif\n";
                                         $current_model = Module::where(
                                             'code',
                                             GeneratorUtils::singularSnakeCase($value->constrain)
-                                        )->orWhere('code',GeneratorUtils::pluralSnakeCase($value->constrain))
-                                        ->orWhere('code',$value->constrain)->first();
+                                        )->orWhere('code', GeneratorUtils::pluralSnakeCase($value->constrain))
+                                            ->orWhere('code', $value->constrain)->first();
                                         $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->get();
 
                                         foreach ($lookatrrs as $sa) {
@@ -1265,7 +1318,7 @@ $template .= "@endif\n";
                                     $template .= ' <select data-constrain="' . GeneratorUtils::singularSnakeCase($value->constrain) . '" name="' . $field->code . '[{{ $index }}][' . $value->code . ']" class="form-select ' . $class . '  google-input multi-type" required="">';
 
                                     $template .= '@foreach( \\App\\Models\\Admin\\' . GeneratorUtils::singularPascalCase($value->constrain) . '::all() as $item2 )';
-                                    $template .= '<option '. $dataIds .' data-id="{{$item2->id}}" @selected( isset($item->' . $value->code . ') ? $item->' . $value->code . ' == "$item2->' . $value->attribute . '" : 0 )  value="{{ $item2->' . $value->attribute . '}}" >{{ $item2->' . $value->attribute . '}}</option>';
+                                    $template .= '<option ' . $dataIds . ' data-id="{{$item2->id}}" @selected( isset($item->' . $value->code . ') ? $item->' . $value->code . ' == "$item2->' . $value->attribute . '" : 0 )  value="{{ $item2->' . $value->attribute . '}}" >{{ $item2->' . $value->attribute . '}}</option>';
 
                                     $template .= '@endforeach';
                                     $template .= '</select>';
@@ -1559,7 +1612,7 @@ $template .= "@endif\n";
                                     field: $field->code,
                                     formatValue: $formatValue,
                                     label: $field->name,
-                                    source:$field->source
+                                    source: $field->source
                                 );
                                 break;
                         }
@@ -1637,7 +1690,7 @@ $template .= "@endif\n";
      * @param string $formatValue
      * @return string
      */
-    public function setInputTypeTemplate(string $field, array $request, string $model, string $formatValue, $date = 0, string $label = '',$source = null ): string
+    public function setInputTypeTemplate(string $field, array $request, string $model, string $formatValue, $date = 0, string $label = '', $source = null): string
     {
         if ($date == 1) {
             return str_replace(
