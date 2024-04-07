@@ -14,6 +14,8 @@
                         </div>
                         <div class="card-body pb-2">
                             <div class="row">
+                                @if(!empty($module->migration))
+
                                 <div class="col-sm-12 form-group">
                                     <label class="form-label" for="name">Name <span
                                             class="text-red">*</span></label>
@@ -21,6 +23,10 @@
                                         value="{{ $module->name }}">
                                     <input type="hidden" name="id" id="aid" value="">
                                 </div>
+                                @endif
+
+                                @if(!empty($module->migration))
+
 
                                 <div class="col-sm-12 form-group">
                                     <label class="form-label" for="name">Code <span
@@ -29,7 +35,8 @@
                                         value="{{ $module->code }}">
 
                                 </div>
-                                @if($module->migration)
+                                @endif
+                                @if(!empty($module->migration))
                                 <div class="col-sm-12 form-group">
                                     <label class="form-label" for="path">Path <span
                                             class="text-red">*</span></label>
@@ -54,6 +61,9 @@
                                     </label>
                                 </div>
 
+                                @if(!empty($module->migration))
+
+
                                 <div class="form-group col-sm-4">
                                     <label class="custom-switch form-label">
                                         <input type="checkbox" @checked($module->is_system) name="is_system"
@@ -62,6 +72,7 @@
                                         <span class="custom-switch-description">Global</span>
                                     </label>
                                 </div>
+                                @endif
                                 <div class="form-group col-sm-4">
                                     <label class="custom-switch form-label">
                                         <input type="checkbox" @checked($module->status) name="status" id="status"
@@ -71,6 +82,8 @@
                                             class="custom-switch-description">Status</span>
                                     </label>
                                 </div>
+                                @if(!empty($module->migration))
+
                                 <div class="col-sm-12 input-box">
                                     <label class="form-label"
                                         for="module">Type<span
@@ -88,6 +101,7 @@
                                    
 
                                 </div>
+                                @endif
                                 {{-- <div class="col-sm-12 form-group">
                             <label class="form-label" for="meta_title">Meta Title</label>
                             <input type="text" name="meta_title" class="form-control" value="">
