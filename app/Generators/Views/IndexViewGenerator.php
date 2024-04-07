@@ -574,7 +574,7 @@ class IndexViewGenerator
             GeneratorUtils::getTemplate('views/index')
         );
 
-        $modelName = $module->code;
+        // $modelName = $module->code;
 
         switch ($path) {
             case '':
