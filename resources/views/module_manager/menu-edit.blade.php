@@ -29,13 +29,14 @@
                                         value="{{ $module->code }}">
 
                                 </div>
-
+                                @if($module->migration)
                                 <div class="col-sm-12 form-group">
                                     <label class="form-label" for="path">Path <span
                                             class="text-red">*</span></label>
                                     <input type="text" readonly id="apath" class="form-control"
                                         value="{{ $module->menu->path }}">
                                 </div>
+                                @endif
 
                                 <div class="col-sm-12 form-group">
                                     <label class="form-label" for="path">Sidebar Name <span
