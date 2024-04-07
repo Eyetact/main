@@ -23,7 +23,53 @@ class FormViewGenerator
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
 
+        // $template = "<div class=\"row mb-2\">\n";
+
         $template = "<div class=\"row mb-2\">\n";
+        $template .= "@if($model->is_system && auth()->user()->hasAnyRole(['vendor', 'admin']) && !isset($(\$$modelNameSingularCamelCase)))\n";
+$template .= "<div class=\"form-group col-sm-8\">\n";
+$template .= "<label class=\"custom-switch form-label\">\n";
+$template .= "<input type=\"hidden\" name=\"global\" value=\"0\"> <!-- Hidden input as default value -->\n";
+$template .= "<input type=\"checkbox\" name=\"global\" value=\"1\" class=\"custom-switch-input\" id=\"global-1\"\n";
+$template .= "{{ isset($(\$$modelNameSingularCamelCase)) && $(\$$modelNameSingularCamelCase)->global == '1' ? 'checked' : '' }}";
+$template .= ">\n";
+$template .= "<span class=\"custom-switch-indicator\"></span>\n";
+$template .= "<span class=\"custom-switch-description\">Add to global data</span>\n";
+$template .= "</label>\n";
+$template .= "</div>\n";
+$template .= "@endif\n";
+
+
+$template .= "@if($model->is_system && auth()->user()->hasRole('super') && isset($(\$$modelNameSingularCamelCase)))\n";
+$template .= "<div class=\"col-md-12\">\n";
+$template .= "<div class=\"input-box\">\n";
+$template .= "<label for=\"status\">{{ __('Status') }}</label>\n";
+$template .= "@php\n";
+$template .= "$model = \App\Models\Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase('status'))\n";
+$template .= "->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase('status'))\n";
+$template .= "->first();\n";
+$template .= "$constrain_name = App\Generators\GeneratorUtils::singularSnakeCase('status');\n";
+$template .= "if ($model) {\n";
+$template .= "$for_attr = json_encode($model->fields()->select('code','attribute')->where('type', 'foreignId')->get());\n";
+$template .= "$for_attr = str_replace('\"', \"'\", $for_attr);\n";
+$template .= "}\n";
+$template .= "@endphp\n";
+$template .= "<select data-constrain=\"{{ $constrain_name }}\" data-source=\"Disable\" data-attrs={!! isset($for_attr) ? $for_attr : '' !!} class=\"google-input @error('status') is-invalid @enderror\" name=\"status\" id=\"status\" class=\"form-control\">\n";
+$template .= "<option value=\"\" selected disabled>-- {{ __('Select status') }} --</option>\n";
+$template .= "<option value=\"active\" {{ isset($(\$$modelNameSingularCamelCase)) && $(\$$modelNameSingularCamelCase)->status == 'active' ? 'selected' : ('inactive' == 'active' ? 'selected' : '') }}>active</option>\n";
+$template .= "<option value=\"inactive\" {{ isset($(\$$modelNameSingularCamelCase)) && $(\$$modelNameSingularCamelCase)->status == 'inactive' ? 'selected' : ('inactive' == 'inactive' ? 'selected' : '') }}>inactive</option>\n";
+$template .= "<option value=\"pending\" {{ isset($(\$$modelNameSingularCamelCase)) && $(\$$modelNameSingularCamelCase)->status == 'pending' ? 'selected' : ('inactive' == 'pending' ? 'selected' : '') }}>pending</option>\n";
+$template .= "</select>\n";
+$template .= "@error('status')\n";
+$template .= "<span class=\"text-danger\">\n";
+$template .= "{{ $message }}\n";
+$template .= "</span>\n";
+$template .= "@enderror\n";
+$template .= "</div>\n";
+$template .= "</div>\n";
+$template .= "@endif\n";
+
+
 
         if (!empty($request['fields'][0])) {
             foreach ($request['fields'] as $i => $field) {
@@ -794,7 +840,7 @@ class FormViewGenerator
                         }
                         break;
                     case 'foreignId':
-                        
+
                         // remove '/' or sub folders
                         $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
 
@@ -939,7 +985,7 @@ class FormViewGenerator
                                     [
                                         GeneratorUtils::cleanUcWords($field->name),
                                         str_replace('-','_',GeneratorUtils::kebabCase($field->name)),
-                                        
+
                                         $fieldSnakeCase,
                                         GeneratorUtils::cleanLowerCase($field->name),
                                         $options,
