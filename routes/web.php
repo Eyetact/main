@@ -68,6 +68,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('remove_attribute/{attribute}', 'destroy')->name('attribute.destroy');
         Route::post('/attribute/{attributeId}/updateStatus', 'updateStatus')->name('attribute.updateStatus');
         Route::get('/attribute-by-module/{module}', 'getAttrByModel')->name('attribute.get');
+        Route::get('/attribute-by-module2/{module}', 'getAttrByModel2')->name('attribute.get');
     });
 
     Route::controller(MenuManagerController::class)->group(function () {

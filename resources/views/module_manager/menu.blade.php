@@ -201,6 +201,9 @@
             /* padding-bottom: 7px; */
             line-height: 0;
         }
+        .swal2-container.swal2-center.swal2-backdrop-show {
+    z-index: 99999999;
+}
     </style>
 @endsection
 
@@ -548,7 +551,7 @@
 
 
                                                                             <select name="attr_id" class="google-input "
-                                                                                id="attr_id" required>
+                                                                                id="attr_id">
                                                                                 <option value="" selected>Select
                                                                                     Attribute</option>
 
@@ -654,7 +657,7 @@
 
                                                                                 <select name="mtype"
                                                                                     class="google-input module"
-                                                                                    id="mtype" required>
+                                                                                    id="mtype">
                                                                                     <option disabled value=""
                                                                                         selected>Select</option>
                                                                                     <option value="stander">Stander
@@ -728,6 +731,8 @@
     <script src="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
     <script src="{{ URL::asset('assets/js/sweet-alert.js') }}"></script>
     <script src="//code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         $(document).ready(function() {
 
@@ -736,7 +741,7 @@
 
                 var parent = $(this).parent().parent().parent().parent().find('#attr_id');
                 $.ajax({
-                    url: '{{ url('/') }}/attribute-by-module/' + id,
+                    url: '{{ url('/') }}/attribute-by-module2/' + id,
                     success: function(response) {
                         console.log(response);
                         // $('.child-drop').remove()
@@ -1130,33 +1135,51 @@
                     }
                 }
             });
+            
+            $("#moduleCreateSub").on("submit", function(event) {
+                if ($('#attr_id').val() <= 0) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "The parent module dos not have attribute ...",
+                        text: "Something went wrong!",
+                        footer: '<a href="{{ url('attribute') }}">Create ?</a>'
+                    });
+                   
+                    event.preventDefault();
 
-            $('#moduleCreateSub').validate({
-                rules: {
-                    module: {
-                        required: true,
-                    },
-                    name: {
-                        required: true,
-                    },
-                    code: {
-                        required: true,
-                    },
-                    path: {
-                        required: true,
-                    },
-                    attr_id: {
-                        required: true,
-
-                    },
-                    messages: {
-
-                        attr_id: "Please enter a valid email address",
-
-                    }
-                },
-
+                    return;
+                } else {
+                    $("#moduleCreateSub").submit()
+                }
+                event.preventDefault();
             });
+
+            // $('#moduleCreateSub').validate({
+            //     rules: {
+            //         module: {
+            //             required: true,
+            //         },
+            //         name: {
+            //             required: true,
+            //         },
+            //         code: {
+            //             required: true,
+            //         },
+            //         path: {
+            //             required: true,
+            //         },
+            //         attr_id: {
+            //             required: true,
+
+            //         },
+            //         messages: {
+
+            //             attr_id: "Please enter a valid email address",
+
+            //         }
+            //     },
+
+            // });
 
             $("#storfront_li").click(function() {
                 $("#admin_div").hide();

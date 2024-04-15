@@ -11,12 +11,13 @@
             </ol>
         </div>
         <div class="page-rightheader">
-        @can('create.{{modelNameSingularLowercase}}')
-       @php
-                    $model_id = App\Models\Permission::where('name', 'create.{{modelNameSingularLowercase}}')?->first()?->module;
+        @php
+                    $model_id = App\Models\Permission::where('name', 'create.{{code}}')?->first()?->module;
                     $model = App\Models\Module::find($model_id)
                     // dd($model_id);
                 @endphp
+        @can('create.{{code}}')
+       
                      @if (auth()->user()->checkAllowdByModelID($model_id))
                     <div class="btn btn-list">
                         <a id="add_new" class="btn btn-info" data-toggle="tooltip" title=""

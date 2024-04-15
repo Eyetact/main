@@ -337,6 +337,18 @@ class AttributeController extends Controller
         }
         return $options;
     }
+
+
+    public function getAttrByModel2(Module $module)
+    {
+        $attributes = Attribute::where('module', $module->id)->get();
+        $options = '<option disabled selected>-- select --</option>';
+
+        foreach ($attributes as $key => $value) {
+            $options .= '<option data-id="' . $value->id . '" value="' . $value->id . '" >' . $value->name . '</option>';
+        }
+        return $options;
+    }
     /**
      * Show the form for editing the specified resource.
      *

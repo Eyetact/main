@@ -396,15 +396,30 @@ class ModuleManagerController extends Controller
 
         // try {
         //     DB::beginTransaction();
+
+        $addable = $request->addable;
         $module = Module::create([
             'name' => $request->name,
-            'is_system' => 0,
+            'is_system' => isset($request->is_system) ? 1 : 0,
+            'shared' => isset($request->shared) ? 1 : 0,
+            'addable' => isset($request->addable) ? 1 : 0,
+            'is_sub' => 1,
             'code' => $request->code,
             'user_id' => auth()->user()->id,
             'parent_id' => $id,
             'migration' => $id,
 
         ]);
+
+        // dd( $request->all() );
+
+        if( ( !isset($request->shared) || $request->shared == 0 ) || $request->addable  ){
+            $attr = Attribute::find($request->attr_id);
+            $new_attr = $attr->replicate();
+            $new_attr->created_at = Carbon::now();
+            $new_attr->module = $module->id;
+            $new_attr->save();
+        }
 
         $this->generatorService->reGenerateFormWithSub($id); // sub
 
@@ -420,7 +435,7 @@ class ModuleManagerController extends Controller
 
 
 
-        if ($module) {
+        if ($module ) { 
 
             $menuParent = MenuManager::where('module_id', $id)->first()->id;
 
@@ -439,7 +454,7 @@ class ModuleManagerController extends Controller
             $createData = array(
                 'name' => $requestData['name'],
                 'module_id' => $module->id,
-                'include_in_menu' => 1,
+                'include_in_menu' => $addable ? 1 : 0, // add menu label for addable only
                 'menu_type' => $requestData['menu_type'],
                 'path' => $modelNamePluralLowercase,
                 'sequence' => $sequence,
@@ -466,26 +481,48 @@ class ModuleManagerController extends Controller
 
         // try {
         //     DB::beginTransaction();
+        $addable = $request->addable;
+
         $module = Module::create([
             'name' => $request->name,
             'is_system' => 0,
             'code' => $request->code,
+            'is_sub' => 1,
             'user_id' => auth()->user()->id,
             'parent_id' => $request->parent_id,
             'migration' => $request->parent_id,
 
         ]);
 
+        if( ( !isset($request->shared) || $request->shared == 0 ) || $request->addable  ){
+            $attr = Attribute::find($request->attr_id);
+            $new_attr = $attr->replicate();
+            $new_attr->created_at = Carbon::now();
+            $new_attr->module = $module->id;
+            $new_attr->save();
+        }
+
         $this->generatorService->reGenerateFormWithSub($request->parent_id); // sub
 
 
         $this->generatorService->generateModel($request->all()); // model
         $this->generatorService->generateMigration($request->all(), $module->id); // migration
-        Artisan::call('migrate'); // run php artisan mnigrate in background
         $this->generatorService->generateController($request->all()); // migration
         $this->generatorService->generateRequest($request->all()); // req
         $this->generatorService->generateRoute($request->all()); // route
         $this->generatorService->generateViews($request->all()); // views
+
+
+        // re create view for duplcate attr views
+        if( ( !isset($request->shared) || $request->shared == 0 ) || $request->addable  ){
+            $this->generatorService->reGenerateModel($module->id);
+            $this->generatorService->reGenerateMigration($module->id);
+            $this->generatorService->reGenerateController($module->id);
+            $this->generatorService->reGenerateRequest($module->id);
+            $this->generatorService->reGenerateViews($module->id);
+        }
+        
+        Artisan::call("migrate");
         $this->generatorService->generatePermission($request->all(), $module->id);
 
 
@@ -509,7 +546,7 @@ class ModuleManagerController extends Controller
             $createData = array(
                 'name' => $requestData['name'],
                 'module_id' => $module->id,
-                'include_in_menu' => 1,
+                'include_in_menu' => $addable ? 1 : 0, // add menu label for addable only
                 'menu_type' => $requestData['menu_type'],
                 'path' => $modelNamePluralLowercase,
                 'sequence' => $sequence,
