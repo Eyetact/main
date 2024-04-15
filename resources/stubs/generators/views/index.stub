@@ -12,11 +12,12 @@
         </div>
         <div class="page-rightheader">
         @php
-                    $model_id = App\Models\Permission::where('name', 'create.{{code}}')?->first()?->module;
+                    $model_id = App\Models\Permission::where('name', 'create.{{modelNameSingularLowercase}}')
+                    ->orWhere('name', 'create.{{code}}')?->first()?->module;
                     $model = App\Models\Module::find($model_id)
                     // dd($model_id);
                 @endphp
-        @can('create.{{code}}')
+        @canany(['create.{{code}}','create.{{modelNameSingularLowercase}}'])
        
                      @if (auth()->user()->checkAllowdByModelID($model_id))
                     <div class="btn btn-list">
@@ -25,7 +26,7 @@
                     </div>
 
                 @endif
-            @endcan
+            @endcanany
         </div>
     </div>
     <!--End Page header-->
