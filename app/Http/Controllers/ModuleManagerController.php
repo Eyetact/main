@@ -486,13 +486,15 @@ class ModuleManagerController extends Controller
         $module = Module::create([
             'name' => $request->name,
             'is_system' => 0,
-            'code' => $request->code,
+            'code' => str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower())),
             'is_sub' => 1,
             'user_id' => auth()->user()->id,
             'parent_id' => $request->parent_id,
             'migration' => $request->parent_id,
 
         ]);
+        $request->code = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
+
 
         if( ( !isset($request->shared) || $request->shared == 0 ) || $request->addable  ){
             $attr = Attribute::find($request->attr_id);
