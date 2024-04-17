@@ -138,8 +138,11 @@
                             <li><a href="#sub" class=" fs-14" data-toggle="tab"> Subscriptions</a></li>
 
 
+
                             @if ($user->hasRole('super'))
                                 <li><a href="#admins" class=" fs-14" data-toggle="tab"> Admins</a></li>
+
+
                             @endif
 
                             @if ($user->hasRole('admin'))
@@ -148,6 +151,8 @@
 
                             @if ($user->hasRole('vendor'))
                                 <li><a href="#vendor" class=" fs-14" data-toggle="tab"> admin</a></li>
+                                <li><a href="#order" class=" fs-14" data-toggle="tab"> Orders</a></li>
+
                             @endif
                         </ul>
                     </div>
@@ -439,6 +444,40 @@
                                 </div>
                             </div>
                         </div>
+
+
+
+
+                        <div class="tab-pane" id="order">
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Data</div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered text-nowrap" id="orders_table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="100px">No.</th>
+                                                    <th>Mixture_id</th>
+                                                    <th>Mixture Name</th>
+                                                    <th>{{ __('Created At') }}</th>
+                                                    <th>{{ __('Updated At') }}</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
                     @endif
                 </div>
             </div>
@@ -565,6 +604,54 @@
 
         table.buttons().container()
             .appendTo('#admins_table_wrapper .col-md-6:eq(0)');
+
+
+            var table = $('#orders_table').DataTable({
+            processing: true,
+            serverSide: true,
+            lengthChange: false,
+            // dom: 'lBftrip',
+            // buttons: ['copy', 'excel', 'pdf', 'colvis'],
+            responsive: true,
+            language: {
+                searchPlaceholder: 'Search...',
+                sSearch: '',
+                lengthMenu: '_MENU_ ',
+            },
+            ajax: "{{ route('users.myorders') }}",
+
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'mixture_id',
+                    name: 'mixture_id'
+                },
+                {
+                    data: 'mixture',
+                    name: 'mixture'
+                },
+
+                {
+                    data: 'created_at',
+                    name: 'created_at'
+                },
+                {
+                    data: 'updated_at',
+                    name: 'updated_at'
+                },
+
+
+            ]
+        });
+
+        // console.log(table.buttons().container());
+
+        // table.buttons().container()
+        //     .appendTo('#orders_table_wrapper .col-md-6:eq(0)');
 
 
         $(document).ready(function() {

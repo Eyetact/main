@@ -52,12 +52,12 @@ class ComponentController extends ApiController
         $setCategories = [];
         $index = 1;
         foreach ($request->compo_category as $item) {
-            if (!isset ($item['name'])) {
+            if (!isset($item['name'])) {
                 return $this->returnError(__('Invalid category name.'));
             }
 
             $setCategories[$index] = [
-                'id'=> $item['id'],
+                'id' => $item['id'],
                 'name' => $item['name'],
                 'minimum' => $item['minimum'],
                 'maximum' => $item['maximum'],
@@ -93,7 +93,7 @@ class ComponentController extends ApiController
                     'name' => $model->compo_name,
                 ];
 
-                if (!is_array($newComponent) || empty ($newComponent['name'])) {
+                if (!is_array($newComponent) || empty($newComponent['name'])) {
                     return $this->returnError(__('Invalid component data.'));
                 }
 
@@ -137,7 +137,7 @@ class ComponentController extends ApiController
                 $set->user_id = auth()->user()->id;
                 $set->save();
 
-                $machine->components_set_id =  $set->id;
+                $machine->components_set_id = $set->id;
                 $machine->save();
 
 
@@ -178,12 +178,12 @@ class ComponentController extends ApiController
             $model->compo_carrier = $request->compo_carrier;
 
 
-            if (isset ($request->compo_category)) {
+            if (isset($request->compo_category)) {
 
                 $setCategories = [];
                 $index = 1;
                 foreach ($request->compo_category as $item) {
-                    if (!isset ($item['name'])) {
+                    if (!isset($item['name'])) {
                         return $this->returnError(__('Invalid category name.'));
                     }
 
@@ -205,7 +205,7 @@ class ComponentController extends ApiController
 
 
 
-            if (isset ($request['name'])) {
+            if (isset($request['name'])) {
 
                 $component_set = ComponentsSet::where('main_part_id', $model->main_part_id)
                     ->where('user_id', auth()->user()->id)
@@ -256,7 +256,7 @@ class ComponentController extends ApiController
         $components = Component::where('main_part_id', $machine->main_part_id)
             ->where(function ($query) use ($machine) {
                 $query->where('customer_id', auth()->user()->id)
-                      ->orWhere('global', 1)
+                    ->orWhere('global', 1)
                     ->orWhere('user_id', auth()->user()->id)
                     ->orWhere('assign_id', auth()->user()->id);
 
@@ -275,7 +275,7 @@ class ComponentController extends ApiController
     public function elements()
     {
 
-              $elements = Element::all();
+        $elements = Element::all();
 
 
 
@@ -288,10 +288,44 @@ class ComponentController extends ApiController
         $model = $this->repositry->getByID($id);
 
         if ($model) {
-            return $this->returnData('data', new ComponentDataResource( $model ), __('Get  succesfully'));
+            return $this->returnData('data', new ComponentDataResource($model), __('Get  succesfully'));
         }
 
         return $this->returnError(__('Sorry! Failed to get !'));
+    }
+
+
+    public function getComponentsByCategory(Request $request)
+    {
+
+        $machine = Software::find($request->machine_id);
+
+        $componentSetId = $machine->components_set_id;
+        $catId = $request->category_id;
+        $components = collect([]);
+
+        if ($componentSetId) {
+            $components_set = ComponentsSet::find($componentSetId);
+
+            if ($components_set) {
+                $set_component = json_decode($components_set->set_component);
+                $componentsId = collect($set_component)->pluck('id');
+
+                foreach ($componentsId as $componentId) {
+                    $component = Component::find($componentId);
+                    $compo_category = json_decode($component->compo_category, true);
+                    $compo_category_collection = collect($compo_category)->pluck('id');
+
+                    if ($compo_category_collection->contains($catId)) {
+                        // if ($compo_category_collection->contains($catId) && !$components->contains('id', $componentId)) {
+                        $components->push($component);
+                    }
+                }
+                return $this->returnData('data', ComponentResource::collection($components), __('Get successfully'));
+
+            }
+        }
+
     }
 
 }

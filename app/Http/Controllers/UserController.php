@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin\Software;
 use App\Models\CustomerGroup;
+use App\Models\Order;
 use App\Models\UCGroup;
 use App\Models\UserGroup;
 use App\Models\Plan;
@@ -245,6 +247,27 @@ class UserController extends Controller
     }
 
 
+    public function myOrders()
+    {
+        if (request()->ajax()) {
+
+            $software_id= Software::where('customer_id',auth()->user()->id)->first();
+            $orders=Order::where('software_id', $software_id->id)->get();
+
+            return datatables()->of( $orders)
+
+
+            ->addColumn('mixture', function ($row) {
+                return $row->mixture_id ? $row->mixture->mix_name : '';})
+
+                ->rawColumns(['mixture'])
+
+                ->addIndexColumn()
+                ->make(true);
+        }
+
+    }
+
 
 
     /**
@@ -314,15 +337,15 @@ class UserController extends Controller
                 case 'admin':
                     return redirect()->route('users.admins');
                     break;
-    
+
                 case 'vendor':
                     return redirect()->route('users.vendors');
                     break;
                 case 'user':
                     return redirect()->route('users.users');
                     break;
-    
-    
+
+
             }
             return redirect()->route('module_manager.index');
         }

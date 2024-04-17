@@ -70,6 +70,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('component/delete/{id}', [ComponentController::class, 'delete']);
     Route::post('component/edit/{id}', [ComponentController::class, 'edit']);
 
+    //get components by category
+    Route::post('get-components-by-category', [ComponentController::class, 'getComponentsByCategory']);
+
+
 
     //mixtures
     Route::get('mixtures/{id}', [MixtureController::class, 'mixtures']);
@@ -78,6 +82,15 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('mixture/{id}', [MixtureController::class, 'view']);
     Route::get('mixture/delete/{id}', [MixtureController::class, 'delete']);
     Route::post('mixture/edit/{id}', [MixtureController::class, 'edit']);
+
+
+    //get mix by category
+
+    Route::post('get-mixtures-by-category', [MixtureController::class, 'getMixByCategory']);
+
+
+    //make order
+    Route::post('make-order', [MixtureController::class, 'makeOrder']);
 
 
     //elements

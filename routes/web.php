@@ -156,6 +156,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('add-sub-post', 'storeSubPost')->name('module_manager.storSubPost');
     });
     Route::get('/myadmins/{user_id}', [UserController::class, 'myAdmins'])->name('users.myadmins');
+
+    //orders
+    Route::get('/myorders', [UserController::class, 'myOrders'])->name('users.myorders');
+
     Route::get('/vendors', [UserController::class, 'vendors'])->name('users.vendors');
     Route::get('/admins', [UserController::class, 'admins'])->name('users.admins');
     Route::get('/users', [UserController::class, 'users'])->name('users.users');

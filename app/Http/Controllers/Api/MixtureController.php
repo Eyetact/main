@@ -6,6 +6,7 @@ use App\Http\Resources\MixtureDataResource;
 use App\Models\Admin\ComponentsSet;
 use App\Models\Admin\Mixture;
 use App\Models\Admin\Software;
+use App\Models\Order;
 use App\Models\SoftMixture;
 use Illuminate\Http\Request;
 use App\Repositories\Repository;
@@ -161,6 +162,40 @@ class MixtureController extends ApiController
         }
 
         return $this->returnError(__('Sorry! Failed to get !'));
+    }
+
+
+
+    public function getMixByCategory(Request $request)
+    {
+
+
+        $machine = Software::find($request->machine_id);
+
+        $mixtures = $machine->mixtures->where('components_set_id', $machine->components_set_id)
+                                      ->where('category_id',$request->category_id)
+                                      ->get();
+                                    //   ->unique();
+
+
+
+
+        return $this->returnData('data', MixtureDataResource::collection($mixtures), __('Get successfully'));
+
+    }
+
+    public function makeOrder(Request $request)
+    {
+
+
+       $order= new Order();
+       $order->software_id = $request->machine_id;
+       $order->mixture_id = $request->mixture_id;
+       $order->save();
+
+
+       return $this->returnSuccessMessage('Done');
+
     }
 
 
