@@ -177,6 +177,8 @@ class MixtureController extends ApiController
                                       ->get();
                                     //   ->unique();
 
+                                    dd($mixtures);
+
 
 
 
