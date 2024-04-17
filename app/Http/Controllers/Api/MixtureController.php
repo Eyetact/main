@@ -173,9 +173,9 @@ class MixtureController extends ApiController
         $machine = Software::find($request->machine_id);
 
 
-        dd($machine->mixtures);
 
-        $mixtures = $machine->mixtures->where('components_set_id', $machine->components_set_id)
+
+        $mixtures = $machine->mixtures()->where('components_set_id', $machine->components_set_id)
                                       ->where('category_id',$request->category_id)
                                       ->get();
                                     //   ->unique();
