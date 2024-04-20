@@ -184,7 +184,22 @@ class CategoryController extends ApiController
                 }
             }
 
-            return $this->returnData('data', ['categories' => $categories], __('Get successfully'));
+            $categoriesWithImages = [];
+
+            foreach ($categories as $categoryId) {
+                $categoryObject = Category::find($categoryId['id']);
+
+                if ($categoryObject) {
+                    $categoryId['category_image'] = $categoryObject->category_image;
+                }
+
+                $categoriesWithImages[] = $categoryId;
+            }
+
+            // dd($categoriesWithImages);
+
+
+            return $this->returnData('data', ['categories' => $categoriesWithImages], __('Get successfully'));
         }
         if ($request->name == "components") {
 
@@ -192,6 +207,7 @@ class CategoryController extends ApiController
             $machine = Software::find($request->machine_id);
             $components_set = ComponentsSet::find($machine->components_set_id);
 
+            $descriptions = [];
             $components = collect([]);
 
             if( $components_set){
@@ -199,15 +215,28 @@ class CategoryController extends ApiController
             $componentIds = collect($set_component)->pluck("id");
 
 
+
             foreach ($componentIds as $componentId) {
                 $component = Component::find($componentId);
                 if ($component) {
+
+                      // Access the description from the JSON object
+                      $description = collect($set_component)->firstWhere('id', $componentId)->describtion;
+                      $descriptions[$componentId] = $description;
+
                     $components->push($component);
                 }
             }
 
 
         }
+
+
+            // Add descriptions to the component objects
+    $components = $components->map(function ($component) use ($descriptions) {
+        $component->description = $descriptions[$component->id] ?? null;
+        return $component;
+    });
 
             return $this->returnData('data', ComponentResource::collection($components), __('Get successfully'));
         }
@@ -231,3 +260,4 @@ class CategoryController extends ApiController
     }
 
 }
+

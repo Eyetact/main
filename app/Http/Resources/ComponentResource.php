@@ -20,6 +20,7 @@ class ComponentResource extends JsonResource
             'name' => $this->compo_name,
             'categories'=>json_decode($this->compo_category, true),
             'concentration' => $this->compo_concentration,
+            'description' => $this->description, // Include the description field
 
 
         ];
