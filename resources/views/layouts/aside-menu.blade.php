@@ -135,6 +135,9 @@
         @endphp
 
 
+@php
+dd($side_menus);
+@endphp
         @foreach ($side_menus as $item)
             {{-- @php
             echo json_encode($item->childrens(),true)
