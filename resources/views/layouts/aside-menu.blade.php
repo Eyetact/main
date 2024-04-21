@@ -141,7 +141,7 @@
             echo json_encode($item->childrens(),true)
         @endphp --}}
             @php
-            if($item->module->code){
+
                 $pers = [];
                 array_push(
                     $pers,
@@ -150,7 +150,7 @@
                             ->singular()
                             ->lower(),
                 );
-            }
+
             @endphp
             @foreach ($item->childrens() as $item2)
                 @php
