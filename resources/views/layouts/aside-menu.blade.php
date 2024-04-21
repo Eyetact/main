@@ -136,7 +136,7 @@
 
 
 @php
-dd($side_menus);
+echo $side_menus;
 @endphp
         @foreach ($side_menus as $item)
             {{-- @php
