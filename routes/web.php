@@ -446,6 +446,43 @@ Route::get('/get-components-by-category/{category_id}/{cset_id}', function ($cat
     }
 })->name('get-components-by-category');
 
+
+
+Route::get('/get-max-min/{component_id}/{category_id}', function ($component_id, $category_id) {
+    $componentId = $component_id;
+    $categoryId = $category_id;
+
+    if ($categoryId) {
+        $category_values = App\Models\Admin\Component::where('id', $componentId)->first();
+
+        $compo_category = json_decode($category_values->compo_category, true);
+        // dd( $compo_category);
+
+        $compo_category = array_combine(
+            array_map('intval', array_keys($compo_category)),
+            array_values($compo_category)
+        );
+
+        foreach ($compo_category as $item) {
+            if (isset($item['id']) && $item['id'] == $categoryId) {
+                $minimum = $item['minimum'];
+                $maximum = $item['maximum'];
+                $default = $item['default'];
+
+                return response()->json([
+                    'minimum' => $minimum,
+                    'maximum' => $maximum,
+                    'default' => $default,
+                ]);
+            }
+        }
+    }
+
+
+
+    return response()->json([]);
+})->name('get-mixman');
+
 // Route::get('/get-components-by-category/{category_id}/{cset_id}', function ($category_id,$cset_id) {
 //     try {
 //         $componentSetId = $cset_id;
@@ -496,6 +533,9 @@ Route::get('/get-components-by-category/{category_id}/{cset_id}', function ($cat
 
 //     return response()->json($components);
 // })->name('get-compos');
+
+
+
 
 Route::get(
     'searchtargetfromsource/{main_model}/{main_model_id}/{for_key_attr_name}/{target_result_attr}',
