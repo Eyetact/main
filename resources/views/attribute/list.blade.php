@@ -469,7 +469,17 @@
         })
 
 
+        $(document).on('change', 'select[name=attribute]', function() {
 
+                 var selectedValue = $('.lookup-drop').val();
+                    var modifiedValue = selectedValue +'_'+ $(this).val() + '_id';
+                    // alert(modifiedValue);
+
+                    $('.input-code').val(modifiedValue);
+                    $('.input-code').prop('readonly', true);
+
+
+        });
         $(document).on('change', '.lookup-drop', function() {
             var id = $(this).find(':selected').data('id');
 

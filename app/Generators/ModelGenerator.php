@@ -18,7 +18,7 @@ class ModelGenerator
 
         $path = GeneratorUtils::getModelLocation($request['name']);
         $model = GeneratorUtils::setModelName($request['name']);
-        
+
         $modelName = GeneratorUtils::setModelName($request['code']);
 
         $fields = "[";
@@ -136,7 +136,7 @@ class ModelGenerator
                         break;
                 }
 
-                
+
 
                 switch ($request['input_types'][$i]) {
                     case 'month':
@@ -351,7 +351,7 @@ class ModelGenerator
                     $constrainPath = GeneratorUtils::getModelLocation($field->constrain);
                     $constrainName = GeneratorUtils::setModelName($field->constrain);
 
-                    $foreign_id = isset($field->foreign_ids) ? ", '" . $field->foreign_ids . "'" : '';
+                    $foreign_id = ' ,"' .$field->code . '"';
 
                     if ($i > 0) {
                         $relations .= "\t";
@@ -363,16 +363,16 @@ class ModelGenerator
                         $constrainPath = "\\App\\Models\Admin\\$constrainName";
                     }
 
-                    $relations .= "\n\tpublic function " . str()->snake($constrainName) . "()\n\t{\n\t\treturn \$this->belongsTo(" . $constrainPath . "::class" . $foreign_id . ");\n\t}";
+                    $relations .= "\n\tpublic function " . str()->snake($constrainName). "_" .str()->snake($field->attribute) . "()\n\t{\n\t\treturn \$this->belongsTo(" . $constrainPath . "::class" . $foreign_id . ");\n\t}";
 
                     break;
                 case 'assign':
-                    
+
                     break;
 
             }
 
-            
+
 
             switch ($field->input) {
                 case 'month':

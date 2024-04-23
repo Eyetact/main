@@ -18,7 +18,7 @@
                     // dd($model_id);
                 @endphp
         @canany(['create.{{code}}','create.{{modelNameSingularLowercase}}'])
-       
+
                      @if (auth()->user()->checkAllowdByModelID($model_id))
                     <div class="btn btn-list">
                         <a id="add_new" class="btn btn-info" data-toggle="tooltip" title=""
@@ -470,10 +470,19 @@ output {
 
                 $.each(obj, function(key, value) {
                     $e_string = value.code;
+                    $e_string2 = value.attribute;
                     $e_id = $e_string.split('_')
                     console.log('id : ' + '#' + $e_string)
                     console.log('source : ' + $('[name=' + $e_string + ']').data('source'))
-                    if ($('[name=' + $e_string + ']').data('source') == main_model) {
+
+                    $tag_source = '';
+                    if( $('[name=' + $e_string + ']').data('source') != undefined){
+                        $tag_source = $('[name=' + $e_string + ']').data('source');
+                    }else{
+                        $tag_source = $('[name=' + $e_id[0] + '_' + $e_string2 + '_' + $e_id[1] + ']').data('source');
+                    }
+
+                    if ($tag_source == main_model) {
 
                         console.log(key + ": " + $e_id[0]);
 
@@ -487,11 +496,17 @@ output {
                             url: path,
                             success: function(response) {
                                 console.log(response);
-                                $('select[name=' + response.id + ']').find('option').hide();
-                                $('select[name=' + response.id + ']').find('option[value=' + response.data_id + ']').prop('selected', true).show();
-                                $('input[name=' + response.id + ']').val(response.data)
-
-                                $('[name=' + response.id + ']').prop('readOnly', true);
+                                if( $('[name=' + $e_string + ']').data('source') != undefined){
+                                    $('select[name=' + response.id + ']').find('option').hide();
+                                    $('select[name=' + response.id + ']').find('option[value=' + response.data_id + ']').prop('selected', true).show();
+                                    $('input[name=' + response.id + ']').val(response.data)
+                                    $('[name=' + response.id + ']').prop('readOnly', true);
+                                }else{
+                                    $('select[name=' + $e_id[0] + '_' + $e_string2 + '_' + $e_id[1] + ']').find('option').hide();
+                                    $('select[name=' + $e_id[0] + '_' + $e_string2 + '_' + $e_id[1] + ']').find('option[value=' + response.data_id + ']').prop('selected', true).show();
+                                    $('input[name=' + $e_id[0] + '_' + $e_string2 + '_' + $e_id[1] + ']').val(response.data)
+                                    $('[name=' + $e_id[0] + '_' + $e_string2 + '_' + $e_id[1] + ']').prop('readOnly', true);
+                                }
 
                             }
                         });

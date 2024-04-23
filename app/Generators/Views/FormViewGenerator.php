@@ -917,9 +917,10 @@ class FormViewGenerator
 
                             $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->get();
 
+
                             foreach ($lookatrrs as $sa) {
                                 $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$" . $constrainSingularCamelCase . "->" . $sa->code . "}}\"";
-
+                                // $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$" . $constrainSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($sa->constrain). "_" .str()->snake($sa->attribute)  . "_id" . "}}\"";
                             }
                         }
 
@@ -968,14 +969,16 @@ class FormViewGenerator
                                         '{{source}}'
                                     ],
                                     [
-                                        str_replace('-', '_', GeneratorUtils::singularKebabCase($field->name)),
+
+                                        explode('_',str_replace('-', '_', GeneratorUtils::singularKebabCase($field->code)))[0],
+
                                         GeneratorUtils::cleanSingularUcWords($field->name),
                                         GeneratorUtils::cleanSingularLowerCase($constrainModel),
                                         $options,
                                         $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
                                         $fieldSnakeCase,
                                         '',
-                                        $field->source
+                                        explode('_',$field->source)[0]
 
                                     ],
                                     GeneratorUtils::getTemplate('views/forms/select')
@@ -1307,6 +1310,7 @@ class FormViewGenerator
 
                                         foreach ($lookatrrs as $sa) {
                                             $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "={{ \$item2->" . $sa->code . "}}";
+
                                         }
                                     }
 
