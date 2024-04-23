@@ -272,6 +272,8 @@ class ModuleManagerController extends Controller
         $this->generatorService->reGenerateController($request['module']);
         $this->generatorService->reGenerateRequest($request['module']);
         $this->generatorService->reGenerateViews($request['module']);
+        $this->generatorService->reGenerateFormWithSub($request['module']); // sub
+
         Artisan::call("optimize:clear");
         try {
             $this->generatorService->reGeneratePermission($request['module']);
@@ -413,7 +415,7 @@ class ModuleManagerController extends Controller
 
         // dd( $request->all() );
 
-        if( ( !isset($request->shared) || $request->shared == 0 ) || $request->addable  ){
+        if ((!isset($request->shared) || $request->shared == 0) || $request->addable) {
             $attr = Attribute::find($request->attr_id);
             $new_attr = $attr->replicate();
             $new_attr->created_at = Carbon::now();
@@ -435,7 +437,7 @@ class ModuleManagerController extends Controller
 
 
 
-        if ($module ) { 
+        if ($module) {
 
             $menuParent = MenuManager::where('module_id', $id)->first()->id;
 
@@ -478,10 +480,13 @@ class ModuleManagerController extends Controller
 
     public function storeSubPost(Request $request)
     {
+        // dd(!isset($request->shared));
+        // dd($request->all());
 
         // try {
         //     DB::beginTransaction();
-        $addable = $request->addable;
+
+
 
         $module = Module::create([
             'name' => $request->name,
@@ -491,41 +496,78 @@ class ModuleManagerController extends Controller
             'user_id' => auth()->user()->id,
             'parent_id' => $request->parent_id,
             'migration' => $request->parent_id,
+            'shared' => isset($request->shared) ? 1 : 0,
+            'addable' => isset($request->addable) ? 1 : 0,
 
         ]);
         $request->code = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
+        
+        
+        //default sub
+        if (!isset($request->shared)) {
 
+            $constrain = Module::find($request->parent_id);
+            $constrainAtrr = Attribute::find($request->attr_id);
+            $lookUpAttr = [
 
-        if( ( !isset($request->shared) || $request->shared == 0 ) || $request->addable  ){
-            $attr = Attribute::find($request->attr_id);
-            $new_attr = $attr->replicate();
-            $new_attr->created_at = Carbon::now();
-            $new_attr->module = $module->id;
-            $new_attr->save();
+                'module' => $module->id,
+                'name' => $constrain->name,
+                'type' => "foreignId",
+                'min_length' => null,
+                'max_length' => null,
+                'steps' => null,
+                'input' => "select",
+                'required' => 'yes',
+                'default_value' => null,
+                'select_option' => null,
+                'constrain' => $constrain->code,
+                'on_update_foreign' => "1",
+                'on_delete_foreign' => "1",
+                'is_enable' => 1,
+                'is_system' => 0,
+                'is_multi' => 0, //for multi select
+                'max_size' => null,
+                'file_type' => null,
+                'source' => null,
+                'target' => null,
+                'code' => $constrain->code . "_id",
+                'attribute' => $constrainAtrr->code,
+                'user_id' => auth()->user()->id,
+            ];
+
+            $attribute = Attribute::create($lookUpAttr);
         }
 
+
+        // if( ( !isset($request->shared) || $request->shared == 0 ) || $request->addable  ){
+        //     $attr = Attribute::find($request->attr_id);
+        //     $new_attr = $attr->replicate();
+        //     $new_attr->created_at = Carbon::now();
+        //     $new_attr->module = $module->id;
+        //     $new_attr->save();
+        // }
+
         $this->generatorService->reGenerateFormWithSub($request->parent_id); // sub
-
-
         $this->generatorService->generateModel($request->all()); // model
         $this->generatorService->generateMigration($request->all(), $module->id); // migration
         $this->generatorService->generateController($request->all()); // migration
         $this->generatorService->generateRequest($request->all()); // req
         $this->generatorService->generateRoute($request->all()); // route
         $this->generatorService->generateViews($request->all()); // views
+        $this->generatorService->generatePermission($request->all(), $module->id);
 
 
         // re create view for duplcate attr views
-        if( ( !isset($request->shared) || $request->shared == 0 ) || $request->addable  ){
+        if ((!isset($request->shared)) || $request->addable) {
             $this->generatorService->reGenerateModel($module->id);
             $this->generatorService->reGenerateMigration($module->id);
             $this->generatorService->reGenerateController($module->id);
             $this->generatorService->reGenerateRequest($module->id);
             $this->generatorService->reGenerateViews($module->id);
+            $this->generatorService->reGeneratePermission($module->id);
         }
-        
+
         Artisan::call("migrate");
-        $this->generatorService->generatePermission($request->all(), $module->id);
 
 
 
@@ -548,7 +590,7 @@ class ModuleManagerController extends Controller
             $createData = array(
                 'name' => $requestData['name'],
                 'module_id' => $module->id,
-                'include_in_menu' => $addable ? 1 : 0, // add menu label for addable only
+                'include_in_menu' => isset($request->shared) ? ( isset($request->addable) ? 1 : 0 ) : 1,
                 'menu_type' => $requestData['menu_type'],
                 'path' => $modelNamePluralLowercase,
                 'sequence' => $sequence,

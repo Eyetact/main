@@ -19,7 +19,9 @@ class Module extends Model
         'migration',
         'is_delete',
         'type',
-        'status'
+        'status',
+        'shared',
+        'addable'
 
     ];
 

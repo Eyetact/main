@@ -491,7 +491,7 @@
                                                                             <label class="custom-switch form-label ">
                                                                                 <input type="checkbox"
                                                                                     class="custom-switch-input"
-                                                                                    id="shared">
+                                                                                    id="shared" name="shared">
                                                                                 <span
                                                                                     class="custom-switch-indicator"></span>
                                                                                 <span
@@ -504,7 +504,7 @@
                                                                             <label class="custom-switch form-label ">
                                                                                 <input type="checkbox"
                                                                                     class="custom-switch-input"
-                                                                                    id="addable">
+                                                                                    id="addable" name="addable">
                                                                                 <span
                                                                                     class="custom-switch-indicator"></span>
                                                                                 <span

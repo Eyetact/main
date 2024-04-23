@@ -35,7 +35,7 @@ class MenuManager extends Model
 
     public function childrens()
     {
-        return $this->children()->where('is_delete',0)->orderBy('sequence', 'asc')->get();
+        return $this->children()->where('is_delete',0)->where('include_in_menu', 1)->orderBy('sequence', 'asc')->get();
     }
 
     public function parent()
