@@ -17,7 +17,7 @@ class ShowViewGenerator
     {
         $model = GeneratorUtils::setModelName($request['name'], 'default');
         $path = GeneratorUtils::getModelLocation($request['name']);
-        
+
         $request['code'] = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
         $code = GeneratorUtils::setModelName($request['code'], 'default');
 
@@ -197,7 +197,7 @@ class ShowViewGenerator
 
                         $trs .= "<tr>
                                         <td class=\"fw-bold\">{{ __('" . GeneratorUtils::cleanSingularUcWords($constrainModel) . "') }}</td>
-                                        <td>{{ $" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . " ? $" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "->" . $field->attribute . " : '' }}</td>
+                                        <td>{{ $" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel). "_" .str()->snake($field->attribute)  . " ? $" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel). "_" .str()->snake($field->attribute) . "->" . $field->attribute . " : '' }}</td>
                                     </tr>";
                         break;
                     case 'date':

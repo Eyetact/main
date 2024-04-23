@@ -22,7 +22,7 @@ class WebControllerGenerator
 
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($model);
         $modelNamePluralCamelCase = GeneratorUtils::pluralCamelCase($model);
-        
+
         $code = GeneratorUtils::setModelName($request['code'], 'default');
 
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
@@ -254,7 +254,9 @@ class WebControllerGenerator
                     if ($field->constrain != null) {
                         $constrainName = GeneratorUtils::setModelName($field->constrain);
 
-                        $constrainSnakeCase = GeneratorUtils::singularSnakeCase($constrainName);
+                        $columnsk = GeneratorUtils::singularSnakeCase($constrainName);
+                        $constrainSnakeCase = str()->snake($constrainName). "_" .str()->snake($field->attribute);
+
                         $selectedColumns =  'id,'. $field->attribute;
                         $columnAfterId = $field->attribute;
 

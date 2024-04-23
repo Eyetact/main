@@ -28,8 +28,8 @@ class IndexViewGenerator
         // dd($request['code']);
         $code = GeneratorUtils::setModelName($request['code'], 'default');
         $modelName = GeneratorUtils::pluralKebabCase($code);
-        
-        
+
+
 
 
         $modelNamePluralUcWords = GeneratorUtils::cleanPluralUcWords($model);
@@ -519,8 +519,8 @@ class IndexViewGenerator
                      * }
                      */
                     $tdColumns .= "{
-                    data: \"" . GeneratorUtils::singularSnakeCase($constrainModel) . "\",
-                    name: \"" . GeneratorUtils::singularSnakeCase($constrainModel) . "." . $field->attribute . "\"
+                    data: \"" . GeneratorUtils::singularSnakeCase($constrainModel). "_" .str()->snake($field->attribute)  . "\",
+                    name: \"" . GeneratorUtils::singularSnakeCase($constrainModel). "_" .str()->snake($field->attribute)   . "." . $field->attribute . "\"
                 },";
                 } else {
                     /**
