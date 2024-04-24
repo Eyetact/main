@@ -806,7 +806,8 @@ class FormViewGenerator
                                         '{{options}}',
                                         '{{nullable}}',
                                         '{{multiple}}',
-                                        '{{source}}'
+                                        '{{source}}',
+                                        '{{multiple2}}'
                                     ],
                                     [
                                         $fieldUcWords,
@@ -816,7 +817,8 @@ class FormViewGenerator
                                         $options,
                                         $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
                                         $multiple,
-                                        $field->source
+                                        $field->source,
+                                        ''
                                     ],
                                     GeneratorUtils::getTemplate('views/forms/select')
                                 );
@@ -923,13 +925,23 @@ class FormViewGenerator
                                 // $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$" . $constrainSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($sa->constrain). "_" .str()->snake($sa->attribute)  . "_id" . "}}\"";
                             }
                         }
+if($field->multiple > 0){
+    $options = "
+    @foreach (\$look_" . GeneratorUtils::pluralCamelCase($constrainModel) . " as $$constrainSingularCamelCase)
+        <option    $dataIds  value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && in_array($" . $constrainSingularCamelCase . "->id, $" . $modelNameSingularCamelCase . "->".str_replace('_id','',$fieldSnakeCase)."()->pluck('id')->toArray())  ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
+            {{ $" . $constrainSingularCamelCase . "->$columnAfterId }}
+        </option>
+    @endforeach";
+}else{
 
-                        $options = "
-                        @foreach (\$look_" . GeneratorUtils::pluralCamelCase($constrainModel) . " as $$constrainSingularCamelCase)
-                            <option    $dataIds  value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == $" . $constrainSingularCamelCase . "->id ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
-                                {{ $" . $constrainSingularCamelCase . "->$columnAfterId }}
-                            </option>
-                        @endforeach";
+    $options = "
+    @foreach (\$look_" . GeneratorUtils::pluralCamelCase($constrainModel) . " as $$constrainSingularCamelCase)
+        <option    $dataIds  value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == $" . $constrainSingularCamelCase . "->id ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
+            {{ $" . $constrainSingularCamelCase . "->$columnAfterId }}
+        </option>
+    @endforeach";
+
+}
 
                         switch ($field->input) {
                             case 'datalist':
@@ -966,7 +978,8 @@ class FormViewGenerator
                                         '{{nullable}}',
                                         '{{fieldSnakeCase}}',
                                         '{{multiple}}',
-                                        '{{source}}'
+                                        '{{source}}',
+                                        '{{multiple2}}'
                                     ],
                                     [
 
@@ -977,8 +990,10 @@ class FormViewGenerator
                                         $options,
                                         $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
                                         $fieldSnakeCase,
-                                        '',
-                                        explode('_',$field->source)[0]
+                                        ($field->multiple > 0) ? 'multiple' : '',
+                                        explode('_',$field->source)[0],
+                                        ($field->multiple > 0) ? '[]' : '',
+
 
                                     ],
                                     GeneratorUtils::getTemplate('views/forms/select')

@@ -58,6 +58,12 @@ class GeneratorService
         (new MigrationGenerator)->removeTable($id,);
     }
 
+    public function generateMultipleMigration($table_name,$id1, $id2): void
+    {
+        (new MigrationGenerator)->generateMultiple($table_name,$id1, $id2);
+    }
+
+
     public function generateController(array $request): void
     {
         (new WebControllerGenerator)->generate($request);

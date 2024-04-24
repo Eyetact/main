@@ -59,6 +59,7 @@ class ShowViewGenerator
                                     </tr>";
                             break;
                         case 'foreignId':
+
                             // remove '/' or sub folders
                             $constrainModel = GeneratorUtils::setModelName($request['constrains'][$i], 'default');
 
@@ -195,11 +196,44 @@ class ShowViewGenerator
                         // remove '/' or sub folders
                         $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
 
-                        $trs .= "<tr>
-                                        <td class=\"fw-bold\">{{ __('" . GeneratorUtils::cleanSingularUcWords($constrainModel) . "') }}</td>
-                                        <td>{{ $" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel). "_" .str()->snake($field->attribute)  . " ? $" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel). "_" .str()->snake($field->attribute) . "->" . $field->attribute . " : '' }}</td>
-                                    </tr>";
-                        break;
+
+                    // Define the variable $value
+
+
+
+
+                    $text = '';
+                    $value = '';
+
+                    $trs .= "<tr>
+                    <td class=\"fw-bold\">{{ __('" . GeneratorUtils::cleanSingularUcWords($constrainModel) . "') }}</td>
+                    @php
+                    \$text = '';
+                    \$value = '';
+                    if (!is_a(\$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . ", 'Illuminate\Database\Eloquent\Collection')) {
+                        \$text= \$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . " ? \$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . "->" . $field->attribute . " : '';
+                    } else {
+                        foreach (\$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . " as \$value) {
+
+                            \$text .= \$value->" . $field->attribute . ".',';
+                        }
+                    }
+                    @endphp";
+
+                $trs .= "<td>{{ \$text }}</td>
+                </tr>";
+                break;
+
+
+
+
+
+
+
+                        //                 <td class=\"fw-bold\">{{ __('" . GeneratorUtils::cleanSingularUcWords($constrainModel) . "') }}</td>
+                        //                 <td>{{ $" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel). "_" .str()->snake($field->attribute)  . " ? $" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel). "_" .str()->snake($field->attribute) . "->" . $field->attribute . " : '' }}</td>
+                        //             </tr>";
+                        // break;
                     case 'date':
                         $dateFormat = config('generator.format.date') ? config('generator.format.date') : 'd/m/Y';
 

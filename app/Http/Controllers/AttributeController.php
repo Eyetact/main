@@ -265,6 +265,7 @@ class AttributeController extends Controller
             'code' => str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower())),
             'attribute' => isset($request['attribute']) ? $request['attribute'] : ' ',
             'user_id' => auth()->user()->id,
+            'multiple' => isset($request['multiple']) ? 1 : 0,
         ];
         // dd($createArr);
         $attribute = Attribute::create($createArr);
@@ -291,12 +292,19 @@ class AttributeController extends Controller
 
         try {
             $this->generatorService->reGenerateModel($request['module']);
+
+            if(!isset($requestData['multiple']))
+            {
             $this->generatorService->reGenerateMigration($request['module']);
             Artisan::call("migrate");
+            }
+
             $this->generatorService->reGenerateController($request['module']);
             $this->generatorService->reGenerateRequest($request['module']);
             $this->generatorService->reGenerateViews($request['module']);
             $this->generatorService->generatePermissionForAttr($createArr, $attribute->id);
+
+
         } catch (\Throwable $th) {
 
             // $this->generatorService->removeMigration($request['module'], $attribute->id);
@@ -308,6 +316,21 @@ class AttributeController extends Controller
         }
 
         Artisan::call("optimize:clear");
+
+
+        if (isset($requestData['multiple'])) {
+
+
+            $model1=GeneratorUtils::singularSnakeCase(Module::find($requestData['module'])->name);
+            $model2=GeneratorUtils::singularSnakeCase($requestData['constrains']);
+
+            $table_name= $model1 . "_" . $model2;
+            $id1=$model1 . "_id";
+            $id2=$model2 . "_id";
+
+            $this->generatorService->generateMultipleMigration( $table_name,$id1,$id2);
+
+        }
 
 
         // dd($requestData['multi']);

@@ -271,8 +271,24 @@ class WebControllerGenerator
                         // id name created_at
                         //$row->category->name
 
+
+
                         $addColumns .= "->addColumn('$constrainSnakeCase', function (\$row) {
-                    return \$row->" . $constrainSnakeCase . " ? \$row->" . $constrainSnakeCase . "->$columnAfterId : '';
+
+                            if (!is_a(\$row->" . $constrainSnakeCase . ", 'Illuminate\Database\Eloquent\Collection')) {
+
+
+                                return \$row->" . $constrainSnakeCase . " ? \$row->" . $constrainSnakeCase . "->$columnAfterId : '';
+                            } else {
+                                \$text = '';
+                                foreach (\$row->" . $constrainSnakeCase . " as \$value) {
+                                    \$text .= \$value->$columnAfterId . ', ';
+                                }
+                                return \$text;
+                            }
+
+
+
                 })";
                     }
                 }

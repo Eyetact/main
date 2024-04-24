@@ -12,7 +12,7 @@ use App\Generators\GeneratorUtils;
 use App\Models\User;
 use App\Models\Limit;
 use Illuminate\Http\Request;
-
+use DB;
 
 
 
@@ -186,6 +186,37 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
 
         }
 
+
+
+             $attributes=Attribute::where('module',$module_id)->where('multiple',1)->get();
+            foreach($attributes as $attr)
+            {
+
+
+            if ($request->has($attr->code)) {
+            foreach ($request->input($attr->code) as $mId) {
+
+                $model1=GeneratorUtils::singularSnakeCase(Module::find($attr->module)->name);
+
+                        $model2=GeneratorUtils::singularSnakeCase($attr->constrain);
+
+                        $table_name= $model1 . "_" . $model2;
+                        $id1=$model1 . "_id";
+                        $id2=$model2 . "_id";
+
+                $values = array($id1 => $insert->id,$id2 => $mId);
+                DB::table($table_name)->insert($values);
+
+            }
+        }
+
+            }
+
+
+
+
+
+
         $this->customStore($request,$insert);
 
         if( !empty($request->module) ){
@@ -287,6 +318,36 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
     public function update(Update{{modelNameSingularPascalCase}}Request $request, {{modelNameSingularPascalCase}} ${{modelNameSingularCamelCase}})
     {
         {{updateDataAction}}
+
+
+
+         $module =  Module::where('code', GeneratorUtils::singularSnakeCase('{{modelNameSingularPascalCase}}'))->orWhere('code', GeneratorUtils::pluralSnakeCase('{{modelNameSingularPascalCase}}'))->first();
+            $module_id = (int)$module?->id;
+
+
+
+           $attributes=Attribute::where('module',$module_id)->where('multiple',1)->get();
+
+
+            foreach($attributes as $attr)
+            {
+
+            $relation = GeneratorUtils::singularSnakeCase(str_replace('_id','',$attr->code));
+
+
+
+            if (isset($request[$attr->code])) {
+
+               ${{modelNameSingularCamelCase}}->$relation()->sync($request[$attr->code]);
+
+            } else {
+
+            ${{modelNameSingularCamelCase}}->$relation()->detach();
+            }
+
+            }
+
+
 
         $this->customUpdate($request,${{modelNameSingularCamelCase}});
 

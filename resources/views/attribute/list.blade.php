@@ -494,7 +494,17 @@
                         <select class="google-input " name="attribute" required>
                            ${response}
                         </select>
-                    </div></div>`);
+                    </div></div>
+
+
+                    <div class="form-group col-sm-4">
+                    <label class="custom-switch form-label">
+                        <input type="checkbox" name="multiple" class="custom-switch-input" id="multiple">
+                        <span class="custom-switch-indicator"></span>
+                        <span class="custom-switch-description">Multiple</span>
+                    </label>
+                </div>
+                    `);
 
                     var selectedValue = $('.lookup-drop').val();
                     var modifiedValue = selectedValue + '_id';
@@ -954,6 +964,9 @@
                     break;
                 case 'foreignId':
                     $('#type').val('foreignId').trigger('change')
+                    break;
+                    case 'condition':
+                    $('#type').val('condition').trigger('change')
                     break;
                 case 'assign':
                     $('#type').val('assign').trigger('change')

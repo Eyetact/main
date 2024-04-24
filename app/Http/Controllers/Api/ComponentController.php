@@ -321,7 +321,7 @@ class ComponentController extends ApiController
                         $components->push($component);
                     }
                 }
-                return $this->returnData('data', ComponentResource::collection($components), __('Get successfully'));
+                return $this->returnData('data', ComponentDesResource::collection($components), __('Get successfully'));
 
             }
         }

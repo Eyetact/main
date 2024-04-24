@@ -452,4 +452,36 @@ class MigrationGenerator
         Artisan::call("migrate");
 
     }
+
+
+    public function generateMultiple($tableNamePluralLowecase,$id1,$id2)
+    {
+
+
+            $template = str_replace(
+                [
+                    '{{tableNamePluralLowecase}}',
+                    '{{id1}}',
+                    '{{id2}}'
+                ],
+                [
+                    $tableNamePluralLowecase,
+                    $id1,
+                    $id2
+
+                ],
+                GeneratorUtils::getTemplate('migration-multible')
+            );
+
+
+
+        $migrationName = date('Y') . '_' . date('m') . '_' . date('d') . '_' . date('h') . date('i') . date('s') . '_multiple_' . $tableNamePluralLowecase . '_table.php';
+        // $module = Module::find($id);
+        // $migrationName = $module->migration ;
+
+        file_put_contents(database_path("/migrations/Admin/$migrationName"), $template);
+
+        Artisan::call("migrate");
+
+    }
 }

@@ -363,9 +363,31 @@ class ModelGenerator
                         $constrainPath = "\\App\\Models\Admin\\$constrainName";
                     }
 
+                    if($field->multiple)
+                    {
+
+                        $model1=GeneratorUtils::singularSnakeCase(Module::find($field->module)->name);
+
+                        $model2=GeneratorUtils::singularSnakeCase($field->constrain);
+
+                        $table_name= $model1 . "_" . $model2;
+                        $id1=$model1 . "_id";
+                        $id2=$model2 . "_id";
+
+
+
+                        $relations .= "\n\tpublic function " . str()->snake($constrainName). "_" .str()->snake($field->attribute) . "()\n\t{\n\t\treturn \$this->belongsToMany(" . $constrainPath . "::class" . ",'" . $table_name . "','" . $id1 . "','" . $id2 .    "');\n\t}";
+                    }
+                    else{
+
                     $relations .= "\n\tpublic function " . str()->snake($constrainName). "_" .str()->snake($field->attribute) . "()\n\t{\n\t\treturn \$this->belongsTo(" . $constrainPath . "::class" . $foreign_id . ");\n\t}";
 
+                    }
+
                     break;
+
+
+
                 case 'assign':
 
                     break;
