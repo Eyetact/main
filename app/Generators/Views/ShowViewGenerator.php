@@ -155,7 +155,6 @@ class ShowViewGenerator
         $modelNamePluralKebabCase = GeneratorUtils::pluralKebabCase($code);
         $modelNameSingularCamelCase = GeneratorUtils::singularCamelCase($code);
 
-
         $trs = "";
         $totalFields = count($module->fields()->where('is_enable', 1)->get());
         $dateTimeFormat = config('generator.format.datetime') ? config('generator.format.datetime') : 'd/m/Y H:i';

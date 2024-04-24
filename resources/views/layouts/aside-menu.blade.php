@@ -128,6 +128,7 @@
                     ->where('parent', '0')
                     ->where('menu_type', 'admin')
                     ->where('is_delete', 0)
+                    ->where('include_in_menu', 1)
                     ->whereIn('module_id', $module_ids) // Filter by module_id
                     ->orderBy('sequence', 'asc')
                     ->get();

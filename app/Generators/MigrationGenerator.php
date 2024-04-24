@@ -183,137 +183,141 @@ class MigrationGenerator
         $setFields = '';
         $totalFields = count($module->fields);
 
+        if( count($module->fields()->orderBy('created_at', 'desc')->take(1)->get()) <=0 ){
+            return;
+        }
+
         foreach ($module->fields()->orderBy('created_at', 'desc')->take(1)->get() as $i => $field) {
             $field->code = !empty($field->code) ? GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
 
-                if ($field->type == 'date' && $field->input == 'month') {
-                    $setFields .= "\$table->text('" . str()->snake($field->code);
-                } elseif ($field->type == 'multi' && $field->input == 'multi') {
-                    $setFields .= "\$table->text('" . str()->snake($field->code);
-                } elseif ($field->type == 'enum' && $field->input == 'select') {
-                    $setFields .= "\$table->text('" . str()->snake($field->code);
-                } else {
-                    $setFields .= "\$table->" . $field->type . "('" . str()->snake($field->code);
-                }
+            if ($field->type == 'date' && $field->input == 'month') {
+                $setFields .= "\$table->text('" . str()->snake($field->code);
+            } elseif ($field->type == 'multi' && $field->input == 'multi') {
+                $setFields .= "\$table->text('" . str()->snake($field->code);
+            } elseif ($field->type == 'enum' && $field->input == 'select') {
+                $setFields .= "\$table->text('" . str()->snake($field->code);
+            } else {
+                $setFields .= "\$table->" . $field->type . "('" . str()->snake($field->code);
+            }
 
+            if ($field->type == 'enum') {
+                //     $options = explode('|', $field->select_option);
+                //     $totalOptions = count($options);
+
+                //     $enum = "[";
+
+                //     foreach ($options as $key => $value) {
+                //         if ($key + 1 != $totalOptions) {
+                //             $enum .= "'$value', ";
+                //         } else {
+                //             $enum .= "'$value']";
+                //         }
+                //     }
+
+                // $setFields .= "', " . $enum;
+                $setFields .= "'";
+            }
+
+            if (isset($field->max_length) && $field->max_length >= 0) {
                 if ($field->type == 'enum') {
-                    //     $options = explode('|', $field->select_option);
-                    //     $totalOptions = count($options);
 
-                    //     $enum = "[";
-
-                    //     foreach ($options as $key => $value) {
-                    //         if ($key + 1 != $totalOptions) {
-                    //             $enum .= "'$value', ";
-                    //         } else {
-                    //             $enum .= "'$value']";
-                    //         }
-                    //     }
-
-                    // $setFields .= "', " . $enum;
-                    $setFields .= "'";
-                }
-
-                if (isset($field->max_length) && $field->max_length >= 0) {
-                    if ($field->type == 'enum') {
-
-                        $setFields .= ")";
-                    } else {
-
-                        switch ($field->input) {
-                            case 'range':
-                                $setFields .= "')";
-                                break;
-                            default:
-                                $setFields .= "', " . $field->max_length . ")";
-                                break;
-                        }
-                    }
+                    $setFields .= ")";
                 } else {
-                    if ($field->type == 'enum') {
 
-                        $setFields .= ")";
-                    } else {
-
-                        $setFields .= "')";
+                    switch ($field->input) {
+                        case 'range':
+                            $setFields .= "')";
+                            break;
+                        default:
+                            $setFields .= "', " . $field->max_length . ")";
+                            break;
                     }
                 }
+            } else {
+                if ($field->type == 'enum') {
 
-                if ($field->required != 'on') {
+                    $setFields .= ")";
+                } else {
 
-                    $setFields .= "->nullable()";
+                    $setFields .= "')";
+                }
+            }
+
+            if ($field->required != 'on') {
+
+                $setFields .= "->nullable()";
+            }
+
+            if ($field->default_value) {
+
+                $defaultValue = "'" . $field->default_value . "'";
+
+                if ($field->type == 'month') {
+                    $defaultValue = "\Carbon\Carbon::createFromFormat('Y-m', '" . $field->default_value . "')";
                 }
 
-                if ($field->default_value) {
+                $setFields .= "->default($defaultValue)";
+            }
 
-                    $defaultValue = "'" . $field->default_value . "'";
+            if ($field->type === 'email') {
 
-                    if ($field->type == 'month') {
-                        $defaultValue = "\Carbon\Carbon::createFromFormat('Y-m', '" . $field->default_value . "')";
-                    }
+                $setFields .= "->unique()";
+            }
 
-                    $setFields .= "->default($defaultValue)";
-                }
+            $constrainName = '';
+            if ($field->type == 'foreignId') {
+                $constrainName = GeneratorUtils::setModelName($field->constrain);
+            }
 
-                if ($field->type === 'email') {
-
-                    $setFields .= "->unique()";
-                }
-
-                $constrainName = '';
+            if ($i + 1 != $totalFields) {
                 if ($field->type == 'foreignId') {
-                    $constrainName = GeneratorUtils::setModelName($field->constrain);
-                }
+                    if ($field->on_delete_foreign == ActionForeign::NULL->value) {
+                        $setFields .= "->nullable()";
+                    }
 
-                if ($i + 1 != $totalFields) {
-                    if ($field->type == 'foreignId') {
-                        if ($field->on_delete_foreign == ActionForeign::NULL->value) {
-                            $setFields .= "->nullable()";
-                        }
+                    $setFields .= "->constrained('" . GeneratorUtils::pluralSnakeCase($constrainName) . "')";
 
-                        $setFields .= "->constrained('" . GeneratorUtils::pluralSnakeCase($constrainName) . "')";
+                    if ($field->on_update_foreign == ActionForeign::CASCADE->value) {
+                        $setFields .= "->cascadeOnUpdate()";
+                    } elseif ($field->on_update_foreign == ActionForeign::RESTRICT->value) {
+                        $setFields .= "->restrictOnUpdate()";
+                    }
 
-                        if ($field->on_update_foreign == ActionForeign::CASCADE->value) {
-                            $setFields .= "->cascadeOnUpdate()";
-                        } elseif ($field->on_update_foreign == ActionForeign::RESTRICT->value) {
-                            $setFields .= "->restrictOnUpdate()";
-                        }
-
-                        if ($field->on_delete_foreign == ActionForeign::CASCADE->value) {
-                            $setFields .= "->cascadeOnDelete();\n\t\t\t";
-                        } elseif ($field->on_delete_foreign == ActionForeign::RESTRICT->value) {
-                            $setFields .= "->restrictOnDelete();\n\t\t\t";
-                        } elseif ($field->on_delete_foreign == ActionForeign::NULL->value) {
-                            $setFields .= "->nullOnDelete();\n\t\t\t";
-                        } else {
-                            $setFields .= ";\n\t\t\t";
-                        }
+                    if ($field->on_delete_foreign == ActionForeign::CASCADE->value) {
+                        $setFields .= "->cascadeOnDelete();\n\t\t\t";
+                    } elseif ($field->on_delete_foreign == ActionForeign::RESTRICT->value) {
+                        $setFields .= "->restrictOnDelete();\n\t\t\t";
+                    } elseif ($field->on_delete_foreign == ActionForeign::NULL->value) {
+                        $setFields .= "->nullOnDelete();\n\t\t\t";
                     } else {
                         $setFields .= ";\n\t\t\t";
                     }
                 } else {
-                    if ($field->type == 'foreignId') {
-                        $setFields .= "->constrained('" . GeneratorUtils::pluralSnakeCase($constrainName) . "')";
+                    $setFields .= ";\n\t\t\t";
+                }
+            } else {
+                if ($field->type == 'foreignId') {
+                    $setFields .= "->constrained('" . GeneratorUtils::pluralSnakeCase($constrainName) . "')";
 
-                        if ($field->on_update_foreign == ActionForeign::CASCADE->value) {
-                            $setFields .= "->cascadeOnUpdate()";
-                        } elseif ($field->on_update_foreign == ActionForeign::RESTRICT->value) {
-                            $setFields .= "->restrictOnUpdate()";
-                        }
+                    if ($field->on_update_foreign == ActionForeign::CASCADE->value) {
+                        $setFields .= "->cascadeOnUpdate()";
+                    } elseif ($field->on_update_foreign == ActionForeign::RESTRICT->value) {
+                        $setFields .= "->restrictOnUpdate()";
+                    }
 
-                        if ($field->on_delete_foreign == ActionForeign::CASCADE->value) {
-                            $setFields .= "->cascadeOnDelete();";
-                        } elseif ($field->on_delete_foreign == ActionForeign::RESTRICT->value) {
-                            $setFields .= "->restrictOnDelete();";
-                        } elseif ($field->on_delete_foreign == ActionForeign::NULL->value) {
-                            $setFields .= "->nullOnDelete();";
-                        } else {
-                            $setFields .= ";";
-                        }
+                    if ($field->on_delete_foreign == ActionForeign::CASCADE->value) {
+                        $setFields .= "->cascadeOnDelete();";
+                    } elseif ($field->on_delete_foreign == ActionForeign::RESTRICT->value) {
+                        $setFields .= "->restrictOnDelete();";
+                    } elseif ($field->on_delete_foreign == ActionForeign::NULL->value) {
+                        $setFields .= "->nullOnDelete();";
                     } else {
                         $setFields .= ";";
                     }
+                } else {
+                    $setFields .= ";";
                 }
+            }
 
         }
 
@@ -331,8 +335,7 @@ class MigrationGenerator
                 ],
                 GeneratorUtils::getTemplate('migration-assign')
             );
-        }
-        else{
+        } else {
             $template = str_replace(
                 [
                     '{{tableNamePluralLowecase}}',
@@ -396,7 +399,7 @@ class MigrationGenerator
                 ],
                 GeneratorUtils::getTemplate('migration-remove-assign')
             );
-        }else{
+        } else {
             $template = str_replace(
                 [
                     '{{tableNamePluralLowecase}}',
@@ -431,15 +434,15 @@ class MigrationGenerator
         $tableNamePluralLowercase = GeneratorUtils::pluralSnakeCase($model);
 
 
-            $template = str_replace(
-                [
-                    '{{tableNamePluralLowecase}}',
-                ],
-                [
-                    $tableNamePluralLowercase,
-                ],
-                GeneratorUtils::getTemplate('migration-remove-table')
-            );
+        $template = str_replace(
+            [
+                '{{tableNamePluralLowecase}}',
+            ],
+            [
+                $tableNamePluralLowercase,
+            ],
+            GeneratorUtils::getTemplate('migration-remove-table')
+        );
 
 
 

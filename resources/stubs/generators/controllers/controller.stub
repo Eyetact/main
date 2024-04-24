@@ -219,6 +219,26 @@ class {{modelNameSingularPascalCase}}Controller extends Controller
 
         $this->customStore($request,$insert);
 
+        if ($module->addable) {
+            $parent = Module::find($module->parent_id);
+
+
+            $modelName = "App\Models\Admin\\" . GeneratorUtils::setModelName($parent->code);
+
+            $data = new $modelName();
+            foreach ($parent->fields as $value) {
+
+                $attr = GeneratorUtils::singularSnakeCase($value->code);
+
+                $data->$attr = $request[$attr];
+            }
+            $data->save();
+
+            $insert->sub_id = $parent->id;
+            $insert->data_id = $data->id;
+            $insert->save();
+        }
+
         if( !empty($request->module) ){
 
             $module = Module::find($request->module);

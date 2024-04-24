@@ -1670,7 +1670,7 @@ if($field->multiple > 0){
         $template = "";
         $options = "<option>-- Select --</option>";
 
-        foreach ($module->childs as $model) {
+        foreach ($module->childs()->where('shared',1)->get() as $model) {
             $options .= "<option data-id=\"{{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase" . "->data_id  ? \$$modelNameSingularCamelCase" . "->data_id : '' }}\"  {{ isset(\$$modelNameSingularCamelCase) && \$$modelNameSingularCamelCase" . "->sub_id == '$model->id' ? 'selected' : '' }} data-value=\"" . GeneratorUtils::pluralKebabCase($model->code) . "\" value=\"" . $model->id . "\" >" . $model->name . "</option>";
         }
 

@@ -21,6 +21,20 @@
                         {{ $aMenu->name }}
                         {{-- - ( {{ $aMenu->children->count() }} ) --}}
                         <div>
+                            @if ($aMenu->module->parent_id > 0)
+                                                @php
+                                                    $m = \App\Models\Module::find($aMenu->module->parent_id);
+                                                @endphp
+                                                <span class="badge badge-danger">
+                                                    @if ($aMenu->module->addable)
+                                                        Addable
+                                                    @elseif($aaMenu->module->shared)
+                                                        Shared
+                                                    @endif
+                                                    Sub to {{ $m->name }}
+
+                                                </span>
+                                            @endif
                             @if (empty($aMenu->module->migration))
                                 <span class="badge badge-danger">Label</span>
                             @endif
@@ -33,10 +47,10 @@
                             <span class="tag tag-deleted  tag-red">Deleted</span>
                         @endif
                     </div>
-                    @if ($aMenu->is_delete == 0)
+                    {{-- @if ($aMenu->is_delete == 0)
                         <button data-path="{{ route('module_manager.addSub', $aMenu->module_id) }}" class="sub-add"
                             type="button">+</button>
-                    @endif
+                    @endif --}}
 
 
                     @if ($aMenu->children->count())
@@ -55,6 +69,20 @@
                                         {{ $aaMenu->name }}
                                         {{-- - ( {{ $aaMenu->children->count() }} ) --}}
                                         <div>
+                                            @if ($aaMenu->module->parent_id > 0)
+                                                @php
+                                                    $m = \App\Models\Module::find($aaMenu->module->parent_id);
+                                                @endphp
+                                                <span class="badge badge-danger">
+                                                    @if ($aaMenu->module->addable)
+                                                        Addable
+                                                    @elseif($aaMenu->module->shared)
+                                                        Shared
+                                                    @endif
+                                                    Sub to {{ $m->name }}
+
+                                                </span>
+                                            @endif
                                             @if (empty($aaMenu->module->migration))
                                                 <span class="badge badge-danger">Label</span>
                                             @endif
@@ -67,10 +95,10 @@
                                             <span class="tag tag-deleted  tag-red">Deleted</span>
                                         @endif
                                     </div>
-                                    @if ($aaMenu->is_delete == 0)
+                                    {{-- @if ($aaMenu->is_delete == 0)
                                         <button data-path="{{ route('module_manager.addSub', $aaMenu->module_id) }}"
                                             class="sub-add" type="button">+</button>
-                                    @endif
+                                    @endif --}}
 
                                     @if ($aaMenu->children->count())
                                         <ol class="dd-list">
@@ -88,6 +116,20 @@
                                                     <div class="dd-handle">
                                                         {{ $aaaMenu->name }}
                                                         <div>
+                                                            @if ($aaaMenu->module->parent_id > 0)
+                                                @php
+                                                    $m = \App\Models\Module::find($aaaMenu->module->parent_id);
+                                                @endphp
+                                                <span class="badge badge-danger">
+                                                    @if ($aaaMenu->module->addable)
+                                                        Addable
+                                                    @elseif($aaMenu->module->shared)
+                                                        Shared
+                                                    @endif
+                                                    Sub to {{ $m->name }}
+
+                                                </span>
+                                            @endif
                                                             @if (empty($aaaMenu->module->migration))
                                                                 <span class="badge badge-danger">Label</span>
                                                             @endif
