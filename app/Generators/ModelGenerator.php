@@ -116,6 +116,8 @@ class ModelGenerator
                         $casts .= "'" . str()->snake($field) . "' => 'double', ";
                         break;
                     case 'foreignId':
+                    case 'condition':
+
                         $constrainPath = GeneratorUtils::getModelLocation($request['constrains'][$i]);
                         $constrainName = GeneratorUtils::setModelName($request['constrains'][$i]);
 
@@ -348,6 +350,7 @@ class ModelGenerator
                     $casts .= "'" . str()->snake($field->code) . "' => 'double', ";
                     break;
                 case 'foreignId':
+                case 'condition':
                     $constrainPath = GeneratorUtils::getModelLocation($field->constrain);
                     $constrainName = GeneratorUtils::setModelName($field->constrain);
 

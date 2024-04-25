@@ -211,6 +211,16 @@ class AttributeController extends Controller
     {
         $request->validated();
         $requestData = $request->all();
+        // dd(  $requestData);
+
+        $condition_value = '';
+        $condition_attr = '';
+        if(isset($requestData['condition_attr'])){
+            $condition_attr = $requestData['condition_attr'];
+            foreach ($requestData['condition_value'] as  $value) {
+                $condition_value .= $value . '|';
+            }
+        }
 
 
 
@@ -268,6 +278,8 @@ class AttributeController extends Controller
             'attribute' => isset($request['attribute']) ? $request['attribute'] : ' ',
             'user_id' => auth()->user()->id,
             'multiple' => isset($request['multiple']) ? 1 : 0,
+            'condition_attr' => $condition_attr,
+            'condition_value' => $condition_value
         ];
         // dd($createArr);
         $attribute = Attribute::create($createArr);
@@ -372,6 +384,28 @@ class AttributeController extends Controller
         foreach ($attributes as $key => $value) {
             $options .= '<option data-id="' . $value->id . '" value="' . $value->id . '" >' . $value->name . '</option>';
         }
+        return $options;
+    }
+
+    public function getDataByModel($model_id,$attr_condtion)
+    {
+        $module =  Module::find($model_id);
+        if($model_id == 1 || $model_id == 2 || $model_id == 3 || $model_id == 4 || $model_id == 5)
+        {
+            $modelName = "App\Models\\".GeneratorUtils::setModelName($module->code);
+        }
+        else{
+        $modelName = "App\Models\Admin\\".GeneratorUtils::setModelName($module->code);
+        }
+        $query =  $modelName::all()->pluck($attr_condtion,'id');
+        // dd($query);
+
+        $options = '<option disabled selected>-- select --</option>';
+
+        foreach ($query as $key => $value) {
+            $options .= '<option data-id="' . $key . '" value="' . $value . '" >' . $value . '</option>';
+        }
+
         return $options;
     }
     /**

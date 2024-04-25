@@ -182,6 +182,7 @@ class RequestGenerator
                         $validations .= "|boolean',";
                         break;
                     case 'foreignId':
+                        case 'condition':
                         // remove '/' or sub folders
 
                         if (!isset($request['multiple'][$i])) {
@@ -502,6 +503,8 @@ class RequestGenerator
                             $validations .= "|boolean',";
                             break;
                         case 'foreignId':
+                        case 'condition':
+
                             // remove '/' or sub folders
 
 

@@ -196,7 +196,10 @@ class MigrationGenerator
                 $setFields .= "\$table->text('" . str()->snake($field->code);
             } elseif ($field->type == 'enum' && $field->input == 'select') {
                 $setFields .= "\$table->text('" . str()->snake($field->code);
-            } else {
+            }
+         elseif ($field->type == 'condition' ) {
+            $setFields .= "\$table->foreignId('" . str()->snake($field->code);
+        } else {
                 $setFields .= "\$table->" . $field->type . "('" . str()->snake($field->code);
             }
 
@@ -265,12 +268,12 @@ class MigrationGenerator
             }
 
             $constrainName = '';
-            if ($field->type == 'foreignId') {
+            if ($field->type == 'foreignId' ||  $field->type == 'condition') {
                 $constrainName = GeneratorUtils::setModelName($field->constrain);
             }
 
             if ($i + 1 != $totalFields) {
-                if ($field->type == 'foreignId') {
+                if ($field->type == 'foreignId' ||  $field->type == 'condition') {
                     if ($field->on_delete_foreign == ActionForeign::NULL->value) {
                         $setFields .= "->nullable()";
                     }
@@ -296,7 +299,7 @@ class MigrationGenerator
                     $setFields .= ";\n\t\t\t";
                 }
             } else {
-                if ($field->type == 'foreignId') {
+                if ($field->type == 'foreignId' ||  $field->type == 'condition') {
                     $setFields .= "->constrained('" . GeneratorUtils::pluralSnakeCase($constrainName) . "')";
 
                     if ($field->on_update_foreign == ActionForeign::CASCADE->value) {
@@ -375,7 +378,7 @@ class MigrationGenerator
         $tableNamePluralLowercase = GeneratorUtils::pluralSnakeCase($model);
 
         $setFields = '';
-        if ($field->type == 'foreignId') {
+        if ($field->type == 'foreignId' ||  $field->type == 'condition') {
             $setFields .= "\$table->dropForeign('" . $tableNamePluralLowercase . '_' . GeneratorUtils::singularSnakeCase(str()->snake($field->code)) . "_foreign');\n";
 
         }

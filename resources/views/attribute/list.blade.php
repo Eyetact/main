@@ -399,14 +399,14 @@
         $(document).on('change', '.select-module', function() {
             var id = $(this).find(':selected').data('id');
             var parent = $(this).parent().parent().parent().parent().find('.select_options');
-            let index = parseInt($(this).parent().parent().parent().parent().parent().find('.text-center').find(
-                '.input-box').html());
+            let index = parseInt($(this).parent().parent().parent().parent().parent().find('.text-center').find('.input-box').html());
             // alert(index)
             $.ajax({
                 url: '{{ url('/') }}/attribute-by-module/' + id,
                 success: function(response) {
                     console.log(response);
-                    parent.find('.child-drop').remove()
+                    parent.find('.child-drop').remove();
+                    // parent.find('.condition-drop').remove();
                     parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="multi[${index}][attribute]" required>
@@ -481,6 +481,9 @@
 
         });
         $(document).on('change', '.lookup-drop', function() {
+            $('.cb').remove()
+            $('.child-drop').remove();
+                    $('.cond-wrapper').remove();
             var id = $(this).find(':selected').data('id');
 
             var parent = $(this).parent().parent().parent().parent().find('.options');
@@ -488,7 +491,7 @@
                 url: '{{ url('/') }}/attribute-by-module/' + id,
                 success: function(response) {
                     console.log(response);
-                    $('.child-drop').remove()
+
                     parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="attribute" required>
@@ -497,7 +500,7 @@
                     </div></div>
 
 
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-4 cb">
                     <label class="custom-switch form-label">
                         <input type="checkbox" name="multiple" class="custom-switch-input" id="multiple">
                         <span class="custom-switch-indicator"></span>
@@ -505,6 +508,18 @@
                     </label>
                 </div>
                     `);
+
+                    if($('.form-input-types').val() == 'condition'){
+
+                        parent.append(` <div class="input-box cond-wrapper form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input condition-drop" name="condition_attr" required>
+                           ${response}
+                        </select>
+                    </div></div>
+                    `);
+
+                    }
 
                     var selectedValue = $('.lookup-drop').val();
                     var modifiedValue = selectedValue + '_id';
@@ -519,6 +534,34 @@
             });
         })
 
+
+        $(document).on('change', '.condition-drop', function() {
+            $('.cond2-wrapper').remove()
+            var conditionId = $(this).find(':selected').val();
+            var modelId = $('.lookup-drop').find(':selected').data('id');
+
+            var parent = $(this).parent().parent().parent().parent().find('.options');
+
+
+            $.ajax({
+                url: '{{ url('/') }}/data-by-module/' + modelId + '/'  + conditionId,
+                success: function(response) {
+                    console.log(response);
+
+                    parent.append(` <div class="input-box child cond2-wrapper form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input " name="condition_value[]" required multiple>
+                           ${response}
+                        </select>
+                    </div></div>
+
+
+
+                    `);
+
+                }
+            });
+        })
         $(document).on('change', '.multi-type', function() {
             let index = parseInt($(this).parent().parent().parent().find('.text-center').find('.input-box').html());
             // alert(index);
@@ -762,6 +805,7 @@
             // `)
 
             } else if ($(this).val() == 'foreignId') {
+                alert('hi');
                 removeAllInputHidden(index)
                 checkMinAndMaxLength(index)
 
@@ -806,7 +850,58 @@
             //     <option value="datalist">Datalist</option>
             // `)
 
-            } else if (
+            }
+
+            else if ($(this).val() == 'condition') {
+                removeAllInputHidden(index)
+                checkMinAndMaxLength(index)
+
+                $(`.form-option`).remove()
+
+                $(`.options`).append(`
+                <input type="hidden" name="select_options" class="form-option">
+            `)
+
+                // var list = `<option>aaaa</option>`;
+                var list = `{!! $all !!}`;
+                // alert( list )
+
+                $(`.options`).append(`
+                <div class="input-box form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input lookup-drop"  name="constrains" required>
+                           ${list}
+                        </select>
+                    </div>
+                    <small class="text-secondary">
+                        <ul class="my-1 mx-2 p-0">
+                            <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
+                            <li>Field name must be related model + "_id", e.g.: user_id</li>
+                        </ul>
+                    </small>
+                </div>
+                <div class="input-box form-foreign-id mt-2">
+                    <input type="hidden" name="foreign_ids" class="google-input" placeholder="Foreign key (optional)">
+                </div>
+
+                <input type="hidden" name="on_update_foreign" class="google-input" value="1">
+
+                <input type="hidden" name="on_delete_foreign" class="google-input" value="1">
+
+
+            `)
+
+                //     $(`.form-input-types`).html(`
+            //     <option value="" disabled selected>-- Select input type --</option>
+            //     <option value="select">Select</option>
+            //     <option value="datalist">Datalist</option>
+            // `)
+
+            }
+
+
+
+            else if (
                 $(this).val() == 'text' ||
                 $(this).val() == 'longText' ||
                 $(this).val() == 'mediumText' ||
@@ -906,6 +1001,8 @@
         })
 
         $(document).on('change', '.form-input-types', function() {
+            // alert('hi');
+            // alert('welocme');
             let index = 0
             let minLength = $(`.form-min-lengths`)
             let maxLength = $(`.form-max-lengths`)
@@ -916,6 +1013,7 @@
             switchRequired.prop('disabled', false)
 
             $(`.form-default-value`).remove()
+            $(`.options`).html('')
             $(`.custom-value`).append(`
             <div class="form-group form-default-value ">
                 <input type="hidden" name="default_values">

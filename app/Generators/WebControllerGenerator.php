@@ -241,11 +241,11 @@ class WebControllerGenerator
             }
 
             // load the relations for create, show, and edit
-            if ( count($module->fields()->where('is_enable',1)->where('type','foreignId')->get()) > 0) {
+            if ( count($module->fields()->where('is_enable',1)->where('type','foreignId')->orWhere('type','condition')->get()) > 0) {
 
                 $relations .= "$" . $modelNameSingularCamelCase . "->load(";
 
-                $countForeidnId = count($module->fields()->where('type','foreignId')->get());
+                $countForeidnId = count($module->fields()->where('type','foreignId')->orWhere('type','condition')->get());
 
                 $query = "$modelNameSingularPascalCase::with(";
 

@@ -224,7 +224,7 @@ class IndexViewGenerator
                  * will generate something like:
                  * <th>{{ __('Price') }}</th>
                  */
-                if ($field->type != 'foreignId') {
+                if ($field->type != 'foreignId' && $field->type != 'condition') {
                     $thColums .= "<th>{{ __('" . GeneratorUtils::cleanUcWords($field->name) . "') }}</th>";
                 }
 
@@ -250,6 +250,7 @@ class IndexViewGenerator
                     foreach ($field->multis as $key => $value) {
                         switch ($value->type) {
                             case 'foreignId':
+                                case 'condition':
 
                                 $trhtml .= "var list_" . $field->id . $key . " = '<option selected disabled>-- select " . $value->constrain . " -- </option>'
                                 \n";
@@ -262,7 +263,7 @@ class IndexViewGenerator
                                     )->orWhere('code', GeneratorUtils::pluralSnakeCase($value->constrain))
                                         ->orWhere('code', $value->constrain)->first();
                                     // dd($current_model);
-                                    $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->get();
+                                    $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->orWhere('type', 'condition')->get();
 
                                     foreach ($lookatrrs as $sa) {
                                         $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "={{ \$item2->" . $sa->code . "}}";
@@ -277,7 +278,7 @@ class IndexViewGenerator
                                 ';
                                 $trhtml .= 'if ($model) {
                                     ';
-                                $trhtml .= '$for_attr = json_encode($model->fields()->select(\'code\', \'attribute\')->where(\'type\', \'foreignId\')->get());
+                                $trhtml .= '$for_attr = json_encode($model->fields()->select(\'code\', \'attribute\')->where(\'type\', \'foreignId\')->orWhere(\'type\', \'condition\')->get());
                                 ';
                                 $trhtml .= '$for_attr = str_replace(\'"\', \'\\\'\', $for_attr);
                                 ';
@@ -418,6 +419,7 @@ class IndexViewGenerator
                                 break;
 
                             case 'foreignId':
+                                case 'condition':
                                 $class = "select-base";
 
 
@@ -505,7 +507,7 @@ class IndexViewGenerator
                         </div>`;
                         }
                     },";
-                } elseif ($field->type == 'foreignId') {
+                } elseif ($field->type == 'foreignId'|| $field->type == 'condition') {
                     // remove '/' or sub folders
                     $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
 
