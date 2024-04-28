@@ -55,6 +55,19 @@
                 </svg>
                 <span class="side-menu__label">Attributes</span></a>
         </li>
+
+
+        {{-- <li class="slide">
+            <a class="side-menu__item" href="{{ url('data') }}">
+                <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height  ="24" viewBox="0 0 24 24"
+                    width="24">
+                    <path d="M0 0h24v24H0V0z" fill="none" />
+                    <path
+                        d="M19 5v2h-4V5h4M9 5v6H5V5h4m10 8v6h-4v-6h4M9 17v2H5v-2h4M21 3h-8v6h8V3zM11 3H3v10h8V3zm10 8h-8v10h8V11zm-10 4H3v6h8v-6z" />
+                </svg>
+                <span class="side-menu__label">Data Manager</span></a>
+        </li> --}}
+
         @if (auth()->user()->can('mail.settings') || auth()->user()->hasRole('super'))
             <li class="slide">
                 <a class="side-menu__item" data-toggle="slide" href="{{ url('/' . ($page = '#')) }}">
@@ -119,12 +132,10 @@
         <li class="side-item side-item-category mt-4">Module Manger</li>
 
         @php
-                  if (auth()->user()->hasRole('super')) {
+            if (auth()->user()->hasRole('super')) {
+                $module_ids = \App\Models\Module::where('user_id', auth()->user()->id)->pluck('id');
 
-                $module_ids = \App\Models\Module::where('user_id', auth()->user()->id)
-                    ->pluck('id');
-
-                    $side_menus  = \App\Models\MenuManager::with('children.children.children')
+                $side_menus = \App\Models\MenuManager::with('children.children.children')
                     ->where('parent', '0')
                     ->where('menu_type', 'admin')
                     ->where('is_delete', 0)

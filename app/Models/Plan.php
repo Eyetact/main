@@ -37,4 +37,9 @@ class Plan extends Model
     public function limits( $module_id ){
         return (int)Limit::where('plan_id',$this->id)->where('module_id',$module_id)->first()?->data_limit;
     }
+
+    public function getTableColumns()
+    {
+        return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
+    }
 }

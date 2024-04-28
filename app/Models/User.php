@@ -67,11 +67,17 @@ class User extends Authenticatable
     public function setAvatarAttribute($value)
     {
         if ($value) {
-            // dd($value);
+            try {
+                // dd($value);
             $ext = $value->getClientOriginalExtension();
             $file_name = time() . mt_rand(1000, 9000) . '.' . $ext;
             $value->move(public_path('uploads/users/'), $file_name);
             $this->attributes['avatar'] = $file_name;
+            } catch (\Throwable $th) {
+               // dd($value);
+
+            $this->attributes['avatar'] = $value;
+            }
         }
     }
 
@@ -83,6 +89,11 @@ class User extends Authenticatable
     public function vendors()
     {
         return $this->hasMany(User::class, 'user_id');
+    }
+
+    public function getTableColumns()
+    {
+        return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
     }
 
     public function admins()

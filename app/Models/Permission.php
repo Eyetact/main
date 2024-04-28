@@ -27,6 +27,11 @@ class Permission extends Model
         return $this->permissions->pluck('id', 'id');
     }
 
+    public function getTableColumns()
+    {
+        return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
+    }
+
     public function scopeFilter($query)
     {
         $userDetails = Auth::user();
