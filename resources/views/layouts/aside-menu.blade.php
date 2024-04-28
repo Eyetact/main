@@ -57,6 +57,10 @@
         </li>
 
 
+
+
+
+
         {{-- <li class="slide">
             <a class="side-menu__item" href="{{ url('data') }}">
                 <svg class="side-menu__icon" xmlns="http://www.w3.org/2000/svg" height  ="24" viewBox="0 0 24 24"
