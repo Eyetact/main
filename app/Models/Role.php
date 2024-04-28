@@ -15,4 +15,9 @@ class Role extends Model{
     public function scheduler() {
         return $this->hasMany(RoleSchedulerSetting::class,'role_id','id');
     }
+
+    public function getTableColumns()
+    {
+        return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
+    }
 }

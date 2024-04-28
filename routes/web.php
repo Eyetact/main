@@ -1,7 +1,10 @@
 <?php
 
+use App\Exports\UsersExport;
 use App\Generators\GeneratorUtils;
 use App\Helpers\Helper;
+use App\Http\Controllers\DataController;
+use App\Imports\UsersImport;
 use App\Models\Admin\Element;
 use App\Models\Admin\Unit;
 use App\Models\Attribute;
@@ -604,3 +607,26 @@ Route::post('assign-record/{model}', function (Request $request, $model) {
 })->name('assign-record');
 
 
+
+
+
+Route::resource('data',DataController::class);
+
+Route::post('export-template',function(Request $request){
+
+    return (new UsersExport($request->module,true))->download('template.xlsx');
+})->name('export-template');
+
+Route::post('export-data',function(Request $request){
+
+    return (new UsersExport($request->module))->download('data.xlsx');
+})->name('export-data');
+
+Route::post('import-data',function(Request $request){
+
+    $file = $request->file;
+
+    Excel::import(new UsersImport($request->module), $file);
+
+        return redirect('/')->with('success', 'All good!');
+})->name('import-data');
