@@ -3,6 +3,10 @@
 namespace App\Http\Resources;
 
 use App\Models\Admin\Component;
+use App\Models\Admin\ComponentsSet;
+use App\Models\Admin\MainPart;
+use App\Models\Admin\Software;
+use App\Models\SoftMixture;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,6 +23,17 @@ class MixtureDataResource extends JsonResource
      {
          $categoryId = $this->category_id;
          $components = $this->mix_component ? json_decode($this->mix_component, true) : null;
+
+         $set_component=ComponentsSet::find($this->components_set_id)->set_component;
+         $setComponent = json_decode($set_component, true);
+        //  dd( $setComponent);
+
+
+         $sw= SoftMixture::where('mixture_id',$this->id)->first()->software_id;
+         $main_part= Software::find($sw)->main_part_id;
+         $pumps = MainPart::find($main_part)->main_pump;
+         $pumps = json_decode($pumps, true); // Decode the main_pump array
+
 
          if ($categoryId && $components) {
              $response = [];
@@ -47,12 +62,34 @@ class MixtureDataResource extends JsonResource
                      }
                  }
 
+
+
+
+                 $pumpFlow = null;
+                 $componentIndex = null;
+
+                 foreach ($setComponent as $index => $setComp) {
+                     if ($setComp['id'] == $componentId) {
+                         $componentIndex = $index;
+                         break; // Exit the loop once the matching component is found
+                     }
+                 }
+
+                 if ($componentIndex !== null && isset($pumps[$componentIndex])) {
+                     $pumpFlow = $pumps[$componentIndex]['pump_flow'];
+                 }
+
+
+
                  $response[] = [
                      'id' => $component['id'],
                      'name' => $component['name'],
                      'value' => $component['value'],
+                    //  'result' => $component['result'],
                      'minimum' => $minimum, // Add minimum value to the component
                      'maximum' => $maximum, // Add maximum value to the component
+                    //  'flow_rate' => $pumpFlow, // Add pump flow value to the component
+                     'delay' => ($component['result'] * 60 / $pumpFlow) * 1000,
                  ];
              }
 

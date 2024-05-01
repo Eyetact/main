@@ -419,6 +419,8 @@ Route::get('/get-compononets-by-main/{id}', function ($id) {
 
 
 
+
+
 Route::get('/get-components-by-category/{category_id}/{cset_id}', function ($category_id, $cset_id) {
     try {
         $componentSetId = $cset_id;
@@ -486,6 +488,51 @@ Route::get('/get-max-min/{component_id}/{category_id}', function ($component_id,
 
     return response()->json([]);
 })->name('get-mixman');
+
+Route::get('/get-unit-by-component/{id}/{cset_id}', function ($id,$cset_id) {
+    $componentId = $id;
+    $componentSetId = $cset_id;
+
+    if ($componentId) {
+        $component = App\Models\Admin\Component::with('unit')->find($componentId);
+        $component_set = App\Models\Admin\ComponentsSet::with('main_part')->find($componentSetId);
+
+
+        $componentData = [
+            'unit' => $component->unit->unit_code,
+            'concentration' => $component->compo_concentration,
+            'type' => $component_set->main_part->main_type,
+        ];
+
+
+
+    }
+
+    return response()->json( $componentData);
+})->name('get-unit');
+
+
+Route::get('/get-type-by-component/{id}', function ($id) {
+
+    $componentSetId = $id;
+
+    if ($componentSetId) {
+
+        $component_set = App\Models\Admin\ComponentsSet::with('main_part')->find($componentSetId);
+
+
+        $componentData = [
+
+            'type' => $component_set->main_part->main_type,
+        ];
+
+
+
+    }
+
+    return response()->json( $componentData);
+})->name('get-type');
+
 
 // Route::get('/get-components-by-category/{category_id}/{cset_id}', function ($category_id,$cset_id) {
 //     try {
