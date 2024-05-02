@@ -232,7 +232,7 @@ class ModuleManagerController extends Controller
                 'parent' => 0,
                 'sidebar_name' => $requestData['sidebar_name'],
             );
-            dd($createData);
+            // dd($createData);
             $menuManager = MenuManager::create($createData);
         }
 
