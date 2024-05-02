@@ -152,6 +152,104 @@ class ModuleManagerController extends Controller
 
     }
 
+
+    public function storeFront(ModulePostRequest $request)
+    {
+
+        // try {
+        //     DB::beginTransaction();
+        $module = Module::create([
+            'name' => $request->name,
+            'is_system' => isset($request->is_system) ? 1 : 0,
+            'code' => str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower())),
+            'user_id' => auth()->user()->id,
+            'type' => isset($request->mtype) ? $request->mtype : null,
+            'status' => isset($request->status) ? $request->status : null,
+
+
+        ]);
+
+        $request->code = str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower()));
+
+        $requestData = $request->all();
+        $request->validated();
+        $this->generatorService->generateModel($request->all()); // model
+        $this->generatorService->generateMigration($request->all(), $module->id); // migration
+        Artisan::call('migrate'); // run php artisan mnigrate in background
+        $this->generatorService->generateController($request->all()); // migration
+        $this->generatorService->generateRequest($request->all()); // req
+        $this->generatorService->generateRoute($request->all()); // route
+        $this->generatorService->generateViews($request->all()); // views
+        $this->generatorService->generatePermission($request->all(), $module->id);
+
+
+        if (!empty($request->fields[0])) {
+            foreach ($request->fields as $i => $attr) {
+                $createArr = [
+
+                    'module' => $module->id,
+                    'name' => $attr,
+                    'type' => $request['column_types'][$i],
+                    'min_length' => $request['min_lengths'][$i],
+                    'max_length' => $request['max_lengths'][$i],
+                    'steps' => $request['steps'][$i],
+                    'input' => $request['input_types'][$i],
+                    'required' => $request['requireds'][$i],
+                    'default_value' => $request['default_values'][$i],
+                    'select_option' => $request['select_options'][$i],
+                    'constrain' => $request['constrains'][$i],
+                    'on_update_foreign' => $request['on_update_foreign'][$i],
+                    'on_delete_foreign' => $request['on_delete_foreign'][$i],
+                    'is_enable' => isset($request['is_enable'][$i]) ? 1 : 0,
+                    'is_system' => isset($request['is_system'][$i]) ? 1 : 0,
+                    'max_size' => $request['files_sizes'][$i],
+                    'file_type' => $request['file_types'][$i],
+
+                ];
+
+                // dd($createArr);
+                $attribute = Attribute::create($createArr);
+            }
+        }
+
+        if ($module) {
+
+
+
+            $lastSequenceData = MenuManager::where('parent', '0')->where('menu_type', $requestData['menu_type'])->where('include_in_menu', 1)->orderBy('id', 'desc')->first();
+            $sequence = 0;
+            if ($lastSequenceData) {
+                $sequence = $lastSequenceData->sequence + 1;
+            }
+
+            $createData = array(
+                'name' => $requestData['name'],
+                'module_id' => $module->id,
+                'include_in_menu' => 1,
+                'menu_type' => $requestData['menu_type'],
+                'path' => str_replace(' ', '', $requestData['path']),
+                'sequence' => $sequence,
+                'parent' => 0,
+                'sidebar_name' => $requestData['sidebar_name'],
+            );
+            $menuManager = MenuManager::create($createData);
+        }
+
+        if (!$menuManager) {
+            $this->flashRepository->setFlashSession('alert-danger', 'Something went wrong!.');
+            return redirect()->route('module_manager.index');
+        }
+        $this->flashRepository->setFlashSession('alert-success', 'Menu Item created successfully.');
+        return redirect()->route('module_manager.index');
+
+        //     DB::commit();
+        // } catch (Exception $ex) {
+        //     DB::rollback();
+        //     dd($ex);
+        // }
+
+    }
+
     public function storeLabel(Request $request)
     {
         // dd($request->all());
@@ -253,6 +351,10 @@ class ModuleManagerController extends Controller
             );
 
             $menu = MenuManager::where('module_id', $module->id)->first();
+
+            if($menu->menu_type == 'storfront'){
+                $request->include_in_menu = 1;
+            }
             $menu->update(
                 [
                     'name' => $request->name,

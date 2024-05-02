@@ -208,9 +208,8 @@
 }
 
 .dd {
-  //  float: left;
-  //  width: 48 %;
-  width: 80%;
+
+  width: 100%;
 }
 
 .dd + .dd {

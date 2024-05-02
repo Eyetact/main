@@ -52,6 +52,8 @@
                                         value="{{ $module->menu->sidebar_name }}">
                                 </div>
 
+                                @if($module->menu->menu_type == 'admin')
+
                                 <div class="form-group col-sm-4">
                                     <label class="custom-switch form-label">
                                         <input type="checkbox" @checked($module->menu->include_in_menu) name="include_in_menu"
@@ -60,6 +62,8 @@
                                         <span class="custom-switch-description">Include in menu</span>
                                     </label>
                                 </div>
+
+                                @endif
 
                                 @if(!empty($module->migration))
 

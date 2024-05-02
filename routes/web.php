@@ -139,6 +139,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/module_manager', 'index')->name('module_manager.index');
         Route::get('module_manager/create', 'create')->name('module_manager.create');
         Route::post('module_manager/store', 'store')->name('module_manager.store');
+        Route::post('module_manager/storeFront', 'store')->name('module_manager.storeFront');
         Route::post('module_manager/storeLabel', 'storeLabel')->name('module_manager.storelabel');
         Route::post('module_manager/menu_update', 'menu_update')->name('module_manager.menu_update');
         Route::get('module_manager/{module}/edit', 'edit')->name('module_manager.edit');

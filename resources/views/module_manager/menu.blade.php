@@ -227,15 +227,29 @@
 
     <div class="row">
         <div class="col-lg-12 col-xl-6 col-md-12 col-sm-12">
+            @if (auth()->user()->hasRole('super'))
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Storfront</h4>
+                    <h4 class="card-title" style="width: 100%">
+                        <div class="row">
+                            <div class="col-10" style="padding-top: 10px">Front - (
+                                {{ count(App\Models\MenuManager::where('menu_type', 'storfront')->get()) }} )</div>
+                            <div class="col-1">
+                                
+                                    <button type="button" data-target="#FrontForm" data-toggle="modal"
+                                        class="btn btn-primary">Add</button>
+                                
+                            </div>
+                        </div>
+
+                    </h4>
                 </div>
 
                 <div class="card-body">
                     @include('module_manager.storfront_nested_menu')
                 </div>
             </div>
+            @endif
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title" style="width: 100%">
@@ -715,6 +729,148 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+
+    <div class="modal fade bd-example-modal-lg" id="FrontForm" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Add</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                            aria-hidden="true">×</span> </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+
+
+
+                        <div class="col-12">
+                            <div class="main-form">
+
+                                <form
+                                    action="{{ $menu->id == null ? route('module_manager.storeFront') : route('module_manager.update', ['menu' => $menu->id]) }}"
+                                    id="admin_form" method="POST" autocomplete="off" novalidate="novalidate">
+                                    @csrf
+                                    <input type="hidden" name="menu_type" value="storfront">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="">
+
+                                                <div class="">
+                                                    <div class="row">
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="form-label" for="name">Name <span
+                                                                    class="text-red">*</span></label>
+                                                            <input type="text" name="name" id="aname"
+                                                                class="form-control" value="">
+                                                            <input type="hidden" name="id" id="aid"
+                                                                value="">
+                                                        </div>
+
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="form-label" for="code2">Code <span
+                                                                    class="text-red">*</span></label>
+                                                            <input type="text" name="code" id="code"
+                                                                class="form-control" value="">
+
+                                                        </div>
+
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="form-label" for="path">Path <span
+                                                                    class="text-red">*</span></label>
+                                                            <input type="text" name="path" id="apath"
+                                                                class="form-control" value="">
+                                                        </div>
+
+                                                        <div class="col-sm-12 form-group">
+                                                            <label class="form-label" for="path">Sidebar Name <span
+                                                                    class="text-red">*</span></label>
+                                                            <input type="text" name="sidebar_name" id="sidebar_name"
+                                                                class="form-control" value="">
+                                                        </div>
+
+                                                        {{-- <div class="form-group col-sm-4">
+                                                            <label class="custom-switch form-label">
+                                                                <input type="checkbox" name="include_in_menu"
+                                                                    id="ainclude_in_menu" class="custom-switch-input"
+                                                                    id="is_enable">
+                                                                <span class="custom-switch-indicator"></span>
+                                                                <span class="custom-switch-description">Include in
+                                                                    menu</span>
+                                                            </label>
+                                                        </div> --}}
+
+                                                        <div class="form-group col-sm-4">
+                                                            <label class="custom-switch form-label">
+                                                                <input type="checkbox" name="is_system" id="is_system"
+                                                                    class="custom-switch-input" id="is_system">
+                                                                <span class="custom-switch-indicator"></span>
+                                                                <span class="custom-switch-description">Global</span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-4">
+                                                            <label class="custom-switch form-label">
+                                                                <input type="checkbox" name="status" id="status"
+                                                                    class="custom-switch-input" id="status" checked>
+                                                                <span class="custom-switch-indicator"></span>
+                                                                <span class="custom-switch-description">Status</span>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="col-sm-12 input-box">
+                                                            <label class="form-label" for="module">Type<span
+                                                                    class="text-red">*</span></label>
+
+
+                                                            <select name="mtype" class="google-input module"
+                                                                id="mtype" required>
+                                                                <option disabled value="" selected>Select</option>
+                                                                <option value="stander">Stander</option>
+                                                                <option value="sortable">Sortable</option>
+
+                                                            </select>
+
+
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer text-right">
+                                                    <input title="Reset form" class="btn btn-danger d-none"
+                                                        id="remove-admin-menu" type="button" value="Delete">
+                                                    <input title="Reset form" class="btn btn-success d-none"
+                                                        id="restore-admin-menu" type="button" value="Restore">
+                                                    <input title="Save module" class="btn btn-primary"
+                                                        id="submit-admin-menu" type="submit" value="Save">
+                                                    {{-- <input title="Reset form" class="btn btn-warning" type="reset" value="Reset"> --}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+
+                            </div>
+
+                        </div>
+
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 {{-- import model start --}}
@@ -967,40 +1123,89 @@
                 }
             });
 
+            // $('#storfront_nestable').on('mousedown', '.dd-handle', function(event) {
+            //     var type = '#storfront_form_edit';
+
+            //     $("#storfront_edit_div").show();
+            //     $("#admin_edit_div").hide();
+
+            //     $('#storfront_nestable .dd-handle').removeClass('selected-item');
+            //     $('#admin_nestable .dd-handle').removeClass('selected-item');
+            //     $(this).addClass('selected-item');
+
+            //     var singleData = $(this).parent().data("json");
+            //     console.log(singleData);
+
+            //     console.log("PMD isDeleted", singleData.is_deleted)
+            //     // alert("aaa")
+            //     if (singleData.is_deleted == 1) {
+            //         $(this).addClass('deleted-item');
+            //     } else {
+            //         $(this).removeClass('deleted-item');
+            //     }
+
+            //     enabledDisabledStoreFrontFormField(type, singleData)
+
+            //     $("#storfront_form_edit #sid").val(singleData.id);
+            //     $("#storfront_form_edit #sname").val(singleData.name);
+            //     $("#storfront_form_edit #scode").val(singleData.code);
+            //     $("#storfront_form_edit #spath").val(singleData.path);
+            //     $("#storfront_form_edit #sis_enable").prop('checked', singleData.status);
+            //     $("#storfront_form_edit #sinclude_in_menu").prop('checked', singleData.include_in_menu);
+            //     $("#storfront_form_edit #smeta_title").val(singleData.meta_title);
+            //     $("#storfront_form_edit #smeta_description").val(singleData.meta_description);
+            //     $("#storfront_form_edit #screated_date").val(singleData.created_date);
+            //     $("#storfront_form_edit #sassigned_attributes").val(singleData.assigned_attributes);
+            // });
+
             $('#storfront_nestable').on('mousedown', '.dd-handle', function(event) {
                 var type = '#storfront_form_edit';
 
-                $("#storfront_edit_div").show();
                 $("#admin_edit_div").hide();
+                $("#storfront_edit_div").show();
 
-                $('#storfront_nestable .dd-handle').removeClass('selected-item');
                 $('#admin_nestable .dd-handle').removeClass('selected-item');
+                $('#storfront_nestable .dd-handle').removeClass('selected-item');
                 $(this).addClass('selected-item');
 
                 var singleData = $(this).parent().data("json");
-                console.log(singleData);
+                var path = $(this).parent().data("path");
+                console.log("PMD 1", singleData)
+                // alert(singleData.module_id)
+
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                $.ajax({
+                    url: path,
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    success: function(response) {
+                        $('.editc').html(response);
+
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+
+
 
                 console.log("PMD isDeleted", singleData.is_deleted)
-                alert("aaa")
-                if (singleData.is_deleted == 1) {
-                    $(this).addClass('deleted-item');
-                } else {
-                    $(this).removeClass('deleted-item');
-                }
 
-                enabledDisabledStoreFrontFormField(type, singleData)
+                enabledDisabledAdminFormField(type, singleData)
 
-                $("#storfront_form_edit #sid").val(singleData.id);
-                $("#storfront_form_edit #sname").val(singleData.name);
-                $("#storfront_form_edit #scode").val(singleData.code);
-                $("#storfront_form_edit #spath").val(singleData.path);
-                $("#storfront_form_edit #sis_enable").prop('checked', singleData.status);
-                $("#storfront_form_edit #sinclude_in_menu").prop('checked', singleData.include_in_menu);
-                $("#storfront_form_edit #smeta_title").val(singleData.meta_title);
-                $("#storfront_form_edit #smeta_description").val(singleData.meta_description);
-                $("#storfront_form_edit #screated_date").val(singleData.created_date);
-                $("#storfront_form_edit #sassigned_attributes").val(singleData.assigned_attributes);
+                $("#admin_form_edit #aid").val(singleData.id);
+                $("#admin_form_edit #aname").val(singleData.name);
+                $("#admin_form_edit #acode").val(singleData.code);
+                $("#admin_form_edit #apath").val(singleData.path);
+                $("#admin_form_edit #ais_enable").prop('checked', singleData.status);
+                $("#admin_form_edit #ainclude_in_menu").prop('checked', singleData.include_in_menu);
+                $("#admin_form_edit #acreated_date").val(singleData.created_date);
+                $("#admin_form_edit #aassigned_attributes").val(singleData.assigned_attributes);
             });
+
 
             $('#admin_nestable').on('mousedown', '.dd-handle', function(event) {
                 var type = '#admin_form_edit';
