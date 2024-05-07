@@ -31,7 +31,7 @@
                                                     @elseif($aaMenu->module->shared)
                                                         Shared
                                                     @endif
-                                                    Sub to {{ $m->name }}
+                                                    Sub to {{ $m?->name }}
 
                                                 </span>
                                             @endif
@@ -79,7 +79,7 @@
                                                     @elseif($aaMenu->module->shared)
                                                         Shared
                                                     @endif
-                                                    Sub to {{ $m->name }}
+                                                    Sub to {{ $m?->name }}
 
                                                 </span>
                                             @endif
@@ -126,7 +126,7 @@
                                                     @elseif($aaMenu->module->shared)
                                                         Shared
                                                     @endif
-                                                    Sub to {{ $m->name }}
+                                                    Sub to {{ $m?->name }}
 
                                                 </span>
                                             @endif
