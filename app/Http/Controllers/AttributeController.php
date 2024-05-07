@@ -265,6 +265,7 @@ class AttributeController extends Controller
             'default_value' => $request['default_values'],
             'select_option' => $request['select_options'],
             'constrain' => $request['constrains'],
+            'constrain2' => isset($request['constrains2']) ? $request['constrains2'] : null,
             'on_update_foreign' => $request['on_update_foreign'],
             'on_delete_foreign' => $request['on_delete_foreign'],
             'is_enable' => isset($request['is_enable']) ? 1 : 0,
@@ -276,6 +277,7 @@ class AttributeController extends Controller
             'target' => $request['target'],
             'code' => str()->snake(str_replace(['.', '/', '\\', '-', ' ', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '=', '<', '>', ',', '{', '}', '[', ']', ':', ';', '"', '\''], '', str($request['code'])->lower())),
             'attribute' => isset($request['attribute']) ? $request['attribute'] : ' ',
+            'attribute2' => isset($request['attribute2']) ? $request['attribute2'] : null,
             'user_id' => auth()->user()->id,
             'multiple' => isset($request['multiple']) ? 1 : 0,
             'condition_attr' => $condition_attr,
@@ -524,11 +526,13 @@ class AttributeController extends Controller
         $id = $attribute->module;
         if ($attribute) {
             $this->generatorService->removeMigration($id, $attribute->id);
+            Artisan::call("migrate");
             $attribute->delete();
             $this->generatorService->reGenerateModel($id);
             $this->generatorService->reGenerateController($id);
             $this->generatorService->reGenerateRequest($id);
             $this->generatorService->reGenerateViews($id);
+
 
             return response()->json(['msg' => 'Attribute deleted successfully!'], 200);
         } else {

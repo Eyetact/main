@@ -612,6 +612,36 @@ Route::get(
     }
 );
 
+
+Route::get('gettest/{id}', function ($id) {
+
+    $attributes = Attribute::where('module', $id)->where('type', 'foreignId')->get();
+
+
+
+
+       $options = '';
+       $options = '<option  >-- select --</option>';
+
+
+
+       foreach ($attributes as $key => $value) {
+
+        $all =  GeneratorUtils::setModelName( explode('_', $value->code)[0] );
+        $model = Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase($all))
+        ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))
+        ?->first();
+
+
+           $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
+       }
+
+
+
+    return $options;
+
+});
+
 Route::get('getsource/{id}', function ($id) {
 
     $attributes = Attribute::where('module', $id)->where('type', 'foreignId')->get();

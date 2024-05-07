@@ -276,16 +276,29 @@ class ModelGenerator
                         break;
                 }
             } else {
-                switch ($i + 1 != $totalFields) {
 
+                if($field->type == 'doublefk'){
+                    switch ($i + 1 != $totalFields) {
 
-                    case true:
-                        $fields .= "'" . str()->snake($field->code) . "', ";
-                        break;
-                    default:
-                        $fields .= "'" . str()->snake($field->code) . "'";
-                        break;
+                        case true:
+                            $fields .= "'" . str()->snake($field->code) . "', '" . str()->snake($field->constrain2.'_'.$field->attribute2. '_id') . "', " ;
+                            break;
+                        default:
+                            $fields .= "'" . str()->snake($field->code) . "', '" . str()->snake($field->constrain2.'_'.$field->attribute2. '_id')  . "'";
+                            break;
+                    }
+                }else{
+                    switch ($i + 1 != $totalFields) {
+
+                        case true:
+                            $fields .= "'" . str()->snake($field->code) . "', ";
+                            break;
+                        default:
+                            $fields .= "'" . str()->snake($field->code) . "'";
+                            break;
+                    }
                 }
+
             }
 
             if ($field->input == 'password') {
@@ -351,6 +364,7 @@ class ModelGenerator
                     break;
                 case 'foreignId':
                 case 'condition':
+                case 'informatic':
                     $constrainPath = GeneratorUtils::getModelLocation($field->constrain);
                     $constrainName = GeneratorUtils::setModelName($field->constrain);
 
@@ -384,6 +398,55 @@ class ModelGenerator
                     else{
 
                     $relations .= "\n\tpublic function " . str()->snake($constrainName). "_" .str()->snake($field->attribute) . "()\n\t{\n\t\treturn \$this->belongsTo(" . $constrainPath . "::class" . $foreign_id . ");\n\t}";
+
+                    }
+
+                    break;
+
+                    case 'doublefk':
+
+                        // $fields.=" '" . . "'";
+                        $constrainPath = GeneratorUtils::getModelLocation($field->constrain);
+                        $constrainName = GeneratorUtils::setModelName($field->constrain);
+
+                        $constrainPath2 = GeneratorUtils::getModelLocation($field->constrain2);
+                        $constrainName2 = GeneratorUtils::setModelName($field->constrain2);
+
+                        $foreign_id = ' ,"' .$field->code . '"';
+                        $foreign_id2 = ' ,"' . str()->snake($field->constrain2.'_'.$field->attribute2. '_id') . '"';
+
+                        if ($i > 0) {
+                            $relations .= "\t";
+                        }
+
+                        if ($constrainPath != '') {
+                            $constrainPath = "\\App\\Models\Admin\\$constrainPath\\$constrainName";
+                            $constrainPath2 = "\\App\\Models\Admin\\$constrainPath2\\$constrainName2";
+                        } else {
+                            $constrainPath = "\\App\\Models\Admin\\$constrainName";
+                            $constrainPath2 = "\\App\\Models\Admin\\$constrainName2";
+                        }
+
+
+                    if($field->multiple)
+                    {
+
+                        $model1=GeneratorUtils::singularSnakeCase(Module::find($field->module)->name);
+
+                        $model2=GeneratorUtils::singularSnakeCase($field->constrain);
+
+                        $table_name= $model1 . "_" . $model2;
+                        $id1=$model1 . "_id";
+                        $id2=$model2 . "_id";
+
+
+
+                        $relations .= "\n\tpublic function " . str()->snake($constrainName). "_" .str()->snake($field->attribute) . "()\n\t{\n\t\treturn \$this->belongsToMany(" . $constrainPath . "::class" . ",'" . $table_name . "','" . $id1 . "','" . $id2 .    "');\n\t}";
+                    }
+                    else{
+
+                    $relations .= "\n\tpublic function " . str()->snake($constrainName). "_" .str()->snake($field->attribute) . "()\n\t{\n\t\treturn \$this->belongsTo(" . $constrainPath . "::class" . $foreign_id . ");\n\t}";
+                    $relations .= "\n\tpublic function " . str()->snake($constrainName2). "_" .str()->snake($field->attribute2) . "()\n\t{\n\t\treturn \$this->belongsTo(" . $constrainPath2 . "::class" . $foreign_id2 . ");\n\t}";
 
                     }
 

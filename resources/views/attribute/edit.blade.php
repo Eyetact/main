@@ -72,18 +72,22 @@
                                 <option @selected($attribute->input == 'image') value="image">Image (all format: png,jpg,,,etc)
                                 </option>
                                 <option @selected($attribute->input == 'file') value="file">File</option>
-                                <option @selected($attribute->input == 'number') value="number">Number</option>
+                                {{-- <option @selected($attribute->input == 'number') value="number">Number</option> --}}
                                 <option @selected($attribute->input == 'number') value="number">Integer Number</option>
                                 <option @selected($attribute->input == 'decimal') value="number">Decimal Number</option>
                                 <option @selected($attribute->input == 'range') value="range">Range</option>
-                                <option @selected($attribute->input == 'radio') value="radio">Radio ( True, False )</option>
+                                {{-- <option @selected($attribute->input == 'radio') value="radio">Radio ( True, False )</option> --}}
+                                <option @selected($attribute->input == 'switch') value="switch">Yes Or No</option>
                                 <option @selected($attribute->input == 'date') value="date">Date</option>
-                                <option @selected($attribute->input == 'month') value="month">Month</option>
+                                <option @selected($attribute->input == 'month') value="month">Months Of The Year</option>
                                 <option @selected($attribute->input == 'time') value="time">Time</option>
                                 <option @selected($attribute->input == 'datalist') value="datalist">Datalist ( Year List )</option>
                                 <option @selected($attribute->input == 'datetime-local') value="datetime-local">Date And Time</option>
                                 <option @selected($attribute->input == 'select') value="select">Select</option>
+                                <option @selected($attribute->input == 'radioselect') value="radioselect">Radio</option>
                                 <option @selected($attribute->input == 'foreignId') value="foreignId">Lookup</option>
+                                <option @selected($attribute->input == 'informatic') value="informatic">Informatic Attribute</option>
+                                <option @selected($attribute->input == 'doublefk') value="doublefk">Double Attribute</option>
                             </select>
                             <label id="field_type-error" class="error text-red hide" for="field_type"></label>
                             @error('field_type')
@@ -456,7 +460,9 @@
         </div>
     </div>
 
-    <div class="card">
+    @if ($attribute->input == 'foreignId' || $attribute->input == 'condition')
+
+    <div class="card source-card">
         <div class="card-header">
             <h3 class="card-title">Source</h3>
         </div>
@@ -468,7 +474,7 @@
                         <option >Disable</option>
                         @foreach ($module->fields()->where('type','foreignId')->get() as $item)
                         <option @selected($attribute->source == explode('_', $item->code)[0]) value="{{ explode('_id', $item->code)[0] }}">{{ $item->name }}</option>
-                            
+
                         @endforeach
                     </select>
                 </div>
@@ -483,6 +489,8 @@
             </div>
         </div>
     </div>
+
+    @endif
 
     <div class="card">
         <div class="card-header">
@@ -503,8 +511,7 @@
                         <input type="checkbox" name="is_system" class="custom-switch-input" id="is_system"
                             {{ $attribute->is_system == 1 ? 'checked' : '' }}>
                         <span class="custom-switch-indicator"></span>
-                        <span class="custom-switch-description">System (This attribute is only available for
-                            admin)</span>
+                        <span class="custom-switch-description">Global</span>
                     </label>
                 </div>
                 @if ($attribute->min_length)

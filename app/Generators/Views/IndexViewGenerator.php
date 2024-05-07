@@ -224,7 +224,7 @@ class IndexViewGenerator
                  * will generate something like:
                  * <th>{{ __('Price') }}</th>
                  */
-                if ($field->type != 'foreignId' && $field->type != 'condition') {
+                if ($field->type != 'foreignId' && $field->type != 'condition'&& $field->type != 'informatic' && $field->type != 'doublefk') {
                     $thColums .= "<th>{{ __('" . GeneratorUtils::cleanUcWords($field->name) . "') }}</th>";
                 }
 
@@ -507,7 +507,7 @@ class IndexViewGenerator
                         </div>`;
                         }
                     },";
-                } elseif ($field->type == 'foreignId'|| $field->type == 'condition') {
+                } elseif ($field->type == 'foreignId'|| $field->type == 'condition' || $field->type == 'informatic' || $field->type == 'doublefk')  {
                     // remove '/' or sub folders
                     $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
 

@@ -192,8 +192,45 @@ class ShowViewGenerator
                                     </tr>";
                         break;
                     case 'foreignId':
+                        case 'informatic':
+
+                            // remove '/' or sub folders
+                            $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
+
+
+                        // Define the variable $value
+
+
+
+
+                        $text = '';
+                        $value = '';
+
+                        $trs .= "<tr>
+                        <td class=\"fw-bold\">{{ __('" . GeneratorUtils::cleanSingularUcWords($constrainModel) . "') }}</td>
+                        @php
+                        \$text = '';
+                        \$value = '';
+                        if (!is_a(\$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . ", 'Illuminate\Database\Eloquent\Collection')) {
+                            \$text= \$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . " ? \$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . "->" . $field->attribute . " : '';
+                        } else {
+                            foreach (\$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . " as \$value) {
+
+                                \$text .= \$value->" . $field->attribute . ".',';
+                            }
+                        }
+                        @endphp";
+
+                    $trs .= "<td>{{ \$text }}</td>
+                    </tr>";
+                    break;
+
+
+                    case 'doublefk':
+
                         // remove '/' or sub folders
                         $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
+                        $constrainModel2 = GeneratorUtils::setModelName($field->constrain2, 'default');
 
 
                     // Define the variable $value
@@ -210,7 +247,7 @@ class ShowViewGenerator
                     \$text = '';
                     \$value = '';
                     if (!is_a(\$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . ", 'Illuminate\Database\Eloquent\Collection')) {
-                        \$text= \$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . " ? \$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . "->" . $field->attribute . " : '';
+                        \$text= \$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . " ? \$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . "->" . $field->attribute . " .  ', ' . \$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel2) . "_" . str()->snake($field->attribute2) . "->" . $field->attribute2 . " : '';
                     } else {
                         foreach (\$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . " as \$value) {
 

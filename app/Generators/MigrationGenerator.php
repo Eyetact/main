@@ -181,6 +181,7 @@ class MigrationGenerator
         $tableNamePluralLowercase = GeneratorUtils::pluralSnakeCase($model);
 
         $setFields = '';
+        $setFields2 = '';
         $totalFields = count($module->fields);
 
         if( count($module->fields()->orderBy('created_at', 'desc')->take(1)->get()) <=0 ){
@@ -197,9 +198,19 @@ class MigrationGenerator
             } elseif ($field->type == 'enum' && $field->input == 'select') {
                 $setFields .= "\$table->text('" . str()->snake($field->code);
             }
-         elseif ($field->type == 'condition' ) {
-            $setFields .= "\$table->foreignId('" . str()->snake($field->code);
-        } else {
+            elseif ($field->type == 'enum' && $field->input == 'radioselect') {
+                $setFields .= "\$table->text('" . str()->snake($field->code);
+            }
+            elseif ($field->type == 'condition' ) {
+                $setFields .= "\$table->foreignId('" . str()->snake($field->code);
+            }
+            elseif ($field->type == 'informatic' ) {
+                $setFields .= "\$table->foreignId('" . str()->snake($field->code);
+            }
+            elseif ($field->type == 'doublefk' ) {
+                $setFields .= "\$table->foreignId('" . str()->snake($field->code);
+                $setFields2 .= "\$table->foreignId('" . str()->snake($field->constrain2.'_'.$field->attribute2. '_id');
+            } else {
                 $setFields .= "\$table->" . $field->type . "('" . str()->snake($field->code);
             }
 
@@ -233,6 +244,9 @@ class MigrationGenerator
                             break;
                         default:
                             $setFields .= "', " . $field->max_length . ")";
+                            if( $field->type == 'doublefk'){
+                            $setFields2 .= "', " . $field->max_length . ")";
+                            }
                             break;
                     }
                 }
@@ -241,7 +255,10 @@ class MigrationGenerator
 
                     $setFields .= ")";
                 } else {
+                    if( $field->type == 'doublefk'){
 
+                        $setFields2 .= "')";
+                    }
                     $setFields .= "')";
                 }
             }
@@ -268,21 +285,45 @@ class MigrationGenerator
             }
 
             $constrainName = '';
-            if ($field->type == 'foreignId' ||  $field->type == 'condition') {
+            $constrainName2 = '';
+            if ($field->type == 'foreignId' ||  $field->type == 'condition' ||  $field->type == 'doublefk') {
                 $constrainName = GeneratorUtils::setModelName($field->constrain);
+                if( $field->type == 'doublefk'){
+                    $constrainName2 = GeneratorUtils::setModelName($field->constrain2);
+
+                }
             }
 
             if ($i + 1 != $totalFields) {
-                if ($field->type == 'foreignId' ||  $field->type == 'condition') {
+                if ($field->type == 'foreignId' ||  $field->type == 'condition'||  $field->type == 'doublefk') {
                     if ($field->on_delete_foreign == ActionForeign::NULL->value) {
+                        if( $field->type == 'doublefk'){
+
+                            $setFields2 .= "->nullable()";
+
+                        }
                         $setFields .= "->nullable()";
+                    }
+                    if( $field->type == 'doublefk'){
+
+                        $setFields2 .= "->constrained('" . GeneratorUtils::pluralSnakeCase($constrainName2) . "')";
+
                     }
 
                     $setFields .= "->constrained('" . GeneratorUtils::pluralSnakeCase($constrainName) . "')";
 
                     if ($field->on_update_foreign == ActionForeign::CASCADE->value) {
+                        if( $field->type == 'doublefk'){
+
+                            $setFields2 .= "->cascadeOnUpdate()";
+                        }
                         $setFields .= "->cascadeOnUpdate()";
                     } elseif ($field->on_update_foreign == ActionForeign::RESTRICT->value) {
+                        if( $field->type == 'doublefk'){
+
+                            $setFields2 .= "->restrictOnUpdate()";
+                        }
+
                         $setFields .= "->restrictOnUpdate()";
                     }
 
@@ -295,12 +336,47 @@ class MigrationGenerator
                     } else {
                         $setFields .= ";\n\t\t\t";
                     }
+
+                    if( $field->type == 'doublefk'){
+
+                        if ($field->on_delete_foreign == ActionForeign::CASCADE->value) {
+                            $setFields2 .= "->cascadeOnDelete();\n\t\t\t";
+                        } elseif ($field->on_delete_foreign == ActionForeign::RESTRICT->value) {
+                            $setFields2 .= "->restrictOnDelete();\n\t\t\t";
+                        } elseif ($field->on_delete_foreign == ActionForeign::NULL->value) {
+                            $setFields2 .= "->nullOnDelete();\n\t\t\t";
+                        } else {
+                            $setFields2 .= ";\n\t\t\t";
+                        }
+                    }
                 } else {
                     $setFields .= ";\n\t\t\t";
                 }
             } else {
-                if ($field->type == 'foreignId' ||  $field->type == 'condition') {
+                if ($field->type == 'foreignId' ||  $field->type == 'condition' ||  $field->type == 'doublefk') {
                     $setFields .= "->constrained('" . GeneratorUtils::pluralSnakeCase($constrainName) . "')";
+
+                    if( $field->type == 'doublefk'){
+                        $setFields2 .= "->constrained('" . GeneratorUtils::pluralSnakeCase($constrainName2) . "')";
+
+
+                        if ($field->on_update_foreign == ActionForeign::CASCADE->value) {
+                            $setFields2 .= "->cascadeOnUpdate()";
+                        } elseif ($field->on_update_foreign == ActionForeign::RESTRICT->value) {
+                            $setFields2 .= "->restrictOnUpdate()";
+                        }
+
+                        if ($field->on_delete_foreign == ActionForeign::CASCADE->value) {
+                            $setFields2 .= "->cascadeOnDelete();";
+                        } elseif ($field->on_delete_foreign == ActionForeign::RESTRICT->value) {
+                            $setFields2 .= "->restrictOnDelete();";
+                        } elseif ($field->on_delete_foreign == ActionForeign::NULL->value) {
+                            $setFields2 .= "->nullOnDelete();";
+                        } else {
+                            $setFields2 .= ";";
+                        }
+
+                    }
 
                     if ($field->on_update_foreign == ActionForeign::CASCADE->value) {
                         $setFields .= "->cascadeOnUpdate()";
@@ -323,6 +399,8 @@ class MigrationGenerator
             }
 
         }
+
+        $setFields .= $setFields2;
 
         if ($field->type == 'assign') {
             $template = str_replace(
@@ -378,14 +456,35 @@ class MigrationGenerator
         $tableNamePluralLowercase = GeneratorUtils::pluralSnakeCase($model);
 
         $setFields = '';
-        if ($field->type == 'foreignId' ||  $field->type == 'condition') {
+        $setFields .= "DB::statement('SET FOREIGN_KEY_CHECKS=0;');\n";
+        if ($field->type == 'foreignId' ||  $field->type == 'condition' ||  $field->type == 'informatic') {
             $setFields .= "\$table->dropForeign('" . $tableNamePluralLowercase . '_' . GeneratorUtils::singularSnakeCase(str()->snake($field->code)) . "_foreign');\n";
 
         }
 
 
+        if ($field->type == 'doublefk' ) {
+            $setFields .= "if (Schema::hasColumn('$tableNamePluralLowercase', '" . $tableNamePluralLowercase . '_' . GeneratorUtils::singularSnakeCase(str()->snake($field->code)) . "_foreign')) {\n";
+            $setFields .= "\$table->dropForeign('" . $tableNamePluralLowercase . '_' . GeneratorUtils::singularSnakeCase(str()->snake($field->code)) . "_foreign');\n";
+            $setFields .= "}\n";
+            $setFields .= "if (Schema::hasColumn('$tableNamePluralLowercase', '" . $tableNamePluralLowercase . '_' . GeneratorUtils::singularSnakeCase(str()->snake($field->constrain2 . '_' . $field->attribute2 . '_id')) . "_foreign')) {\n";
+            $setFields .= "\$table->dropForeign('" . $tableNamePluralLowercase . '_' . GeneratorUtils::singularSnakeCase(str()->snake($field->constrain2 . '_' . $field->attribute2 . '_id')) . "_foreign');\n";
+            $setFields .= "}\n";
+        }
 
-        $setFields .= "\$table->dropColumn('" . GeneratorUtils::singularSnakeCase(str()->snake($field->code)) . "');";
+        // ithink its good lets test againe..ok
+
+
+
+        $setFields .= "\$table->dropColumn('" . GeneratorUtils::singularSnakeCase(str()->snake($field->code)) . "');\n";
+
+        if ($field->type == 'doublefk' ) {
+            $setFields .= "\$table->dropColumn('" . GeneratorUtils::singularSnakeCase(str()->snake($field->constrain2 . '_' . $field->attribute2 . '_id')) . "');\n";
+
+        }
+
+        $setFields .= "DB::statement('SET FOREIGN_KEY_CHECKS=1;');\n";
+
 
 
         if ($field->type == 'assign') {
@@ -425,7 +524,7 @@ class MigrationGenerator
 
         file_put_contents(database_path("/migrations/Admin/$migrationName"), $template);
 
-        Artisan::call("migrate");
+        // Artisan::call("migrate");
 
     }
 

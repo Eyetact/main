@@ -107,6 +107,10 @@ class RequestGenerator
                      * will generate like:
                      * 'name' => 'required|mimes|size:1024',
                      */
+
+
+
+
                     $validations .= "|mimes:" . $request['mimes'][$i] . "|size:" . $request['files_sizes'][$i];
                 }
 
@@ -356,11 +360,37 @@ class RequestGenerator
                      * 'name' => 'required
                      */
                     if ($field->type != 'multi') {
+
+                        if($field->type != 'boolean' &&  $field->type != 'doublefk')
+                        {
                         match ($field->required) {
                             'yes' => $validations .= "'required",
                             'on' => $validations .= "'required",
                             default => $validations .= "'nullable"
                         };
+
+
+                    }
+                    if($field->type == 'doublefk' )
+                    {
+                    match ($field->required) {
+                        'yes' => $validations .= "'required',\n'" . str()->snake($field->constrain2 . '_' . $field->attribute2 . '_id') . "' => 'required",
+                        'on' => $validations .= "'required',\n'" . str()->snake($field->constrain2 . '_' . $field->attribute2 . '_id') . "' => 'required",
+                        default => $validations .= "'nullable',\n'" . str()->snake($field->constrain2 . '_' . $field->attribute2 . '_id') . "' => 'nullable",
+                    };
+
+
+
+                }
+                    if($field->type == 'boolean' ){
+
+                        match ($field->required) {
+                            'yes' => $validations .= "'nullable",
+                            'on' => $validations .= "'nullable",
+                            default => $validations .= "'nullable"
+                        };
+
+                    }
 
                     } else {
                         $validations .= "'nullable";
@@ -424,7 +454,7 @@ class RequestGenerator
                          * will generate like:
                          * 'name' => 'required|mimes|size:1024',
                          */
-                        // $validations .= "|size:" . $field->max_size;
+                        $validations .= "|max:" . $field->max_size;
                     }
 
                     if ($field->type == 'enum') {

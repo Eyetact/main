@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Generators;
+
 use App\Models\Module;
 use Illuminate\Support\Facades\File;
 
@@ -225,55 +226,59 @@ class WebControllerGenerator
         $relations = "";
         $addColumns = "";
 
-            if (
-                count($module->fields()->where('type','text')->get()) > 0 ||
-                count($module->fields()->where('type','longtext')->get()) > 0
-            ) {
-                $limitText = config('generator.format.limit_text') ? config('generator.format.limit_text') : 200;
+        if (
+            count($module->fields()->where('type', 'text')->get()) > 0 ||
+            count($module->fields()->where('type', 'longtext')->get()) > 0
+        ) {
+            $limitText = config('generator.format.limit_text') ? config('generator.format.limit_text') : 200;
 
-                foreach ($module->fields()->where('is_enable',1)->get() as $i => $field) {
-                    if ($field->type == 'text' || $field->type == 'longText') {
-                        $addColumns .= "->addColumn('" . str($field->code)->snake() . "', function(\$row){
+            foreach ($module->fields()->where('is_enable', 1)->get() as $i => $field) {
+                if ($field->type == 'text' || $field->type == 'longText') {
+                    $addColumns .= "->addColumn('" . str($field->code)->snake() . "', function(\$row){
                     return str(\$row->" . str($field->code)->snake() . ")->limit($limitText);
                 })\n\t\t\t\t";
-                    }
                 }
             }
+        }
 
-            // load the relations for create, show, and edit
-            if ( count($module->fields()->where('is_enable',1)->where('type','foreignId')->orWhere('type','condition')->get()) > 0) {
+        // dd($module);
 
-                $relations .= "$" . $modelNameSingularCamelCase . "->load(";
+        // dd();
 
-                $countForeidnId = count($module->fields()->where('type','foreignId')->orWhere('type','condition')->get());
+        // load the relations for create, show, and edit
+        // if ( count($module->fields()->where('is_enable',1)->where('type','foreignId')->orWhere('type','condition')->get()) > 0) {
+        if (count($module->fields()->where('is_enable', 1)->where('type', 'foreignId')->get()) + count($module->fields()->where('is_enable', 1)->where('type', 'condition')->get()) + count($module->fields()->where('is_enable', 1)->where('type', 'informatic')->get())+ count($module->fields()->where('is_enable', 1)->where('type', 'doublefk')->get()) > 0) {
+            $relations .= "$" . $modelNameSingularCamelCase . "->load(";
 
-                $query = "$modelNameSingularPascalCase::with(";
+            $countForeidnId = count($module->fields()->where('type', 'foreignId')->orWhere('type', 'condition')->orWhere('type', 'informatic')->get());
 
-                foreach ($module->fields()->where('is_enable',1)->get() as $i => $field) {
-                    $field->code = !empty($field->code) ?  GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
-                    if ($field->constrain != null) {
-                        $constrainName = GeneratorUtils::setModelName($field->constrain);
+            $query = "$modelNameSingularPascalCase::with(";
 
-                        $columnsk = GeneratorUtils::singularSnakeCase($constrainName);
-                        $constrainSnakeCase = str()->snake($constrainName). "_" .str()->snake($field->attribute);
+            foreach ($module->fields()->where('is_enable', 1)->get() as $i => $field) {
+                $field->code = !empty($field->code) ? GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
+                if ($field->constrain != null && $field->type != 'doublefk') {
+                    $constrainName = GeneratorUtils::setModelName($field->constrain);
 
-                        $selectedColumns =  'id,'. $field->attribute;
-                        $columnAfterId = $field->attribute;
+                    $columnsk = GeneratorUtils::singularSnakeCase($constrainName);
+                    $constrainSnakeCase = str()->snake($constrainName) . "_" . str()->snake($field->attribute);
 
-                        if ($countForeidnId + 1 < $i) {
-                            $relations .= "'$constrainSnakeCase:$selectedColumns', ";
-                            $query .= "'$constrainSnakeCase:$selectedColumns', ";
-                        } else {
-                            $relations .= "'$constrainSnakeCase:$selectedColumns'";
-                            $query .= "'$constrainSnakeCase:$selectedColumns'";
-                        }
+                    $selectedColumns = 'id,' . $field->attribute;
+                    $columnAfterId = $field->attribute;
 
-                        // id name created_at
-                        //$row->category->name
+                    if ($countForeidnId + 1 < $i) {
+                        $relations .= "'$constrainSnakeCase:$selectedColumns', ";
+                        $query .= "'$constrainSnakeCase:$selectedColumns', ";
+                    } else {
+                        $relations .= "'$constrainSnakeCase:$selectedColumns'";
+                        $query .= "'$constrainSnakeCase:$selectedColumns'";
+                    }
+
+                    // id name created_at
+                    //$row->category->name
 
 
 
-                        $addColumns .= "->addColumn('$constrainSnakeCase', function (\$row) {
+                    $addColumns .= "->addColumn('$constrainSnakeCase', function (\$row) {
 
                             if (!is_a(\$row->" . $constrainSnakeCase . ", 'Illuminate\Database\Eloquent\Collection')) {
 
@@ -290,15 +295,68 @@ class WebControllerGenerator
 
 
                 })";
-                    }
                 }
 
-                $query .= ")";
-                $relations .= ");\n\n\t\t";
+                if ($field->constrain != null && $field->type  == 'doublefk') {
+                    $constrainName = GeneratorUtils::setModelName($field->constrain);
+                    $constrainName2 = GeneratorUtils::setModelName($field->constrain2);
 
-                $query = str_replace("''", "', '", $query);
-                $relations = str_replace("''", "', '", $relations);
+                    $columnsk = GeneratorUtils::singularSnakeCase($constrainName);
+                    $columnsk2 = GeneratorUtils::singularSnakeCase($constrainName2);
+
+                    $constrainSnakeCase = str()->snake($constrainName) . "_" . str()->snake($field->attribute);
+                    $constrainSnakeCase2 = str()->snake($constrainName2) . "_" . str()->snake($field->attribute2);
+
+                    $selectedColumns = 'id,' . $field->attribute ;
+                    $selectedColumns2 = 'id,' . $field->attribute2 ;
+
+                    $columnAfterId = $field->attribute;
+                    $columnAfterId2 = $field->attribute2;
+
+                    if ($countForeidnId + 1 < $i) {
+                        $relations .= "'$constrainSnakeCase:$selectedColumns', ";
+                        $relations .= "'$constrainSnakeCase2:$selectedColumns2', ";
+                        $query .= "'$constrainSnakeCase:$selectedColumns', ";
+                        $query .= "'$constrainSnakeCase2:$selectedColumns2', ";
+                    } else {
+                        $relations .= "'$constrainSnakeCase:$selectedColumns'";
+                        $relations .= "'$constrainSnakeCase2:$selectedColumns2'";
+
+                        $query .= "'$constrainSnakeCase:$selectedColumns'";
+                        $query .= "'$constrainSnakeCase2:$selectedColumns2'";
+                    }
+
+                    // id name created_at
+                    //$row->category->name
+
+
+
+                    $addColumns .= "->addColumn('$constrainSnakeCase', function (\$row) {
+
+                            if (!is_a(\$row->" . $constrainSnakeCase . ", 'Illuminate\Database\Eloquent\Collection')) {
+
+
+                                return \$row->" . $constrainSnakeCase . " ? \$row->" . $constrainSnakeCase . "->$columnAfterId . ', ' . \$row->" . $constrainSnakeCase2 . "->$columnAfterId2  : '';
+                            } else {
+                                \$text = '';
+                                foreach (\$row->" . $constrainSnakeCase . " as \$value) {
+                                    \$text .= \$value->$columnAfterId . ', ';
+                                }
+                                return \$text;
+                            }
+
+
+
+                })";
+                }
             }
+
+            $query .= ")";
+            $relations .= ");\n\n\t\t";
+
+            $query = str_replace("''", "', '", $query);
+            $relations = str_replace("''", "', '", $relations);
+        }
 
         $insertDataAction = $modelNameSingularPascalCase . "::create(\$request->validated());";
         $updateDataAction = "\$" . $modelNameSingularCamelCase . "->update(\$request->validated());";
@@ -387,7 +445,7 @@ class WebControllerGenerator
         switch ($path) {
             case '':
                 file_put_contents(app_path("/Http/Controllers/Admin/{$modelNameSingularPascalCase}Controller.php"), $template);
-                if (!File::exists(app_path("/Http/Controllers/Admin/{$modelNameSingularPascalCase}Trait.php"))){
+                if (!File::exists(app_path("/Http/Controllers/Admin/{$modelNameSingularPascalCase}Trait.php"))) {
                     file_put_contents(app_path("/Http/Controllers/Admin/{$modelNameSingularPascalCase}Trait.php"), $templatetrait);
                 }
                 break;
@@ -395,7 +453,7 @@ class WebControllerGenerator
                 $fullPath = app_path("/Http/Controllers/Admin/$path/");
                 GeneratorUtils::checkFolder($fullPath);
                 file_put_contents("$fullPath" . $modelNameSingularPascalCase . "Controller.php", $template);
-                if (!File::exists("$fullPath" . $modelNameSingularPascalCase . "Trait.php")){
+                if (!File::exists("$fullPath" . $modelNameSingularPascalCase . "Trait.php")) {
                     file_put_contents("$fullPath" . $modelNameSingularPascalCase . "Trait.php", $templatetrait);
 
                 }

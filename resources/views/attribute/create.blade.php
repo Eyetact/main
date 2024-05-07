@@ -95,18 +95,22 @@
                                 <option value="search">Search</option>
                                 <option value="image">Image (all format: png,jpg,,,etc)</option>
                                 <option value="file">File</option>
-                                <option value="number">Number</option>
+                                {{-- <option value="number">Number</option> --}}
                                 <option value="number">Integer Number</option>
                                 <option value="decimal">Decimal Number</option>
                                 <option value="range">Range</option>
-                                <option value="radio">Radio ( True, False )</option>
+                                {{-- <option value="radio">Radio ( True, False )</option> --}}
+                                <option value="switch">Yes Or No</option>
                                 <option value="date">Date</option>
-                                <option value="month">Month</option>
+                                <option value="month">Months Of The Year</option>
                                 <option value="time">Time</option>
                                 <option value="datalist">Datalist ( Year List )</option>
                                 <option value="datetime-local">Date And Time</option>
                                 <option value="select">Select</option>
+                                <option value="radioselect">Radio</option>
                                 <option value="foreignId">Lookup</option>
+                                <option value="informatic">Informatic Attribute</option>
+                                <option value="doublefk">Double Attribute</option>
                                 <option value="condition">Condition Lookup</option>
 
                                 {{-- <option value="assign">Assign</option> --}}
@@ -168,7 +172,7 @@
     </div>
 
 
-    <div class="card">
+    <div class="card source-card">
         <div class="card-header">
             <h3 class="card-title">Source</h3>
         </div>
@@ -218,8 +222,7 @@
                         <input type="checkbox" name="is_system" class="custom-switch-input" id="is_system"
                             {{ $attribute->is_system == 1 ? 'checked' : '' }}>
                         <span class="custom-switch-indicator"></span>
-                        <span class="custom-switch-description">System (This attribute is only available for
-                            admin)</span>
+                        <span class="custom-switch-description">Global</span>
                     </label>
                 </div>
                 <div class="col-md-12">

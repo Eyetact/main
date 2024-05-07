@@ -221,12 +221,13 @@
                                 <select class="google-input assign_g" name="ids[]" tabindex="null" multiple>
                                     @foreach (\App\Models\Admin\{{code2}}::where('user_id',1)->where('global',1)->where('status','active')->where('assign_id',null)
                                     ->orWhere('user_id',auth()->user()->user_id)->where('global',1)->where('status','active')->where('assign_id',null)->get() as $item)
-
+                                    @if($item)
                                     @php
                                         $column = \App\Generators\GeneratorUtils::getColumnAfterId('{{code}}');
                                     @endphp
                                         <option value="{{ $item->id }}">{{ $item->id }} - {{ $item->$column }}
                                         </option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -431,6 +432,8 @@ output {
             $(document).on('change', 'select', function() {
                 var main_model = $(this).attr('id'); //element
 
+                var $this = $(this);
+
                 try {
                 var prev = $(this).closest('td').find('input').val( $(this).find('option:selected').data('id') );
                 // alert($(this).data('id'))
@@ -441,6 +444,8 @@ output {
                 if ($('[data-source=' + main_model + ']').attr('id') == undefined) {
                     return;
                 }
+                var inform = $(this).data('inform'); //element
+
 
                 console.log('main_model:' + main_model)
                 var main_model_id = $(this).find('option:selected').val(); // 1
@@ -455,6 +460,7 @@ output {
                     var constrain = $(this).data('constrain')
                     var id = $(this).find('option:selected').val()
                     // $('[data-source='+constrain+']').hide();
+                    $('[data-source='+constrain+']').val('');
                     $('[data-source='+constrain+']').find('option').hide();
                     console.log('option[data-' + constrain + '=' + id + ']')
                     $('[data-source='+constrain+']').find('option[data-' + constrain + '=' + id + ']')
@@ -481,6 +487,9 @@ output {
                     }else{
                         $tag_source = $('[name=' + $e_id[0] + '_' + $e_string2 + '_' + $e_id[1] + ']').data('source');
                     }
+                        if (inform) {
+                        $tag_source = $this.parent().parent().parent().find('input').data('source');
+                    }
 
                     if ($tag_source == main_model) {
 
@@ -496,6 +505,10 @@ output {
                             url: path,
                             success: function(response) {
                                 console.log(response);
+                                if(inform){
+                                    $this.parent().parent().parent().find('input').val(response.data);
+                                    return;
+                                }
                                 if( $('[name=' + $e_string + ']').data('source') != undefined){
                                     $('select[name=' + response.id + ']').find('option').hide();
                                     $('select[name=' + response.id + ']').find('option[value=' + response.data_id + ']').prop('selected', true).show();
@@ -809,6 +822,7 @@ output {
                     });
                     changeEvents()
                                             $('#role_form_modal').find('select[multiple]').select2();
+                                            $('.inform').trigger('change');
 
                 }
             });
