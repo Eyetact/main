@@ -472,25 +472,25 @@
 
         $(document).on('change', 'select[name=attribute]', function() {
 
-            var selectedValue = $('.lookup-drop').val();
-            var modifiedValue = selectedValue + '_' + $(this).val() + '_id';
-            // alert(modifiedValue);
+                    var selectedValue = $('.lookup-drop').val();
+                    var modifiedValue = selectedValue + '_' + $(this).val() + '_id';
+                    // alert(modifiedValue);
 
-            $('.input-code').val(modifiedValue);
-            $('.input-code').prop('readonly', true);
+                    $('.input-code').val(modifiedValue);
+                    $('.input-code').prop('readonly', true);
 
-            // alert('hi 2');
+                    // alert('hi 2');
 
-            var list = `{!! $all !!}`;
+                    var list = `{!! $all !!}`;
 
-            if ($('.form-input-types').val() == 'informatic' || $('.form-input-types').val() == 'doublefk') {
-
-
+                    if ($('.form-input-types').val() == 'informatic' || $('.form-input-types').val() == 'doublefk') {
 
 
 
-                $(`.options`).append(`
-    <div class="input-box form-constrain mt-2">
+
+
+                            $(`.options`).append(`
+    <div class="input-box form-constrain fkey2 mt-2">
         <div class="input-box form-on-update mt-2 form-on-update-foreign">
             <select class="google-input lookup-drop2"  name="constrains2" required>
                ${list}
@@ -512,24 +512,78 @@
     <input type="hidden" name="on_delete_foreign" class="google-input" value="1">
 
 
-`)
+`);
 
 
-            }
-        });
-        $(document).on('change', '.lookup-drop', function() {
-            $('.cb').remove()
-            $('.child-drop').remove();
-            $('.cond-wrapper').remove();
-            var id = $(this).find(':selected').data('id');
+                        }
 
-            var parent = $(this).parent().parent().parent().parent().find('.options');
-            $.ajax({
-                url: '{{ url('/') }}/attribute-by-module/' + id,
-                success: function(response) {
-                    console.log(response);
-                    if ($('.form-input-types').val() == 'informatic' || $('.form-input-types').val() == 'doublefk') {
-                    parent.append(` <div class="input-box child-drop form-constrain mt-2">
+                        if ($('.secondary-drop').val() == 'lookprefix' || $('.secondary-drop').val() == 'looksuffix') {
+
+var id = $('.lookup-drop').find(':selected').data('id');
+$.ajax({
+    url: '{{ url('/') }}/get-belongs-to/' + id,
+    success: function(response) {
+        console.log(response);
+
+
+        $(`.options`).append(`
+<div class="input-box form-constrain fkey2 mt-2">
+<div class="input-box form-on-update mt-2 form-on-update-foreign">
+<select class="google-input lookup-drop2"  name="constrains2" required>
+${response}
+</select>
+</div>
+<small class="text-secondary">
+<ul class="my-1 mx-2 p-0">
+<li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
+<li>Field name must be related model + "_id", e.g.: user_id</li>
+</ul>
+</small>
+</div>
+<div class="input-box form-foreign-id mt-2">
+<input type="hidden" name="foreign_ids" class="google-input" placeholder="Foreign key (optional)">
+</div>
+
+<input type="hidden" name="on_update_foreign" class="google-input" value="1">
+
+<input type="hidden" name="on_delete_foreign" class="google-input" value="1">
+
+
+`);
+
+
+    }});
+
+}
+
+                    }); $(document).on('change', '.lookup-drop', function() {
+                    $('.cb').remove()
+                    $('.child-drop').remove();
+                    $('.cond-wrapper').remove();
+
+
+                    if ($(`.secondary-drop`).val() == "looksuffix" || $(`.secondary-drop`).val() == "lookprefix")
+
+                    {
+                    $('.fkey2').hide();
+                    $('.child-drop2').hide()
+
+
+                    $('select[name=attribute]').trigger('change');
+
+                    }
+
+                    var id = $(this).find(':selected').data('id');
+
+                    var parent = $(this).parent().parent().parent().parent().find('.options');
+                    $.ajax({
+                        url: '{{ url('/') }}/attribute-by-module/' + id,
+                        success: function(response) {
+                            console.log(response);
+                            if ($('.form-input-types').val() == 'informatic' || $('.form-input-types')
+                            .val() ==
+                                'doublefk' || $('.form-input-types').val() == 'doubleattr') {
+                                parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="attribute" required>
                            ${response}
@@ -538,8 +592,9 @@
 
 
 
-                    `);}else{
-                        parent.append(` <div class="input-box child-drop form-constrain mt-2">
+                    `);
+                            } else {
+                                parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="attribute" required>
                            ${response}
@@ -555,11 +610,11 @@
                     </label>
                 </div>
                     `);
-                    }
+                            }
 
-                    if ($('.form-input-types').val() == 'condition') {
+                            if ($('.form-input-types').val() == 'condition') {
 
-                        parent.append(` <div class="input-box cond-wrapper form-constrain mt-2">
+                                parent.append(` <div class="input-box cond-wrapper form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input condition-drop" name="condition_attr" required>
                            ${response}
@@ -567,32 +622,35 @@
                     </div></div>
                     `);
 
-                    }
+                            }
 
-                    var selectedValue = $('.lookup-drop').val();
-                    var modifiedValue = selectedValue + '_id';
-                    // alert(modifiedValue);
+                            var selectedValue = $('.lookup-drop').val();
+                            var modifiedValue = selectedValue + '_id';
+                            // alert(modifiedValue);
 
-                    $('.input-code').val(modifiedValue);
-                    $('.input-code').prop('readonly', true);
+                            $('.input-code').val(modifiedValue);
+                            $('.input-code').prop('readonly', true);
 
 
 
-                }
-            });
-        })
+                        }
+                    });
+                })
 
-        $(document).on('change', '.lookup-drop2', function() {
+                $(document).on('change', '.lookup-drop2', function() {
 
-            var id = $(this).find(':selected').data('id');
+                    var id = $(this).find(':selected').data('id');
 
-            var parent = $(this).parent().parent().parent().parent().find('.options');
-            $.ajax({
-                url: '{{ url('/') }}/attribute-by-module/' + id,
-                success: function(response) {
-                    console.log(response);
+                    var parent = $(this).parent().parent().parent().parent().find('.options');
+                    $.ajax({
+                        url: '{{ url('/') }}/attribute-by-module/' + id,
+                        success: function(response) {
+                            console.log(response);
 
-                    parent.append(` <div class="input-box child-drop form-constrain mt-2">
+
+                            if ($('.form-input-types').val() == 'doubleattr') {
+
+                                parent.append(` <div class="input-box child-drop2 form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="attribute2" required>
                            ${response}
@@ -603,9 +661,26 @@
 
                     `);
 
-                    if ($('.form-input-types').val() == 'condition') {
+                            }
 
-                        parent.append(` <div class="input-box cond-wrapper form-constrain mt-2">
+                            if ($('.form-input-types').val() != 'doubleattr') {
+
+                                parent.append(` <div class="input-box child-drop form-constrain mt-2">
+<div class="input-box form-on-update mt-2 form-on-update-foreign">
+    <select class="google-input " name="attribute2" required>
+       ${response}
+    </select>
+</div></div>
+
+
+
+`);
+
+                            }
+
+                            if ($('.form-input-types').val() == 'condition') {
+
+                                parent.append(` <div class="input-box cond-wrapper form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input condition-drop" name="condition_attr" required>
                            ${response}
@@ -613,29 +688,29 @@
                     </div></div>
                     `);
 
-                    }
+                            }
 
 
 
-                }
-            });
-        })
+                        }
+                    });
+                })
 
 
-        $(document).on('change', '.condition-drop', function() {
-            $('.cond2-wrapper').remove()
-            var conditionId = $(this).find(':selected').val();
-            var modelId = $('.lookup-drop').find(':selected').data('id');
+                $(document).on('change', '.condition-drop', function() {
+                    $('.cond2-wrapper').remove()
+                    var conditionId = $(this).find(':selected').val();
+                    var modelId = $('.lookup-drop').find(':selected').data('id');
 
-            var parent = $(this).parent().parent().parent().parent().find('.options');
+                    var parent = $(this).parent().parent().parent().parent().find('.options');
 
 
-            $.ajax({
-                url: '{{ url('/') }}/data-by-module/' + modelId + '/' + conditionId,
-                success: function(response) {
-                    console.log(response);
+                    $.ajax({
+                        url: '{{ url('/') }}/data-by-module/' + modelId + '/' + conditionId,
+                        success: function(response) {
+                            console.log(response);
 
-                    parent.append(` <div class="input-box child cond2-wrapper form-constrain mt-2">
+                            parent.append(` <div class="input-box child cond2-wrapper form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="condition_value[]" required multiple>
                            ${response}
@@ -646,25 +721,26 @@
 
                     `);
 
-                }
-            });
-        })
-        $(document).on('change', '.multi-type', function() {
-            let index = parseInt($(this).parent().parent().parent().find('.text-center').find('.input-box').html());
-            // alert(index);
-            $(this).parent().parent().find('.c-f').remove()
-            $(this).parent().parent().find('.child-drop').remove()
-            $(this).parent().parent().find('.s-option').remove()
-            if ($(this).val() == 'select') {
-                $(this).parent().parent().find('.select_options').append(`<div class="input-box s-option mt-2">
+                        }
+                    });
+                })
+                 $(document).on('change', '.multi-type', function() {
+                    let index = parseInt($(this).parent().parent().parent().find('.text-center').find('.input-box')
+                        .html());
+                    // alert(index);
+                    $(this).parent().parent().find('.c-f').remove()
+                    $(this).parent().parent().find('.child-drop').remove()
+                    $(this).parent().parent().find('.s-option').remove()
+                    if ($(this).val() == 'select') {
+                        $(this).parent().parent().find('.select_options').append(`<div class="input-box s-option mt-2">
                 <input type="text" name="multi[${index}][select_options]" class="google-input" placeholder="Seperate with '|', e.g.: water|fire">
             </div>`);
-            } else if ($(this).val() == 'foreignId') {
-                var list = `{!! $all !!}`;
+                    } else if ($(this).val() == 'foreignId') {
+                        var list = `{!! $all !!}`;
 
 
 
-                $(this).parent().parent().find('.select_options').append(` <div class="input-box c-f form-constrain mt-2">
+                        $(this).parent().parent().find('.select_options').append(` <div class="input-box c-f form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input select-module" name="multi[${index}][constrain]" required>
                            ${list}
@@ -680,40 +756,185 @@
 
               `);
 
-            }
+                    }
 
-        })
-
-        $(document).on('change', '.form-column-types', function() {
-            // alert($(this).val())
-            var index = 0;
-            let switchRequired = $(`.switch-requireds`)
-
-            switchRequired.prop('checked', true)
-            switchRequired.prop('disabled', false)
-
-            $('.input-code').prop('readonly', false);
+                })
 
 
+                $(document).on('change', '.secondary-drop', function() {
 
-            $(`.form-default-value`).remove()
-            $(`.custom-values`).append(`
+
+                    if ($(`.secondary-drop`).val() == "looksuffix" || $(`.secondary-drop`).val() == "lookprefix") {
+
+                        // alert('hi');
+                        $('.fixed-val').hide();
+
+
+                        $('.fkey2').hide();
+
+
+                        $('.child-drop2').hide()
+                        $('select[name=attribute]').trigger('change');
+
+                    } else {
+
+
+                        $('.fkey2').hide();
+
+                        $('.fixed-val').show();
+                        $('.child-drop2').hide()
+                    }
+
+                })
+
+                $(document).on('change', '.primary-drop', function() {
+
+                    // alert($('.primary-drop').val());
+
+                    if ($(`.primary-drop`).val() == "select") {
+                        $(`.form-min-lengths`).hide()
+                        $(`.form-max-lengths`).hide()
+                        $('.fkey').hide();
+                        $('.fkey2').hide();
+                        $('select[name=attribute]').hide()
+                        $('.child-drop').hide()
+
+                        $('.fixed-val').show();
+
+                        $('.secondary-drop option[value="lookprefix"]').remove();
+                        $('.secondary-drop option[value="looksuffix"]').remove();
+
+                        $(`.options`).append(`
+<div class="option_fields select-drop mt-5">
+    <div class="form-group col-sm-12">
+                        <label class="custom-switch form-label">
+                            <input type="checkbox" name="is_multi" class="custom-switch-input" id="multi-select" >
+                            <span class="custom-switch-indicator"></span>
+                            <span class="custom-switch-description">Multi Select</span>
+                        </label>
+                    </div>
+
+            <div class="table-responsive">
+                <table class="table card-table table-vcenter text-nowrap table-light draggable-table"
+                    id="type_options">
+                    <thead class="bg-gray-700 text-white">
+                        <tr>
+                            <th></th>
+                            <th class="text-white">Is Default</th>
+                            <th class="text-white">Label</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="4"><button id="addRow" type="button"
+                                    class="btn btn-info">Add Option</button></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+`)
+                    }
+
+                    if ($(`.primary-drop`).val() == "lookup") {
+
+
+                        $('.select-drop').hide();
+
+                        $(`.form-min-lengths`).hide()
+                        $(`.form-max-lengths`).hide()
+
+
+
+                        $(`.secondary-drop`).append(`
+                <option value="lookprefix">Lookup prefix</option>
+                                  <option value="looksuffix">Lookup suffix</option>
+
+                                  `)
+
+                        var list = `{!! $all !!}`;
+                        // alert( list )
+
+                        $(`.options`).append(`
+                <div class="input-box form-constrain fkey mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input lookup-drop"  name="constrains" required>
+                           ${list}
+                        </select>
+                    </div>
+                    <small class="text-secondary">
+                        <ul class="my-1 mx-2 p-0">
+                            <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
+                            <li>Field name must be related model + "_id", e.g.: user_id</li>
+                        </ul>
+                    </small>
+                </div>
+                <div class="input-box form-foreign-id mt-2">
+                    <input type="hidden" name="foreign_ids" class="google-input" placeholder="Foreign key (optional)">
+                </div>
+
+                <input type="hidden" name="on_update_foreign" class="google-input" value="1">
+
+                <input type="hidden" name="on_delete_foreign" class="google-input" value="1">
+
+
+            `)
+                    }
+
+
+
+
+                    if ($(`.primary-drop`).val() != "select" && $(`.primary-drop`).val() != "lookup") {
+
+                        $('.select-drop').hide();
+                        $('.fkey').hide();
+                        $('.fkey2').hide();
+                        $('.child-drop').hide()
+                        $('select[name=attribute]').hide()
+
+                        $(`.form-min-lengths`).show()
+                        $(`.form-max-lengths`).show()
+
+                        $('.secondary-drop option[value="lookprefix"]').remove();
+                        $('.secondary-drop option[value="looksufffix"]').remove();
+
+                    }
+
+                })
+
+                $(document).on('change', '.form-column-types', function() {
+                    // alert($(this).val())
+                    var index = 0;
+                    let switchRequired = $(`.switch-requireds`)
+
+                    switchRequired.prop('checked', true)
+                    switchRequired.prop('disabled', false)
+
+                    $('.input-code').prop('readonly', false);
+
+
+
+                    $(`.form-default-value`).remove()
+                    $(`.custom-values`).append(`
             <div class="form-group form-default-value ">
                 <input type="hidden" name="default_values">
             </div>
         `)
 
-            if ($(this).val() == 'enum') {
-                removeAllInputHidden(index)
-                checkMinAndMaxLength(index)
-                addColumTypeHidden(index)
-                $('.source-card').hide();
-                $('.deff-class').hide();
+                    if ($(this).val() == 'enum') {
+                        removeAllInputHidden(index)
+                        checkMinAndMaxLength(index)
+                        addColumTypeHidden(index)
+                        $('.source-card').hide();
+                        $('.deff-class').hide();
 
-                $(`.form-option`).remove()
+                        $(`.form-option`).remove()
 
-                if ($(`.form-input-types`).val() == "select") {
-                    $(`.options`).append(`
+                        if ($(`.form-input-types`).val() == "select") {
+                            $(`.options`).append(`
             <div class="option_fields mt-5">
                 <div class="form-group col-sm-12">
                                     <label class="custom-switch form-label">
@@ -746,10 +967,10 @@
                         </div>
                     </div>
             `)
-                }
+                        }
 
-                if ($(`.form-input-types`).val() == "radioselect") {
-                    $(`.options`).append(`
+                        if ($(`.form-input-types`).val() == "radioselect") {
+                            $(`.options`).append(`
             <div class="option_fields mt-5">
 
                         <div class="table-responsive">
@@ -775,19 +996,19 @@
                         </div>
                     </div>
             `)
-                }
+                        }
 
 
-            } else if ($(this).val() == 'multi') {
-                removeAllInputHidden(index)
-                checkMinAndMaxLength(index)
-                addColumTypeHidden(index)
-                $('.source-card').hide();
-                $('.deff-class').hide();
+                    } else if ($(this).val() == 'multi') {
+                        removeAllInputHidden(index)
+                        checkMinAndMaxLength(index)
+                        addColumTypeHidden(index)
+                        $('.source-card').hide();
+                        $('.deff-class').hide();
 
-                $(`.form-option`).remove()
+                        $(`.form-option`).remove()
 
-                $(`.options`).append(`
+                        $(`.options`).append(`
                 <div class="multi-options">
                                 <div class="attr_header row flex justify-content-end my-5 align-items-end">
                                     <input title="Reset form" class="btn btn-success" id="add_new_tr" type="button"
@@ -872,87 +1093,87 @@
                             </div>
                 `)
 
-                //     $(`.form-input-types`).html(`
-            //     <option value="" disabled selected>-- Select input type --</option>
-            //     <option value="select">Select</option>
-            //     <option value="radio">Radio</option>
-            //     <option value="datalist">Datalist</option>
-            // `)
+                        //     $(`.form-input-types`).html(`
+                    //     <option value="" disabled selected>-- Select input type --</option>
+                    //     <option value="select">Select</option>
+                    //     <option value="radio">Radio</option>
+                    //     <option value="datalist">Datalist</option>
+                    // `)
 
 
-            } else if ($(this).val() == 'date') {
-                removeAllInputHidden(index)
-                checkMinAndMaxLength(index)
-                addColumTypeHidden(index)
-                $('.source-card').hide();
-                $('.deff-class').hide();
+                    } else if ($(this).val() == 'date') {
+                        removeAllInputHidden(index)
+                        checkMinAndMaxLength(index)
+                        addColumTypeHidden(index)
+                        $('.source-card').hide();
+                        $('.deff-class').hide();
 
-                //     $(`.form-input-types`).html(`
-            //     <option value="" disabled selected>-- Select input type --</option>
-            //     <option value="date">Date</option>
-            //     <option value="month">Month</option>
-            // `)
+                        //     $(`.form-input-types`).html(`
+                    //     <option value="" disabled selected>-- Select input type --</option>
+                    //     <option value="date">Date</option>
+                    //     <option value="month">Month</option>
+                    // `)
 
-            } else if ($(this).val() == 'time') {
-                checkMinAndMaxLength(index)
-                removeAllInputHidden(index)
-                addColumTypeHidden(index)
-                $('.source-card').hide();
-                $('.deff-class').hide();
+                    } else if ($(this).val() == 'time') {
+                        checkMinAndMaxLength(index)
+                        removeAllInputHidden(index)
+                        addColumTypeHidden(index)
+                        $('.source-card').hide();
+                        $('.deff-class').hide();
 
-                //     $(`.form-input-types`).html(`
-            //     <option value="" disabled selected>-- Select input type --</option>
-            //     <option value="time">Time</option>
-            // `)
+                        //     $(`.form-input-types`).html(`
+                    //     <option value="" disabled selected>-- Select input type --</option>
+                    //     <option value="time">Time</option>
+                    // `)
 
-                $(`.form-min-lengths`).prop('readonly', true).hide()
-                $(`.form-max-lengths`).prop('readonly', true).hide()
-                $(`.form-min-lengths`).val('')
-                $(`.form-max-lengths`).val('')
+                        $(`.form-min-lengths`).prop('readonly', true).hide()
+                        $(`.form-max-lengths`).prop('readonly', true).hide()
+                        $(`.form-min-lengths`).val('')
+                        $(`.form-max-lengths`).val('')
 
-            } else if ($(this).val() == 'year') {
-                removeAllInputHidden(index)
-                checkMinAndMaxLength(index)
-                addColumTypeHidden(index)
-                $('.source-card').hide();
-                $('.deff-class').hide();
+                    } else if ($(this).val() == 'year') {
+                        removeAllInputHidden(index)
+                        checkMinAndMaxLength(index)
+                        addColumTypeHidden(index)
+                        $('.source-card').hide();
+                        $('.deff-class').hide();
 
-                //     $(`.form-input-types`).html(`
-            //     <option value="" disabled selected>-- Select input type --</option>
-            //     <option value="select">Select</option>
-            //     <option value="datalist">Datalist</option>
-            // `)
+                        //     $(`.form-input-types`).html(`
+                    //     <option value="" disabled selected>-- Select input type --</option>
+                    //     <option value="select">Select</option>
+                    //     <option value="datalist">Datalist</option>
+                    // `)
 
-            } else if ($(this).val() == 'dateTime') {
-                removeAllInputHidden(index)
-                checkMinAndMaxLength(index)
-                addColumTypeHidden(index)
-                $('.source-card').hide();
-                $('.deff-class').hide();
+                    } else if ($(this).val() == 'dateTime') {
+                        removeAllInputHidden(index)
+                        checkMinAndMaxLength(index)
+                        addColumTypeHidden(index)
+                        $('.source-card').hide();
+                        $('.deff-class').hide();
 
-                //     $(`.form-input-types`).html(`
-            //     <option value="" disabled selected>-- Select input type --</option>
-            //     <option value="datetime-local">Datetime local</option>
-            // `)
+                        //     $(`.form-input-types`).html(`
+                    //     <option value="" disabled selected>-- Select input type --</option>
+                    //     <option value="datetime-local">Datetime local</option>
+                    // `)
 
-            } else if ($(this).val() == 'foreignId') {
-                // alert('hi');
-                removeAllInputHidden(index)
-                checkMinAndMaxLength(index)
-                $('.source-card').show();
-                $('.deff-class').hide();
+                    } else if ($(this).val() == 'foreignId') {
+                        // alert('hi');
+                        removeAllInputHidden(index)
+                        checkMinAndMaxLength(index)
+                        $('.source-card').show();
+                        $('.deff-class').hide();
 
-                $(`.form-option`).remove()
+                        $(`.form-option`).remove()
 
-                $(`.options`).append(`
+                        $(`.options`).append(`
                 <input type="hidden" name="select_options" class="form-option">
             `)
 
-                // var list = `<option>aaaa</option>`;
-                var list = `{!! $all !!}`;
-                // alert( list )
+                        // var list = `<option>aaaa</option>`;
+                        var list = `{!! $all !!}`;
+                        // alert( list )
 
-                $(`.options`).append(`
+                        $(`.options`).append(`
                 <div class="input-box form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input lookup-drop"  name="constrains" required>
@@ -977,83 +1198,30 @@
 
             `)
 
-                //     $(`.form-input-types`).html(`
-            //     <option value="" disabled selected>-- Select input type --</option>
-            //     <option value="select">Select</option>
-            //     <option value="datalist">Datalist</option>
-            // `)
+                        //     $(`.form-input-types`).html(`
+                    //     <option value="" disabled selected>-- Select input type --</option>
+                    //     <option value="select">Select</option>
+                    //     <option value="datalist">Datalist</option>
+                    // `)
 
-            } else if ($(this).val() == 'informatic') {
-                // alert('hi');
-                removeAllInputHidden(index)
-                checkMinAndMaxLength(index)
-                $('.source-card').hide();
-                $('.deff-class').hide();
+                    } else if ($(this).val() == 'informatic') {
+                        // alert('hi');
+                        removeAllInputHidden(index)
+                        checkMinAndMaxLength(index)
+                        $('.source-card').hide();
+                        $('.deff-class').hide();
 
-                $(`.form-option`).remove()
+                        $(`.form-option`).remove()
 
-                $(`.options`).append(`
+                        $(`.options`).append(`
                 <input type="hidden" name="select_options" class="form-option">
             `)
 
-                // var list = `<option>aaaa</option>`;
-                var list = `{!! $all !!}`;
-                // alert( list )
+                        // var list = `<option>aaaa</option>`;
+                        var list = `{!! $all !!}`;
+                        // alert( list )
 
-                $(`.options`).append(`
-                <div class="input-box form-constrain mt-2">
-                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
-                        <select class="google-input lookup-drop"  name="constrains" required>
-                           ${list}
-                        </select>
-                    </div>
-                    <small class="text-secondary">
-                        <ul class="my-1 mx-2 p-0">
-                            <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
-                            <li>Field name must be related model + "_id", e.g.: user_id</li>
-                        </ul>
-                    </small>
-                </div>
-                <div class="input-box form-foreign-id mt-2">
-                    <input type="hidden" name="foreign_ids" class="google-input" placeholder="Foreign key (optional)">
-                </div>
-
-                <input type="hidden" name="on_update_foreign" class="google-input" value="1">
-
-                <input type="hidden" name="on_delete_foreign" class="google-input" value="1">
-
-
-
-
-
-            `)
-
-                //     $(`.form-input-types`).html(`
-            //     <option value="" disabled selected>-- Select input type --</option>
-            //     <option value="select">Select</option>
-            //     <option value="datalist">Datalist</option>
-            // `)
-
-            }
-            else if ($(this).val() == 'doublefk') {
-                // alert('hi');
-                removeAllInputHidden(index)
-                checkMinAndMaxLength(index)
-                $('.source-card').hide();
-                $('.deff-class').hide();
-
-                $(`.form-option`).remove()
-
-                $(`.options`).append(`
-                <input type="hidden" name="select_options" class="form-option">
-            `)
-
-                // var list = `<option>aaaa</option>`;
-
-                var list = `{!! $all !!}`;
-                // alert( list )
-
-                $(`.options`).append(`
+                        $(`.options`).append(`
                 <div class="input-box form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input lookup-drop"  name="constrains" required>
@@ -1081,29 +1249,146 @@
 
             `)
 
-                //     $(`.form-input-types`).html(`
-            //     <option value="" disabled selected>-- Select input type --</option>
-            //     <option value="select">Select</option>
-            //     <option value="datalist">Datalist</option>
-            // `)
+                        //     $(`.form-input-types`).html(`
+                    //     <option value="" disabled selected>-- Select input type --</option>
+                    //     <option value="select">Select</option>
+                    //     <option value="datalist">Datalist</option>
+                    // `)
 
-            } else if ($(this).val() == 'condition') {
-                removeAllInputHidden(index)
-                checkMinAndMaxLength(index)
-                $('.source-card').show();
-                $('.deff-class').hide();
+                    } else if ($(this).val() == 'doublefk') {
+                        // alert('hi');
+                        removeAllInputHidden(index)
+                        checkMinAndMaxLength(index)
+                        $('.source-card').hide();
+                        $('.deff-class').hide();
 
-                $(`.form-option`).remove()
+                        $(`.form-option`).remove()
 
-                $(`.options`).append(`
+                        $(`.options`).append(`
                 <input type="hidden" name="select_options" class="form-option">
             `)
 
-                // var list = `<option>aaaa</option>`;
-                var list = `{!! $all !!}`;
-                // alert( list )
+                        // var list = `<option>aaaa</option>`;
 
-                $(`.options`).append(`
+                        var list = `{!! $all !!}`;
+                        // alert( list )
+
+                        $(`.options`).append(`
+                <div class="input-box form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input lookup-drop"  name="constrains" required>
+                           ${list}
+                        </select>
+                    </div>
+                    <small class="text-secondary">
+                        <ul class="my-1 mx-2 p-0">
+                            <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
+                            <li>Field name must be related model + "_id", e.g.: user_id</li>
+                        </ul>
+                    </small>
+                </div>
+                <div class="input-box form-foreign-id mt-2">
+                    <input type="hidden" name="foreign_ids" class="google-input" placeholder="Foreign key (optional)">
+                </div>
+
+                <input type="hidden" name="on_update_foreign" class="google-input" value="1">
+
+                <input type="hidden" name="on_delete_foreign" class="google-input" value="1">
+
+
+
+
+
+            `)
+
+                        //     $(`.form-input-types`).html(`
+                    //     <option value="" disabled selected>-- Select input type --</option>
+                    //     <option value="select">Select</option>
+                    //     <option value="datalist">Datalist</option>
+                    // `)
+
+                    } else if ($(this).val() == 'doubleattr') {
+                        // alert('hi');
+                        removeAllInputHidden(index)
+                        checkMinAndMaxLength(index)
+                        $('.source-card').hide();
+                        $('.deff-class').hide();
+
+                        $(`.form-option`).remove()
+
+                        $(`.options`).append(`
+                <input type="hidden" name="select_options" class="form-option">
+            `)
+
+                        // var list = `<option>aaaa</option>`;
+
+
+                        // alert( list )
+
+                        $(`.options`).append(`
+                <div class="input-box form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input primary-drop"  name="primary" required>
+                            <option value="" disabled selected>-- Select primary attribute --</option>
+                                  <option value="text">Text</option>
+                                  <option value="integer">Integer Number</option>
+                                  <option value="decimal">Decimal Number</option>
+                                  <option value="select">Select</option>
+                                  <option value="lookup">Lookup</option>
+                        </select>
+                    </div>
+                    </div>
+
+                    <div class="input-box form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input secondary-drop"  name="secondary" required>
+                            <option value="" disabled selected>-- Select secondary attribute --</option>
+                                  <option value="prefix">fixed prefix</option>
+                                  <option value="suffix">fixed suffix</option>
+
+
+                        </select>
+                    </div>
+                    </div>
+
+                    <div class="col-sm-12 input-box fixed-val">
+                            <label class="form-label" for="fixed_value">Fixed value<span class="text-red">*</span></label>
+                            <input type="text" name="fixed_value" id="fixed_value"
+                                class="google-input @error('fixed_value') is-invalid @enderror"
+                                value="">
+                            @error('fixed_value')
+                                <span class="error name-error">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+
+            `)
+
+
+
+                        //     $(`.form-input-types`).html(`
+                    //     <option value="" disabled selected>-- Select input type --</option>
+                    //     <option value="select">Select</option>
+                    //     <option value="datalist">Datalist</option>
+                    // `)
+
+                    } else if ($(this).val() == 'condition') {
+                        removeAllInputHidden(index)
+                        checkMinAndMaxLength(index)
+                        $('.source-card').show();
+                        $('.deff-class').hide();
+
+                        $(`.form-option`).remove()
+
+                        $(`.options`).append(`
+                <input type="hidden" name="select_options" class="form-option">
+            `)
+
+                        // var list = `<option>aaaa</option>`;
+                        var list = `{!! $all !!}`;
+                        // alert( list )
+
+                        $(`.options`).append(`
                 <div class="input-box form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input lookup-drop"  name="constrains" required>
@@ -1128,225 +1413,228 @@
 
             `)
 
-                //     $(`.form-input-types`).html(`
-            //     <option value="" disabled selected>-- Select input type --</option>
-            //     <option value="select">Select</option>
-            //     <option value="datalist">Datalist</option>
-            // `)
+                        //     $(`.form-input-types`).html(`
+                    //     <option value="" disabled selected>-- Select input type --</option>
+                    //     <option value="select">Select</option>
+                    //     <option value="datalist">Datalist</option>
+                    // `)
 
-            } else if (
-                $(this).val() == 'text' ||
-                $(this).val() == 'longText' ||
-                $(this).val() == 'mediumText' ||
-                $(this).val() == 'tinyText' ||
-                $(this).val() == 'string'
-            ) {
-                removeAllInputHidden(index)
-                checkMinAndMaxLength(index)
-                addColumTypeHidden(index)
-                $('.source-card').hide();
-                $('.deff-class').hide();
+                    } else if (
+                        $(this).val() == 'text' ||
+                        $(this).val() == 'longText' ||
+                        $(this).val() == 'mediumText' ||
+                        $(this).val() == 'tinyText' ||
+                        $(this).val() == 'string'
+                    ) {
+                        removeAllInputHidden(index)
+                        checkMinAndMaxLength(index)
+                        addColumTypeHidden(index)
+                        $('.source-card').hide();
+                        $('.deff-class').hide();
 
-                //     $(`.form-input-types`).html(`
-            //     <option value="" disabled selected>-- Select input type --</option>
-            //     <option value="text">Text</option>
-            //     <option value="textarea">Textarea</option>
-            //     <option value="email">Email</option>
-            //     <option value="tel">Telepon</option>
-            //     <option value="password">Password</option>
-            //     <option value="url">Url</option>
-            //     <option value="search">Search</option>
-            //     <option value="file">File</option>
-            //     <option value="hidden">Hidden</option>
-            //     <option value="no-input">No Input</option>
-            // `)
+                        //     $(`.form-input-types`).html(`
+                    //     <option value="" disabled selected>-- Select input type --</option>
+                    //     <option value="text">Text</option>
+                    //     <option value="textarea">Textarea</option>
+                    //     <option value="email">Email</option>
+                    //     <option value="tel">Telepon</option>
+                    //     <option value="password">Password</option>
+                    //     <option value="url">Url</option>
+                    //     <option value="search">Search</option>
+                    //     <option value="file">File</option>
+                    //     <option value="hidden">Hidden</option>
+                    //     <option value="no-input">No Input</option>
+                    // `)
 
-            } else if (
-                $(this).val() == 'integer' ||
-                $(this).val() == 'mediumInteger' ||
-                $(this).val() == 'bigInteger' ||
-                $(this).val() == 'decimal' ||
-                $(this).val() == 'double' ||
-                $(this).val() == 'float' ||
-                $(this).val() == 'tinyInteger'
-            ) {
-                removeAllInputHidden(index)
-                checkMinAndMaxLength(index)
-                addColumTypeHidden(index)
-                $('.source-card').hide();
-                $('.deff-class').hide();
+                    } else if (
+                        $(this).val() == 'integer' ||
+                        $(this).val() == 'mediumInteger' ||
+                        $(this).val() == 'bigInteger' ||
+                        $(this).val() == 'decimal' ||
+                        $(this).val() == 'double' ||
+                        $(this).val() == 'float' ||
+                        $(this).val() == 'tinyInteger'
+                    ) {
+                        removeAllInputHidden(index)
+                        checkMinAndMaxLength(index)
+                        addColumTypeHidden(index)
+                        $('.source-card').hide();
+                        $('.deff-class').hide();
 
-                //     $(`.form-input-types`).html(`
-            //     <option value="" disabled selected>-- Select input type --</option>
-            //     <option value="number">Number</option>
-            //     <option value="range">Range</option>
-            //     <option value="hidden">Hidden</option>
-            //     <option value="no-input">No Input</option>
-            // `)
+                        //     $(`.form-input-types`).html(`
+                    //     <option value="" disabled selected>-- Select input type --</option>
+                    //     <option value="number">Number</option>
+                    //     <option value="range">Range</option>
+                    //     <option value="hidden">Hidden</option>
+                    //     <option value="no-input">No Input</option>
+                    // `)
 
-            } else if ($(this).val() == 'boolean') {
-                removeAllInputHidden(index)
-                checkMinAndMaxLength(index)
-                addColumTypeHidden(index)
-                $('.source-card').hide();
+                    } else if ($(this).val() == 'boolean') {
+                        removeAllInputHidden(index)
+                        checkMinAndMaxLength(index)
+                        addColumTypeHidden(index)
+                        $('.source-card').hide();
 
-                //     $(`.form-input-types`).html(`
-            //     <option value="" disabled selected>-- Select input type --</option>
-            //     <option value="select">Select</option>
-            //     <option value="radio">Radio</option>
-            // `)
+                        //     $(`.form-input-types`).html(`
+                    //     <option value="" disabled selected>-- Select input type --</option>
+                    //     <option value="select">Select</option>
+                    //     <option value="radio">Radio</option>
+                    // `)
 
-            } else {
-                removeAllInputHidden(index)
-                checkMinAndMaxLength(index)
-                addColumTypeHidden(index)
+                    } else {
+                        removeAllInputHidden(index)
+                        checkMinAndMaxLength(index)
+                        addColumTypeHidden(index)
 
-                //     $(`.form-input-types`).html(`
-            //     <option value="" disabled selected>-- Select input type --</option>
-            //     <option value="text">Text</option>
-            //     <option value="email">Email</option>
-            //     <option value="tel">Telepon</option>
-            //     <option value="url">Url</option>
-            //     <option value="week">Week</option>
-            //     <option value="color">Color</option>
-            //     <option value="search">Search</option>
-            //     <option value="file">File</option>
-            //     <option value="hidden">Hidden</option>
-            //     <option value="no-input">No Input</option>
-            // `)
-            }
-        });
+                        //     $(`.form-input-types`).html(`
+                    //     <option value="" disabled selected>-- Select input type --</option>
+                    //     <option value="text">Text</option>
+                    //     <option value="email">Email</option>
+                    //     <option value="tel">Telepon</option>
+                    //     <option value="url">Url</option>
+                    //     <option value="week">Week</option>
+                    //     <option value="color">Color</option>
+                    //     <option value="search">Search</option>
+                    //     <option value="file">File</option>
+                    //     <option value="hidden">Hidden</option>
+                    //     <option value="no-input">No Input</option>
+                    // `)
+                    }
+                });
 
-        $(document).on('change', '.switch-requireds', function() {
-            let index = 0;
-            $(`.form-default-value`).remove()
-            // alert($('.form-input-types').val());
+                $(document).on('change', '.switch-requireds', function() {
+                    let index = 0;
+                    $(`.form-default-value`).remove()
+                    // alert($('.form-input-types').val());
 
 
-            let inputTypeDefaultValue = setInputTypeDefaultValue(index)
+                    let inputTypeDefaultValue = setInputTypeDefaultValue(index)
 
-            if ($(this).is(':checked')) {
-                $(`.custom-values`).append(`
+                    if ($(this).is(':checked')) {
+                        $(`.custom-values`).append(`
                 <div class="input-boc form-default-value ">
                     <input type="hidden" name="default_values">
                 </div>
             `)
-            } else {
+                    } else {
 
-                if ($('.form-input-types').val() == 'switch')
+                        if ($('.form-input-types').val() == 'switch')
 
-                {
+                        {
 
 
-                    $(`.custom-values`).append(`
+                            $(`.custom-values`).append(`
                 <div class="input-box form-default-value ">
                     <input type="${inputTypeDefaultValue}" readonly name="default_values" class="google-input" placeholder="Default Value (optional)">
                 </div>
             `)
-                } else {
-                    $(`.custom-values`).append(`
+                        } else {
+                            $(`.custom-values`).append(`
                 <div class="input-box form-default-value ">
                     <input type="${inputTypeDefaultValue}" name="default_values" class="google-input" placeholder="Default Value (optional)">
                 </div>
             `)
-                }
-            }
-        })
+                        }
+                    }
+                })
 
-        $(document).on('change', '.form-input-types', function() {
-            // alert('hi');
-            // alert('welocme');
-            let index = 0
-            let minLength = $(`.form-min-lengths`)
-            let maxLength = $(`.form-max-lengths`)
-            let switchRequired = $(`.switch-requireds`)
-
-
-            removeInputTypeHidden(index)
-            switchRequired.prop('checked', true)
-            switchRequired.prop('disabled', false)
+                $(document).on('change', '.form-input-types', function() {
+                    // alert('hi');
+                    // alert('welocme');
+                    let index = 0
+                    let minLength = $(`.form-min-lengths`)
+                    let maxLength = $(`.form-max-lengths`)
+                    let switchRequired = $(`.switch-requireds`)
 
 
-            $(`.form-default-value`).remove()
-            $(`.options`).html('')
-            $(`.custom-value`).append(`
+                    removeInputTypeHidden(index)
+                    switchRequired.prop('checked', true)
+                    switchRequired.prop('disabled', false)
+
+
+                    $(`.form-default-value`).remove()
+                    $(`.options`).html('')
+                    $(`.custom-value`).append(`
             <div class="form-group form-default-value ">
                 <input type="hidden" name="default_values">
             </div>
         `)
 
-            switch ($(this).val()) {
-                case 'text':
-                case 'textarea':
-                case 'texteditor':
-                case 'file':
-                case 'image':
-                case 'email':
-                case 'tel':
-                case 'password':
-                case 'url':
-                case 'search':
-                    $('#type').val('text').trigger('change')
-                    break;
-                case 'decimal':
-                case 'number':
-                case 'range':
-                    $('#type').val('double').trigger('change')
-                    break;
-                case 'radio':
-                case 'switch':
-                    $('#type').val('boolean').trigger('change')
-                    break;
-                case 'date':
-                case 'month':
-                    $('#type').val('date').trigger('change')
-                    break;
-                case 'time':
-                    $('#type').val('time').trigger('change')
-                    break;
-                case 'datalist':
-                    $('#type').val('year').trigger('change')
-                    break;
-                case 'datetime-local':
-                    $('#type').val('dateTime').trigger('change')
-                    break;
-                case 'select':
-                case 'radioselect':
-                    $('#type').val('enum').trigger('change')
-                    break;
-                case 'multi':
-                    $('#type').val('multi').trigger('change')
-                    break;
-                case 'foreignId':
-                    $('#type').val('foreignId').trigger('change')
-                    break;
+                    switch ($(this).val()) {
+                        case 'text':
+                        case 'textarea':
+                        case 'texteditor':
+                        case 'file':
+                        case 'image':
+                        case 'email':
+                        case 'tel':
+                        case 'password':
+                        case 'url':
+                        case 'search':
+                            $('#type').val('text').trigger('change')
+                            break;
+                        case 'decimal':
+                        case 'number':
+                        case 'range':
+                            $('#type').val('double').trigger('change')
+                            break;
+                        case 'radio':
+                        case 'switch':
+                            $('#type').val('boolean').trigger('change')
+                            break;
+                        case 'date':
+                        case 'month':
+                            $('#type').val('date').trigger('change')
+                            break;
+                        case 'time':
+                            $('#type').val('time').trigger('change')
+                            break;
+                        case 'datalist':
+                            $('#type').val('year').trigger('change')
+                            break;
+                        case 'datetime-local':
+                            $('#type').val('dateTime').trigger('change')
+                            break;
+                        case 'select':
+                        case 'radioselect':
+                            $('#type').val('enum').trigger('change')
+                            break;
+                        case 'multi':
+                            $('#type').val('multi').trigger('change')
+                            break;
+                        case 'foreignId':
+                            $('#type').val('foreignId').trigger('change')
+                            break;
 
-                case 'informatic':
-                    $('#type').val('informatic').trigger('change')
-                    break;
-                    case 'doublefk':
-                    $('#type').val('doublefk').trigger('change')
-                    break;
-                case 'condition':
-                    $('#type').val('condition').trigger('change')
-                    break;
-                case 'assign':
-                    $('#type').val('assign').trigger('change')
-                    break;
+                        case 'informatic':
+                            $('#type').val('informatic').trigger('change')
+                            break;
+                        case 'doublefk':
+                            $('#type').val('doublefk').trigger('change')
+                            break;
+                        case 'doubleattr':
+                            $('#type').val('doubleattr').trigger('change')
+                            break;
+                        case 'condition':
+                            $('#type').val('condition').trigger('change')
+                            break;
+                        case 'assign':
+                            $('#type').val('assign').trigger('change')
+                            break;
 
 
-                default:
-                    break;
-            }
+                        default:
+                            break;
+                    }
 
-            if ($(this).val() == 'file') {
-                minLength.prop('readonly', true).hide()
-                maxLength.prop('readonly', true).hide()
-                minLength.val('')
-                maxLength.val('')
-                $('#deff').hide();
+                    if ($(this).val() == 'file') {
+                        minLength.prop('readonly', true).hide()
+                        maxLength.prop('readonly', true).hide()
+                        minLength.val('')
+                        maxLength.val('')
+                        $('#deff').hide();
 
-                $(`.input-options`).append(`
+                        $(`.input-options`).append(`
             <div class="input-box mt-2 form-file-types">
 
             <input type="hidden" name="file_types" value="file" >
@@ -1359,16 +1647,16 @@
 
             <input type="hidden" name="steps" class="form-step" >
             `)
-                return;
+                        return;
 
-            }
-            if ($(this).val() == 'image') {
-                minLength.prop('readonly', true).hide()
-                maxLength.prop('readonly', true).hide()
-                minLength.val('')
-                maxLength.val('')
+                    }
+                    if ($(this).val() == 'image') {
+                        minLength.prop('readonly', true).hide()
+                        maxLength.prop('readonly', true).hide()
+                        minLength.val('')
+                        maxLength.val('')
 
-                $(`.input-options`).append(`
+                        $(`.input-options`).append(`
             <div class="input-box mt-2 form-file-types">
                 <input type="hidden" name="file_types" value="image" >
 
@@ -1380,32 +1668,32 @@
             <input type="hidden" name="steps" class="form-step">
             `)
 
-            } else if (
-                $(this).val() == 'email' ||
-                $(this).val() == 'select' ||
-                $(this).val() == 'radioselect' ||
-                $(this).val() == 'datalist' ||
-                $(this).val() == 'radio' ||
-                $(this).val() == 'date' ||
-                $(this).val() == 'month' ||
-                $(this).val() == 'password' ||
-                $(this).val() == 'number'
-            ) {
-                minLength.prop('readonly', true).hide()
-                maxLength.prop('readonly', true).hide()
-                minLength.val('')
-                maxLength.val('')
+                    } else if (
+                        $(this).val() == 'email' ||
+                        $(this).val() == 'select' ||
+                        $(this).val() == 'radioselect' ||
+                        $(this).val() == 'datalist' ||
+                        $(this).val() == 'radio' ||
+                        $(this).val() == 'date' ||
+                        $(this).val() == 'month' ||
+                        $(this).val() == 'password' ||
+                        $(this).val() == 'number'
+                    ) {
+                        minLength.prop('readonly', true).hide()
+                        maxLength.prop('readonly', true).hide()
+                        minLength.val('')
+                        maxLength.val('')
 
-                addInputTypeHidden(index)
+                        addInputTypeHidden(index)
 
-            } else if ($(this).val() == 'text' || $(this).val() == 'tel') {
-                minLength.prop('readonly', false).show()
-                maxLength.prop('readonly', false).show()
+                    } else if ($(this).val() == 'text' || $(this).val() == 'tel') {
+                        minLength.prop('readonly', false).show()
+                        maxLength.prop('readonly', false).show()
 
-                addInputTypeHidden(index)
+                        addInputTypeHidden(index)
 
-            } else if ($(this).val() == 'switch') {
-                $(`.input-options`).append(`
+                    } else if ($(this).val() == 'switch') {
+                        $(`.input-options`).append(`
                 <div class="form-group col-sm-4 deff-class" style="margin-top:12px;">
                     <label class="custom-switch form-label">
                         <input type="checkbox" name="deff" class="custom-switch-input" id="deff"
@@ -1416,35 +1704,35 @@
                 </div>
             `)
 
-                minLength.prop('readonly', true).hide()
-                maxLength.prop('readonly', true).hide()
-                minLength.val('')
-                maxLength.val('')
+                        minLength.prop('readonly', true).hide()
+                        maxLength.prop('readonly', true).hide()
+                        minLength.val('')
+                        maxLength.val('')
 
-                addInputTypeHidden(index)
+                        addInputTypeHidden(index)
 
-
-                $('input[name="default_values"]').val('0');
-
-
-                $('#deff').change(function() {
-
-                    if ($(this).is(':checked')) {
-
-                        // $('.switch-requireds').val(0).trigger('change');
-                        $('input[name="default_values"]').val('1');
-                    } else {
-                        // $('.switch-requireds').val(1).trigger('change');
 
                         $('input[name="default_values"]').val('0');
-                    }
-                });
+
+
+                        $('#deff').change(function() {
+
+                            if ($(this).is(':checked')) {
+
+                                // $('.switch-requireds').val(0).trigger('change');
+                                $('input[name="default_values"]').val('1');
+                            } else {
+                                // $('.switch-requireds').val(1).trigger('change');
+
+                                $('input[name="default_values"]').val('0');
+                            }
+                        });
 
 
 
 
-            } else if ($(this).val() == 'range') {
-                $(`.input-options`).append(`
+                    } else if ($(this).val() == 'range') {
+                        $(`.input-options`).append(`
                 <div class="input-box form-step mt-4">
                     <input type="number" name="steps" class="google-input" placeholder="Step (optional)">
                 </div>
@@ -1453,139 +1741,140 @@
                 <input type="hidden" name="mimes" class="form-mimes">
             `)
 
-                minLength.prop('readonly', false).show()
-                maxLength.prop('readonly', false).show()
-                minLength.prop('required', true)
-                maxLength.prop('required', true)
+                        minLength.prop('readonly', false).show()
+                        maxLength.prop('readonly', false).show()
+                        minLength.prop('required', true)
+                        maxLength.prop('required', true)
 
-                // addInputTypeHidden(index)
+                        // addInputTypeHidden(index)
 
-            } else if ($(this).val() == 'hidden' || $(this).val() == 'no-input') {
-                minLength.prop('readonly', true).hide()
-                maxLength.prop('readonly', true).hide()
-                minLength.val('')
-                maxLength.val('')
+                    } else if ($(this).val() == 'hidden' || $(this).val() == 'no-input') {
+                        minLength.prop('readonly', true).hide()
+                        maxLength.prop('readonly', true).hide()
+                        minLength.val('')
+                        maxLength.val('')
 
-                let inputTypeDefaultValue = setInputTypeDefaultValue(index)
+                        let inputTypeDefaultValue = setInputTypeDefaultValue(index)
 
-                $(`.form-default-value`).remove()
+                        $(`.form-default-value`).remove()
 
-                $(`.input-options`).append(`
+                        $(`.input-options`).append(`
                 <div class="input-box form-default-value ">
                     <input type="${inputTypeDefaultValue}" name="default_values" class="google-input" placeholder="Default Value (optional)">
                 </div>
             `)
 
-                switchRequired.prop('checked', false)
-                switchRequired.prop('disabled', true)
-                addInputTypeHidden(index)
+                        switchRequired.prop('checked', false)
+                        switchRequired.prop('disabled', true)
+                        addInputTypeHidden(index)
 
-            } else if (
-                $(this).val() == 'time' ||
-                $(this).val() == 'week' ||
-                $(this).val() == 'color' ||
-                $(this).val() == 'datetime-local'
-            ) {
-                minLength.prop('readonly', true).hide()
-                maxLength.prop('readonly', true).hide()
-                minLength.val('')
-                maxLength.val('')
-                addInputTypeHidden(index)
+                    } else if (
+                        $(this).val() == 'time' ||
+                        $(this).val() == 'week' ||
+                        $(this).val() == 'color' ||
+                        $(this).val() == 'datetime-local'
+                    ) {
+                        minLength.prop('readonly', true).hide()
+                        maxLength.prop('readonly', true).hide()
+                        minLength.val('')
+                        maxLength.val('')
+                        addInputTypeHidden(index)
 
-            } else {
-                addInputTypeHidden(index)
-                minLength.prop('readonly', false).show()
-                maxLength.prop('readonly', false).show()
-            }
-        });
-
-
+                    } else {
+                        addInputTypeHidden(index)
+                        minLength.prop('readonly', false).show()
+                        maxLength.prop('readonly', false).show()
+                    }
+                });
 
 
 
 
 
 
-        $(document).on("click", "#addRow", function() {
-            var html = '';
-            var index = parseInt($(this).parent().parent().parent().parent().find('.text-center:last').html()) > 0 ?
-                parseInt($(this).parent().parent().parent().parent().find('.text-center:last').html()) + 1 : 1
-
-            html +=
-                '<tr><td class="text-center" scope="row">' + index +
-                '</td><td><input type="radio" name="fields_info_radio" onchange="addValue(' +
-                index + ')" class="m-input mr-2"><input type="hidden" value="0" id="fields_info[' + index +
-                '][default]" name="fields_info[' + index +
-                '][default]"></td><td><input type="text" name="fields_info[' + index +
-                '][value]" class="form-control m-input mr-2"  autocomplete="off"></td><td><button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button></td></tr>';
-            $('.option_fields tbody').append(html);
-
-        });
-
-        function addValue(index) {
-            console.log(index);
-            $('[id^="fields_info"]').each(function() {
-                $(this).val(0);
-            });
-            $("#fields_info\\[" + index + "\\]\\[default\\]").val(1);
-
-        }
-        $(document).on('click', '.removeSection', function() {
-            $(this).closest('tr').remove();
-            index--;
-        });
-
-        jQuery.validator.addMethod("notEqual", function(value, element, param) {
-            return this.optional(element) || value != param;
-        }, "Please change the name, you can't enter id");
-
-        jQuery.validator.addMethod("notEqual2", function(value, element, param) {
-            return this.optional(element) || value != param;
-        }, "Please change the name, you can't enter id");
 
 
-        jQuery.validator.addMethod("notEqual3", function(value, element, param) {
-            return this.optional(element) || value != param;
-        }, "Please change the name, you can't enter id");
+                $(document).on("click", "#addRow", function() {
+                    var html = '';
+                    var index = parseInt($(this).parent().parent().parent().parent().find('.text-center:last').html()) >
+                        0 ?
+                        parseInt($(this).parent().parent().parent().parent().find('.text-center:last').html()) + 1 : 1
 
-        jQuery.validator.addMethod("notEqual4", function(value, element, param) {
-            return this.optional(element) || value != param;
-        }, "Please change the name, you can't enter id");
+                    html +=
+                        '<tr><td class="text-center" scope="row">' + index +
+                        '</td><td><input type="radio" name="fields_info_radio" onchange="addValue(' +
+                        index + ')" class="m-input mr-2"><input type="hidden" value="0" id="fields_info[' + index +
+                        '][default]" name="fields_info[' + index +
+                        '][default]"></td><td><input type="text" name="fields_info[' + index +
+                        '][value]" class="form-control m-input mr-2"  autocomplete="off"></td><td><button type="button" class="btn btn-danger removeSection"><i class="fa fa-trash"></i></button></td></tr>';
+                    $('.option_fields tbody').append(html);
 
-        $(document).on('change', '#attributeCreate', function() {
-            $("#attributeCreate").validate({
-                onkeyup: function(el, e) {
+                });
 
-                    $(el).valid();
-                },
-                // errorClass: "invalid-feedback is-invalid",
-                // validClass: 'valid-feedback is-valid',
-                ignore: ":hidden",
-                rules: {
-                    name: {
-                        required: true,
-                        maxlength: 255,
-                    },
-                    code: {
-                        required: true,
-                        maxlength: 255,
-                        notEqual: 'id',
-                        notEqual2: 'ID',
-                        notEqual3: 'iD',
-                        notEqual4: 'Id',
-                    },
-                    input_types: {
-                        required: true,
-                        maxlength: 255,
-                    },
+                function addValue(index) {
+                    console.log(index);
+                    $('[id^="fields_info"]').each(function() {
+                        $(this).val(0);
+                    });
+                    $("#fields_info\\[" + index + "\\]\\[default\\]").val(1);
 
-                },
-                messages: {},
-                errorPlacement: function(error, element) {
-                    error.insertAfter($(element).parent());
-                },
-            });
-            // alert($('#attributeCreate').valid());
-        });
+                }
+                $(document).on('click', '.removeSection', function() {
+                    $(this).closest('tr').remove();
+                    index--;
+                });
+
+                jQuery.validator.addMethod("notEqual", function(value, element, param) {
+                    return this.optional(element) || value != param;
+                }, "Please change the name, you can't enter id");
+
+                jQuery.validator.addMethod("notEqual2", function(value, element, param) {
+                    return this.optional(element) || value != param;
+                }, "Please change the name, you can't enter id");
+
+
+                jQuery.validator.addMethod("notEqual3", function(value, element, param) {
+                    return this.optional(element) || value != param;
+                }, "Please change the name, you can't enter id");
+
+                jQuery.validator.addMethod("notEqual4", function(value, element, param) {
+                    return this.optional(element) || value != param;
+                }, "Please change the name, you can't enter id");
+
+                $(document).on('change', '#attributeCreate', function() {
+                    $("#attributeCreate").validate({
+                        onkeyup: function(el, e) {
+
+                            $(el).valid();
+                        },
+                        // errorClass: "invalid-feedback is-invalid",
+                        // validClass: 'valid-feedback is-valid',
+                        ignore: ":hidden",
+                        rules: {
+                            name: {
+                                required: true,
+                                maxlength: 255,
+                            },
+                            code: {
+                                required: true,
+                                maxlength: 255,
+                                notEqual: 'id',
+                                notEqual2: 'ID',
+                                notEqual3: 'iD',
+                                notEqual4: 'Id',
+                            },
+                            input_types: {
+                                required: true,
+                                maxlength: 255,
+                            },
+
+                        },
+                        messages: {},
+                        errorPlacement: function(error, element) {
+                            error.insertAfter($(element).parent());
+                        },
+                    });
+                    // alert($('#attributeCreate').valid());
+                });
     </script>
 @endsection

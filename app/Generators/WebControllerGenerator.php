@@ -247,10 +247,10 @@ class WebControllerGenerator
 
         // load the relations for create, show, and edit
         // if ( count($module->fields()->where('is_enable',1)->where('type','foreignId')->orWhere('type','condition')->get()) > 0) {
-        if (count($module->fields()->where('is_enable', 1)->where('type', 'foreignId')->get()) + count($module->fields()->where('is_enable', 1)->where('type', 'condition')->get()) + count($module->fields()->where('is_enable', 1)->where('type', 'informatic')->get())+ count($module->fields()->where('is_enable', 1)->where('type', 'doublefk')->get()) > 0) {
+        if (count($module->fields()->where('is_enable', 1)->where('type', 'foreignId')->get()) + count($module->fields()->where('is_enable', 1)->where('type', 'condition')->get()) + count($module->fields()->where('is_enable', 1)->where('primary', 'lookup')->get()) + count($module->fields()->where('is_enable', 1)->where('type', 'informatic')->get())+ count($module->fields()->where('is_enable', 1)->where('type', 'doublefk')->get()) > 0) {
             $relations .= "$" . $modelNameSingularCamelCase . "->load(";
 
-            $countForeidnId = count($module->fields()->where('type', 'foreignId')->orWhere('type', 'condition')->orWhere('type', 'informatic')->get());
+            $countForeidnId = count($module->fields()->where('type', 'foreignId')->orWhere('primary', 'lookup')->orWhere('type', 'condition')->orWhere('type', 'informatic')->get());
 
             $query = "$modelNameSingularPascalCase::with(";
 

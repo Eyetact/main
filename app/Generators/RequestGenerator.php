@@ -457,7 +457,7 @@ class RequestGenerator
                         $validations .= "|max:" . $field->max_size;
                     }
 
-                    if ($field->type == 'enum') {
+                    if ($field->type == 'enum' || $field->primary == 'select') {
                         /**
                          * will generate like:
                          * 'name' => 'required|in:water,fire',
@@ -492,7 +492,7 @@ class RequestGenerator
                         $validations .= "|string";
                     }
 
-                    if ($field->input == 'number' || $field->input == 'decimal' || $field->type == 'year' || $field->input == 'range') {
+                    if ($field->input == 'number' || $field->input == 'decimal' || $field->type == 'year' || $field->input == 'range' || $field->primary == 'integer' || $field->primary == 'decimal') {
                         /**
                          * will generate like:
                          * 'name' => 'required|numeric',

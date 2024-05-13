@@ -613,11 +613,20 @@ Route::get(
 );
 
 
-Route::get('gettest/{id}', function ($id) {
+Route::get('get-belongs-to/{id}', function ($id) {
 
-    $attributes = Attribute::where('module', $id)->where('type', 'foreignId')->get();
+    // $attributes = Attribute::where('module', $id)->where('type', 'foreignId')->get();
 
 
+    $attributes = Attribute::where('module', $id)
+    ->where(function ($query) {
+        $query->where('type', 'foreignId')
+            ->orWhere('type', 'informatic')
+            ->orWhere('type', 'doublefk')
+            ->orWhere('primary', 'lookup');
+    })
+
+    ->get();
 
 
        $options = '';

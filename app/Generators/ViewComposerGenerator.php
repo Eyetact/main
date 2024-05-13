@@ -91,7 +91,7 @@ class ViewComposerGenerator
 
         foreach ($module->fields as $i => $field) {
             $field->name = GeneratorUtils::singularSnakeCase($field->name);
-            if ($field->type == 'foreignId' || $field->type == 'informatic') {
+            if ($field->type == 'foreignId' || $field->type == 'informatic' || $field->primary == 'lookup') {
                 // remove '/' or sub folders
                 $constrainModel = GeneratorUtils::setModelName($field->constrain);
 

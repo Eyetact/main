@@ -195,7 +195,25 @@ class MigrationGenerator
                 $setFields .= "\$table->text('" . str()->snake($field->code);
             } elseif ($field->type == 'multi' && $field->input == 'multi') {
                 $setFields .= "\$table->text('" . str()->snake($field->code);
-            } elseif ($field->type == 'enum' && $field->input == 'select') {
+            }
+            elseif ($field->type == 'doubleattr' && $field->input == 'doubleattr') {
+
+                if($field->primary == 'text' || $field->primary == 'select')
+                {
+                $setFields .= "\$table->text('" . str()->snake($field->code);
+                }
+
+                if($field->primary == 'integer' || $field->primary == 'decimal')
+                {
+                $setFields .= "\$table->double('" . str()->snake($field->code);
+                }
+
+                if($field->primary == 'lookup')
+                {
+                    $setFields .= "\$table->foreignId('" . str()->snake($field->code);
+                }
+            }
+            elseif ($field->type == 'enum' && $field->input == 'select') {
                 $setFields .= "\$table->text('" . str()->snake($field->code);
             }
             elseif ($field->type == 'enum' && $field->input == 'radioselect') {
@@ -286,7 +304,7 @@ class MigrationGenerator
 
             $constrainName = '';
             $constrainName2 = '';
-            if ($field->type == 'foreignId' ||  $field->type == 'condition' ||  $field->type == 'doublefk') {
+            if ($field->type == 'foreignId' ||  $field->type == 'condition' ||  $field->type == 'doublefk' || $field->primary == 'lookup') {
                 $constrainName = GeneratorUtils::setModelName($field->constrain);
                 if( $field->type == 'doublefk'){
                     $constrainName2 = GeneratorUtils::setModelName($field->constrain2);
@@ -295,7 +313,7 @@ class MigrationGenerator
             }
 
             if ($i + 1 != $totalFields) {
-                if ($field->type == 'foreignId' ||  $field->type == 'condition'||  $field->type == 'doublefk') {
+                if ($field->type == 'foreignId' ||  $field->type == 'condition'||  $field->type == 'doublefk' || $field->primary == 'lookup') {
                     if ($field->on_delete_foreign == ActionForeign::NULL->value) {
                         if( $field->type == 'doublefk'){
 
@@ -353,7 +371,7 @@ class MigrationGenerator
                     $setFields .= ";\n\t\t\t";
                 }
             } else {
-                if ($field->type == 'foreignId' ||  $field->type == 'condition' ||  $field->type == 'doublefk') {
+                if ($field->type == 'foreignId' ||  $field->type == 'condition' ||  $field->type == 'doublefk' || $field->primary == 'lookup') {
                     $setFields .= "->constrained('" . GeneratorUtils::pluralSnakeCase($constrainName) . "')";
 
                     if( $field->type == 'doublefk'){
@@ -457,7 +475,7 @@ class MigrationGenerator
 
         $setFields = '';
         $setFields .= "DB::statement('SET FOREIGN_KEY_CHECKS=0;');\n";
-        if ($field->type == 'foreignId' ||  $field->type == 'condition' ||  $field->type == 'informatic') {
+        if ($field->type == 'foreignId' ||  $field->type == 'condition' ||  $field->type == 'informatic' ||  $field->primary == 'lookup') {
             $setFields .= "\$table->dropForeign('" . $tableNamePluralLowercase . '_' . GeneratorUtils::singularSnakeCase(str()->snake($field->code)) . "_foreign');\n";
 
         }

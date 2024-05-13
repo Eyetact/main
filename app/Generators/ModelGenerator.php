@@ -403,6 +403,53 @@ class ModelGenerator
 
                     break;
 
+
+                    case 'doubleattr':
+                        if($field->primary == 'lookup'){
+
+
+                        $constrainPath = GeneratorUtils::getModelLocation($field->constrain);
+                        $constrainName = GeneratorUtils::setModelName($field->constrain);
+
+                        $foreign_id = ' ,"' .$field->code . '"';
+
+                        if ($i > 0) {
+                            $relations .= "\t";
+                        }
+
+                        if ($constrainPath != '') {
+                            $constrainPath = "\\App\\Models\Admin\\$constrainPath\\$constrainName";
+                        } else {
+                            $constrainPath = "\\App\\Models\Admin\\$constrainName";
+                        }
+
+                        if($field->multiple)
+                        {
+
+                            $model1=GeneratorUtils::singularSnakeCase(Module::find($field->module)->name);
+
+                            $model2=GeneratorUtils::singularSnakeCase($field->constrain);
+
+                            $table_name= $model1 . "_" . $model2;
+                            $id1=$model1 . "_id";
+                            $id2=$model2 . "_id";
+
+
+
+                            $relations .= "\n\tpublic function " . str()->snake($constrainName). "_" .str()->snake($field->attribute) . "()\n\t{\n\t\treturn \$this->belongsToMany(" . $constrainPath . "::class" . ",'" . $table_name . "','" . $id1 . "','" . $id2 .    "');\n\t}";
+                        }
+                        else{
+
+                        $relations .= "\n\tpublic function " . str()->snake($constrainName). "_" .str()->snake($field->attribute) . "()\n\t{\n\t\treturn \$this->belongsTo(" . $constrainPath . "::class" . $foreign_id . ");\n\t}";
+
+                        }
+
+                    }
+                        break;
+
+
+
+
                     case 'doublefk':
 
                         // $fields.=" '" . . "'";
@@ -483,6 +530,21 @@ class ModelGenerator
             ) {
                 if ($field->input != 'week') {
                     $casts .= "'" . str()->snake($field->code) . "' => 'string', ";
+                }
+            }
+
+
+            if (
+                str_contains($field->type, 'doubleattr')
+            ) {
+                if ($field->primary == 'text') {
+                    $casts .= "'" . str()->snake($field->code) . "' => 'string', ";
+                }
+
+                if ($field->primary == 'integer' || $field->primary == 'decimal') {
+
+                $casts .= "'" . str()->snake($field->code) . "' => 'double', ";
+
                 }
             }
         }

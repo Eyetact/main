@@ -445,7 +445,7 @@ output {
                     return;
                 }
                 var inform = $(this).data('inform'); //element
-
+                var fixed = $(this).data('fixed');
 
                 console.log('main_model:' + main_model)
                 var main_model_id = $(this).find('option:selected').val(); // 1
@@ -490,6 +490,10 @@ output {
                         if (inform) {
                         $tag_source = $this.parent().parent().parent().find('input').data('source');
                     }
+                         if (fixed) {
+
+                        $tag_source = $this.parent().find('label').data('source');
+                    }
 
                     if ($tag_source == main_model) {
 
@@ -509,6 +513,12 @@ output {
                                     $this.parent().parent().parent().find('input').val(response.data);
                                     return;
                                 }
+
+                                  if(fixed){
+                                    $this.parent().find('label').html(response.data);
+                                    return;
+                                }
+
                                 if( $('[name=' + $e_string + ']').data('source') != undefined){
                                     $('select[name=' + response.id + ']').find('option').hide();
                                     $('select[name=' + response.id + ']').find('option[value=' + response.data_id + ']').prop('selected', true).show();

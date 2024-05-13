@@ -225,6 +225,42 @@ class ShowViewGenerator
                     </tr>";
                     break;
 
+                    case 'doubleattr':
+                        if($field->primary == 'lookup'){
+
+
+                            // remove '/' or sub folders
+                            $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
+
+
+                        // Define the variable $value
+
+
+
+
+                        $text = '';
+                        $value = '';
+
+                        $trs .= "<tr>
+                        <td class=\"fw-bold\">{{ __('" . GeneratorUtils::cleanSingularUcWords($constrainModel) . "') }}</td>
+                        @php
+                        \$text = '';
+                        \$value = '';
+                        if (!is_a(\$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . ", 'Illuminate\Database\Eloquent\Collection')) {
+                            \$text= \$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . " ? \$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . "->" . $field->attribute . " : '';
+                        } else {
+                            foreach (\$" . $modelNameSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($constrainModel) . "_" . str()->snake($field->attribute) . " as \$value) {
+
+                                \$text .= \$value->" . $field->attribute . ".',';
+                            }
+                        }
+                        @endphp";
+
+                    $trs .= "<td>{{ \$text }}</td>
+                    </tr>";
+
+                        }
+                        break;
 
                     case 'doublefk':
 
@@ -359,6 +395,7 @@ class ShowViewGenerator
                             <td class=\"fw-bold\">{{ __('$fieldUcWords') }}</td>
                             <td>{!! $" . $modelNameSingularCamelCase . "->" . $fieldSnakeCase . " !!}</td>
                         </tr>";
+
 
                            }else{
                             $trs .= "<tr>

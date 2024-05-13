@@ -73,8 +73,8 @@
                                 </option>
                                 <option @selected($attribute->input == 'file') value="file">File</option>
                                 {{-- <option @selected($attribute->input == 'number') value="number">Number</option> --}}
-                                <option @selected($attribute->input == 'number') value="number">Integer Number</option>
-                                <option @selected($attribute->input == 'decimal') value="number">Decimal Number</option>
+                                <option @selected($attribute->input == 'number') value="number">Integer Number(1,2,3....etc)</option>
+                                <option @selected($attribute->input == 'decimal') value="number">Decimal Number(1,2,3.123....etc)</option>
                                 <option @selected($attribute->input == 'range') value="range">Range</option>
                                 {{-- <option @selected($attribute->input == 'radio') value="radio">Radio ( True, False )</option> --}}
                                 <option @selected($attribute->input == 'switch') value="switch">Yes Or No</option>
@@ -87,7 +87,8 @@
                                 <option @selected($attribute->input == 'radioselect') value="radioselect">Radio</option>
                                 <option @selected($attribute->input == 'foreignId') value="foreignId">Lookup</option>
                                 <option @selected($attribute->input == 'informatic') value="informatic">Informatic Attribute</option>
-                                <option @selected($attribute->input == 'doublefk') value="doublefk">Double Attribute</option>
+                                <option @selected($attribute->input == 'doublefk') value="doublefk">Double Lookup Attribute</option>
+                                <option @selected($attribute->input == 'doubleattr') value="doubleattr">Double Attribute</option>
                             </select>
                             <label id="field_type-error" class="error text-red hide" for="field_type"></label>
                             @error('field_type')

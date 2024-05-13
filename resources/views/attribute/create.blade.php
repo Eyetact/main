@@ -14,7 +14,7 @@
                 <div class="card-body pb-2">
                     <div class="row">
                         <div class="col-sm-12 input-box">
-                            <label class="form-label" for="module">Module<span class="text-red">*</span></label>
+                            <label class="form-label" for="module">Add Attribute To<span class="text-red">*</span></label>
                             <select name="module" class="google-input module" id="module" required>
                                 <option value="" selected>Select Module</option>
                                 @foreach ($moduleData as $module)
@@ -92,12 +92,12 @@
                                 <option value="tel">Telepon</option>
                                 <option value="password">Password</option>
                                 <option value="url">Url</option>
-                                <option value="search">Search</option>
+                                {{-- <option value="search">Search</option> --}}
                                 <option value="image">Image (all format: png,jpg,,,etc)</option>
                                 <option value="file">File</option>
                                 {{-- <option value="number">Number</option> --}}
-                                <option value="number">Integer Number</option>
-                                <option value="decimal">Decimal Number</option>
+                                <option value="number">Integer Number(1,,2,3...etc)</option>
+                                <option value="decimal">Decimal Number(1,2,3.123....etc)</option>
                                 <option value="range">Range</option>
                                 {{-- <option value="radio">Radio ( True, False )</option> --}}
                                 <option value="switch">Yes Or No</option>
@@ -110,7 +110,8 @@
                                 <option value="radioselect">Radio</option>
                                 <option value="foreignId">Lookup</option>
                                 <option value="informatic">Informatic Attribute</option>
-                                <option value="doublefk">Double Attribute</option>
+                                <option value="doublefk">Double Lookup Attribute</option>
+                                <option value="doubleattr">Double Attribute</option>
                                 <option value="condition">Condition Lookup</option>
 
                                 {{-- <option value="assign">Assign</option> --}}
