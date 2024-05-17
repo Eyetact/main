@@ -36,7 +36,8 @@ class FormViewGenerator
         $template .= "->first();\n";
         $template .= "\$constrain_name = App\Generators\GeneratorUtils::singularSnakeCase('" . $code . "');\n";
         $template .= "if (\$model) {\n";
-        $template .= "\$for_attr = json_encode(\$model->fields()->select('code','attribute')->where('type', 'foreignId')->get());\n";
+        $template .= "\$for_attr = json_encode(\$model->fields()->select('code','attribute')->where('type', 'foreignId')->orWhere('primary', 'lookup')
+        ->orWhere('type', 'fk')->get());\n";
         $template .= "\$for_attr = str_replace('\"', \"'\", \$for_attr);\n";
         $template .= "}\n";
         $template .= "@endphp\n";
@@ -671,7 +672,8 @@ class FormViewGenerator
         $template .= "->first();\n";
         $template .= "\$constrain_name = App\Generators\GeneratorUtils::singularSnakeCase('" . $code . "');\n";
         $template .= "if (\$model) {\n";
-        $template .= "\$for_attr = json_encode(\$model->fields()->select('code','attribute')->where('type', 'foreignId')->orWhere('type', 'condition')->get());\n";
+        $template .= "\$for_attr = json_encode(\$model->fields()->select('code','attribute')->where('type', 'foreignId')->orWhere('type', 'condition')->orWhere('primary', 'lookup')
+        ->orWhere('type', 'fk')->get());\n";
         $template .= "\$for_attr = str_replace('\"', \"'\", \$for_attr);\n";
         $template .= "}\n";
         $template .= "@endphp\n";
@@ -1033,6 +1035,341 @@ class FormViewGenerator
                         }
                         break;
 
+
+                        case 'fk':
+
+
+                            if($field->fk_type == 'basic')
+                            {
+
+                            // remove '/' or sub folders
+                            $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
+
+                            $constrainSingularCamelCase = GeneratorUtils::singularCamelCase($constrainModel);
+
+                            $columnAfterId = $field->attribute;
+                            $dataIds = '';
+
+                            if ($field->source != null) {
+
+                                $current_model = Module::where(
+                                    'code',
+                                    GeneratorUtils::singularSnakeCase($field->constrain)
+                                )->orWhere('code', GeneratorUtils::pluralSnakeCase($field->constrain))
+                                    ->orWhere('code', $field->constrain)->first();
+
+                                $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->get();
+
+
+                                foreach ($lookatrrs as $sa) {
+                                    $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$" . $constrainSingularCamelCase . "->" . $sa->code . "}}\"";
+                                    // $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$" . $constrainSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($sa->constrain). "_" .str()->snake($sa->attribute)  . "_id" . "}}\"";
+                                }
+                            }
+                            if ($field->multiple > 0) {
+                                $options = "
+                                            @foreach (\$look_" . GeneratorUtils::pluralCamelCase($constrainModel) . " as $$constrainSingularCamelCase)
+                                                <option    $dataIds  value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && in_array($" . $constrainSingularCamelCase . "->id, $" . $modelNameSingularCamelCase . "->" . str_replace('_id', '', $fieldSnakeCase) . "()->pluck('id')->toArray())  ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
+                                                    {{ $" . $constrainSingularCamelCase . "->$columnAfterId }}
+                                                </option>
+                                            @endforeach";
+                            } else {
+
+                                $options = "
+                                                    @foreach (\$look_" . GeneratorUtils::pluralCamelCase($constrainModel) . " as $$constrainSingularCamelCase)
+                                                        <option    $dataIds  value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == $" . $constrainSingularCamelCase . "->id ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
+                                                            {{ $" . $constrainSingularCamelCase . "->$columnAfterId }}
+                                                        </option>
+                                                    @endforeach";
+
+                            }
+
+
+                                    // select
+                                    $template .= str_replace(
+                                        [
+                                            '{{fieldKebabCase}}',
+                                            '{{fieldUcWords}}',
+                                            '{{fieldSpaceLowercase}}',
+                                            '{{options}}',
+                                            '{{nullable}}',
+                                            '{{fieldSnakeCase}}',
+                                            '{{multiple}}',
+                                            '{{source}}',
+                                            '{{multiple2}}'
+                                        ],
+                                        [
+
+                                            explode('_', str_replace('-', '_', GeneratorUtils::singularKebabCase($field->code)))[0],
+
+                                            GeneratorUtils::cleanSingularUcWords($field->name),
+                                            GeneratorUtils::cleanSingularLowerCase($constrainModel),
+                                            $options,
+                                            $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                            $fieldSnakeCase,
+                                            ($field->multiple > 0) ? 'multiple' : '',
+                                            explode('_', $field->source)[0],
+                                            ($field->multiple > 0) ? '[]' : '',
+
+
+                                        ],
+                                        GeneratorUtils::getTemplate('views/forms/select')
+                                    );
+                                }
+
+
+                                if($field->fk_type == 'condition')
+                                {
+
+                                         // remove '/' or sub folders
+                        $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
+
+                        $constrainSingularCamelCase = GeneratorUtils::singularCamelCase($constrainModel);
+
+                        $columnAfterId = $field->attribute;
+                        $dataIds = '';
+
+                        $values = explode("|", $field->condition_value);
+                        $values_count = count($values);
+                        $i = 0;
+                        $q = GeneratorUtils::setModelName($constrainModel);
+                        foreach ($values as $value) {
+                            if ($i < $values_count) {
+                                if ($i == 0) {
+                                    $q .= "::where('$field->condition_attr', '$value')";
+                                } else {
+                                    $q .= "->orWhere('$field->condition_attr', '$value')";
+
+                                }
+                            }
+                            $i++;
+                        }
+
+                        if ($field->source != null) {
+
+                            $current_model = Module::where(
+                                'code',
+                                GeneratorUtils::singularSnakeCase($field->constrain)
+                            )->orWhere('code', GeneratorUtils::pluralSnakeCase($field->constrain))
+                                ->orWhere('code', $field->constrain)->first();
+
+                            $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->get();
+
+
+                            foreach ($lookatrrs as $sa) {
+                                $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$" . $constrainSingularCamelCase . "->" . $sa->code . "}}\"";
+                                // $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$" . $constrainSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($sa->constrain). "_" .str()->snake($sa->attribute)  . "_id" . "}}\"";
+                            }
+                        }
+                        if ($field->multiple > 0) {
+                            $options = "
+                                    @foreach (\App\Models\Admin\\" . $q . "->get() as $$constrainSingularCamelCase)
+                                        <option    $dataIds  value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && in_array($" . $constrainSingularCamelCase . "->id, $" . $modelNameSingularCamelCase . "->" . str_replace('_id', '', $fieldSnakeCase) . "()->pluck('id')->toArray())  ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
+                                            {{ $" . $constrainSingularCamelCase . "->$columnAfterId }}
+                                        </option>
+                                    @endforeach";
+                        } else {
+
+                            $options = "
+                                    @foreach (\App\Models\Admin\\" . $q . "->get() as $$constrainSingularCamelCase)
+                                                <option    $dataIds  value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == $" . $constrainSingularCamelCase . "->id ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
+                                                    {{ $" . $constrainSingularCamelCase . "->$columnAfterId }}
+                                                </option>
+                                            @endforeach";
+
+                        }
+
+
+                                // select
+                                $template .= str_replace(
+                                    [
+                                        '{{fieldKebabCase}}',
+                                        '{{fieldUcWords}}',
+                                        '{{fieldSpaceLowercase}}',
+                                        '{{options}}',
+                                        '{{nullable}}',
+                                        '{{fieldSnakeCase}}',
+                                        '{{multiple}}',
+                                        '{{source}}',
+                                        '{{multiple2}}'
+                                    ],
+                                    [
+
+                                        explode('_', str_replace('-', '_', GeneratorUtils::singularKebabCase($field->code)))[0],
+
+                                        GeneratorUtils::cleanSingularUcWords($field->name),
+                                        GeneratorUtils::cleanSingularLowerCase($constrainModel),
+                                        $options,
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                        $fieldSnakeCase,
+                                        ($field->multiple > 0) ? 'multiple' : '',
+                                        explode('_', $field->source)[0],
+                                        ($field->multiple > 0) ? '[]' : '',
+
+
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/select')
+                                );
+
+
+                                }
+
+                                if($field->fk_type == 'based'){
+
+
+
+                        // remove '/' or sub folders
+                        $constrainModel = GeneratorUtils::setModelName($field->constrain, 'default');
+                        $constrainModel2 = GeneratorUtils::setModelName($field->constrain2, 'default');
+
+                        $constrainSingularCamelCase = GeneratorUtils::singularCamelCase($constrainModel);
+                        $constrainSingularCamelCase2 = GeneratorUtils::singularCamelCase($constrainModel2);
+
+                        $columnAfterId = $field->attribute;
+                        $columnAfterId2 = $field->attribute2;
+
+                        $dataIds = '';
+                        $dataIds2 = '';
+
+                        $options2 = '';
+
+                        $fieldSnakeCase2 = str()->snake($field->constrain2 . '_' . $field->attribute2 . '_id');
+                        $code2 = $field->constrain2 . '_' . $field->attribute2 . '_id';
+
+
+
+
+                       $values = explode("|", $field->condition_value);
+                        $values_count = count($values);
+                        $i = 0;
+                        $q = GeneratorUtils::setModelName($constrainModel2);
+                        foreach ($values as $value) {
+                            if ($i < $values_count) {
+                                if ($i == 0) {
+                                    $q .= "::where('$field->condition_attr', '$value')";
+                                } else {
+                                    $q .= "->orWhere('$field->condition_attr', '$value')";
+
+                                }
+                            }
+                            $i++;
+                        }
+
+
+                        if (true) {
+
+                            $current_model = Module::where(
+                                'code',
+                                GeneratorUtils::singularSnakeCase($field->constrain)
+                            )->orWhere('code', GeneratorUtils::pluralSnakeCase($field->constrain))
+                                ->orWhere('code', $field->constrain)->first();
+
+                            $current_model2 = Module::where(
+                                'code',
+                                GeneratorUtils::singularSnakeCase($field->constrain2)
+                            )->orWhere('code', GeneratorUtils::pluralSnakeCase($field->constrain2))
+                                ->orWhere('code', $field->constrain2)->first();
+
+                            $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->orWhere('primary', 'lookup')
+                            ->orWhere('type', 'fk')->get();
+                            $lookatrrs2 = Attribute::where("module", $current_model2->id)->where('type', 'foreignId')->orWhere('primary', 'lookup')
+                            ->orWhere('type', 'fk')->get();
+
+
+                            foreach ($lookatrrs as $sa) {
+                                $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$" . $constrainSingularCamelCase . "->" . $sa->code . "}}\"";
+                                // $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$" . $constrainSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($sa->constrain). "_" .str()->snake($sa->attribute)  . "_id" . "}}\"";
+                            }
+
+                            foreach ($lookatrrs2 as $sa) {
+                                $dataIds2 .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$" . $constrainSingularCamelCase2 . "->" . $sa->code . "}}\"";
+                                // $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$" . $constrainSingularCamelCase . "->" . GeneratorUtils::singularSnakeCase($sa->constrain). "_" .str()->snake($sa->attribute)  . "_id" . "}}\"";
+                            }
+                        }
+                        if ($field->multiple > 0) {
+                            $options = "
+                                            @foreach (\$look_" . GeneratorUtils::pluralCamelCase($constrainModel) . " as $$constrainSingularCamelCase)
+                                                <option    $dataIds  value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && in_array($" . $constrainSingularCamelCase . "->id, $" . $modelNameSingularCamelCase . "->" . str_replace('_id', '', $fieldSnakeCase) . "()->pluck('id')->toArray())  ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
+                                                    {{ $" . $constrainSingularCamelCase . "->$columnAfterId }}
+                                                </option>
+                                            @endforeach";
+                        } else {
+
+                            $options = "
+                                                    @foreach (\$look_" . GeneratorUtils::pluralCamelCase($constrainModel) . " as $$constrainSingularCamelCase)
+                                                        <option    $dataIds  value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == $" . $constrainSingularCamelCase . "->id ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
+                                                            {{ $" . $constrainSingularCamelCase . "->$columnAfterId }}
+                                                        </option>
+                                                    @endforeach";
+
+                            $options2 = "
+                                                    @foreach ( \App\Models\Admin\\" . $q . "->get()   as $$constrainSingularCamelCase2)
+                                                        <option    $dataIds2  value=\"{{ $" . $constrainSingularCamelCase2 . "->id }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase2 == $" . $constrainSingularCamelCase2 . "->id ? 'selected' : (old('$fieldSnakeCase2') == $" . $constrainSingularCamelCase2 . "->id ? 'selected' : '') }}>
+                                                            {{ $" . $constrainSingularCamelCase2 . "->$columnAfterId2 }}
+                                                        </option>
+                                                    @endforeach";
+
+                        }
+
+
+                                // select
+                                $template .= str_replace(
+                                    [
+                                        '{{fieldKebabCase}}',
+                                        '{{fieldUcWords}}',
+                                        '{{fieldSpaceLowercase}}',
+                                        '{{options}}',
+                                        '{{nullable}}',
+                                        '{{fieldSnakeCase}}',
+                                        '{{multiple}}',
+                                        '{{source}}',
+                                        '{{multiple2}}',
+
+
+                                        '{{fieldKebabCase2}}',
+                                        '{{fieldUcWords2}}',
+                                        '{{fieldSpaceLowercase2}}',
+                                        '{{options2}}',
+                                        '{{nullable2}}',
+                                        '{{fieldSnakeCase2}}',
+                                        '{{multiple2}}',
+                                        '{{source2}}',
+                                        '{{multiple2}}'
+                                    ],
+                                    [
+
+                                        explode('_', str_replace('-', '_', GeneratorUtils::singularKebabCase($field->code)))[0],
+
+                                        GeneratorUtils::cleanSingularUcWords($field->name),
+                                        GeneratorUtils::cleanSingularLowerCase($constrainModel),
+                                        $options,
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                        $fieldSnakeCase,
+                                        ($field->multiple > 0) ? 'multiple' : '',
+                                        '',
+                                        ($field->multiple > 0) ? '[]' : '',
+
+
+
+                                        explode('_', str_replace('-', '_', GeneratorUtils::singularKebabCase($code2)))[0],
+
+                                        GeneratorUtils::cleanSingularUcWords($field->name),
+                                        GeneratorUtils::cleanSingularLowerCase($constrainModel2),
+                                        $options2,
+                                        $field->required == 'yes' || $field->required == 'on' ? ' required' : '',
+                                        $fieldSnakeCase2,
+                                        ($field->multiple > 0) ? 'multiple' : '',
+                                        explode('_', $field->constrain)[0],
+                                        ($field->multiple > 0) ? '[]' : '',
+
+
+                                    ],
+                                    GeneratorUtils::getTemplate('views/forms/doublefk')
+                                );
+
+                                }
+
+                            break;
 
 
                     case 'doublefk':
@@ -1754,7 +2091,8 @@ class FormViewGenerator
                                             GeneratorUtils::singularSnakeCase($value->constrain)
                                         )->orWhere('code', GeneratorUtils::pluralSnakeCase($value->constrain))
                                             ->orWhere('code', $value->constrain)->first();
-                                        $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->get();
+                                        $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->orWhere('primary', 'lookup')
+                                        ->orWhere('type', 'fk')->get();
 
                                         foreach ($lookatrrs as $sa) {
                                             $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "={{ \$item2->" . $sa->code . "}}";

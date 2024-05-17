@@ -604,6 +604,7 @@ Route::get(
         $target_data = $target_model::find($element->$for_key_attr_name);
         $target_data->$target_result_attr;
         return response()->json([
+
             'data' => $target_data->$target_result_attr,
             'data_id' => $target_data->id,
             'id' => $id
@@ -623,7 +624,8 @@ Route::get('get-belongs-to/{id}', function ($id) {
         $query->where('type', 'foreignId')
             ->orWhere('type', 'informatic')
             ->orWhere('type', 'doublefk')
-            ->orWhere('primary', 'lookup');
+            ->orWhere('primary', 'lookup')
+            ->orWhere('type', 'fk');
     })
 
     ->get();
@@ -650,6 +652,102 @@ Route::get('get-belongs-to/{id}', function ($id) {
     return $options;
 
 });
+
+
+
+Route::get('get-relations-modules/{id}', function ($id) {
+
+    // $attributes = Attribute::where('module', $id)->where('type', 'foreignId')->get();
+
+
+
+    //this is for belongs to
+    $attributes = Attribute::where('module', $id)
+    ->where(function ($query) {
+        $query->where('type', 'foreignId')
+            ->orWhere('type', 'informatic')
+            ->orWhere('type', 'doublefk')
+            ->orWhere('primary', 'lookup')
+            ->orWhere('type', 'fk');
+    })
+
+    ->get();
+
+
+    $basedAttributes = Attribute::where('module', $id)
+    ->where(function ($query) {
+        $query->where('type', 'fk')
+              ->where('fk_type','based');
+
+    })
+
+    ->get();
+
+
+
+    //this is for has many
+    $module =  Module::find($id);
+    $code = GeneratorUtils::singularSnakeCase($module->code);
+
+    $attributes2 = Attribute::where('constrain', $code)
+                            ->orWhere('constrain2',$code)
+                            ->where(function ($query) {
+                            $query->where('type', 'foreignId')
+                            ->orWhere('type', 'informatic')
+                            ->orWhere('type', 'doublefk')
+                            ->orWhere('primary', 'lookup')
+                            ->orWhere('type', 'fk');
+                          })
+
+                           ->get();
+
+
+       $options = '';
+       $options = '<option  >-- select --</option>';
+
+
+
+       foreach ($attributes as $key => $value) {
+
+        $all =  GeneratorUtils::setModelName( explode('_', $value->code)[0] );
+        $model = Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase($all))
+        ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))
+        ?->first();
+
+
+           $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
+       }
+
+
+
+       foreach ($attributes2 as $key => $value) {
+
+
+        $model = Module::find($value->module);
+
+
+
+           $options .= '<option data-id="' . $value->module . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
+       }
+
+
+       foreach ($basedAttributes as $key => $value) {
+
+        $all =  GeneratorUtils::setModelName($value->constrain2 );
+        $model = Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase($all))
+        ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))
+        ?->first();
+
+
+           $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
+       }
+
+
+
+    return $options;
+
+});
+
 
 Route::get('getsource/{id}', function ($id) {
 

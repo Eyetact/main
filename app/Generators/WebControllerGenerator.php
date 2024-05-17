@@ -247,16 +247,16 @@ class WebControllerGenerator
 
         // load the relations for create, show, and edit
         // if ( count($module->fields()->where('is_enable',1)->where('type','foreignId')->orWhere('type','condition')->get()) > 0) {
-        if (count($module->fields()->where('is_enable', 1)->where('type', 'foreignId')->get()) + count($module->fields()->where('is_enable', 1)->where('type', 'condition')->get()) + count($module->fields()->where('is_enable', 1)->where('primary', 'lookup')->get()) + count($module->fields()->where('is_enable', 1)->where('type', 'informatic')->get())+ count($module->fields()->where('is_enable', 1)->where('type', 'doublefk')->get()) > 0) {
+        if (count($module->fields()->where('is_enable', 1)->where('type', 'foreignId')->get()) + count($module->fields()->where('is_enable', 1)->where('type', 'condition')->get()) + count($module->fields()->where('is_enable', 1)->where('type', 'fk')->get()) + count($module->fields()->where('is_enable', 1)->where('primary', 'lookup')->get()) + count($module->fields()->where('is_enable', 1)->where('type', 'informatic')->get())+ count($module->fields()->where('is_enable', 1)->where('type', 'doublefk')->get()) > 0) {
             $relations .= "$" . $modelNameSingularCamelCase . "->load(";
 
-            $countForeidnId = count($module->fields()->where('type', 'foreignId')->orWhere('primary', 'lookup')->orWhere('type', 'condition')->orWhere('type', 'informatic')->get());
+            $countForeidnId = count($module->fields()->where('type', 'foreignId')->orWhere('primary', 'lookup')->orWhere('type', 'condition')->orWhere('type', 'informatic')->orWhere('type','fk')->get());
 
             $query = "$modelNameSingularPascalCase::with(";
 
             foreach ($module->fields()->where('is_enable', 1)->get() as $i => $field) {
                 $field->code = !empty($field->code) ? GeneratorUtils::singularSnakeCase($field->code) : GeneratorUtils::singularSnakeCase($field->name);
-                if ($field->constrain != null && $field->type != 'doublefk') {
+                if ($field->constrain != null && $field->type != 'doublefk' && $field->fk_type != 'based') {
                     $constrainName = GeneratorUtils::setModelName($field->constrain);
 
                     $columnsk = GeneratorUtils::singularSnakeCase($constrainName);
@@ -349,6 +349,60 @@ class WebControllerGenerator
 
                 })";
                 }
+
+                if ($field->constrain != null && $field->fk_type  == 'based') {
+                    $constrainName = GeneratorUtils::setModelName($field->constrain);
+                    $constrainName2 = GeneratorUtils::setModelName($field->constrain2);
+
+                    $columnsk = GeneratorUtils::singularSnakeCase($constrainName);
+                    $columnsk2 = GeneratorUtils::singularSnakeCase($constrainName2);
+
+                    $constrainSnakeCase = str()->snake($constrainName) . "_" . str()->snake($field->attribute);
+                    $constrainSnakeCase2 = str()->snake($constrainName2) . "_" . str()->snake($field->attribute2);
+
+                    $selectedColumns = 'id,' . $field->attribute ;
+                    $selectedColumns2 = 'id,' . $field->attribute2 ;
+
+                    $columnAfterId = $field->attribute;
+                    $columnAfterId2 = $field->attribute2;
+
+                    if ($countForeidnId + 1 < $i) {
+                        $relations .= "'$constrainSnakeCase:$selectedColumns', ";
+                        $relations .= "'$constrainSnakeCase2:$selectedColumns2', ";
+                        $query .= "'$constrainSnakeCase:$selectedColumns', ";
+                        $query .= "'$constrainSnakeCase2:$selectedColumns2', ";
+                    } else {
+                        $relations .= "'$constrainSnakeCase:$selectedColumns'";
+                        $relations .= "'$constrainSnakeCase2:$selectedColumns2'";
+
+                        $query .= "'$constrainSnakeCase:$selectedColumns'";
+                        $query .= "'$constrainSnakeCase2:$selectedColumns2'";
+                    }
+
+                    // id name created_at
+                    //$row->category->name
+
+
+
+                    $addColumns .= "->addColumn('$constrainSnakeCase', function (\$row) {
+
+                            if (!is_a(\$row->" . $constrainSnakeCase . ", 'Illuminate\Database\Eloquent\Collection')) {
+
+
+                                return \$row->" . $constrainSnakeCase . " ? \$row->" . $constrainSnakeCase . "->$columnAfterId . ', ' . \$row->" . $constrainSnakeCase2 . "->$columnAfterId2  : '';
+                            } else {
+                                \$text = '';
+                                foreach (\$row->" . $constrainSnakeCase . " as \$value) {
+                                    \$text .= \$value->$columnAfterId . ', ';
+                                }
+                                return \$text;
+                            }
+
+
+
+                })";
+                }
+
             }
 
             $query .= ")";

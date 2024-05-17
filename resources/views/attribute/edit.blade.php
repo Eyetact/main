@@ -85,9 +85,10 @@
                                 <option @selected($attribute->input == 'datetime-local') value="datetime-local">Date And Time</option>
                                 <option @selected($attribute->input == 'select') value="select">Select</option>
                                 <option @selected($attribute->input == 'radioselect') value="radioselect">Radio</option>
-                                <option @selected($attribute->input == 'foreignId') value="foreignId">Lookup</option>
-                                <option @selected($attribute->input == 'informatic') value="informatic">Informatic Attribute</option>
-                                <option @selected($attribute->input == 'doublefk') value="doublefk">Double Lookup Attribute</option>
+                                {{-- <option @selected($attribute->input == 'foreignId') value="foreignId">Normal Lookup</option> --}}
+                                <option @selected($attribute->input == 'fk') value="fk">Lookup</option>
+                                {{-- <option @selected($attribute->input == 'informatic') value="informatic">Informatic Attribute</option> --}}
+                                {{-- <option @selected($attribute->input == 'doublefk') value="doublefk">Double Lookup Attribute</option> --}}
                                 <option @selected($attribute->input == 'doubleattr') value="doubleattr">Double Attribute</option>
                             </select>
                             <label id="field_type-error" class="error text-red hide" for="field_type"></label>

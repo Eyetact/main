@@ -108,11 +108,12 @@
                                 <option value="datetime-local">Date And Time</option>
                                 <option value="select">Select</option>
                                 <option value="radioselect">Radio</option>
-                                <option value="foreignId">Lookup</option>
-                                <option value="informatic">Informatic Attribute</option>
-                                <option value="doublefk">Double Lookup Attribute</option>
+                                {{-- <option value="foreignId">Normal Lookup</option> --}}
+                                <option value="fk">Lookup</option>
+                                {{-- <option value="informatic">Informatic Attribute</option> --}}
+                                {{-- <option value="doublefk">Double Lookup Attribute</option> --}}
                                 <option value="doubleattr">Double Attribute</option>
-                                <option value="condition">Condition Lookup</option>
+                                {{-- <option value="condition">Condition Lookup</option> --}}
 
                                 {{-- <option value="assign">Assign</option> --}}
                             </select>

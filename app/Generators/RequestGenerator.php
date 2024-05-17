@@ -361,7 +361,7 @@ class RequestGenerator
                      */
                     if ($field->type != 'multi') {
 
-                        if($field->type != 'boolean' &&  $field->type != 'doublefk')
+                        if($field->type != 'boolean' &&  $field->type != 'doublefk'  &&  $field->fk_type != 'based')
                         {
                         match ($field->required) {
                             'yes' => $validations .= "'required",
@@ -371,7 +371,7 @@ class RequestGenerator
 
 
                     }
-                    if($field->type == 'doublefk' )
+                    if($field->type == 'doublefk'  ||  $field->fk_type == 'based')
                     {
                     match ($field->required) {
                         'yes' => $validations .= "'required',\n'" . str()->snake($field->constrain2 . '_' . $field->attribute2 . '_id') . "' => 'required",

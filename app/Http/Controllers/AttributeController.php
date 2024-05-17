@@ -281,6 +281,7 @@ class AttributeController extends Controller
             'primary' => isset($request['primary']) ? $request['primary'] : null,
             'secondary' => isset($request['secondary']) ? $request['secondary'] : null,
             'fixed_value' => isset($request['fixed_value']) ? $request['fixed_value'] : null,
+            'fk_type' => isset($request['fk_type']) ? $request['fk_type'] : null,
             'user_id' => auth()->user()->id,
             'multiple' => isset($request['multiple']) ? 1 : 0,
             'condition_attr' => $condition_attr,
@@ -290,6 +291,22 @@ class AttributeController extends Controller
         $attribute = Attribute::create($createArr);
 
         // dd($attribute);
+
+        if (isset($requestData['fk_type']) && $requestData['fk_type']== 'condition') {
+
+
+            $attribute->attribute = $attribute->condition_attr;
+            $attribute->save();
+
+        }
+
+        if (isset($requestData['fk_type']) && $requestData['fk_type']== 'based') {
+
+
+            $attribute->attribute2 = $attribute->condition_attr;
+            $attribute->save();
+
+        }
 
         if (isset($requestData['multi'])) {
 

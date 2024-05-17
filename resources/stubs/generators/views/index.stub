@@ -506,7 +506,9 @@ output {
                         // alert(path)
                         console.log(path);
                         $.ajax({
+                            async: false,
                             url: path,
+
                             success: function(response) {
                                 console.log(response);
                                 if(inform){

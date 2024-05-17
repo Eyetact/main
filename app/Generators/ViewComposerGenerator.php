@@ -91,7 +91,7 @@ class ViewComposerGenerator
 
         foreach ($module->fields as $i => $field) {
             $field->name = GeneratorUtils::singularSnakeCase($field->name);
-            if ($field->type == 'foreignId' || $field->type == 'informatic' || $field->primary == 'lookup') {
+            if ($field->type == 'foreignId' || $field->type == 'informatic' || $field->type == 'condition' || $field->primary == 'lookup' || $field->fk_type == 'basic' || $field->fk_type == 'condition') {
                 // remove '/' or sub folders
                 $constrainModel = GeneratorUtils::setModelName($field->constrain);
 
@@ -146,7 +146,7 @@ class ViewComposerGenerator
                 file_put_contents($path, $viewProviderTemplate);
             }
 
-            if($field->type == 'doublefk'){
+            if($field->type == 'doublefk' || $field->fk_type == 'based'){
 
                 // the first one
                 $constrainModel = GeneratorUtils::setModelName($field->constrain);
@@ -279,7 +279,7 @@ class ViewComposerGenerator
         $viewPath = GeneratorUtils::getModelLocation($crud->name);
 
         foreach ($crud->fields as $i => $feild) {
-            if ($feild->type == 'foreignId') {
+            if ($feild->type == 'foreignId' || $feild->type == 'fk') {
                 // remove '/' or sub folders
                 $constrainModel = GeneratorUtils::setModelName($feild->constrain);
 
