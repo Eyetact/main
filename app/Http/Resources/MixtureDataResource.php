@@ -90,6 +90,7 @@ class MixtureDataResource extends JsonResource
                      'maximum' => $maximum, // Add maximum value to the component
                     //  'flow_rate' => $pumpFlow, // Add pump flow value to the component
                      'delay' => ($component['result'] * 60 / $pumpFlow) * 1000,
+                     'pin_number' => $componentIndex, // Add component index to the response
                  ];
              }
 

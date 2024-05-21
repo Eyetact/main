@@ -70,6 +70,9 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('component/delete/{id}', [ComponentController::class, 'delete']);
     Route::post('component/edit/{id}', [ComponentController::class, 'edit']);
 
+
+    Route::post('get-component', [ComponentController::class, 'show']);
+
     //get components by category
     Route::post('get-components-by-category', [ComponentController::class, 'getComponentsByCategory']);
 
