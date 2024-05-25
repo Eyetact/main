@@ -303,7 +303,7 @@ class AttributeController extends Controller
         if (isset($requestData['fk_type']) && $requestData['fk_type']== 'based') {
 
 
-            $attribute->attribute2 = $attribute->condition_attr;
+            $attribute->attribute = $attribute->condition_attr;
             $attribute->save();
 
         }
@@ -452,6 +452,19 @@ class AttributeController extends Controller
     public function update(AttributePostRequest $request, Attribute $attribute)
     {
 
+
+        $condition_value = '';
+
+        if(isset($request['condition_value'])){
+
+            foreach ($request['condition_value'] as  $value) {
+                $condition_value .= $value . '|';
+            }
+
+
+        $attribute->condition_value = $condition_value;
+        }
+
         $attribute->name = str(str_replace('.', '', $request['name']))->lower();
         $attribute->is_enable = isset($request['is_enable']) ? 1 : 0;
         $attribute->is_system = isset($request['is_system']) ? 1 : 0;
@@ -463,6 +476,7 @@ class AttributeController extends Controller
 
         $attribute->min_length = $request['min_lengths'];
         $attribute->max_length = $request['max_lengths'];
+
 
         $enumValues = '';
         if (isset($request['fields_info'])) {

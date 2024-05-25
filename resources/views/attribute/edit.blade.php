@@ -73,8 +73,10 @@
                                 </option>
                                 <option @selected($attribute->input == 'file') value="file">File</option>
                                 {{-- <option @selected($attribute->input == 'number') value="number">Number</option> --}}
-                                <option @selected($attribute->input == 'number') value="number">Integer Number(1,2,3....etc)</option>
-                                <option @selected($attribute->input == 'decimal') value="number">Decimal Number(1,2,3.123....etc)</option>
+                                <option @selected($attribute->input == 'number') value="number">Integer Number(1,2,3....etc)
+                                </option>
+                                <option @selected($attribute->input == 'decimal') value="number">Decimal Number(1,2,3.123....etc)
+                                </option>
                                 <option @selected($attribute->input == 'range') value="range">Range</option>
                                 {{-- <option @selected($attribute->input == 'radio') value="radio">Radio ( True, False )</option> --}}
                                 <option @selected($attribute->input == 'switch') value="switch">Yes Or No</option>
@@ -96,6 +98,57 @@
                                 <span class="error field_type-error">{{ $message }}</span>
                             @enderror
                             <div class="input-options">
+
+
+                                @if ($attribute->fk_type == 'based')
+                                    @php
+                                        $selectedOptions = explode('|', $attribute->condition_value);
+
+                                        $module = App\Models\Module::find($attribute->module);
+
+                                        $code =  App\Generators\GeneratorUtils::setModelName( explode('_', $attribute->code)[0] );
+
+                                        $model = App\Models\Module::where('code',App\Generators\GeneratorUtils::singularSnakeCase($code))
+                                                                   ->orWhere('code',App\Generators\GeneratorUtils::pluralSnakeCase($code))
+                                                                    ?->first();
+                                                                        // dd($model);
+
+                                        if (in_array($module->id, [1, 2, 3, 4, 5])) {
+                                            $modelName = 'App\Models\\' . App\Generators\GeneratorUtils::setModelName($model->code);
+                                        } else {
+                                            $modelName =
+                                                'App\Models\Admin\\' . App\Generators\GeneratorUtils::setModelName($model->code);
+                                        }
+
+                                        $query = $modelName::all()->pluck($attribute->condition_attr, 'id');
+                                        $options = '<option disabled>-- select --</option>';
+                                        // dd($query);
+
+                                        foreach ($query as $key => $value) {
+                                            $selected = in_array($value, $selectedOptions) ? 'selected' : '';
+                                            $options .=
+                                                '<option data-id="' .
+                                                $key .
+                                                '" value="' .
+                                                $value .
+                                                '" ' .
+                                                $selected .
+                                                '>' .
+                                                $value .
+                                                '</option>';
+                                        }
+                                        // dd($query);
+                                    @endphp
+
+                                    <div class="input-box child cond2-wrapper form-constrain mt-2">
+                                        <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                                            <select class="google-input" name="condition_value[]" required multiple>
+                                                {!! $options !!}
+                                            </select>
+                                        </div>
+                                    </div>
+                                @endif
+
 
                                 @if ($attribute->input == 'select')
 
@@ -133,7 +186,8 @@
 
                                                     @foreach ($options as $index => $option)
                                                         <tr>
-                                                            <td class="text-center" scope="row">{{ $index + 1 }}
+                                                            <td class="text-center" scope="row">
+                                                                {{ $index + 1 }}
                                                             </td>
                                                             <td><input @checked($option == $attribute->default_value) type="radio"
                                                                     name="fields_info_radio"
@@ -334,29 +388,33 @@
 
 
                                                                         {{-- @if ($multi->condition != 'disabled' && !empty($multi->condition)) --}}
+                                                                        <div
+                                                                            class="input-box child-drop form-constrain mt-2">
                                                                             <div
-                                                                                class="input-box child-drop form-constrain mt-2">
-                                                                                <div
-                                                                                    class="input-box form-on-update mt-2 form-on-update-foreign">
+                                                                                class="input-box form-on-update mt-2 form-on-update-foreign">
 
-                                                                                    <select class="google-input "
-                                                                                        name="multi[{{ $index }}][source]"
-                                                                                        required>
+                                                                                <select class="google-input "
+                                                                                    name="multi[{{ $index }}][source]"
+                                                                                    required>
 
 
-                                                                                        <option value="disabled"
-                                                                                            @selected($multi->source == 'disabled')>
-                                                                                            disabled
+                                                                                    <option value="disabled"
+                                                                                        @selected($multi->source == 'disabled')>
+                                                                                        disabled
 
+                                                                                    </option>
+                                                                                    @foreach (App\Models\Attribute::where('type', 'foreignId')->get() as $it)
+                                                                                        <option
+                                                                                            value="{{ explode('_id', $it->code)[0] }}"
+                                                                                            @selected($multi->source == explode('_id', $it->code)[0])>
+                                                                                            {{ $it->name }}
                                                                                         </option>
-                                                                                        @foreach( App\Models\Attribute::where('type','foreignId')->get() as $it )
-                                                                                            <option value="{{explode('_id', $it->code)[0]}}" @selected($multi->source == explode('_id', $it->code)[0])>{{$it->name}}</option>
-                                                                                        @endforeach
+                                                                                    @endforeach
 
-                                                                                    </select>
+                                                                                </select>
 
-                                                                                </div>
                                                                             </div>
+                                                                        </div>
                                                                         {{-- @endif --}}
                                                                     </div>
                                                                 @endif
@@ -464,33 +522,33 @@
 
     @if ($attribute->input == 'foreignId' || $attribute->input == 'condition')
 
-    <div class="card source-card">
-        <div class="card-header">
-            <h3 class="card-title">Source</h3>
-        </div>
-        <div class="card-body pb-2">
-            <div class="row">
-                <div class="col-sm-12 input-box">
-                    <label class="form-label" for="source">source<span class="text-red">*</span></label>
-                    <select class="google-input " name="source">
-                        <option >Disable</option>
-                        @foreach ($module->fields()->where('type','foreignId')->get() as $item)
-                        <option @selected($attribute->source == explode('_', $item->code)[0]) value="{{ explode('_id', $item->code)[0] }}">{{ $item->name }}</option>
+        <div class="card source-card">
+            <div class="card-header">
+                <h3 class="card-title">Source</h3>
+            </div>
+            <div class="card-body pb-2">
+                <div class="row">
+                    <div class="col-sm-12 input-box">
+                        <label class="form-label" for="source">source<span class="text-red">*</span></label>
+                        <select class="google-input " name="source">
+                            <option>Disable</option>
+                            @foreach ($module->fields()->where('type', 'foreignId')->get() as $item)
+                                <option @selected($attribute->source == explode('_', $item->code)[0]) value="{{ explode('_id', $item->code)[0] }}">
+                                    {{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                        @endforeach
-                    </select>
-                </div>
-
-                {{-- <div class="col-sm-6 input-box">
+                    {{-- <div class="col-sm-6 input-box">
                     <label class="form-label" for="target">Target<span class="text-red">*</span></label>
                     <select class="google-input " name="target" required readonly disabled>
                         <option value="{{ $attribute->target }}">{{ $attribute->target }}</option>
                     </select>
                 </div> --}}
 
+                </div>
             </div>
         </div>
-    </div>
 
     @endif
 

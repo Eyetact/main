@@ -662,26 +662,26 @@ Route::get('get-relations-modules/{id}', function ($id) {
 
 
     //this is for belongs to
-    $attributes = Attribute::where('module', $id)
-    ->where(function ($query) {
-        $query->where('type', 'foreignId')
-            ->orWhere('type', 'informatic')
-            ->orWhere('type', 'doublefk')
-            ->orWhere('primary', 'lookup')
-            ->orWhere('type', 'fk');
-    })
+    // $attributes = Attribute::where('module', $id)
+    // ->where(function ($query) {
+    //     $query->where('type', 'foreignId')
+    //         ->orWhere('type', 'informatic')
+    //         ->orWhere('type', 'doublefk')
+    //         ->orWhere('primary', 'lookup')
+    //         ->orWhere('type', 'fk');
+    // })
 
-    ->get();
+    // ->get();
 
 
-    $basedAttributes = Attribute::where('module', $id)
-    ->where(function ($query) {
-        $query->where('type', 'fk')
-              ->where('fk_type','based');
+    // $basedAttributes = Attribute::where('module', $id)
+    // ->where(function ($query) {
+    //     $query->where('type', 'fk')
+    //           ->where('fk_type','based');
 
-    })
+    // })
 
-    ->get();
+    // ->get();
 
 
 
@@ -707,16 +707,16 @@ Route::get('get-relations-modules/{id}', function ($id) {
 
 
 
-       foreach ($attributes as $key => $value) {
+    //    foreach ($attributes as $key => $value) {
 
-        $all =  GeneratorUtils::setModelName( explode('_', $value->code)[0] );
-        $model = Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase($all))
-        ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))
-        ?->first();
+    //     $all =  GeneratorUtils::setModelName( explode('_', $value->code)[0] );
+    //     $model = Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase($all))
+    //     ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))
+    //     ?->first();
 
 
-           $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
-       }
+    //        $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
+    //    }
 
 
 
@@ -731,16 +731,16 @@ Route::get('get-relations-modules/{id}', function ($id) {
        }
 
 
-       foreach ($basedAttributes as $key => $value) {
+    //    foreach ($basedAttributes as $key => $value) {
 
-        $all =  GeneratorUtils::setModelName($value->constrain2 );
-        $model = Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase($all))
-        ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))
-        ?->first();
+    //     $all =  GeneratorUtils::setModelName($value->constrain2 );
+    //     $model = Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase($all))
+    //     ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))
+    //     ?->first();
 
 
-           $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
-       }
+    //        $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
+    //    }
 
 
 
