@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\MyComponentsResource;
 use App\Models\Admin\Component;
 use App\Models\Admin\ComponentsSet;
 use App\Models\Admin\Element;
@@ -328,4 +329,95 @@ class ComponentController extends ApiController
 
     }
 
+
+
+    public function show(Request $request)
+    {
+        $machine = Software::find($request->machine_id);
+        $components_set = ComponentsSet::find($machine->components_set_id);
+
+        $descriptions = [];
+        $results = [];
+        $delays = [];
+        $components = collect([]);
+        $matchedComponent = null;
+
+        if ($components_set) {
+            $set_component = json_decode($components_set->set_component);
+            $componentIds = collect($set_component)->pluck("id");
+            $main_pumps = json_decode($machine->main_part->main_pump);
+
+            // Convert main_pumps to an array
+            $main_pumps_array = get_object_vars($main_pumps);
+
+            $indexMap = []; // To store the index for each component
+
+            foreach ($componentIds as $index => $componentId) {
+                $component = Component::find($componentId);
+                if ($component) {
+                    // Access the description from the JSON object
+                    $description = collect($set_component)->firstWhere('id', $componentId)->describtion;
+                    $descriptions[$componentId] = $description;
+
+                    // Store the index for the component
+                    $indexMap[$componentId] = $index + 1;
+
+                    // Extract the flow rate for the current component
+                    $flowRate = $main_pumps_array[$index + 1]->pump_flow;
+
+                    // Calculate the result based on machine's main part type
+                    if ($machine->main_part->main_type != 'Mixing With Carrier') {
+                        $result = 1000 / $component->compo_concentration * $component->compo_value;
+                    } else {
+                        // For 'mixing with carrier', calculate for all except the first component
+                        if ($index == 0) {
+                            $result = null; // Placeholder for the first component
+                        } else {
+                            $result = 1000 / $component->compo_concentration * $component->compo_value;
+                        }
+                    }
+                    $results[$componentId] = $result;
+
+                    // Calculate delay
+                    if ($result !== null) {
+                        $delay = ($result * 60 / $flowRate) * 1000;
+                        $delays[$componentId] = $delay;
+                    }
+
+                    $components->push($component);
+
+                    // Check if this is the component we're interested in
+                    if ($componentId == $request->id) {
+                        $matchedComponent = $component;
+                    }
+                }
+            }
+
+            // Calculate the result for the first component if main_type is 'mixing with carrier'
+            if ($machine->main_part->main_type == 'Mixing With Carrier' && $components->isNotEmpty()) {
+                $sumOfOtherResults = collect($results)->filter()->sum();
+                $firstComponentId = $components->first()->id;
+                $results[$firstComponentId] = 1000 - $sumOfOtherResults;
+
+                // Calculate delay for the first component
+                $flowRate = $main_pumps_array[1]->pump_flow; // The first pump in the original object
+                $delays[$firstComponentId] = ($results[$firstComponentId] * 60 / $flowRate) * 1000;
+
+                // Check if the first component is the one we're interested in
+                if ($firstComponentId == $request->id) {
+                    $matchedComponent = $components->first();
+                }
+            }
+        }
+
+        // Add descriptions to the matched component object
+        if ($matchedComponent) {
+            $matchedComponent->description = $descriptions[$matchedComponent->id] ?? null;
+            $matchedComponent->json_index = $indexMap[$matchedComponent->id] ?? null;
+            $matchedComponent->result = isset($results[$matchedComponent->id]) ? number_format($results[$matchedComponent->id], 3) : null; // Format to 3 decimal places
+            $matchedComponent->delay = isset($delays[$matchedComponent->id]) ? number_format($delays[$matchedComponent->id], 3) : null; // Format to 3 decimal places
+        }
+
+        return $this->returnData('data', new MyComponentsResource($matchedComponent), __('Get successfully'));
+    }
 }
