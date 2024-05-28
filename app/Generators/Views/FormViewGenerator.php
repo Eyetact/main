@@ -672,7 +672,7 @@ class FormViewGenerator
         $template .= "->first();\n";
         $template .= "\$constrain_name = App\Generators\GeneratorUtils::singularSnakeCase('" . $code . "');\n";
         $template .= "if (\$model) {\n";
-        $template .= "\$for_attr = json_encode(\$model->fields()->select('code','attribute')->where('type', 'foreignId')->orWhere('type', 'condition')->orWhere('primary', 'lookup')
+        $template .= "\$for_attr = json_encode(\$model->fields()->select('code','attribute')->where('type', 'foreignId')->orWhere('primary', 'lookup')
         ->orWhere('type', 'fk')->get());\n";
         $template .= "\$for_attr = str_replace('\"', \"'\", \$for_attr);\n";
         $template .= "}\n";

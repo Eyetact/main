@@ -417,21 +417,45 @@
 
                     // if(index > 1)
                     if (1) {
+                        // alert(id);
 
                         var listd = '';
-                        @foreach (App\Models\Attribute::where('type', 'foreignId')->get() as $it)
 
-                            listd +=
-                                '<option value="{{ explode('_id', $it->code)[0] }}" >{{ $it->name }}</option>'
-                        @endforeach
+//                         @foreach (App\Models\Attribute::where('type', 'foreignId')->get() as $it)
 
-                        parent.append(` <div class="input-box child-drop form-constrain mt-2">
+// listd +=
+//     '<option value="{{ explode('_id', $it->code)[0] }}" >{{ $it->name }}</option>'
+// @endforeach
+
+
+
+                        $.ajax({
+                url: '{{ url('/') }}/get-relations-multi/' + id,
+                success: function(response) {
+                    console.log(response);
+
+
+
+                    parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="multi[${index}][source]" required>
                             <option value="disabled">disabled</option>
-                            ${listd}
+                            ${response}
                         </select>
                     </div></div>`);
+                }
+                });
+
+
+
+
+                    //     parent.append(` <div class="input-box child-drop form-constrain mt-2">
+                    // <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                    //     <select class="google-input " name="multi[${index}][source]" required>
+                    //         <option value="disabled">disabled</option>
+                    //         ${listd}
+                    //     </select>
+                    // </div></div>`);
                     }
                 }
             });

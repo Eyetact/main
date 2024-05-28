@@ -12,10 +12,17 @@
         </div>
         <div class="page-rightheader">
         @php
-                    $model_id = App\Models\Permission::where('name', 'create.{{modelNameSingularLowercase}}')
-                    ->orWhere('name', 'create.{{code}}')?->first()?->module;
-                    $model = App\Models\Module::find($model_id)
-                    // dd($model_id);
+
+                           $model_id = \App\Models\Module::where(
+                                    'code',
+                                    App\Generators\GeneratorUtils::singularSnakeCase('{{code}}'),
+                                )
+                                    ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase('{{code}}'))
+                                    ->orWhere('code', '{{code}}')
+                                    ?->first()->id;
+
+                    $model = App\Models\Module::find($model_id);
+                    //dd($model_id);
                 @endphp
         @canany(['create.{{code}}','create.{{modelNameSingularLowercase}}'])
 
@@ -604,6 +611,8 @@ output {
                 var obj = JSON.parse(jsonStringWithDoubleQuotes);
 
                 console.log(obj)
+
+
 
                 $.each(obj, function(key, value) {
                     $e_string = value.code;
