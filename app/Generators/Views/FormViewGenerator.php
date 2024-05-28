@@ -672,7 +672,7 @@ class FormViewGenerator
         $template .= "->first();\n";
         $template .= "\$constrain_name = App\Generators\GeneratorUtils::singularSnakeCase('" . $code . "');\n";
         $template .= "if (\$model) {\n";
-        $template .= "\$for_attr = json_encode(\$model->fields()->select('code','attribute')->where('type', 'foreignId')->orWhere('type', 'condition')->orWhere('primary', 'lookup')
+        $template .= "\$for_attr = json_encode(\$model->fields()->select('code','attribute')->where('type', 'foreignId')->orWhere('primary', 'lookup')
         ->orWhere('type', 'fk')->get());\n";
         $template .= "\$for_attr = str_replace('\"', \"'\", \$for_attr);\n";
         $template .= "}\n";
@@ -1242,7 +1242,7 @@ class FormViewGenerator
                        $values = explode("|", $field->condition_value);
                         $values_count = count($values);
                         $i = 0;
-                        $q = GeneratorUtils::setModelName($constrainModel2);
+                        $q = GeneratorUtils::setModelName($constrainModel);
                         foreach ($values as $value) {
                             if ($i < $values_count) {
                                 if ($i == 0) {
@@ -1254,6 +1254,9 @@ class FormViewGenerator
                             }
                             $i++;
                         }
+
+
+
 
 
                         if (true) {
@@ -1270,10 +1273,28 @@ class FormViewGenerator
                             )->orWhere('code', GeneratorUtils::pluralSnakeCase($field->constrain2))
                                 ->orWhere('code', $field->constrain2)->first();
 
-                            $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->orWhere('primary', 'lookup')
-                            ->orWhere('type', 'fk')->get();
-                            $lookatrrs2 = Attribute::where("module", $current_model2->id)->where('type', 'foreignId')->orWhere('primary', 'lookup')
-                            ->orWhere('type', 'fk')->get();
+                            $lookatrrs = Attribute::where("module", $current_model->id)
+                            ->where(function ($query) {
+                                $query->where('type', 'foreignId')
+                                      ->orWhere('type', 'fk')
+                                      ->orWhere('primary', 'lookup');
+                            })->get();
+                            $lookatrrs2 = Attribute::where("module", $current_model2->id)
+                            ->where(function ($query) {
+                                $query->where('type', 'foreignId')
+                                      ->orWhere('type', 'fk')
+                                      ->orWhere('primary', 'lookup');
+                            })->get();
+
+                            $conditionId = Attribute::where("module", $current_model2->id)->where('constrain',$field->constrain)
+                                                     ->first()->code;
+
+                            $idsData='App\Models\Admin\\' . $q . '->pluck("id")';
+
+
+
+                            $q2 = GeneratorUtils::setModelName($constrainModel2);
+                            $q2 .= "::whereIn('$conditionId', $idsData)";
 
 
                             foreach ($lookatrrs as $sa) {
@@ -1296,14 +1317,14 @@ class FormViewGenerator
                         } else {
 
                             $options = "
-                                                    @foreach (\$look_" . GeneratorUtils::pluralCamelCase($constrainModel) . " as $$constrainSingularCamelCase)
+                                                    @foreach (\App\Models\Admin\\" . $q . "->get()  as $$constrainSingularCamelCase)
                                                         <option    $dataIds  value=\"{{ $" . $constrainSingularCamelCase . "->id }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase == $" . $constrainSingularCamelCase . "->id ? 'selected' : (old('$fieldSnakeCase') == $" . $constrainSingularCamelCase . "->id ? 'selected' : '') }}>
                                                             {{ $" . $constrainSingularCamelCase . "->$columnAfterId }}
                                                         </option>
                                                     @endforeach";
 
                             $options2 = "
-                                                    @foreach ( \App\Models\Admin\\" . $q . "->get()   as $$constrainSingularCamelCase2)
+                                                    @foreach (\App\Models\Admin\\" . $q2 . "->get()    as $$constrainSingularCamelCase2)
                                                         <option    $dataIds2  value=\"{{ $" . $constrainSingularCamelCase2 . "->id }}\" {{ isset($$modelNameSingularCamelCase) && $" . $modelNameSingularCamelCase . "->$fieldSnakeCase2 == $" . $constrainSingularCamelCase2 . "->id ? 'selected' : (old('$fieldSnakeCase2') == $" . $constrainSingularCamelCase2 . "->id ? 'selected' : '') }}>
                                                             {{ $" . $constrainSingularCamelCase2 . "->$columnAfterId2 }}
                                                         </option>
@@ -1364,7 +1385,7 @@ class FormViewGenerator
 
 
                                     ],
-                                    GeneratorUtils::getTemplate('views/forms/doublefk')
+                                    GeneratorUtils::getTemplate('views/forms/based')
                                 );
 
                                 }
@@ -1406,8 +1427,18 @@ class FormViewGenerator
                             )->orWhere('code', GeneratorUtils::pluralSnakeCase($field->constrain2))
                                 ->orWhere('code', $field->constrain2)->first();
 
-                            $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->get();
-                            $lookatrrs2 = Attribute::where("module", $current_model2->id)->where('type', 'foreignId')->get();
+                            $lookatrrs = Attribute::where("module", $current_model->id)
+                            ->where(function ($query) {
+                                $query->where('type', 'foreignId')
+                                      ->orWhere('type', 'fk')
+                                      ->orWhere('primary', 'lookup');
+                            })->get();
+                            $lookatrrs2 = Attribute::where("module", $current_model2->id)
+                            ->where(function ($query) {
+                                $query->where('type', 'foreignId')
+                                      ->orWhere('type', 'fk')
+                                      ->orWhere('primary', 'lookup');
+                            })->get();
 
 
                             foreach ($lookatrrs as $sa) {
@@ -2091,8 +2122,12 @@ class FormViewGenerator
                                             GeneratorUtils::singularSnakeCase($value->constrain)
                                         )->orWhere('code', GeneratorUtils::pluralSnakeCase($value->constrain))
                                             ->orWhere('code', $value->constrain)->first();
-                                        $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->orWhere('primary', 'lookup')
-                                        ->orWhere('type', 'fk')->get();
+                                        $lookatrrs = Attribute::where("module", $current_model->id)
+                                        ->where(function ($query) {
+                                            $query->where('type', 'foreignId')
+                                                  ->orWhere('type', 'fk')
+                                                  ->orWhere('primary', 'lookup');
+                                        })->get();
 
                                         foreach ($lookatrrs as $sa) {
                                             $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "={{ \$item2->" . $sa->code . "}}";

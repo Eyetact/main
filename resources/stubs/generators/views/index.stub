@@ -12,10 +12,17 @@
         </div>
         <div class="page-rightheader">
         @php
-                    $model_id = App\Models\Permission::where('name', 'create.{{modelNameSingularLowercase}}')
-                    ->orWhere('name', 'create.{{code}}')?->first()?->module;
-                    $model = App\Models\Module::find($model_id)
-                    // dd($model_id);
+
+                           $model_id = \App\Models\Module::where(
+                                    'code',
+                                    App\Generators\GeneratorUtils::singularSnakeCase('{{code}}'),
+                                )
+                                    ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase('{{code}}'))
+                                    ->orWhere('code', '{{code}}')
+                                    ?->first()->id;
+
+                    $model = App\Models\Module::find($model_id);
+                    //dd($model_id);
                 @endphp
         @canany(['create.{{code}}','create.{{modelNameSingularLowercase}}'])
 
@@ -428,6 +435,30 @@ output {
 
     <script>
 
+
+    function changeBased() {
+    $(document).on('change', '.based', function() {
+        // Get the selected city option's data-source value
+        var sourc = $(this).data('source');
+
+        var selectedFirstId = $(this).find('option:selected').data(sourc);
+
+        // Find the .based-on (country) select element
+        var basedOnSelect = $('.based-on');
+
+        // Find the option in the country select element that matches the selectedFirstId
+        var firstOption = basedOnSelect.find('option[value="' + selectedFirstId + '"]');
+
+        // Check if the option exists and update the select element
+        if (firstOption.length > 0) {
+            basedOnSelect.val(selectedFirstId);
+            console.log('Updated First Select Value:', basedOnSelect.val());
+        } else {
+            console.log('No matching first option found for ID:', selectedFirstId);
+        }
+    });
+}
+
     function changeEvents() {
             $(document).on('change', 'select', function() {
                 var main_model = $(this).attr('id'); //element
@@ -581,6 +612,8 @@ output {
 
                 console.log(obj)
 
+
+
                 $.each(obj, function(key, value) {
                     $e_string = value.code;
                     $e_id = $e_string.split('_')
@@ -637,6 +670,7 @@ output {
                     });
                     changeEvents();
                     changeMulti();
+                    changeBased();
 
                                             $('#role_form_modal').find('select[multiple]').select2();
 
@@ -833,8 +867,10 @@ output {
                         $(this).closest('tr').find('.select-base').find('option[data-'+constrain+'='+id+']').show();
                     });
                     changeEvents()
+
                                             $('#role_form_modal').find('select[multiple]').select2();
                                             $('.inform').trigger('change');
+                                            $('.based').trigger('change');
 
                 }
             });

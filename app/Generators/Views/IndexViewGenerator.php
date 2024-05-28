@@ -263,10 +263,17 @@ class IndexViewGenerator
                                     )->orWhere('code', GeneratorUtils::pluralSnakeCase($value->constrain))
                                         ->orWhere('code', $value->constrain)->first();
                                     // dd($current_model);
-                                    $lookatrrs = Attribute::where("module", $current_model->id)->where('type', 'foreignId')->orWhere('type', 'condition')->get();
+                                    $lookatrrs = Attribute::where("module", $current_model->id)->where(function ($query) {
+                                        $query->where('type', 'foreignId')
+                                              ->orWhere('type', 'fk');
+
+                                    })
+                                    ->get();
 
                                     foreach ($lookatrrs as $sa) {
-                                        $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "={{ \$item2->" . $sa->code . "}}";
+                                        // $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "={{ \$item2->" . $sa->code . "}}";
+
+                                        $dataIds .= "data-" . GeneratorUtils::singularSnakeCase($sa->constrain) . "=\"{{ \$item2->" . $sa->code . " }}\"";
                                     }
 
                                 }
@@ -278,7 +285,7 @@ class IndexViewGenerator
                                 ';
                                 $trhtml .= 'if ($model) {
                                     ';
-                                $trhtml .= '$for_attr = json_encode($model->fields()->select(\'code\', \'attribute\')->where(\'type\', \'foreignId\')->orWhere(\'type\', \'condition\')->get());
+                                $trhtml .= '$for_attr = json_encode($model->fields()->select(\'code\', \'attribute\')->where(\'type\', \'foreignId\')->orWhere(\'type\', \'fk\')->get());
                                 ';
                                 $trhtml .= '$for_attr = str_replace(\'"\', \'\\\'\', $for_attr);
                                 ';

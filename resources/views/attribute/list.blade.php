@@ -417,21 +417,45 @@
 
                     // if(index > 1)
                     if (1) {
+                        // alert(id);
 
                         var listd = '';
-                        @foreach (App\Models\Attribute::where('type', 'foreignId')->get() as $it)
 
-                            listd +=
-                                '<option value="{{ explode('_id', $it->code)[0] }}" >{{ $it->name }}</option>'
-                        @endforeach
+//                         @foreach (App\Models\Attribute::where('type', 'foreignId')->get() as $it)
 
-                        parent.append(` <div class="input-box child-drop form-constrain mt-2">
+// listd +=
+//     '<option value="{{ explode('_id', $it->code)[0] }}" >{{ $it->name }}</option>'
+// @endforeach
+
+
+
+                        $.ajax({
+                url: '{{ url('/') }}/get-relations-multi/' + id,
+                success: function(response) {
+                    console.log(response);
+
+
+
+                    parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="multi[${index}][source]" required>
                             <option value="disabled">disabled</option>
-                            ${listd}
+                            ${response}
                         </select>
                     </div></div>`);
+                }
+                });
+
+
+
+
+                    //     parent.append(` <div class="input-box child-drop form-constrain mt-2">
+                    // <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                    //     <select class="google-input " name="multi[${index}][source]" required>
+                    //         <option value="disabled">disabled</option>
+                    //         ${listd}
+                    //     </select>
+                    // </div></div>`);
                     }
                 }
             });
@@ -517,48 +541,51 @@
 
             }
 
-         if($('.fktype-radio:checked').val() == 'based')
-        {
-
-            var id = $('.lookup-drop').find(':selected').data('id');
-                $.ajax({
-                    url: '{{ url('/') }}/get-relations-modules/' + id,
-                    success: function(response) {
-                        console.log(response);
+//             if ($('.fktype-radio:checked').val() == 'based') {
 
 
 
 
-                        $(`.options`).append(`
-    <div class="input-box form-constrain fkey2 mt-2">
-        <div class="input-box form-on-update mt-2 form-on-update-foreign">
-            <select class="google-input lookup-drop2"  name="constrains2" required>
-               ${response}
-            </select>
-        </div>
-        <small class="text-secondary">
-            <ul class="my-1 mx-2 p-0">
-                <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
-                <li>Field name must be related model + "_id", e.g.: user_id</li>
-            </ul>
-        </small>
-    </div>
-    <div class="input-box form-foreign-id mt-2">
-        <input type="hidden" name="foreign_ids" class="google-input" placeholder="Foreign key (optional)">
-    </div>
 
-    <input type="hidden" name="on_update_foreign" class="google-input" value="1">
-
-    <input type="hidden" name="on_delete_foreign" class="google-input" value="1">
+//                 var id = $('.lookup-drop').find(':selected').data('id');
+//                 $.ajax({
+//                     url: '{{ url('/') }}/get-relations-modules/' + id,
+//                     success: function(response) {
+//                         console.log(response);
 
 
-`);
 
 
-                    }
-                });
+//                         $(`.options`).append(`
+//     <div class="input-box form-constrain fkey2 mt-2">
+//         <div class="input-box form-on-update mt-2 form-on-update-foreign">
+//             <select class="google-input lookup-drop2"  name="constrains2" required>
+//                ${response}
+//             </select>
+//         </div>
+//         <small class="text-secondary">
+//             <ul class="my-1 mx-2 p-0">
+//                 <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
+//                 <li>Field name must be related model + "_id", e.g.: user_id</li>
+//             </ul>
+//         </small>
+//     </div>
+//     <div class="input-box form-foreign-id mt-2">
+//         <input type="hidden" name="foreign_ids" class="google-input" placeholder="Foreign key (optional)">
+//     </div>
 
-        }
+//     <input type="hidden" name="on_update_foreign" class="google-input" value="1">
+
+//     <input type="hidden" name="on_delete_foreign" class="google-input" value="1">
+
+
+// `);
+
+
+//                     }
+//                 });
+
+//             }
 
             if ($('.secondary-drop').val() == 'lookprefix' || $('.secondary-drop').val() == 'looksuffix') {
 
@@ -618,19 +645,20 @@ ${response}
 
             }
 
-            if($('.fktype-radio:checked').val() == 'based'){
+            if ($('.fktype-radio:checked').val() == 'based') {
 
-                    $('.lookup-drop2').remove();
-                    $('.child-drop2').remove();
-                    $('.cond2-wrapper').remove();
+                $('.lookup-drop2').remove();
+                $('.child-drop2').remove();
+                $('.cond2-wrapper').remove();
 
-                     $('.based-cond').remove()
+                $('.based-cond').remove()
 
-                      $('.condition-drop').remove()
+                $('.condition-drop').remove()
 
+                $('.condition-drop').trigger('change');
 
-                    $('select[name=attribute]').trigger('change');
-   }
+                $('select[name=attribute]').trigger('change');
+            }
 
             var id = $(this).find(':selected').data('id');
 
@@ -641,7 +669,7 @@ ${response}
                     console.log(response);
                     if ($('.form-input-types').val() == 'informatic' || $('.form-input-types')
                         .val() ==
-                        'doublefk' || $('.form-input-types').val() == 'doubleattr' || $('.fktype-radio:checked').val() == 'based') {
+                        'doublefk' || $('.form-input-types').val() == 'doubleattr') {
                         parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="attribute" required>
@@ -658,7 +686,25 @@ ${response}
                     }
 
 
-                    if ( $('.fktype-radio:checked').val() == 'condition') {
+                    if ($('.fktype-radio:checked').val() == 'based') {
+
+
+                        $(`.options`).append(` <div class="input-box cond-wrapper form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input condition-drop" name="condition_attr" required>
+
+
+                            ${response}
+
+                        </select>
+                    </div></div>
+                    `);
+
+
+                    }
+
+
+                    if ($('.fktype-radio:checked').val() == 'condition') {
 
                         parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
@@ -678,18 +724,18 @@ ${response}
 
                     `);
 
-                    $('.child-drop').hide();
-                    $('.cond2-wrapper').remove();
+                        $('.child-drop').hide();
+                        $('.cond2-wrapper').remove();
 
 
-                    $('.input-code').val('');
+                        $('.input-code').val('');
 
-                    var selectedValue = $('.lookup-drop').val();
-                    var modifiedValue = selectedValue + '_id';
-                    // alert(modifiedValue);
+                        var selectedValue = $('.lookup-drop').val();
+                        var modifiedValue = selectedValue + '_id';
+                        // alert(modifiedValue);
 
-                    $('.input-code').val(modifiedValue);
-                    $('.input-code').prop('readonly', true);
+                        $('.input-code').val(modifiedValue);
+                        $('.input-code').prop('readonly', true);
 
                         parent.append(` <div class="input-box cond-wrapper form-constrain mt-2">
 <div class="input-box form-on-update mt-2 form-on-update-foreign">
@@ -701,7 +747,10 @@ ${response}
 
                     }
 
-                    if ($('.form-input-types').val() != 'informatic' && $('.form-input-types').val() !='doublefk' && $('.form-input-types').val() != 'doubleattr' && $('.fktype-radio:checked').val() != 'based' &&  $('.fktype-radio:checked').val() != 'condition' ) {
+                    if ($('.form-input-types').val() != 'informatic' && $('.form-input-types').val() !=
+                        'doublefk' && $('.form-input-types').val() != 'doubleattr' && $(
+                            '.fktype-radio:checked').val() != 'based' && $('.fktype-radio:checked')
+                        .val() != 'condition') {
                         parent.append(` <div class="input-box child-drop form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input " name="attribute" required>
@@ -720,11 +769,11 @@ ${response}
                     `);
 
 
-                    if ($('.form-input-types').val() == 'condition') {
+                        if ($('.form-input-types').val() == 'condition') {
 
 
 
-                        parent.append(` <div class="input-box cond-wrapper form-constrain mt-2">
+                            parent.append(` <div class="input-box cond-wrapper form-constrain mt-2">
 <div class="input-box form-on-update mt-2 form-on-update-foreign">
 <select class="google-input condition-drop" name="condition_attr" required>
    ${response}
@@ -732,7 +781,7 @@ ${response}
 </div></div>
 `);
 
-                    }
+                        }
 
 
                     }
@@ -795,28 +844,28 @@ ${response}
 
                     }
 
-                    if( $('.fktype-radio:checked').val() == 'based')
-                    {
+                    // if( $('.fktype-radio:checked').val() == 'based')
+                    // {
 
-                      $('.based-cond').hide()
-                      $('.cond2-wrapper').remove();
-                      $('.condition-drop').remove()
-
-
-
-                        parent.append(` <div class="input-box cond-wrapper form-constrain mt-2">
-                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
-                        <select class="google-input condition-drop" name="condition_attr" required>
-                           ${response}
-                        </select>
-                    </div></div>
-                    `);
+                    //   $('.based-cond').hide()
+                    //   $('.cond2-wrapper').remove();
+                    //   $('.condition-drop').remove()
 
 
 
-                    }
+                    //     parent.append(` <div class="input-box cond-wrapper form-constrain mt-2">
+                // <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                //     <select class="google-input condition-drop" name="condition_attr" required>
+                //        ${response}
+                //     </select>
+                // </div></div>
+                // `);
 
-                    if ($('.form-input-types').val() == 'condition' ) {
+
+
+                    // }
+
+                    if ($('.form-input-types').val() == 'condition') {
 
                         parent.append(` <div class="input-box cond-wrapper form-constrain mt-2">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
@@ -831,6 +880,7 @@ ${response}
 
 
                 }
+
             });
         })
 
@@ -844,8 +894,7 @@ ${response}
 
 
 
-            if ($('.fktype-radio:checked').val() == 'condition')
-            {
+            if ($('.fktype-radio:checked').val() == 'condition') {
 
                 // alert($('.condition-drop').val())
 
@@ -855,22 +904,70 @@ ${response}
 
                 $('.input-code').val('')
 
-            var selectedValue = $('.lookup-drop').val();
-            var modifiedValue = selectedValue + '_' +  $('.child-drop').val() + '_id';
-            // alert(modifiedValue);
+                var selectedValue = $('.lookup-drop').val();
+                var modifiedValue = selectedValue + '_' + $('.child-drop').val() + '_id';
+                // alert(modifiedValue);
 
-            $('.input-code').val(modifiedValue);
-            $('.input-code').prop('readonly', true);
+                $('.input-code').val(modifiedValue);
+                $('.input-code').prop('readonly', true);
             }
 
 
-            if( $('.fktype-radio:checked').val() == 'based')
+            if ($('.fktype-radio:checked').val() == 'based')
 
             {
 
-                $('.based-cond').val($('.condition-drop').val());
 
-                var modelId = $('.lookup-drop2').find(':selected').data('id');
+
+                $('.input-code').val('');
+                var selectedValue = $('.lookup-drop').val();
+                var modifiedValue = selectedValue + '_' + $(this).val() + '_id';
+
+                $('.input-code').val(modifiedValue);
+                $('.input-code').prop('readonly', true);
+
+
+
+
+                var id = $('.lookup-drop').find(':selected').data('id');
+                $.ajax({
+                    url: '{{ url('/') }}/get-relations-modules/' + id,
+                    success: function(response) {
+                        console.log(response);
+
+
+
+
+                        $(`.options`).append(`
+    <div class="input-box form-constrain fkey2 mt-2">
+        <div class="input-box form-on-update mt-2 form-on-update-foreign">
+            <select class="google-input lookup-drop2"  name="constrains2" required>
+               ${response}
+            </select>
+        </div>
+        <small class="text-secondary">
+            <ul class="my-1 mx-2 p-0">
+                <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
+                <li>Field name must be related model + "_id", e.g.: user_id</li>
+            </ul>
+        </small>
+    </div>
+    <div class="input-box form-foreign-id mt-2">
+        <input type="hidden" name="foreign_ids" class="google-input" placeholder="Foreign key (optional)">
+    </div>
+
+    <input type="hidden" name="on_update_foreign" class="google-input" value="1">
+
+    <input type="hidden" name="on_delete_foreign" class="google-input" value="1">
+
+
+`);
+
+
+                    }
+                });
+
+
 
             }
 
@@ -1852,12 +1949,12 @@ ${response}
                 <input type="hidden" name="select_options" class="form-option">
             `)
 
-                // var list = `<option>aaaa</option>`;
+                    // var list = `<option>aaaa</option>`;
 
-                var list = `{!! $all !!}`;
-                // alert( list )
+                    var list = `{!! $all !!}`;
+                    // alert( list )
 
-                $(`.options`).append(`
+                    $(`.options`).append(`
                 <div class="input-box form-constrain mt-2 fkey1">
                     <div class="input-box form-on-update mt-2 form-on-update-foreign">
                         <select class="google-input lookup-drop"  name="constrains" required>
