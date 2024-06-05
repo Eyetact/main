@@ -23,7 +23,7 @@ class SubscriptionController extends Controller
 
         } else {
 
-            if(auth()->user()->hasRole('vendor') || auth()->user()->hasRole('admin') ){
+            if(auth()->user()->hasRole('vendor') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('public_vendor') ){
 
             $userId = auth()->user()->id;
             $usersOfCustomers = User::where('user_id', $userId)->pluck('id');
@@ -78,7 +78,7 @@ class SubscriptionController extends Controller
         // $roleNames = ['super', 'admin', 'vendor'];
         // $users = User::role($roleNames)->get();
 
-        $roleNames = ['admin', 'vendor'];
+        $roleNames = ['admin', 'public_vendor'];
 
         if (auth()->user()->hasRole('super')) {
 
@@ -88,7 +88,7 @@ class SubscriptionController extends Controller
             // $groups = CustomerGroup::all();
 
             $userId = auth()->user()->id;
-            $usersOfCustomers = User::role('admin')
+            $usersOfCustomers = User::role($roleNames)
                 ->where('user_id', $userId)
                 ->pluck('id');
 

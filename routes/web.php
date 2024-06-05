@@ -9,6 +9,8 @@ use App\Models\Admin\Element;
 use App\Models\Admin\Unit;
 use App\Models\Attribute;
 use App\Models\Module;
+use App\Models\UCGroup;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\AttributeController;
@@ -167,12 +169,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/vendors', [UserController::class, 'vendors'])->name('users.vendors');
     Route::get('/admins', [UserController::class, 'admins'])->name('users.admins');
+    Route::get('/public-vendors', [UserController::class, 'publicVendors'])->name('users.pvendors');
     Route::get('/users', [UserController::class, 'users'])->name('users.users');
 
     Route::post('add-user', [UserController::class, 'store'])->name('users.store');
 
     Route::get('add-user', [UserController::class, 'create'])->name('users.create');
     Route::get('add-vendor', [UserController::class, 'createvendor'])->name('vendor.create');
+    Route::get('add-public-vendor', [UserController::class, 'createPublicVendor'])->name('pvendor.create');
     Route::get('add-admin', [UserController::class, 'createAdmin'])->name('admin.create');
 
     Route::get('add-admin', [UserController::class, 'createAdmin'])->name('admin.create');
@@ -978,6 +982,44 @@ Route::post('assign-record/{model}', function (Request $request, $model) {
     return redirect()->back();
 })->name('assign-record');
 
+
+
+Route::post('assign-cgroup', function (Request $request) {
+
+
+
+    $userIds = explode(',', $request->user_ids);
+
+        $currentTimestamp = now();
+
+    foreach ($userIds as $userid) {
+
+        $record = User::find($userid);
+
+        if($record)
+        {
+    foreach ($request->ids as $id) {
+
+
+        $ifExist = UCGroup::where('user_id',$record->id)->where('group_id',$id)->first();
+
+        if(!$ifExist)
+        {
+
+        $c = new UCGroup();
+        $c->group_id = $id;
+        $c->user_id = $record->id;
+        $c->created_at = $currentTimestamp;
+        $c->updated_at = $currentTimestamp;
+        $c->save();
+        }
+
+
+    }
+}
+}
+return redirect()->back()->with('success', 'Groups assigned successfully.');
+})->name('assign-cgroup');
 
 
 

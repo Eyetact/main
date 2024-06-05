@@ -280,6 +280,12 @@
                         <a class="sub-side-menu__item" href="{{ route('users.admins') }}"><span
                                 class="sub-side-menu__label">Admins</span></a>
                     </li>
+
+                    <li class="sub-slide">
+                        {{-- {{ url('module')}} --}}
+                        <a class="sub-side-menu__item" href="{{ route('users.pvendors') }}"><span
+                                class="sub-side-menu__label">Public Vendors</span></a>
+                    </li>
                 @endrole
 
                 @hasanyrole('super|admin')
