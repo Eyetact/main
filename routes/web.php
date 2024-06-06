@@ -665,7 +665,7 @@ Route::get('get-relations-modules/{id}', function ($id) {
 
 
 
-    //this is for belongs to
+    //this is for bt
     // $attributes = Attribute::where('module', $id)
     // ->where(function ($query) {
     //     $query->where('type', 'foreignId')
@@ -689,7 +689,7 @@ Route::get('get-relations-modules/{id}', function ($id) {
 
 
 
-    //this is for has many
+    //this is for hm
     $module =  Module::find($id);
     $code = GeneratorUtils::singularSnakeCase($module->code);
 
@@ -759,7 +759,7 @@ Route::get('get-relations-multi/{id}', function ($id) {
 
 
 
-    //this is for belongs to
+    //this is for bt
     $attributes = Attribute::where('module', $id)
     ->where(function ($query) {
         $query->where('type', 'foreignId')
@@ -783,7 +783,7 @@ Route::get('get-relations-multi/{id}', function ($id) {
 
 
 
-    //this is for has many
+    //this is for hm
     $module =  Module::find($id);
     $code = GeneratorUtils::singularSnakeCase($module->code);
 
@@ -853,7 +853,7 @@ Route::get('get-belongs-to-multi/{id}', function ($id) {
 
 
 
-    //this is for belongs to
+    //this is for bt
     $attributes = Attribute::where('module', $id)
     ->where(function ($query) {
         $query->where('type', 'foreignId')
@@ -877,7 +877,7 @@ Route::get('get-belongs-to-multi/{id}', function ($id) {
 
 
 
-    //this is for has many
+    //this is for hm
     // $module =  Module::find($id);
     // $code = GeneratorUtils::singularSnakeCase($module->code);
 
