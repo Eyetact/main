@@ -6,14 +6,14 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
-# welcome to Admitro
-## belows is the steps to download/clone the project for the first time:
- 1. git clone the project or download it as a zip file
- 2. create new local branch special for you 
- 3. create new .env file and copy the .env.xample content to it
-    3.1 replace the database_username and password with yours
-4. composer update 
-5. php artisan serv
+- welcome to Admitro  
+- belows is the steps to download/clone the project for the first time:  
+ 1. git clone the project or download it as a zip file  
+ 2. create new local branch special for you  
+ 3. create new .env file and copy the .env.xample content to it  
+    3.1 replace the database_username and password with yours  
+4. composer update  
+5. php artisan serv  
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
