@@ -13,6 +13,7 @@ use App\Repositories\FlashRepository;
 use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Models\Testimonials;
+use App\Models\StoreView;
 use DataTables;
 // use App\Helpers\S3Helper;
 
@@ -63,7 +64,8 @@ class TestimonialsController extends AppBaseController
      */
     public function create()
     {
-        return view('testimonials.create');
+        $StoreView = StoreView::all()->pluck('slug','id');
+        return view('testimonials.create')->with('StoreView',$StoreView);
     }
 
     /**
@@ -80,26 +82,13 @@ class TestimonialsController extends AppBaseController
         $id = auth()->user()->id;
         $input['created_by'] = $id;
 
-        // if ($request->hasFile('category_image')) {
-        //     $path = 'category/'; // Optional: the path within the bucket where the image will be stored.
-        //     $visibility = 'public-read'; // Optional: set to 'private' if you want the image to be private.
+        $imagePath = 'images/testimonials/';
+        if ($request->hasFile('image')) {
+            $filename = time() . '.' . $request->file('image')->getClientOriginalExtension();
+            $request->file('image')->move(public_path($imagePath), $filename);
 
-        //     // Get the uploaded file
-        //     $image = $request->file('category_image');
-        //     // Create an instance of the S3Helper
-        //     $s3Helper = new S3Helper();
-
-        //     // Upload the image to S3
-        //     $imageUrl = $s3Helper->uploadImageToS3($image, $path, $visibility);
-        //     if ($imageUrl) {
-        //         $photo = $imageUrl;
-        //         unset($input['category_image']);
-        //         $input['category_image'] = $photo;
-        //     } else {
-        //         // Failed to upload the image. Handle the error if necessary.
-        //         return response()->json(['message' => 'Image upload failed.'], 500);
-        //     }
-        // }
+            $input['image'] = $imagePath.$filename;
+        }
 
         $category = Testimonials::create($input);
         // dd($category);
@@ -139,6 +128,7 @@ class TestimonialsController extends AppBaseController
      */
     public function edit($id)
     {
+        $StoreView = StoreView::all()->pluck('slug','id');
         $category = Testimonials::find($id);
 
         if (empty($category)) {
@@ -147,7 +137,7 @@ class TestimonialsController extends AppBaseController
             return redirect(route('testimonials.index'));
         }
 
-        return view('testimonials.edit')->with('category', $category);
+        return view('testimonials.edit')->with('category', $category)->with('StoreView',$StoreView);
     }
 
     /**
@@ -169,26 +159,14 @@ class TestimonialsController extends AppBaseController
         }
 
         $requests = $request->all();
-        // if ($request->hasFile('category_image')) {
-        //     $path = 'category/'; // Optional: the path within the bucket where the image will be stored.
-        //     $visibility = 'public-read'; // Optional: set to 'private' if you want the image to be private.
-        //     // Get the uploaded file
-        //     $image = $request->file('category_image');
-        //     // Create an instance of the S3Helper
-        //     $s3Helper = new S3Helper();
-        //     // Upload the image to S3
-        //     $imageUrl = $s3Helper->uploadImageToS3($image, $path, $visibility);
-        //     if ($imageUrl) {
-        //         $photo = $imageUrl;
-        //         unset($requests['category_image']);
-        //         $requests['category_image'] = $photo;
-        //     } else {
-        //         // Failed to upload the image. Handle the error if necessary.
-        //         return response()->json(['message' => 'Image upload failed.'], 500);
-        //     }
-        //     $oldImage = $request['old_image'];
-        //     $s3Helper->removeImageToS3($oldImage);
-        // }
+
+        $imagePath = 'images/testimonials/';
+        if ($request->hasFile('image')) {
+            $filename = time() . '.' . $request->file('image')->getClientOriginalExtension();
+            $request->file('image')->move(public_path($imagePath), $filename);
+
+            $input['image'] = $imagePath.$filename;
+        }
 
         $userId = auth()->user()->id;
         $requests['updated_by'] = $userId;

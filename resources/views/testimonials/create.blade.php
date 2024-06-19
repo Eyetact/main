@@ -12,6 +12,7 @@
     </section>
 
     <div class="content px-3">
+        {{-- @include('adminlte-templates::common.errors') --}}
         <div class="card">
             <div class="card-head">
                 <div class="card-header">

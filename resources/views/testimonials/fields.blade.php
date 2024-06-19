@@ -9,12 +9,10 @@
     <!-- Category Name Field -->
     <div class="form-group">
         {!! Form::label('store_view', __('models/testimonials.fields.store_view'), ['class' => 'required']) !!}
-        {!! Form::select(
-            'store_view',
-            ['DRAFT' => 'DRAFT', 'PUBLISHED' => 'PUBLISHED', 'INACTIVE' => 'INACTIVE'],
-            null,
-            ['class' => 'form-control google-input custom-select'],
-        ) !!}
+        {!! Form::select('store_view', ['' => 'Select Store View'] + $StoreView->toArray(), null, [
+            'class' => 'form-control',
+            'multiple' => false,
+        ]) !!}
     </div>
 
     <!-- Category Name Field -->
@@ -43,9 +41,9 @@
                 {!! Form::label('image', 'Choose file', ['class' => 'custom-file-label']) !!}
             </div>
         </div>
-        <div class="alert alert-primary mt-2">
+        {{-- <div class="alert alert-primary mt-2">
             <b>NOTE : </b> Add info for recommended size for Icon - 30*30.
-        </div>
+        </div> --}}
     </div>
     <div class="clearfix"></div>
     <div class="" id="image-error">
@@ -53,7 +51,7 @@
     @if ($pageType == 'Edit' && $category->image)
         <br />
         <p>
-            <img src={{ env('AWS_URL') . $category->image }} height="150" width="200">
+            <img src={{ asset($category->image) }} height="150" width="200">
         </p>
     @endif
 </div>

@@ -91,6 +91,12 @@ class StoreViewController extends AppBaseController
         $id = auth()->user()->id;
         $input['created_by'] = $id;
 
+        if(isset($input['status'])){
+            $input['status'] = "active";
+        }else{
+            $input['status'] = "inactive";
+        }
+
         // if ($request->hasFile('category_image')) {
         //     $path = 'category/'; // Optional: the path within the bucket where the image will be stored.
         //     $visibility = 'public-read'; // Optional: set to 'private' if you want the image to be private.
@@ -186,6 +192,12 @@ class StoreViewController extends AppBaseController
         }
 
         $requests = $request->all();
+        // dd($requests);
+        if(isset($requests['status'])){
+            $requests['status'] = "active";
+        }else{
+            $requests['status'] = "inactive";
+        }
         // if ($request->hasFile('category_image')) {
         //     $path = 'category/'; // Optional: the path within the bucket where the image will be stored.
         //     $visibility = 'public-read'; // Optional: set to 'private' if you want the image to be private.

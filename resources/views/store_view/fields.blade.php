@@ -11,7 +11,7 @@
         {!! Form::label('region', __('models/store_view.fields.region'), ['class' => 'required']) !!}
         {{-- {!! Form::text('region', null, ['class' => 'form-control']) !!} --}}
         <div class="select2-blue">
-            {!! Form::select('region', ['' => 'Select Country'] + $countryRegion->toArray(), null, [
+            {!! Form::select('region', ['' => 'Select Region'] + $countryRegion->toArray(), null, [
                 'class' => 'form-control',
                 'multiple' => false,
             ]) !!}
@@ -44,19 +44,12 @@
     </div>
 
     <div class="form-group">
-        {{-- {!! Form::label('status', __('models/store_view.fields.status'), ['class' => 'required']) !!} --}}
-        {{-- {!! Form::hidden('status', 0, ['class' => 'custom-switch-input']) !!}
-        {!! Form::checkbox('status', '1', $pageType == 'Edit' ? null : null, [
-            'class' => 'custom-switch-indicator ml-2',
-        ]) !!} --}}
-
-
-        <span class="custom-switch-description">Status</span>
+        {!! Form::label('status', __('models/store_view.fields.status'), ['class' => 'required']) !!}
         <br>
-        <span class="custom-switch-indicator"></span>
-        {{-- <input type="checkbox" name="is_enable" class="custom-switch-input" id="is_enable" --}}
-        {{-- {{ $pageType == 'Edit' ? 'checked' : '' }}> --}}
-
-
+        <label class="custom-switch form-label">
+            <input type="checkbox" name="status" class="custom-switch-input" id="status"
+                {{ old('status', $category->status == 'active') ? 'checked' : '' }}>
+            <span class="custom-switch-indicator"></span>
+        </label>
     </div>
 </div>

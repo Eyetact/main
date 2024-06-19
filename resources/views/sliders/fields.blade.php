@@ -43,9 +43,9 @@
                 {!! Form::label('web_image', 'Choose file', ['class' => 'custom-file-label']) !!}
             </div>
         </div>
-        <div class="alert alert-primary mt-2">
+        {{-- <div class="alert alert-primary mt-2">
             <b>NOTE : </b> Add info for recommended size for Icon - 30*30.
-        </div>
+        </div> --}}
     </div>
     <div class="clearfix"></div>
     <div class="" id="image-error">
@@ -53,7 +53,7 @@
     @if ($pageType == 'Edit' && $category->web_image)
         <br />
         <p>
-            <img src={{ env('AWS_URL') . $category->web_image }} height="150" width="200">
+            <img src={{ asset($category->web_image) }} height="150" width="200">
         </p>
     @endif
 
@@ -71,9 +71,9 @@
                 {!! Form::label('mobile_image', 'Choose file', ['class' => 'custom-file-label']) !!}
             </div>
         </div>
-        <div class="alert alert-primary mt-2">
+        {{-- <div class="alert alert-primary mt-2">
             <b>NOTE : </b> Add info for recommended size for Icon - 30*30.
-        </div>
+        </div> --}}
     </div>
     <div class="clearfix"></div>
     <div class="" id="image-error">
@@ -81,7 +81,7 @@
     @if ($pageType == 'Edit' && $category->mobile_image)
         <br />
         <p>
-            <img src={{ env('AWS_URL') . $category->mobile_image }} height="150" width="200">
+            <img src={{ asset($category->mobile_image) }} height="150" width="200">
         </p>
     @endif
 

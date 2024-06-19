@@ -82,27 +82,24 @@ class SlidersController extends AppBaseController
         $id = auth()->user()->id;
         $input['created_by'] = $id;
 
-        // if ($request->hasFile('category_image')) {
-        //     $path = 'category/'; // Optional: the path within the bucket where the image will be stored.
-        //     $visibility = 'public-read'; // Optional: set to 'private' if you want the image to be private.
 
-        //     // Get the uploaded file
-        //     $image = $request->file('category_image');
-        //     // Create an instance of the S3Helper
-        //     $s3Helper = new S3Helper();
+        $imagePath = 'images/slider/';
 
-        //     // Upload the image to S3
-        //     $imageUrl = $s3Helper->uploadImageToS3($image, $path, $visibility);
-        //     if ($imageUrl) {
-        //         $photo = $imageUrl;
-        //         unset($input['category_image']);
-        //         $input['category_image'] = $photo;
-        //     } else {
-        //         // Failed to upload the image. Handle the error if necessary.
-        //         return response()->json(['message' => 'Image upload failed.'], 500);
-        //     }
-        // }
+        if ($request->hasFile('web_image')) {
+            $filename = time() . '.' . $request->file('web_image')->getClientOriginalExtension();
+            $request->file('web_image')->move(public_path($imagePath), $filename);
 
+            $input['web_image'] = $imagePath.$filename;
+        }
+
+        if ($request->hasFile('mobile_image')) {
+            $filename = time() . '.' . $request->file('mobile_image')->getClientOriginalExtension();
+            $request->file('mobile_image')->move(public_path($imagePath), $filename);
+
+            $input['mobile_image'] = $imagePath.$filename;
+        }
+
+        // dd($input);
         $category = Sliders::create($input);
         // dd($category);
         // Flash::success(__('models/sliders.messages.create_success', ['model' => __('models/sliders.singular')]));
@@ -172,26 +169,21 @@ class SlidersController extends AppBaseController
         }
 
         $requests = $request->all();
-        // if ($request->hasFile('category_image')) {
-        //     $path = 'category/'; // Optional: the path within the bucket where the image will be stored.
-        //     $visibility = 'public-read'; // Optional: set to 'private' if you want the image to be private.
-        //     // Get the uploaded file
-        //     $image = $request->file('category_image');
-        //     // Create an instance of the S3Helper
-        //     $s3Helper = new S3Helper();
-        //     // Upload the image to S3
-        //     $imageUrl = $s3Helper->uploadImageToS3($image, $path, $visibility);
-        //     if ($imageUrl) {
-        //         $photo = $imageUrl;
-        //         unset($requests['category_image']);
-        //         $requests['category_image'] = $photo;
-        //     } else {
-        //         // Failed to upload the image. Handle the error if necessary.
-        //         return response()->json(['message' => 'Image upload failed.'], 500);
-        //     }
-        //     $oldImage = $request['old_image'];
-        //     $s3Helper->removeImageToS3($oldImage);
-        // }
+
+        $imagePath = 'images/slider/';
+        if ($request->hasFile('web_image')) {
+            $filename = time() . '.' . $request->file('web_image')->getClientOriginalExtension();
+            $request->file('web_image')->move(public_path($imagePath), $filename);
+
+            $requests['web_image'] = $imagePath.$filename;
+        }
+
+        if ($request->hasFile('mobile_image')) {
+            $filename = time() . '.' . $request->file('mobile_image')->getClientOriginalExtension();
+            $request->file('mobile_image')->move(public_path($imagePath), $filename);
+
+            $requests['mobile_image'] = $imagePath.$filename;
+        }
 
         $userId = auth()->user()->id;
         $requests['updated_by'] = $userId;
