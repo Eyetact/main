@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('store_view');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->json('image')->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

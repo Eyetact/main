@@ -96,7 +96,7 @@
     <!-- Category Name Field -->
     <div class="form-group">
         {!! Form::label('primary_button_url', __('models/sliders.fields.primary_button_url'), ['class' => 'required']) !!}
-        {!! Form::text('primary_button_url', null, ['class' => 'form-control']) !!}
+        {!! Form::url('primary_button_url', null, ['class' => 'form-control']) !!}
     </div>
 
     <!-- Category Name Field -->
@@ -112,7 +112,7 @@
         {!! Form::label('secondary_button_url', __('models/sliders.fields.secondary_button_url'), [
             'class' => 'required',
         ]) !!}
-        {!! Form::text('secondary_button_url', null, ['class' => 'form-control']) !!}
+        {!! Form::url('secondary_button_url', null, ['class' => 'form-control']) !!}
     </div>
 
 

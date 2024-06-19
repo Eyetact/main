@@ -48,7 +48,7 @@
         <br>
         <label class="custom-switch form-label">
             <input type="checkbox" name="status" class="custom-switch-input" id="status"
-                {{ old('status', $category->status == 'active') ? 'checked' : '' }}>
+                {{ old('status', $pageType== "Edit" && $category->status == 'active') ? 'checked' : '' }}>
             <span class="custom-switch-indicator"></span>
         </label>
     </div>

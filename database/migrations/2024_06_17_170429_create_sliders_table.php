@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('store_view');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->json('web_image')->nullable();
+            $table->string('web_image')->nullable();
             $table->string('mobile_image')->nullable();
             $table->string('primary_button_title')->nullable();
             $table->string('primary_button_url')->nullable();
