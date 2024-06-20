@@ -14,7 +14,8 @@
                 <div class="card-body pb-2">
                     <div class="row">
                         <div class="col-sm-12 input-box">
-                            <label class="form-label" for="module">Add Attribute To<span class="text-red">*</span></label>
+                            <label class="form-label" for="module">Add Attribute To<span
+                                    class="text-red">*</span></label>
                             <select name="module" class="google-input module" id="module" required>
                                 <option value="" selected>Select Module</option>
                                 @foreach ($moduleData as $module)
@@ -40,16 +41,16 @@
                         </div>
 
                         <div class="col-sm-12 input-box">
-                            <label class="form-label" for="code">Code<span class="text-red">*</span></label>
-                            <input type="text" name="code"
-                                class="google-input input-code @error('code') is-invalid @enderror"
-                                value="{{ old('code', $attribute->code) }}">
+                            <label class="form-label" for="_code">Code<span class="text-red">*</span></label>
+                            <input type="text" name="_code"
+                                class="google-input input-code @error('_code') is-invalid @enderror"
+                                value="{{ old('_code', $attribute->code) }}">
                             <small class="text-secondary">
                                 <ul class="my-1 mx-2 p-0">
                                     <li>is not allowed to use numbers or ( ID word ) or symbols</li>
                                 </ul>
                             </small>
-                            @error('code')
+                            @error('_code')
                                 <span class="error code-error">{{ $message }}</span>
                             @enderror
                         </div>
@@ -182,7 +183,7 @@
             <div class="row">
                 <div class="col-sm-12 input-box">
                     <label class="form-label" for="source">source<span class="text-red">*</span></label>
-                    <select class="google-input " name="source"  id="source">
+                    <select class="google-input " name="source" id="source">
                     </select>
                 </div>
 
@@ -196,15 +197,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Admin</h3>
