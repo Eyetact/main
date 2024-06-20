@@ -14,7 +14,8 @@
                 <div class="card-body pb-2">
                     <div class="row">
                         <div class="col-sm-12 input-box">
-                            <label class="form-label" for="module">Add Attribute To<span class="text-red">*</span></label>
+                            <label class="form-label" for="module">Add Attribute To<span
+                                    class="text-red">*</span></label>
                             <select name="module" class="google-input module" id="module" required>
                                 <option value="" selected>Select Module</option>
                                 @foreach ($moduleData as $module)
@@ -182,7 +183,7 @@
             <div class="row">
                 <div class="col-sm-12 input-box">
                     <label class="form-label" for="source">source<span class="text-red">*</span></label>
-                    <select class="google-input " name="source"  id="source">
+                    <select class="google-input " name="source" id="source">
                     </select>
                 </div>
 
