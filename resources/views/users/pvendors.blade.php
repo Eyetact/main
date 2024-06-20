@@ -52,10 +52,10 @@ table {
     <!--Page header-->
     <div class="page-header">
         <div class="page-leftheader">
-            <h4 class="page-title mb-0">Vendors</h4>
+            <h4 class="page-title mb-0">Public Vendors</h4>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#"><i class="fe fe-layout mr-2 fs-14"></i>Users</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><a href="#">Vendors</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">Public Vendors</a></li>
             </ol>
         </div>
         <div class="page-rightheader">
@@ -75,7 +75,7 @@ table {
 
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Vendors Data</div>
+                    <div class="card-title">Public Vendors Data</div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -85,7 +85,7 @@ table {
                                     <th width="30px"></th>
                                     <th>Name</th>
                                     <th>username</th>
-                                    <th>admin</th>
+
                                     <th>email</th>
                                     <th >avatar</th>
                                     <th>phone</th>
@@ -100,8 +100,6 @@ table {
                     </div>
                 </div>
             </div>
-
-
 
             <div class="modal fade bd-example-modal-lg" id="assign_groups" tabindex="-1" role="dialog"
             aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -122,28 +120,7 @@ table {
                                 <div class="input-box" style="margin:0 !important">
                                     <select class="google-input" name="ids[]" tabindex="null" multiple>
                                         <option value="" selected disabled>Select Group</option>
-                                        @php
-
-                                        if(auth()->user()->hasRole('super'))
-                                        {
-
-                                            $items = \App\Models\CustomerGroup::where('type', NULL)
-                                                                                ->whereNotIn('id', [1, 2, 3, 13])
-                                                                                ->get();
-
-                                        }
-                                        else{
-
-
-                                            $items = \App\Models\CustomerGroup::where('type',NULL)
-                                                                               ->where('created_by',auth()->user()->id)
-                                                                               ->whereNotIn('id', [1, 2, 3, 13])
-                                                                               ->get();
-                                        }
-
-
-                                        @endphp
-                                        @foreach ($items as $item)
+                                        @foreach (\App\Models\CustomerGroup::where('type','public_vendor')->whereNotIn('id', [1, 2, 3, 13])->get() as $item)
                                         @if($item)
 
 
@@ -167,6 +144,9 @@ table {
                 </div>
             </div>
         </div>
+
+
+
 
         </div>
     </div>
@@ -246,7 +226,7 @@ table {
 
             // }, false);
             $.ajax({
-                url: "{{ route('vendor.create') }}",
+                url: "{{ route('pvendor.create') }}",
                 success: function(response) {
                     //  console.log(response);
                     $(".modal-body").html(response);
@@ -268,7 +248,7 @@ table {
                 sSearch: '',
                 lengthMenu: '_MENU_ ',
             },
-            ajax: "{{ route('users.vendors') }}",
+            ajax: "{{ route('users.pvendors') }}",
 
             columnDefs: [{
                 orderable: false,
@@ -297,10 +277,7 @@ table {
                     data: 'username',
                     name: 'username'
                 },
-                {
-                    data: 'admin',
-                    name: 'admin'
-                },
+
                 {
                     data: 'email',
                     name: 'email'
@@ -333,7 +310,6 @@ table {
             order: [
                 [1, 'asc']
             ]
-
         });
 
         table.button().add(0, {

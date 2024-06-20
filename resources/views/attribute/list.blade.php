@@ -369,6 +369,7 @@
                                                         <option value="datetime-local">Datetime local</option>
                                                         <option value="select">Select</option>
                                                         <option value="foreignId">Lookup</option>
+                                                        <option value="doubleMulti">Double Attribute</option>
 
                                                     </select>
 
@@ -429,6 +430,9 @@
 
 
 
+
+                       if($('.multi-type').val() == 'foreignId')
+                       {
                         $.ajax({
                 url: '{{ url('/') }}/get-relations-multi/' + id,
                 success: function(response) {
@@ -446,7 +450,7 @@
                 }
                 });
 
-
+            }
 
 
                     //     parent.append(` <div class="input-box child-drop form-constrain mt-2">
@@ -456,10 +460,68 @@
                     //         ${listd}
                     //     </select>
                     // </div></div>`);
+
+
+
+                    if($('.secondary-drop').val() == 'lookprefix' || $('.secondary-drop').val() == 'looksuffix')
+                       {
+
+                        $.ajax({
+                url: '{{ url('/') }}/get-belongs-to-multi/' + id,
+                success: function(response) {
+                    console.log(response);
+
+
+
+                    parent.append(` <div class="input-box child-drop form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input smodule2 " name="multi[${index}][source]" required>
+                            <option value="disabled">disabled</option>
+                            ${response}
+                        </select>
+                    </div></div>`);
+                }
+                });
+
+            }
+
+
                     }
                 }
             });
         })
+
+        $(document).on('change','.smodule2',function(){
+
+
+
+            $(this).closest('tr').find('.cd2').remove();
+            var id = $(this).find(':selected').data('id');
+            var parent = $(this).parent().parent().parent().parent().parent().find('.select_options');
+            let index = parseInt($(this).parent().parent().parent().parent().parent().parent().find('.text-center').find(
+                '.input-box').html());
+            // alert(index)
+            $.ajax({
+                url: '{{ url('/') }}/attribute-by-module/' + id,
+                success: function(response) {
+                    console.log(response);
+
+                    // parent.find('.condition-drop').remove();
+                    parent.append(` <div class="input-box  form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input cd2" name="multi[${index}][attribute2]" required>
+                           ${response}
+                        </select>
+                    </div></div>`);
+
+                }
+            });
+
+
+        })
+
+
+
 
         $(document).on('change', '#module', function() {
             var id = $(this).find(':selected').val();
@@ -999,11 +1061,61 @@ ${response}
             $(this).parent().parent().find('.c-f').remove()
             $(this).parent().parent().find('.child-drop').remove()
             $(this).parent().parent().find('.s-option').remove()
+            $(this).parent().parent().find('.select_options').html("")
             if ($(this).val() == 'select') {
                 $(this).parent().parent().find('.select_options').append(`<div class="input-box s-option mt-2">
                 <input type="text" name="multi[${index}][select_options]" class="google-input" placeholder="Seperate with '|', e.g.: water|fire">
             </div>`);
-            } else if ($(this).val() == 'foreignId') {
+            }
+            else if ($(this).val() == 'doubleMulti') {
+
+
+
+
+                $(this).parent().parent().find('.select_options').append(`
+
+                <div class="input-box form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input primary-drop"  name="multi[${index}][primary]" required>
+                            <option value="" disabled selected>-- Select primary attribute --</option>
+                                  <option value="text">Text</option>
+                                  <option value="integer">Integer Number</option>
+                                  <option value="decimal">Decimal Number</option>
+                                  <option value="select">Select</option>
+                                  <option value="lookup">Lookup</option>
+                        </select>
+                    </div>
+                    </div>
+
+                    <div class="input-box form-constrain mt-2">
+                    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+                        <select class="google-input secondary-drop"  name="multi[${index}][secondary]" required>
+                            <option value="" disabled selected>-- Select secondary attribute --</option>
+                                  <option value="prefix">fixed prefix</option>
+                                  <option value="suffix">fixed suffix</option>
+
+
+                        </select>
+                    </div>
+                    </div>
+
+                    <div class="col-sm-12 input-box fixed-val">
+                            <label class="form-label" for="fixed_value">Fixed value<span class="text-red">*</span></label>
+                            <input type="text" name="multi[${index}][fixed_value]" id="fixed_value"
+                                class="google-input @error('fixed_value') is-invalid @enderror"
+                                value="">
+                            @error('fixed_value')
+                                <span class="error name-error">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+              `);
+
+            }
+
+
+
+            else if ($(this).val() == 'foreignId') {
                 var list = `{!! $all !!}`;
 
 
@@ -1060,6 +1172,9 @@ ${response}
             // alert($('.primary-drop').val());
 
             if ($(`.primary-drop`).val() == "select") {
+
+
+            if($('.form-input-types').val() == 'doubleattr'){
                 $(`.form-min-lengths`).hide()
                 $(`.form-max-lengths`).hide()
                 $('.fkey').hide();
@@ -1107,8 +1222,32 @@ ${response}
 `)
             }
 
+             if($('.form-input-types').val() == 'multi'){
+
+                let index = parseInt($(this).parent().parent().parent().parent().parent().find('.text-center').find('.input-box')
+                .html());
+                // alert(index);
+
+                $(this).closest('tr').find('.child-drop').remove();
+                $(this).closest('tr').find('.select-module').remove();
+                $(this).closest('tr').find('.smodule2').remove();
+                $(this).closest('tr').find('.cd2').remove();
+
+
+
+
+                $(this).closest('tr').find('.select_options').append(`<div class="input-box s-option mt-2">
+                <input type="text" name="multi[${index}][select_options]" class="google-input" placeholder="Seperate with '|', e.g.: water|fire">
+            </div>`);
+            }
+
+        }
+
             if ($(`.primary-drop`).val() == "lookup") {
 
+
+                 if($('.form-input-types').val() == 'doubleattr')
+                 {
 
                 $('.select-drop').hide();
 
@@ -1150,6 +1289,43 @@ ${response}
 
 
             `)
+                 }
+
+                 if($('.form-input-types').val() == 'multi'){
+
+                    $(this).closest('tr').find('.s-option').remove();
+
+                    $(`.secondary-drop`).append(`
+                <option value="lookprefix">Lookup prefix</option>
+                                  <option value="looksuffix">Lookup suffix</option>
+
+                                  `)
+
+                    var list = `{!! $all !!}`;
+                    let index = parseInt($(this).parent().parent().parent().parent().parent().find('.text-center').find('.input-box')
+                .html());
+
+                alert(index);
+
+
+                $(this).closest('tr').find('.select_options').append(` <div class="input-box c-f form-constrain mt-2">
+    <div class="input-box form-on-update mt-2 form-on-update-foreign">
+        <select class="google-input select-module" name="multi[${index}][constrain]" required>
+           ${list}
+        </select>
+    </div>
+    <small class="text-secondary">
+        <ul class="my-1 mx-2 p-0">
+            <li>Use '/' if related model at sub folder, e.g.: Main/Product.</li>
+            <li>Field name must be related model + "_id", e.g.: user_id</li>
+        </ul>
+    </small>
+</div>
+
+`);
+
+
+                 }
             }
 
 
@@ -1168,6 +1344,17 @@ ${response}
 
                 $('.secondary-drop option[value="lookprefix"]').remove();
                 $('.secondary-drop option[value="looksufffix"]').remove();
+
+
+
+                if($('.form-input-types').val() == 'multi'){
+
+                $(this).closest('tr').find('.child-drop').remove();
+                $(this).closest('tr').find('.select-module').remove();
+                $(this).closest('tr').find('.smodule2').remove();
+                $(this).closest('tr').find('.cd2').remove();
+                $(this).closest('tr').find('.s-option').remove();
+                }
 
             }
 
@@ -1331,6 +1518,7 @@ ${response}
                                                         <option value="time">Time</option>
                                                         <option value="select">Select</option>
                                                         <option value="foreignId">Lookup</option>
+                                                        <option value="doubleMulti">Double Attribute</option>
 
                                                     </select>
                                                 </div>

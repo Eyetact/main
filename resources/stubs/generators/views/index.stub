@@ -582,10 +582,18 @@ output {
 
                 console.log("un: " + $('[data-source=' + main_model + ']').length)
 
+                    var fixed = $(this).data('fixmulti');
 
+
+
+
+
+                  if(fixed == undefined)
+                  {
                 if ($('[data-source=' + main_model + ']').length == 0) {
                     return;
                 }
+                  }
 
                 console.log('main_model:' + main_model)
                 var main_model_id = $(this).find('option:selected').data('id'); // 1
@@ -619,6 +627,36 @@ output {
                     $e_id = $e_string.split('_')
                     console.log('id : ' + '#' + $e_string)
                     console.log('source : ' + $('select[data-source=' + main_model + ']').length)
+
+
+
+                    if (fixed) {
+
+                        $this.closest('tr').find('label').data('source');
+                        var attr2= $this.closest('tr').find('label').data('attr2');
+
+
+                        path = "{{ url('/') }}/searchtargetfromsource/" + main_model + '/' +
+                            main_model_id + '/' + value
+                            .code + '/' + attr2
+
+                        // alert(path)
+                        console.log(path);
+                        $.ajax({
+                            url: path,
+                            success: function(response) {
+                                console.log(response);
+
+
+                                $this.closest('tr').find('label').html(response.data);
+
+                            }
+                        });
+
+
+                }
+
+
                     if ($('select[data-source=' + main_model + ']').length > 0) {
 
                         console.log(key + ": " + $e_id[0]);
@@ -867,10 +905,13 @@ output {
                         $(this).closest('tr').find('.select-base').find('option[data-'+constrain+'='+id+']').show();
                     });
                     changeEvents()
+                    changeMulti()
 
                                             $('#role_form_modal').find('select[multiple]').select2();
                                             $('.inform').trigger('change');
                                             $('.based').trigger('change');
+                                            $('.fix-multi').trigger('change');
+
 
                 }
             });
