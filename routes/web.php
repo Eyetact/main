@@ -3,6 +3,7 @@
 use App\Exports\UsersExport;
 use App\Generators\GeneratorUtils;
 use App\Helpers\Helper;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DataController;
 use App\Imports\UsersImport;
 use App\Models\Admin\Element;
@@ -10,6 +11,8 @@ use App\Models\Admin\Unit;
 use App\Models\Attribute;
 use App\Models\Module;
 use App\Models\UCGroup;
+use App\Models\Admin\Category;
+use App\Models\Admin\Component;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -31,9 +34,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\MailsController;
 use App\Http\Controllers\Admin\SoftwareController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
-
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +50,8 @@ use Illuminate\Support\Facades\Route;
  */
 
 Auth::routes();
+// Route::post('/login', [LoginController::class, 'login'])->name('login');
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/dashboard', function () {
         return view('index');
@@ -1018,7 +1023,6 @@ Route::post('export-data', function (Request $request) {
 Route::post('import-data', function (Request $request) {
 
     $file = $request->file;
-
     Excel::import(new UsersImport($request->module), $file);
 
     return redirect('/')->with('success', 'All good!');

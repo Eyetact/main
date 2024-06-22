@@ -15,6 +15,7 @@
 </head>
 
 <body class="app sidebar-mini {{ \App\Helpers\Helper::getThemeClasses() }}">
+
     @include('layouts.theme-setting')
     <!---Global-loader-->
     <div id="global-loader">
@@ -22,18 +23,19 @@
     </div>
     <!--- End Global-loader-->
     <!-- Page -->
+    <!-- this session messages are for alerts (success or danger ) that appears as a response to requests-->
+    @include('layouts.messages.session-messages')
 
     <div class="page">
         <div class="page-main">
             @include('layouts.aside-menu')
-
             <!-- App-Content -->
             <div class="app-content main-content">
                 <div class="side-app">
+                    <!-- this header messages are for alerts(success or danger) that appears as a response to ajax requests-->
+                    @include('layouts.messages.header-messages')
                     @include('layouts.header')
                     @yield('page-header')
-                    @include('layouts.messages.header-messages')
-
                     @yield('content')
                     @include('layouts.footer')
                 </div><!-- End Page -->
