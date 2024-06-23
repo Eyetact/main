@@ -27,7 +27,13 @@ routes/generator
 database/migrations/admin
 database/migrations/Admin
 app/Providers/Generator
-app/Models/Admin
+app/Models/Admin/*
 app/Http/Controllers/Admin
 app/Http/Requests/Admin
 /public/
+
+#files not to include in the ignored parent folders:
+#1. Component, Category, Mixture
+!app/Models/Admin/Component
+!app/Models/Admin/Category
+!app/Models/Admin/Mixture
