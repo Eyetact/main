@@ -3,6 +3,7 @@
 use App\Exports\UsersExport;
 use App\Generators\GeneratorUtils;
 use App\Helpers\Helper;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DataController;
 use App\Imports\UsersImport;
 use App\Models\Admin\Element;
@@ -10,6 +11,8 @@ use App\Models\Admin\Unit;
 use App\Models\Attribute;
 use App\Models\Module;
 use App\Models\UCGroup;
+use App\Models\Admin\Category;
+use App\Models\Admin\Component;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -31,7 +34,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserGroupController;
 use App\Http\Controllers\MailsController;
 use App\Http\Controllers\Admin\SoftwareController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+use Maatwebsite\Excel\Facades\Excel;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +50,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
  */
+
 Auth::routes();
+// Route::post('/login', [LoginController::class, 'login'])->name('login');
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/dashboard', function () {
         return view('index');
@@ -292,11 +302,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 });
 
+
 include_once base_path('routes/generator/generator.php');
 
 Route::get('clear', function () {
     Artisan::call('optimize:clear');
     echo 'done';
+
 });
 
 Route::get('reg-perm', function () {});
@@ -560,18 +572,22 @@ Route::get('searchtargetfromsource/{main_model}/{main_model_id}/{for_key_attr_na
     );
 });
 
+
 Route::get('get-belongs-to/{id}', function ($id) {
     // $attributes = Attribute::where('module', $id)->where('type', 'foreignId')->get();
 
     $attributes = Attribute::where('module', $id)
         ->where(function ($query) {
+
             $query->where('type', 'foreignId')->orWhere('type', 'informatic')->orWhere('type', 'doublefk')->orWhere('primary', 'lookup')->orWhere('type', 'fk');
         })
+
 
         ->get();
 
     $options = '';
     $options = '<option  >-- select --</option>';
+
 
     foreach ($attributes as $key => $value) {
         $all = GeneratorUtils::setModelName(explode('_', $value->code)[0]);
@@ -622,8 +638,10 @@ Route::get('get-relations-modules/{id}', function ($id) {
     $attributes2 = Attribute::where('constrain', $code)
         ->orWhere('constrain2', $code)
         ->where(function ($query) {
+
             $query->where('type', 'foreignId')->orWhere('type', 'informatic')->orWhere('type', 'doublefk')->orWhere('primary', 'lookup')->orWhere('type', 'fk');
         })
+
 
         ->get();
 
@@ -640,11 +658,13 @@ Route::get('get-relations-modules/{id}', function ($id) {
     //        $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
     //    }
 
+
     foreach ($attributes2 as $key => $value) {
         $model = Module::find($value->module);
 
         $options .= '<option data-id="' . $value->module . '" value="' . GeneratorUtils::singularSnakeCase($model->code) . '" >' . $model->name . '</option>';
     }
+
 
     //    foreach ($basedAttributes as $key => $value) {
 
@@ -665,12 +685,12 @@ Route::get('get-relations-multi/{id}', function ($id) {
 
 
 
-    //this is for bt
 
     $attributes = Attribute::where('module', $id)
         ->where(function ($query) {
             $query->where('type', 'foreignId')->orWhere('type', 'informatic')->orWhere('type', 'doublefk')->orWhere('primary', 'lookup')->orWhere('type', 'fk');
         })
+
 
         ->get();
 
@@ -694,16 +714,20 @@ Route::get('get-relations-multi/{id}', function ($id) {
     $attributes2 = Attribute::where('constrain', $code)
         ->orWhere('constrain2', $code)
         ->where(function ($query) {
+
             $query->where('type', 'foreignId')->orWhere('type', 'informatic')->orWhere('type', 'doublefk')->orWhere('primary', 'lookup')->orWhere('type', 'fk');
         })
+
 
         ->get();
 
     $options = '';
 
+
     foreach ($attributes as $key => $value) {
         $all = GeneratorUtils::setModelName(explode('_', $value->code)[0]);
         $model = Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase($all))->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))?->first();
+
 
         $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code) . '" >' . $model->name . '</option>';
     }
@@ -711,8 +735,10 @@ Route::get('get-relations-multi/{id}', function ($id) {
     foreach ($attributes2 as $key => $value) {
         $model = Module::find($value->module);
 
+
         $options .= '<option data-id="' . $value->module . '" value="' . GeneratorUtils::singularSnakeCase($model->code) . '" >' . $model->name . '</option>';
     }
+
 
     //    foreach ($basedAttributes as $key => $value) {
 
@@ -736,15 +762,15 @@ Route::get('get-belongs-to-multi/{id}', function ($id) {
 
     //this is for bt
     $attributes = Attribute::where('module', $id)
-    ->where(function ($query) {
-        $query->where('type', 'foreignId')
-            ->orWhere('type', 'informatic')
-            ->orWhere('type', 'doublefk')
-            ->orWhere('primary', 'lookup')
-            ->orWhere('type', 'fk');
-    })
+        ->where(function ($query) {
+            $query->where('type', 'foreignId')
+                ->orWhere('type', 'informatic')
+                ->orWhere('type', 'doublefk')
+                ->orWhere('primary', 'lookup')
+                ->orWhere('type', 'fk');
+        })
 
-    ->get();
+        ->get();
 
 
     // $basedAttributes = Attribute::where('module', $id)
@@ -775,21 +801,21 @@ Route::get('get-belongs-to-multi/{id}', function ($id) {
     //                        ->get();
 
 
-       $options = '';
+    $options = '';
 
 
 
 
-       foreach ($attributes as $key => $value) {
+    foreach ($attributes as $key => $value) {
 
-        $all =  GeneratorUtils::setModelName( explode('_', $value->code)[0] );
+        $all =  GeneratorUtils::setModelName(explode('_', $value->code)[0]);
         $model = Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase($all))
-        ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))
-        ?->first();
+            ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))
+            ?->first();
 
 
-           $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
-       }
+        $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
+    }
 
 
 
@@ -818,7 +844,6 @@ Route::get('get-belongs-to-multi/{id}', function ($id) {
 
 
     return $options;
-
 });
 
 Route::get('getsource/{id}', function ($id) {
@@ -870,55 +895,53 @@ Route::post('assign-cgroup', function (Request $request) {
 
     $userIds = explode(',', $request->user_ids);
 
-        $currentTimestamp = now();
+    $currentTimestamp = now();
 
     foreach ($userIds as $userid) {
 
         $record = User::find($userid);
 
-        if($record)
-        {
-    foreach ($request->ids as $id) {
+        if ($record) {
+            foreach ($request->ids as $id) {
 
 
-        $ifExist = UCGroup::where('user_id',$record->id)->where('group_id',$id)->first();
+                $ifExist = UCGroup::where('user_id', $record->id)->where('group_id', $id)->first();
 
-        if(!$ifExist)
-        {
+                if (!$ifExist) {
 
-        $c = new UCGroup();
-        $c->group_id = $id;
-        $c->user_id = $record->id;
-        $c->created_at = $currentTimestamp;
-        $c->updated_at = $currentTimestamp;
-        $c->save();
+                    $c = new UCGroup();
+                    $c->group_id = $id;
+                    $c->user_id = $record->id;
+                    $c->created_at = $currentTimestamp;
+                    $c->updated_at = $currentTimestamp;
+                    $c->save();
+                }
+            }
         }
-
-
     }
-}
-}
-return redirect()->back()->with('success', 'Groups assigned successfully.');
+    return redirect()->back()->with('success', 'Groups assigned successfully.');
 })->name('assign-cgroup');
 
 
 
 
-Route::resource('data',DataController::class);
+Route::resource('data', DataController::class);
 
-Route::post('export-template',function(Request $request){
+Route::post('export-template', function (Request $request) {
+
 
     return (new UsersExport($request->module,true))->download('template.xlsx');
 
 })->name('export-template');
+
 
 Route::post('export-data', function (Request $request) {
     return (new UsersExport($request->module))->download('data.xlsx');
 })->name('export-data');
 
 Route::post('import-data', function (Request $request) {
-    $file = $request->file;
 
+    $file = $request->file;
     Excel::import(new UsersImport($request->module), $file);
 
     return redirect('/')->with('success', 'All good!');
