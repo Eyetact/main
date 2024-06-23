@@ -36,7 +36,9 @@ use App\Http\Controllers\MailsController;
 use App\Http\Controllers\Admin\SoftwareController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
 use Maatwebsite\Excel\Facades\Excel;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -155,14 +157,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('module_manager/switch-delete', 'deleteORRestore')->name('module_manager.deleteORRestore');
         Route::get('force-delete/{id}', 'forceDelete')->name('force-delete');
 
-
         // update is deleted menu item
         Route::post('module_manager/menu_delete', 'menuDelete')->name('module_manager.menu_delete');
 
         Route::get('add-sub/{id}', 'addSub')->name('module_manager.addSub');
         Route::post('add-sub/{id}', 'storeSub')->name('module_manager.storSub');
-
-
 
         Route::post('add-sub-post', 'storeSubPost')->name('module_manager.storSubPost');
     });
@@ -189,28 +188,32 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/user/delete/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
-    Route::controller(RoleController::class)->prefix('role')->group(function () {
-        Route::get('/', 'index')->name('role.index');
-        Route::get('create', 'create')->name('role.create')->middleware('can:create.role');
-        Route::post('store', 'store')->name('role.store')->middleware('can:create.role');
-        Route::get('{role}/edit', 'edit')->name('role.edit')->middleware('can:edit.role');
-        Route::post('{role}', 'update')->name('role.update')->middleware('can:edit.role');
-        Route::post('delete/{role}', 'destroy')->name('role.destroy')->middleware('can:delete.role');
-        Route::get('permission', 'assignPermissionList')->name('role.permission.index');
-    });
+    Route::controller(RoleController::class)
+        ->prefix('role')
+        ->group(function () {
+            Route::get('/', 'index')->name('role.index');
+            Route::get('create', 'create')->name('role.create')->middleware('can:create.role');
+            Route::post('store', 'store')->name('role.store')->middleware('can:create.role');
+            Route::get('{role}/edit', 'edit')->name('role.edit')->middleware('can:edit.role');
+            Route::post('{role}', 'update')->name('role.update')->middleware('can:edit.role');
+            Route::post('delete/{role}', 'destroy')->name('role.destroy')->middleware('can:delete.role');
+            Route::get('permission', 'assignPermissionList')->name('role.permission.index');
+        });
 
-    Route::controller(PermissionController::class)->prefix('permission')->group(function () {
-        Route::get('/', 'index')->name('permission.index')->middleware('can:view.permission');
-        Route::get('create', 'create')->name('permission.create')->middleware('can:create.permission');
-        Route::post('store', 'store')->name('permission.store')->middleware('can:create.permission');
-        Route::get('{permission}/edit', 'edit')->name('permission.edit')->middleware('can:edit.permission');
-        Route::post('update', 'update')->name('permission.update')->middleware('can:edit.can');
-        Route::delete('{permission}', 'destroy')->name('permission.destroy')->middleware('can:delete.permission');
+    Route::controller(PermissionController::class)
+        ->prefix('permission')
+        ->group(function () {
+            Route::get('/', 'index')->name('permission.index')->middleware('can:view.permission');
+            Route::get('create', 'create')->name('permission.create')->middleware('can:create.permission');
+            Route::post('store', 'store')->name('permission.store')->middleware('can:create.permission');
+            Route::get('{permission}/edit', 'edit')->name('permission.edit')->middleware('can:edit.permission');
+            Route::post('update', 'update')->name('permission.update')->middleware('can:edit.can');
+            Route::delete('{permission}', 'destroy')->name('permission.destroy')->middleware('can:delete.permission');
 
-        Route::post('permission/delete/{id}', 'deleteSinglePermission')->name('permission.delete')->middleware('can:delete.permission');
+            Route::post('permission/delete/{id}', 'deleteSinglePermission')->name('permission.delete')->middleware('can:delete.permission');
 
-        Route::post('module/store', 'moduleStore')->name('permission.module');
-    });
+            Route::post('module/store', 'moduleStore')->name('permission.module');
+        });
 
     //plan
     Route::get('/plans', [planController::class, 'index'])->name('plans.index');
@@ -260,37 +263,29 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/user-group/delete/{id}', [UserGroupController::class, 'destroy'])->name('ugroups.destroy');
 
-
-
     Route::get('/filesmanager', [FileManagerController::class, 'index'])->name('files');
     Route::post('/filesmanager', [FileManagerController::class, 'newFile'])->name('files');
     Route::get('/new-folder', [FileManagerController::class, 'newFolder'])->name('newfolder');
     Route::post('/new-folder', [FileManagerController::class, 'newFolder'])->name('newfolder');
 
-
     Route::get('/new-file', [FileManagerController::class, 'newFile'])->name('newfile');
     Route::post('/new-file', [FileManagerController::class, 'newFile'])->name('newfile');
-
-
 
     Route::get('/view-folder/{id}', [FileManagerController::class, 'viewfolder'])->name('viewfolder');
 
     Route::get('/show-folder/{id}', [FileManagerController::class, 'showFolder'])->name('showfolder');
     Route::post('update-folder/{id}', [FileManagerController::class, 'updateFolder'])->name('folder.update');
 
-
     Route::post('/folder/delete/{id}', [FileManagerController::class, 'destroyFolder'])->name('folder.destroy');
 
     Route::get('/show-file/{id}', [FileManagerController::class, 'showFile'])->name('showfile');
     Route::post('update-file/{id}', [FileManagerController::class, 'updateFile'])->name('file.update');
-
 
     Route::post('/file/delete/{id}', [FileManagerController::class, 'destroyFile'])->name('file.destroy');
 
     Route::get('/file/download/{id}', [FileManagerController::class, 'downloadFile'])->name('downloadfile');
 
     Route::get('/file/share/{id}', [FileManagerController::class, 'shareFile'])->name('sharefile');
-
 
     Route::get('/file/images/{id}', [FileManagerController::class, 'images'])->name('images');
     Route::get('/file/videos/{id}', [FileManagerController::class, 'videos'])->name('videos');
@@ -302,24 +297,21 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/file/open/{id}', [FileManagerController::class, 'openFile'])->name('open.file');
 
-
     Route::get('testview', function () {
         return view('test');
     });
 });
 
-include_once(base_path('routes/generator/generator.php'));
+
+include_once base_path('routes/generator/generator.php');
 
 Route::get('clear', function () {
     Artisan::call('optimize:clear');
-    echo "done";
+    echo 'done';
+
 });
 
-
-
-Route::get('reg-perm', function () {
-});
-
+Route::get('reg-perm', function () {});
 
 Route::get('/get-mixtures/{id}', function ($id) {
     $componentSetId = $id;
@@ -332,7 +324,6 @@ Route::get('/get-mixtures/{id}', function ($id) {
 
     return response()->json($mixtures);
 })->name('get-mixtures');
-
 
 Route::get('/get-categories/{id}', function ($id) {
     try {
@@ -371,20 +362,17 @@ Route::get('/get-categories/{id}', function ($id) {
     }
 })->name('get-categories');
 
-
 Route::get('/get-components/{id}', function ($id) {
     $componentSetId = $id;
 
     if ($componentSetId) {
-
         $components_set = App\Models\Admin\ComponentsSet::find($componentSetId);
 
         $components = collect([]);
 
         if ($components_set) {
             $set_component = json_decode($components_set->set_component);
-            $componentIds = collect($set_component)->pluck("id");
-
+            $componentIds = collect($set_component)->pluck('id');
 
             foreach ($componentIds as $componentId) {
                 $component = App\Models\Admin\Component::find($componentId);
@@ -404,9 +392,7 @@ Route::get('/get-compononets-by-main/{id}', function ($id) {
     $mainPartId = $id;
 
     if ($mainPartId) {
-        $components = App\Models\Admin\Component::where('main_part_id', $mainPartId)
-            ->with('main_part')
-            ->get();
+        $components = App\Models\Admin\Component::where('main_part_id', $mainPartId)->with('main_part')->get();
 
         $components = $components->map(function ($component) {
             $component->inlet = $component->main_part->main_inlet;
@@ -420,11 +406,6 @@ Route::get('/get-compononets-by-main/{id}', function ($id) {
 
     return response()->json($components);
 })->name('get-compos');
-
-
-
-
-
 
 Route::get('/get-components-by-category/{category_id}/{cset_id}', function ($category_id, $cset_id) {
     try {
@@ -457,8 +438,6 @@ Route::get('/get-components-by-category/{category_id}/{cset_id}', function ($cat
     }
 })->name('get-components-by-category');
 
-
-
 Route::get('/get-max-min/{component_id}/{category_id}', function ($component_id, $category_id) {
     $componentId = $component_id;
     $categoryId = $category_id;
@@ -469,10 +448,7 @@ Route::get('/get-max-min/{component_id}/{category_id}', function ($component_id,
         $compo_category = json_decode($category_values->compo_category, true);
         // dd( $compo_category);
 
-        $compo_category = array_combine(
-            array_map('intval', array_keys($compo_category)),
-            array_values($compo_category)
-        );
+        $compo_category = array_combine(array_map('intval', array_keys($compo_category)), array_values($compo_category));
 
         foreach ($compo_category as $item) {
             if (isset($item['id']) && $item['id'] == $categoryId) {
@@ -489,8 +465,6 @@ Route::get('/get-max-min/{component_id}/{category_id}', function ($component_id,
         }
     }
 
-
-
     return response()->json([]);
 })->name('get-mixman');
 
@@ -502,7 +476,6 @@ Route::get('/get-unit-by-component/{id}/{cset_id}', function ($id, $cset_id) {
         $component = App\Models\Admin\Component::with('unit')->find($componentId);
         $component_set = App\Models\Admin\ComponentsSet::with('main_part')->find($componentSetId);
 
-
         $componentData = [
             'unit' => $component->unit->unit_code,
             'concentration' => $component->compo_concentration,
@@ -513,25 +486,19 @@ Route::get('/get-unit-by-component/{id}/{cset_id}', function ($id, $cset_id) {
     return response()->json($componentData);
 })->name('get-unit');
 
-
 Route::get('/get-type-by-component/{id}', function ($id) {
-
     $componentSetId = $id;
 
     if ($componentSetId) {
-
         $component_set = App\Models\Admin\ComponentsSet::with('main_part')->find($componentSetId);
 
-
         $componentData = [
-
             'type' => $component_set->main_part->main_type,
         ];
     }
 
     return response()->json($componentData);
 })->name('get-type');
-
 
 // Route::get('/get-components-by-category/{category_id}/{cset_id}', function ($category_id,$cset_id) {
 //     try {
@@ -571,7 +538,6 @@ Route::get('/get-type-by-component/{id}', function ($id) {
 //     }
 // })->name('get-categories');
 
-
 // Route::get('/get-compononets-by-main/{id}', function ($id) {
 //     $mainPartId = $id;
 
@@ -584,80 +550,63 @@ Route::get('/get-type-by-component/{id}', function ($id) {
 //     return response()->json($components);
 // })->name('get-compos');
 
+Route::get('searchtargetfromsource/{main_model}/{main_model_id}/{for_key_attr_name}/{target_result_attr}', function ($main_model, $main_model_id, $for_key_attr_name, $target_result_attr) {
+    //main model
+    $main_model = 'App\Models\Admin\\' . GeneratorUtils::setModelName($main_model);
+    $element = $main_model::find($main_model_id);
 
+    $target_model = explode('_', $for_key_attr_name);
+    $id = $for_key_attr_name;
+    $target_model = 'App\Models\Admin\\' . GeneratorUtils::setModelName($target_model[0]);
+    // dd($target_model);
 
-
-Route::get(
-    'searchtargetfromsource/{main_model}/{main_model_id}/{for_key_attr_name}/{target_result_attr}',
-    function ($main_model, $main_model_id, $for_key_attr_name, $target_result_attr) {
-        //main model
-        $main_model = "App\Models\Admin\\" . GeneratorUtils::setModelName($main_model);
-        $element = $main_model::find($main_model_id);
-
-        $target_model = explode('_', $for_key_attr_name);
-        $id = $for_key_attr_name;
-        $target_model = "App\Models\Admin\\" . GeneratorUtils::setModelName($target_model[0]);
-        // dd($target_model);
-
-        $target_data = $target_model::find($element->$for_key_attr_name);
-        $target_data->$target_result_attr;
-        return response()->json([
-
+    $target_data = $target_model::find($element->$for_key_attr_name);
+    $target_data->$target_result_attr;
+    return response()->json(
+        [
             'data' => $target_data->$target_result_attr,
             'data_id' => $target_data->id,
-            'id' => $id
-        ], 200);
-    }
-);
+            'id' => $id,
+        ],
+        200,
+    );
+});
 
 
 Route::get('get-belongs-to/{id}', function ($id) {
-
     // $attributes = Attribute::where('module', $id)->where('type', 'foreignId')->get();
-
 
     $attributes = Attribute::where('module', $id)
         ->where(function ($query) {
-            $query->where('type', 'foreignId')
-                ->orWhere('type', 'informatic')
-                ->orWhere('type', 'doublefk')
-                ->orWhere('primary', 'lookup')
-                ->orWhere('type', 'fk');
+
+            $query->where('type', 'foreignId')->orWhere('type', 'informatic')->orWhere('type', 'doublefk')->orWhere('primary', 'lookup')->orWhere('type', 'fk');
         })
 
-        ->get();
 
+        ->get();
 
     $options = '';
     $options = '<option  >-- select --</option>';
 
 
-
     foreach ($attributes as $key => $value) {
+        $all = GeneratorUtils::setModelName(explode('_', $value->code)[0]);
+        $model = Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase($all))->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))?->first();
 
-        $all =  GeneratorUtils::setModelName(explode('_', $value->code)[0]);
-        $model = Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase($all))
-            ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))
-            ?->first();
-
-
-        $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
+        $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code) . '" >' . $model->name . '</option>';
     }
-
-
 
     return $options;
 });
 
-
-
 Route::get('get-relations-modules/{id}', function ($id) {
-
     // $attributes = Attribute::where('module', $id)->where('type', 'foreignId')->get();
 
 
 
+
     //this is for bt
+
     // $attributes = Attribute::where('module', $id)
     // ->where(function ($query) {
     //     $query->where('type', 'foreignId')
@@ -669,7 +618,6 @@ Route::get('get-relations-modules/{id}', function ($id) {
 
     // ->get();
 
-
     // $basedAttributes = Attribute::where('module', $id)
     // ->where(function ($query) {
     //     $query->where('type', 'fk')
@@ -681,27 +629,24 @@ Route::get('get-relations-modules/{id}', function ($id) {
 
 
 
+
     //this is for hm
     $module =  Module::find($id);
+
     $code = GeneratorUtils::singularSnakeCase($module->code);
 
     $attributes2 = Attribute::where('constrain', $code)
         ->orWhere('constrain2', $code)
         ->where(function ($query) {
-            $query->where('type', 'foreignId')
-                ->orWhere('type', 'informatic')
-                ->orWhere('type', 'doublefk')
-                ->orWhere('primary', 'lookup')
-                ->orWhere('type', 'fk');
+
+            $query->where('type', 'foreignId')->orWhere('type', 'informatic')->orWhere('type', 'doublefk')->orWhere('primary', 'lookup')->orWhere('type', 'fk');
         })
+
 
         ->get();
 
-
     $options = '';
     $options = '<option  >-- select --</option>';
-
-
 
     //    foreach ($attributes as $key => $value) {
 
@@ -710,20 +655,14 @@ Route::get('get-relations-modules/{id}', function ($id) {
     //     ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))
     //     ?->first();
 
-
     //        $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
     //    }
 
 
-
     foreach ($attributes2 as $key => $value) {
-
-
         $model = Module::find($value->module);
 
-
-
-        $options .= '<option data-id="' . $value->module . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
+        $options .= '<option data-id="' . $value->module . '" value="' . GeneratorUtils::singularSnakeCase($model->code) . '" >' . $model->name . '</option>';
     }
 
 
@@ -734,34 +673,26 @@ Route::get('get-relations-modules/{id}', function ($id) {
     //     ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))
     //     ?->first();
 
-
     //        $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
     //    }
-
-
 
     return $options;
 });
 
-
 Route::get('get-relations-multi/{id}', function ($id) {
-
     // $attributes = Attribute::where('module', $id)->where('type', 'foreignId')->get();
 
 
 
-    //this is for bt
+
+
     $attributes = Attribute::where('module', $id)
         ->where(function ($query) {
-            $query->where('type', 'foreignId')
-                ->orWhere('type', 'informatic')
-                ->orWhere('type', 'doublefk')
-                ->orWhere('primary', 'lookup')
-                ->orWhere('type', 'fk');
+            $query->where('type', 'foreignId')->orWhere('type', 'informatic')->orWhere('type', 'doublefk')->orWhere('primary', 'lookup')->orWhere('type', 'fk');
         })
 
-        ->get();
 
+        ->get();
 
     // $basedAttributes = Attribute::where('module', $id)
     // ->where(function ($query) {
@@ -774,49 +705,38 @@ Route::get('get-relations-multi/{id}', function ($id) {
 
 
 
+
     //this is for hm
     $module =  Module::find($id);
+
     $code = GeneratorUtils::singularSnakeCase($module->code);
 
     $attributes2 = Attribute::where('constrain', $code)
         ->orWhere('constrain2', $code)
         ->where(function ($query) {
-            $query->where('type', 'foreignId')
-                ->orWhere('type', 'informatic')
-                ->orWhere('type', 'doublefk')
-                ->orWhere('primary', 'lookup')
-                ->orWhere('type', 'fk');
+
+            $query->where('type', 'foreignId')->orWhere('type', 'informatic')->orWhere('type', 'doublefk')->orWhere('primary', 'lookup')->orWhere('type', 'fk');
         })
 
-        ->get();
 
+        ->get();
 
     $options = '';
 
 
-
-
     foreach ($attributes as $key => $value) {
-
-        $all =  GeneratorUtils::setModelName(explode('_', $value->code)[0]);
-        $model = Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase($all))
-            ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))
-            ?->first();
+        $all = GeneratorUtils::setModelName(explode('_', $value->code)[0]);
+        $model = Module::where('code', App\Generators\GeneratorUtils::singularSnakeCase($all))->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))?->first();
 
 
-        $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
+        $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code) . '" >' . $model->name . '</option>';
     }
 
-
-
     foreach ($attributes2 as $key => $value) {
-
-
         $model = Module::find($value->module);
 
 
-
-        $options .= '<option data-id="' . $value->module . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
+        $options .= '<option data-id="' . $value->module . '" value="' . GeneratorUtils::singularSnakeCase($model->code) . '" >' . $model->name . '</option>';
     }
 
 
@@ -827,11 +747,8 @@ Route::get('get-relations-multi/{id}', function ($id) {
     //     ->orWhere('code', App\Generators\GeneratorUtils::pluralSnakeCase($all))
     //     ?->first();
 
-
     //        $options .= '<option data-id="' . $model->id . '" value="' . GeneratorUtils::singularSnakeCase($model->code)  . '" >' . $model->name . '</option>';
     //    }
-
-
 
     return $options;
 });
@@ -930,7 +847,6 @@ Route::get('get-belongs-to-multi/{id}', function ($id) {
 });
 
 Route::get('getsource/{id}', function ($id) {
-
     $attributes = Attribute::where('module', $id)->where('type', 'foreignId')->get();
 
     $options = '<option>-- select --</option>';
@@ -941,11 +857,11 @@ Route::get('getsource/{id}', function ($id) {
     return $options;
 });
 Route::get('gettarget/{code}', function ($code) {
-
-
     $main_model = Module::where('code', $code)->first();
 
-    $attributes = Attribute::where('module', $main_model->id)->where('type', 'foreignId')->get();
+    $attributes = Attribute::where('module', $main_model->id)
+        ->where('type', 'foreignId')
+        ->get();
 
     $options = '<option>-- select --</option>';
 
@@ -957,9 +873,8 @@ Route::get('gettarget/{code}', function ($code) {
 });
 
 Route::post('assign-record/{model}', function (Request $request, $model) {
-
     foreach ($request->ids as $id) {
-        $fullClass = "App\Models\Admin\\" . GeneratorUtils::setModelName($model);
+        $fullClass = 'App\Models\Admin\\' . GeneratorUtils::setModelName($model);
         $record = $fullClass::find($id);
 
         $newRecord = $record->replicate();
@@ -969,6 +884,8 @@ Route::post('assign-record/{model}', function (Request $request, $model) {
     }
     return redirect()->back();
 })->name('assign-record');
+
+Route::resource('data', DataController::class);
 
 
 
@@ -1012,11 +929,13 @@ Route::resource('data', DataController::class);
 
 Route::post('export-template', function (Request $request) {
 
-    return (new UsersExport($request->module, true))->download('template.xlsx');
+
+    return (new UsersExport($request->module,true))->download('template.xlsx');
+
 })->name('export-template');
 
-Route::post('export-data', function (Request $request) {
 
+Route::post('export-data', function (Request $request) {
     return (new UsersExport($request->module))->download('data.xlsx');
 })->name('export-data');
 
@@ -1027,3 +946,9 @@ Route::post('import-data', function (Request $request) {
 
     return redirect('/')->with('success', 'All good!');
 })->name('import-data');
+
+Route::resource('categories', App\Http\Controllers\CategoryController::class);
+Route::resource('store_view', App\Http\Controllers\StoreViewController::class);
+Route::resource('pages', App\Http\Controllers\PagesController::class);
+Route::resource('sliders', App\Http\Controllers\SlidersController::class);
+Route::resource('testimonials', App\Http\Controllers\TestimonialsController::class);
