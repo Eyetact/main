@@ -22,12 +22,25 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 
-resources/views/admin
+resources/views/admin/*
 routes/generator
-database/migrations/admin
-database/migrations/Admin
+database/migrations/admin/*
+database/migrations/Admin/*
 app/Providers/Generator
-app/Models/Admin
-app/Http/Controllers/Admin
-app/Http/Requests/Admin
+app/Models/Admin/*
+app/Http/Controllers/Admin/*
+app/Http/Requests/Admin/*
 /public/
+
+#files not to include in the ignored parent folders:
+#1. Component, Category, Mixture
+!app/Models/Admin/Component.php
+!app/Models/Admin/Category.php
+!app/Models/Admin/Mixture.php
+
+#2. all files inside the */Admin are ignored except the folder itself, so just adding .gitkeep fil
+#will automatically track the folder 
+!resources/views/admin/.gitkeep
+!database/migrations/Admin/.gitkeep
+!app/Http/Controllers/Admin/.gitkeep
+!app/Http/Requests/Admin/.gitkeep
