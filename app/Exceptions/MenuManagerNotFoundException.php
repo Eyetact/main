@@ -41,6 +41,7 @@ class MenuManagerNotFoundException extends Exception
         }
 
         // Otherwise, return a view with the error message
+        // you need to create the custom blade for errors in this case ;)
         return response()->view('errors.custom', ['error' => $this->getMessage()], $this->getCode());
     }
 }

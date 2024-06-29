@@ -2,8 +2,9 @@
     $data = json_decode($attribute->fields_info, true);
     // dump($data);
 @endphp
-<form action="{{ route('attribute.store') }}" id="attributeCreate" method="POST" autocomplete="off"
-    enctype="multipart/form-data">
+
+
+<form id="attribute-create" autocomplete="off" enctype="multipart/form-data">
     @csrf
     <div class="row">
         <div class="col-lg-12 col-md-12">
@@ -16,7 +17,7 @@
                         <div class="col-sm-12 input-box">
                             <label class="form-label" for="module">Add Attribute To<span
                                     class="text-red">*</span></label>
-                            <select name="module" class="google-input module" id="module" required>
+                            <select name="module" class="google-input module" id="module">
                                 <option value="" selected>Select Module</option>
                                 @foreach ($moduleData as $module)
                                     <option value="{{ $module->id }}"
@@ -25,19 +26,17 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <label id="module-error" class="error text-red hide" for="module"></label>
-                            @error('module')
-                                <span class="error module-error">{{ $message }}</span>
-                            @enderror
+                            <span id="module-attribute-create-error"
+                                class="error text-danger d-none error-message"></span>
                         </div>
+
                         <div class="col-sm-12 input-box">
                             <label class="form-label" for="name">Name<span class="text-red">*</span></label>
                             <input type="text" name="name" id="name"
                                 class="google-input @error('name') is-invalid @enderror"
                                 value="{{ old('name', $attribute->name) }}">
-                            @error('name')
-                                <span class="error name-error">{{ $message }}</span>
-                            @enderror
+                            <span id="name-attribute-create-error"
+                                class="error text-danger d-none error-message"></span>
                         </div>
 
                         <div class="col-sm-12 input-box">
@@ -45,14 +44,13 @@
                             <input type="text" name="_code"
                                 class="google-input input-code @error('_code') is-invalid @enderror"
                                 value="{{ old('_code', $attribute->code) }}">
-                            <small class="text-secondary">
+                            {{-- <small class="text-secondary">
                                 <ul class="my-1 mx-2 p-0">
                                     <li>is not allowed to use numbers or ( ID word ) or symbols</li>
                                 </ul>
-                            </small>
-                            @error('_code')
-                                <span class="error code-error">{{ $message }}</span>
-                            @enderror
+                            </small> --}}
+                            <span id="_code-attribute-create-error"
+                                class="error text-danger d-none error-message"></span>
                         </div>
                     </div>
 
@@ -82,7 +80,7 @@
 
                         <div class="input-box col-sm-12">
                             <label class="form-label">Select Attribute type<span class="text-red">*</span></label>
-                            <select name="input_types" class="form-select form-input-types  google-input" required>
+                            <select name="input_types" class="form-select form-input-types  google-input">
                                 <option value="" disabled selected>-- {{ __('Select input type') }}--</option>
                                 <option value="multi">Multi Attribute</option>
                                 <option value="text">Text</option>
@@ -118,10 +116,8 @@
 
                                 {{-- <option value="assign">Assign</option> --}}
                             </select>
-                            <label id="field_type-error" class="error text-red hide" for="field_type"></label>
-                            @error('field_type')
-                                <span class="error field_type-error">{{ $message }}</span>
-                            @enderror
+                            <span id="input_types-attribute-create-error"
+                                class="error text-danger d-none error-message"></span>
                             <div class="input-options"></div>
 
                             {{-- <div class="multi">
@@ -185,6 +181,7 @@
                     <label class="form-label" for="source">source<span class="text-red">*</span></label>
                     <select class="google-input " name="source" id="source">
                     </select>
+                    <span id="source-attribute-create-error" class="error text-danger d-none error-message"></span>
                 </div>
 
                 {{-- <div class="col-sm-6 input-box">
@@ -240,12 +237,17 @@
                     <div class="input-box">
                         <input type="number" name="min_lengths" class=" google-input form-control form-min-lengths"
                             min="1" placeholder="Min">
+                        <span id="min_lengths-attribute-create-error"
+                            class="error text-danger d-none error-message"></span>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="input-box">
                         <input type="number" name="max_lengths" class="  google-input form-control form-max-lengths"
                             min="1" placeholder="Max">
+                        <span id="max_lengths-attribute-create-error"
+                            class="error text-danger d-none error-message"></span>
+
                     </div>
                 </div>
             </div>
@@ -253,11 +255,20 @@
     </div>
 
 
+    {{-- <div class="card-footer text-right">
+        <input title="Save attribute" class="btn btn-primary" type="submit"
+            value="{{ $attribute->id == null ? 'Create' : 'Update' }}">
+        <input title="Reset form" class="btn btn-warning" type="reset" value="Reset">
+        <a title="Cancel form" href="{{ route('attribute.index') }}" class="btn btn-danger">Cancel</a>
+    </div> --}}
+
     <div class="card-footer text-right">
         <input title="Save attribute" class="btn btn-primary" type="submit"
             value="{{ $attribute->id == null ? 'Create' : 'Update' }}">
         <input title="Reset form" class="btn btn-warning" type="reset" value="Reset">
         <a title="Cancel form" href="{{ route('attribute.index') }}" class="btn btn-danger">Cancel</a>
     </div>
+
 </form>
+
 <!-- End Row -->

@@ -38,8 +38,7 @@
   <!-- session messages style-->
   <link href="{{ asset('assets/css/messages/messages.css') }}" rel="stylesheet">
 
-  <!-- session messages js -->
-  <script type="text/javascript" src="{{ asset('assets/js/messages/messages.js') }}"></script>
+
 
   <style>
       .select2-container {

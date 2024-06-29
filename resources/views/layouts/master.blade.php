@@ -21,8 +21,6 @@
     <div id="global-loader">
         <img src="{{ URL::asset('assets/images/svgs/loader.svg') }}" alt="loader">
     </div>
-    <!--- End Global-loader-->
-    <!-- Page -->
     <!-- this session messages are for alerts (success or danger ) that appears as a response to requests-->
     @include('layouts.messages.session-messages')
 
